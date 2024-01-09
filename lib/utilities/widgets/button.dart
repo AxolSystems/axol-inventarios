@@ -37,12 +37,12 @@ class _ButtonDrawerSave extends State<ButtonDrawerSave> {
   }
 }
 
-class ButtonReturn extends StatefulWidget {
+class ButtonReturnDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final bool? isLoading;
 
-  const ButtonReturn({
+  const ButtonReturnDialog({
     Key? key,
     this.onPressed,
     this.text,
@@ -50,10 +50,10 @@ class ButtonReturn extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State createState() => _ButtonDrawerReturn();
+  State createState() => _ButtonReturnDialog();
 }
 
-class _ButtonDrawerReturn extends State<ButtonReturn> {
+class _ButtonReturnDialog extends State<ButtonReturnDialog> {
   @override
   Widget build(BuildContext context) {
     final String fText = widget.text ?? 'Regresar';
@@ -113,7 +113,8 @@ class ButtonRowTable extends StatefulWidget {
 
   const ButtonRowTable({
     Key? key,
-    this.onPressed, required this.child,
+    this.onPressed,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -132,6 +133,41 @@ class _ButtonRowTable extends State<ButtonRowTable> {
       ),
       onPressed: onPressed_,
       child: child,
+    );
+  }
+}
+
+class ButtonReturnView extends StatefulWidget {
+  final Function()? onPressed;
+
+  const ButtonReturnView({
+    Key? key,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  State createState() => _ButtonReturnView();
+}
+
+class _ButtonReturnView extends State<ButtonReturnView> {
+  @override
+  Widget build(BuildContext context) {
+    final Function() onPressed_ = widget.onPressed ??
+        () {
+          Navigator.pop(context);
+        };
+    return ElevatedButton(
+      onPressed: onPressed_,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: ColorPalette.primary,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        minimumSize: const Size(60, 60),
+      ),
+      child: const Icon(
+        Icons.arrow_back_ios_rounded,
+        color: ColorPalette.lightBackground,
+      ),
     );
   }
 }

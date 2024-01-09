@@ -5,17 +5,14 @@ class SaleNoteRowFormModel {
   TextfieldFormModel quantity;
   TextfieldFormModel productCode;
   TextfieldFormModel unitPrice;
+  String description;
   String note;
-
-  static const String _lblQuantity = 'Cantidad:';
-  static const String _lblCode = 'Producto:';
-  static const String _lblPrice = 'Precion unitario:';
-
 
   SaleNoteRowFormModel({
     required this.quantity,
     required this.productCode,
     required this.unitPrice,
+    required this.description,
     required this.note,
   });
 
@@ -23,5 +20,6 @@ class SaleNoteRowFormModel {
         quantity =  TextfieldFormModel.empty(),
         productCode = TextfieldFormModel.empty(),
         unitPrice = TextfieldFormModel.empty(),
+        description = '',
         note = '';
 }

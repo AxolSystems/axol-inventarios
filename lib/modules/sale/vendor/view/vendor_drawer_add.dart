@@ -114,7 +114,7 @@ class VendorDrawerAdd extends StatelessWidget {
         ],
       ),
       actions: [
-        ButtonReturn(
+        ButtonReturnDialog(
           isLoading: isLoading,
           onPressed: () {
             Navigator.pop(context);

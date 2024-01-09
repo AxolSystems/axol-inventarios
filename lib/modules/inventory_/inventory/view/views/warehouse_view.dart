@@ -6,6 +6,7 @@ import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../global_widgets/toolbar.dart';
 import '../../../../../models/elemnets_bar_model.dart';
 import '../../../../../utilities/theme/theme.dart';
+import '../../../../../utilities/widgets/button.dart';
 import '../../../../sale/view/sale_view.dart';
 import '../../../../user/view/views/home_view.dart';
 import '../../../product/cubit/products/products_cubit.dart';
@@ -54,21 +55,7 @@ class WarehouseView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NavigationRail(
-                  leading: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorPalette.primary,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      minimumSize: const Size(60, 60),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: ColorPalette.lightBackground,
-                    ),
-                  ),
+                  leading: const ButtonReturnView(),
                   destinations: NavigationUtilities.navRail,
                   selectedIndex: 1,
                   backgroundColor: ColorPalette.darkBackground,

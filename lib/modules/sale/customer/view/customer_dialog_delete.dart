@@ -42,7 +42,7 @@ class CustomerDialogDelete extends StatelessWidget {
     const String message =
         '¿Estás seguro de eliminar este cliente?\n Esta acción no se podrá desasear';
     final List<Widget> actions = [
-      ButtonReturn(
+      ButtonReturnDialog(
         onPressed: () {
           Navigator.pop(context);
         },

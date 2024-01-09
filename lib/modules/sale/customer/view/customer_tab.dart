@@ -149,12 +149,13 @@ class CustomerTab extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final customer = customerList[index];
                     return Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecorationTheme.rowTable(),
+                      /*const BoxDecoration(
                           border: Border(
                               bottom: BorderSide(
                         width: 1,
                         color: ColorPalette.darkItems,
-                      ))),
+                      ))),*/
                       child: ButtonRowTable(
                         child: Row(
                           children: [
