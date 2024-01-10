@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,8 +19,12 @@ class SaleNoteAdd extends StatelessWidget {
       bloc: context.read<SaleNoteAddCubit>()..load(),
       builder: (context, state) {
         if (state is LoadingSaleNoteAddState) {
+          return saleNoteAdd(context, [], true);
         } else if (state is LoadedSaleNoteAddState) {
-        } else {}
+          return saleNoteAdd(context, state.rowFormList, false);
+        } else {
+          return saleNoteAdd(context, [], false);
+        }
       },
       listener: (context, state) {
         if (state is ErrorSaleNoteAddState) {}
@@ -27,8 +32,8 @@ class SaleNoteAdd extends StatelessWidget {
     );
   }
 
-  Widget saleNoteAdd(
-      BuildContext context, List<SaleNoteRowFormModel> rowFormList) {
+  Widget saleNoteAdd(BuildContext context,
+      List<SaleNoteRowFormModel> rowFormList, bool isLoading) {
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: PreferredSize(
@@ -40,14 +45,22 @@ class SaleNoteAdd extends StatelessWidget {
         ),
       ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          NavigationRail(
+          SizedBox(
+            width: 72,
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: ButtonReturnView(),
+            ),
+          ),
+          /*NavigationRail(
             leading: const ButtonReturnView(),
-            destinations: NavigationUtilities.navRailReturn,
-            selectedIndex: -1,
+            destinations: NavigationUtilities.navRail,
+            selectedIndex: 0,
             backgroundColor: ColorPalette.darkBackground,
             indicatorColor: ColorPalette.primary,
-          ),
+          ),*/
           const VerticalDivider(
               thickness: 1, width: 1, color: ColorPalette.darkItems),
           Expanded(
@@ -94,7 +107,7 @@ class SaleNoteAdd extends StatelessWidget {
                     itemCount: rowFormList.length,
                     itemBuilder: (context, index) {
                       final row = rowFormList[index];
-                      //final total = 
+                      //final total =
                       return Container(
                         decoration: BoxDecorationTheme.rowTable(),
                         child: Row(
@@ -109,7 +122,7 @@ class SaleNoteAdd extends StatelessWidget {
                                 children: [
                                   Expanded(child: TextField()),
                                   IconButton(
-                                    onPressed: (){},
+                                    onPressed: () {},
                                     icon: Icon(Icons.search),
                                   ),
                                 ],

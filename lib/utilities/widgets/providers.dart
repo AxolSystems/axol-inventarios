@@ -11,8 +11,11 @@ import '../../modules/sale/customer/model/customer_model.dart';
 import '../../modules/sale/customer/view/customer_dialog_delete.dart';
 import '../../modules/sale/customer/view/customer_drawer_add.dart';
 import '../../modules/sale/customer/view/customer_tab.dart';
+import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_cubit.dart';
+import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_form.dart';
 import '../../modules/sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../../modules/sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
+import '../../modules/sale/sale_note/view/views/salenote_add.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_form.dart';
 import '../../modules/sale/vendor/cubit/vendor_delete/customer_delete_cubit.dart';
@@ -69,6 +72,16 @@ class ProviderSaleNoteTab extends Providers {
         BlocProvider(create: (_) => SaleNoteTabCubit()),
         BlocProvider(create: (_) => SaleNoteTabForm()),
       ], child: const SaleNoteTab());
+}
+
+class ProviderSaleNoteAdd extends Providers {
+  const ProviderSaleNoteAdd({super.key});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => SaleNoteAddCubit()),
+        BlocProvider(create: (_) => SaleNoteAddForm()),
+      ], child: const SaleNoteAdd());
 }
 
 //----Vendor

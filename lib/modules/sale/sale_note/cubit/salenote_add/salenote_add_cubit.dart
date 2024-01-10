@@ -10,7 +10,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     try {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
-      emit(LoadedSaleNoteAddState());
+      emit(LoadedSaleNoteAddState(rowFormList: []));
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));

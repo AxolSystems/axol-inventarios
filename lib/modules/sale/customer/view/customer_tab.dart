@@ -10,6 +10,7 @@ import '../../../../utilities/widgets/progress_indicator.dart';
 import '../../../../utilities/widgets/providers.dart';
 import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/customer_tab/customer_tab_cubit.dart';
 import '../cubit/customer_tab/customer_tab_state.dart';
 import '../model/customer_model.dart';
@@ -50,65 +51,68 @@ class CustomerTab extends StatelessWidget {
         selection: TextSelection.collapsed(offset: form.position));
     return Column(
       children: [
-        Container(
+        /*Container(
           height: 50,
           color: ColorPalette.lightBackground,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: FinderBar(
-                  padding: const EdgeInsets.only(left: 12),
-                  textController: textController,
-                  txtForm: form,
-                  enabled: !isLoading,
-                  autoFocus: true,
-                  isTxtExpand: true,
-                  onSubmitted: (value) {
-                    context.read<CustomerTabCubit>().load(value);
-                  },
-                  onChanged: (value) {
-                    upForm = TextfieldModel(
-                        text: value,
-                        position: textController.selection.base.offset);
-                    context.read<CustomerTabForm>().setForm(upForm);
-                  },
-                  onPressed: () {
-                    if (isLoading == false) {
-                      context
-                          .read<CustomerTabForm>()
-                          .setForm(TextfieldModel.empty());
-                      context.read<CustomerTabCubit>().load('');
-                    }
-                  },
-                ),
-              ),
-              const VerticalDivider(
-                thickness: 1,
-                width: 1,
-                color: ColorPalette.lightItems,
-                indent: 4,
-                endIndent: 4,
-              ),
-              IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const ProviderCustomerAdd(),
-                  ).then((value) {
-                    context.read<CustomerTabCubit>().load(form.text);
-                  });
-                },
-                icon: const Icon(
-                  Icons.add_outlined,
-                  color: ColorPalette.darkItems,
-                  size: 30,
-                ),
-              ),
-            ],
+            children: [*/
+        ToolBar(children: [
+          Expanded(
+            child: FinderBar(
+              padding: const EdgeInsets.only(left: 12),
+              textController: textController,
+              txtForm: form,
+              enabled: !isLoading,
+              autoFocus: true,
+              isTxtExpand: true,
+              onSubmitted: (value) {
+                context.read<CustomerTabCubit>().load(value);
+              },
+              onChanged: (value) {
+                upForm = TextfieldModel(
+                    text: value,
+                    position: textController.selection.base.offset);
+                context.read<CustomerTabForm>().setForm(upForm);
+              },
+              onPressed: () {
+                if (isLoading == false) {
+                  context
+                      .read<CustomerTabForm>()
+                      .setForm(TextfieldModel.empty());
+                  context.read<CustomerTabCubit>().load('');
+                }
+              },
+            ),
           ),
-        ),
+          const VerticalDivider(
+            thickness: 1,
+            width: 1,
+            color: ColorPalette.lightItems,
+            indent: 4,
+            endIndent: 4,
+          ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => const ProviderCustomerAdd(),
+              ).then((value) {
+                context.read<CustomerTabCubit>().load(form.text);
+              });
+            },
+            icon: const Icon(
+              Icons.add_outlined,
+              color: ColorPalette.darkItems,
+              size: 30,
+            ),
+          ),
+        ]),
+
+        //],
+        //),
+        //),
         Container(
           decoration: BoxDecorationTheme.headerTable(),
           child: const Padding(
@@ -150,12 +154,6 @@ class CustomerTab extends StatelessWidget {
                     final customer = customerList[index];
                     return Container(
                       decoration: BoxDecorationTheme.rowTable(),
-                      /*const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                        width: 1,
-                        color: ColorPalette.darkItems,
-                      ))),*/
                       child: ButtonRowTable(
                         child: Row(
                           children: [

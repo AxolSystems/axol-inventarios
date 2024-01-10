@@ -10,7 +10,7 @@ import '../../cubit/salenote_drawer_cubit/salenote_drawer_state.dart';
 import '../../model/saelnote_add_form_model.dart';
 import '../widgets/drawer_sale_note/drawer_sale_note.dart';
 
-class DrawerNotesController extends StatelessWidget {
+/*class DrawerNotesController extends StatelessWidget {
   const DrawerNotesController({super.key});
 
   @override
@@ -99,4 +99,4 @@ TextfieldFormModel _changeSalenoteTextfield(
     }
   }
   return textfieldForm;
-}
+}*/

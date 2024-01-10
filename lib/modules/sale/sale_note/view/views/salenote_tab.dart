@@ -5,6 +5,9 @@ import '../../../../../models/textfield_model.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/button.dart';
 import '../../../../../utilities/widgets/finder_bar.dart';
+import '../../../../../utilities/widgets/providers.dart';
+import '../../../../../utilities/widgets/toolbar.dart';
+import '../../cubit/salenote_add/salenote_add_cubit.dart';
 import '../../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../../cubit/salenote_tab/salenote_tab_state.dart';
 import '../../cubit/salenote_tab/salenote_tab_form.dart';
@@ -41,31 +44,57 @@ class SaleNoteTab extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              FinderBar(
-                padding: const EdgeInsets.only(left: 12),
-                textController: textController,
-                txtForm: form,
-                enabled: !isLoading,
-                autoFocus: true,
-                isTxtExpand: true,
-                onSubmitted: (value) {
-                  context.read<SaleNoteTabCubit>().load(value);
-                },
-                onChanged: (value) {
-                  form = TextfieldModel(
-                      text: value,
-                      position: textController.selection.base.offset);
-                  context.read<SaleNoteTabForm>().setForm(form);
-                },
-                onPressed: () {
-                  if (isLoading == false) {
-                    context
-                        .read<SaleNoteTabForm>()
-                        .setForm(TextfieldModel.empty());
-                    context.read<SaleNoteTabCubit>().load('');
-                  }
-                },
-              ),
+              ToolBar(children: [
+                Expanded(
+                    child: FinderBar(
+                  padding: const EdgeInsets.only(left: 12),
+                  textController: textController,
+                  txtForm: form,
+                  enabled: !isLoading,
+                  autoFocus: true,
+                  isTxtExpand: true,
+                  onSubmitted: (value) {
+                    context.read<SaleNoteTabCubit>().load(value);
+                  },
+                  onChanged: (value) {
+                    form = TextfieldModel(
+                        text: value,
+                        position: textController.selection.base.offset);
+                    context.read<SaleNoteTabForm>().setForm(form);
+                  },
+                  onPressed: () {
+                    if (isLoading == false) {
+                      context
+                          .read<SaleNoteTabForm>()
+                          .setForm(TextfieldModel.empty());
+                      context.read<SaleNoteTabCubit>().load('');
+                    }
+                  },
+                )),
+                const VerticalDivider(
+                  thickness: 1,
+                  width: 1,
+                  color: ColorPalette.lightItems,
+                  indent: 4,
+                  endIndent: 4,
+                ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ProviderSaleNoteAdd(),
+                    ).then((value) {
+                      context.read<SaleNoteTabCubit>().load('');
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add_outlined,
+                    color: ColorPalette.darkItems,
+                    size: 30,
+                  ),
+                ),
+              ]),
               Container(
                 decoration: BoxDecorationTheme.headerTable(),
                 child: const Padding(

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../cubit/salenote_form_cubit.dart';
 
-class DrawerSalenote extends StatelessWidget {
+/*class DrawerSalenote extends StatelessWidget {
   final bool isLoading;
 
   const DrawerSalenote({super.key, required this.isLoading});
@@ -190,4 +190,4 @@ class DrawerSalenote extends StatelessWidget {
       ],
     );
   }
-}
+}*/
