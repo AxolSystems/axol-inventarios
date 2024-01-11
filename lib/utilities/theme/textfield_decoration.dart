@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'theme/theme.dart';
+import 'theme.dart';
 
 class TextFieldDecoration {
   static InputDecoration decorationFinder() => InputDecoration(
@@ -9,7 +9,9 @@ class TextFieldDecoration {
         border: InputBorder.none,
       );
 
-  static InputDecoration inputForm(String? errorText) => InputDecoration(
+  static InputDecoration inputForm({String? lblText, String? errorText}) => InputDecoration(
+    labelText: lblText,
+    labelStyle: Typo.labelLight,
     focusedBorder: const UnderlineInputBorder(
       borderSide: BorderSide(color: ColorPalette.primary),
     ),

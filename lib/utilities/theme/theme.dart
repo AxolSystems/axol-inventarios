@@ -113,6 +113,11 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.lightText);
+  static const labelLight = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: ColorPalette.lightItems);
 }
 
 class BoxDecorationTheme {

@@ -35,6 +35,18 @@ class CustomerModel {
   String get tCountry => _country;
   String get tPhoneNumber => _phoneNumber;
 
+  static const String lblId = 'Id: ';
+  static const String lblName = 'Nombre: ';
+  static const String lblPhoneNumber = 'Telefono: ';
+  static const String lblRfc = 'RFC: ';
+  static const String lblPostalCode = 'Código postal: ';
+  static const String lblIntNumber = 'Número interior: ';
+  static const String lblOutNumber = 'Número exterior: ';
+  static const String lblStreet = 'Calle: ';
+  static const String lblHood = 'Colonia: ';
+  static const String lblTown = 'Ciudad: ';
+  static const String lblCountry = 'Estado: ';
+
   const CustomerModel({
     required this.id,
     required this.name,

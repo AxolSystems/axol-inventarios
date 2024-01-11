@@ -54,30 +54,7 @@ class WarehouseView extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NavigationRail(
-                  leading: const ButtonReturnView(),
-                  destinations: NavigationUtilities.navRail,
-                  selectedIndex: 1,
-                  backgroundColor: ColorPalette.darkBackground,
-                  indicatorColor: ColorPalette.primary,
-                  useIndicator: true,
-                  onDestinationSelected: (value) {
-                    if (value == 0) {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeView()));
-                    }
-                    if (value == 2) {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SaleView()));
-                    }
-                  },
-                ),
+                NavigationUtilities.emptyNavRailReturn(),
                 const VerticalDivider(
                     thickness: 1, width: 1, color: ColorPalette.darkItems),
                 Expanded(

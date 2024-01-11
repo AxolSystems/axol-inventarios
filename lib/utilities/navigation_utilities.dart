@@ -1,6 +1,8 @@
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 
+import 'widgets/button.dart';
+
 class NavigationUtilities {
   static const List<NavigationRailDestination> navRail = [
     NavigationRailDestination(
@@ -25,5 +27,13 @@ class NavigationUtilities {
         label: Text('Notas'),
         indicatorColor: ColorPalette.primary),
   ];
-  static const List<NavigationRailDestination> navRailReturn = [];
+  //static const List<NavigationRailDestination> navRailReturn = [];
+
+  static Widget emptyNavRailReturn() => const SizedBox(
+        width: 72,
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: ButtonReturnView(),
+        ),
+      );
 }

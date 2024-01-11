@@ -44,4 +44,18 @@ class SaleNoteModel {
     required this.note,
     required this.saleProduct,
   });
+
+  SaleNoteModel.empty()
+      : id = -1,
+        customer = CustomerModel.empty(),
+        status = -1,
+        date = DateTime.now(),
+        subtotal = 0,
+        iva = 0,
+        total = 0,
+        warehouse = WarehouseModel.empty(),
+        vendor = VendorModel.empty(),
+        type = -1,
+        note = '',
+        saleProduct = SaleProductModel.empty();
 }

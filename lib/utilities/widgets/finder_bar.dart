@@ -2,7 +2,7 @@ import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/textfield_model.dart';
-import '../textfield_decoration.dart';
+import '../theme/textfield_decoration.dart';
 
 class FinderBar extends StatelessWidget {
   final TextfieldModel txtForm;

@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/utilities/textfield_decoration.dart';
+import 'package:axol_inventarios/utilities/theme/textfield_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,7 +39,7 @@ class TextFieldInputForm extends StatelessWidget {
     final labelTf = label ?? '';
     final labelStyleTf = labelStyle ?? Typo.bodyDark;
     final spaceTf = space ?? 8;
-    final decorationTf = decoration ?? TextFieldDecoration.inputForm(errorText);
+    final decorationTf = decoration ?? TextFieldDecoration.inputForm(errorText: errorText);
     final bool enabledTf = enabled ?? true;
     final FocusNode focusNode = FocusNode();
     if (isFocus == true) {
