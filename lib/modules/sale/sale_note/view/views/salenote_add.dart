@@ -7,6 +7,7 @@ import '../../../../../global_widgets/appbar/appbar_global.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
+import '../../../../../utilities/widgets/drawer_find.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../cubit/salenote_add/salenote_add_cubit.dart';
 import '../../cubit/salenote_add/salenote_add_state.dart';
@@ -71,8 +72,16 @@ class SaleNoteAdd extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const BtnSelectInputForm(
-                                    icon: Icons.search, lblText: 'Cliente'),
+                                BtnSelectInputForm(
+                                  icon: Icons.search,
+                                  lblText: 'Cliente',
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const ProviderCustomerFind(),
+                                    );
+                                  },
+                                ),
                                 Text(
                                     '${CustomerModel.lblPhoneNumber} ${saleNote.customer.phoneNumber}',
                                     style: Typo.labelLight),

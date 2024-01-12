@@ -47,21 +47,23 @@ class DrawerBox extends StatelessWidget {
       return Row(
         children: [
           const Expanded(child: SizedBox()),
-          Container(
-            color: ColorPalette.lightBackground,
-            width: drawerWidth,
-            height: screenHeight,
-            child: Padding(
-              padding: paddingDrawer,
-              child: Column(
-                children: [
-                  drawerHead,
-                  Expanded(child: ListView(children: drawerContent)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: drawerActions,
-                  ),
-                ],
+          Material(
+            child: Container(
+              color: ColorPalette.lightBackground,
+              width: drawerWidth,
+              height: screenHeight,
+              child: Padding(
+                padding: paddingDrawer,
+                child: Column(
+                  children: [
+                    drawerHead,
+                    Expanded(child: ListView(children: drawerContent)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: drawerActions,
+                    ),
+                  ],
+                ),
               ),
             ),
           )
@@ -71,21 +73,23 @@ class DrawerBox extends StatelessWidget {
       return Row(
         children: [
           const Expanded(child: SizedBox()),
-          Container(
-            color: ColorPalette.lightBackground,
-            width: drawerWidth,
-            height: screenHeight,
-            child: Padding(
-              padding: paddingDrawer,
-              child: Column(
-                children: [
-                  drawerHead,
-                  child!,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: drawerActions,
-                  ),
-                ],
+          Material(
+            child: Container(
+              color: ColorPalette.lightBackground,
+              width: drawerWidth,
+              height: screenHeight,
+              child: Padding(
+                padding: paddingDrawer,
+                child: Column(
+                  children: [
+                    drawerHead,
+                    child!,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: drawerActions,
+                    ),
+                  ],
+                ),
               ),
             ),
           )

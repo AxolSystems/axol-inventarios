@@ -1,15 +1,18 @@
 import 'package:axol_inventarios/modules/sale/sale_note/view/views/salenote_tab.dart';
+import 'package:axol_inventarios/utilities/widgets/drawer_find.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../modules/sale/customer/cubit/customer_add/customer_add_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_add/customer_add_form.dart';
 import '../../modules/sale/customer/cubit/customer_delete/customer_delete_cubit.dart';
+import '../../modules/sale/customer/cubit/customer_find/customer_find_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_tab/customer_tab_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_tab/customer_tab_form.dart';
 import '../../modules/sale/customer/model/customer_model.dart';
 import '../../modules/sale/customer/view/customer_dialog_delete.dart';
 import '../../modules/sale/customer/view/customer_drawer_add.dart';
+import '../../modules/sale/customer/view/customer_drawer_find.dart';
 import '../../modules/sale/customer/view/customer_tab.dart';
 import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_cubit.dart';
 import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_form.dart';
@@ -61,6 +64,16 @@ class ProviderCustomerTab extends Providers {
         BlocProvider(create: (_) => CustomerTabCubit()),
         BlocProvider(create: (_) => CustomerTabForm()),
       ], child: const CustomerTab());
+}
+
+class ProviderCustomerFind extends Providers {
+  const ProviderCustomerFind({super.key});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => CustomerFindCubit()),
+        BlocProvider(create: (_) => FinderForm()),
+      ], child: const CustomerDrawerFind());
 }
 
 //----SaleNote
