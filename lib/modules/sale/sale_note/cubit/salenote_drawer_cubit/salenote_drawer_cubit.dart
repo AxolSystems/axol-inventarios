@@ -48,10 +48,10 @@ class SalenoteDrawerCubit extends Cubit<SalenoteDrawerState> {
       if (keyElement == -1) {
         //Validar todos
         customersDB =
-            await CustomerRepo().fetchCustomersEq(salenoteForm.customer.value);
-        vendorsDB = await VendorRepo().fetchVendorEq(salenoteForm.vendor.value);
+            await CustomerRepo().fetchCustomersEq(salenoteForm.customerTf.value);
+        vendorsDB = await VendorRepo().fetchVendorEq(salenoteForm.vendorTf.value);
         warehouseDB = await WarehousesRepo()
-            .fetchWarehouseEq(salenoteForm.warehouse.value);
+            .fetchWarehouseEq(salenoteForm.warehouseTf.value);
         if (customersDB.isNotEmpty) {
           if (customersDB.length > 1) {
             response.add(
@@ -91,7 +91,7 @@ class SalenoteDrawerCubit extends Cubit<SalenoteDrawerState> {
       } else if (keyElement == 0) {
         //validar Customer
         customersDB =
-            await CustomerRepo().fetchCustomersEq(salenoteForm.customer.value);
+            await CustomerRepo().fetchCustomersEq(salenoteForm.customerTf.value);
         if (customersDB.isNotEmpty) {
           if (customersDB.length > 1) {
             response.add(
@@ -110,7 +110,7 @@ class SalenoteDrawerCubit extends Cubit<SalenoteDrawerState> {
         }
       } else if (keyElement == 1) {
         //Validar Vendor
-        vendorsDB = await VendorRepo().fetchVendorEq(salenoteForm.vendor.value);
+        vendorsDB = await VendorRepo().fetchVendorEq(salenoteForm.vendorTf.value);
         if (vendorsDB.isNotEmpty) {
           if (vendorsDB.length > 1) {
             response.add(
@@ -130,7 +130,7 @@ class SalenoteDrawerCubit extends Cubit<SalenoteDrawerState> {
       } else if (keyElement == 2) {
         //valdiar Warehouse
         warehouseDB = await WarehousesRepo()
-            .fetchWarehouseEq(salenoteForm.warehouse.value);
+            .fetchWarehouseEq(salenoteForm.warehouseTf.value);
         if (warehouseDB.isNotEmpty) {
           if (warehouseDB.length > 1) {
             response.add(

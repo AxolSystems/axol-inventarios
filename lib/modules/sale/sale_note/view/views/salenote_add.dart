@@ -1,16 +1,17 @@
-import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../global_widgets/appbar/appbar_global.dart';
+import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
-import '../../../../../utilities/widgets/drawer_find.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../cubit/salenote_add/salenote_add_cubit.dart';
+import '../../cubit/salenote_add/salenote_add_form.dart';
 import '../../cubit/salenote_add/salenote_add_state.dart';
+import '../../model/saelnote_add_form_model.dart';
 import '../../model/sale_note_model.dart';
 import '../../model/salenote_row_form_model.dart';
 
@@ -23,12 +24,11 @@ class SaleNoteAdd extends StatelessWidget {
       bloc: context.read<SaleNoteAddCubit>()..load(),
       builder: (context, state) {
         if (state is LoadingSaleNoteAddState) {
-          return saleNoteAdd(context, [], true, SaleNoteModel.empty());
+          return saleNoteAdd(context, [], true);
         } else if (state is LoadedSaleNoteAddState) {
-          return saleNoteAdd(
-              context, state.rowFormList, false, SaleNoteModel.empty());
+          return saleNoteAdd(context, state.rowFormList, false);
         } else {
-          return saleNoteAdd(context, [], false, SaleNoteModel.empty());
+          return saleNoteAdd(context, [], false);
         }
       },
       listener: (context, state) {
@@ -37,11 +37,22 @@ class SaleNoteAdd extends StatelessWidget {
     );
   }
 
-  Widget saleNoteAdd(
-      BuildContext context,
-      List<SaleNoteRowFormModel> rowFormList,
-      bool isLoading,
-      SaleNoteModel saleNote) {
+  Widget saleNoteAdd(BuildContext context,
+      List<SaleNoteRowFormModel> rowFormList, bool isLoading) {
+    final form = context.read<SaleNoteAddForm>().state;
+    SaleNoteAddFormModel upForm = form;
+    TextEditingController customerCtrl = TextEditingController();
+    TextEditingController vendorCtrl = TextEditingController();
+    TextEditingController warehouseCtrl = TextEditingController();
+    customerCtrl.value = TextEditingValue(
+        text: form.customerTf.value,
+        selection: TextSelection.collapsed(offset: form.customerTf.position));
+    vendorCtrl.value = TextEditingValue(
+        text: form.vendorTf.value,
+        selection: TextSelection.collapsed(offset: form.vendorTf.position));
+    warehouseCtrl.value = TextEditingValue(
+        text: form.warehouseTf.value,
+        selection: TextSelection.collapsed(offset: form.warehouseTf.position));
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: const PreferredSize(
@@ -62,7 +73,7 @@ class SaleNoteAdd extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 250,
+                  height: 270,
                   child: Row(
                     children: [
                       Expanded(
@@ -73,41 +84,72 @@ class SaleNoteAdd extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 BtnSelectInputForm(
+                                  controller: customerCtrl,
                                   icon: Icons.search,
                                   lblText: 'Cliente',
+                                  errorText: form.customerTf.validation.isValid
+                                      ? null
+                                      : form.customerTf.validation.errorMessage,
+                                  onChanged: (value) {
+                                    upForm.customerTf.value = value;
+                                    upForm.customerTf.position =
+                                        customerCtrl.selection.base.offset;
+                                    context
+                                        .read<SaleNoteAddForm>()
+                                        .setForm(upForm);
+                                  },
+                                  onSubmitted: (value) {
+                                    upForm =
+                                        context.read<SaleNoteAddForm>().state;
+                                    context
+                                        .read<SaleNoteAddCubit>()
+                                        .fetchCustomer(value, upForm);
+                                  },
                                   onPressed: () {
                                     showDialog(
                                       context: context,
-                                      builder: (context) => const ProviderCustomerFind(),
-                                    );
+                                      builder: (context) =>
+                                          const ProviderCustomerFind(),
+                                    ).then((value) {
+                                      if (value is DataFind &&
+                                          value.data is CustomerModel) {
+                                        upForm.customerTf.value =
+                                            '${value.id} - ${value.data.name}';
+                                        upForm.customer = value.data;
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(upForm);
+                                        context.read<SaleNoteAddCubit>().load();
+                                      }
+                                    });
                                   },
                                 ),
                                 Text(
-                                    '${CustomerModel.lblPhoneNumber} ${saleNote.customer.phoneNumber}',
+                                    '${CustomerModel.lblPhoneNumber} ${form.customer.phoneNumber}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblRfc} ${saleNote.customer.rfc}',
+                                    '${CustomerModel.lblRfc} ${form.customer.rfc}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblStreet} ${saleNote.customer.street}',
+                                    '${CustomerModel.lblStreet} ${form.customer.street}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblOutNumber} ${saleNote.customer.outNumber}',
+                                    '${CustomerModel.lblOutNumber} ${form.customer.outNumber}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblIntNumber} ${saleNote.customer.intNumber}',
+                                    '${CustomerModel.lblIntNumber} ${form.customer.intNumber}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblHood} ${saleNote.customer.hood}',
+                                    '${CustomerModel.lblHood} ${form.customer.hood}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblPostalCode} ${saleNote.customer.postalCode}',
+                                    '${CustomerModel.lblPostalCode} ${form.customer.postalCode}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblTown} ${saleNote.customer.town}',
+                                    '${CustomerModel.lblTown} ${form.customer.town}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblCountry} ${saleNote.customer.country}',
+                                    '${CustomerModel.lblCountry} ${form.customer.country}',
                                     style: Typo.labelLight),
                               ],
                             ),
@@ -124,14 +166,42 @@ class SaleNoteAdd extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Número: ${saleNote.id}',
+                                Text('Número: ${form.id}',
                                     style: Typo.labelLight),
-                                Text('Fecha: ${saleNote.date}',
+                                Text('Fecha: ${form.dateTime}',
                                     style: Typo.labelLight),
-                                const BtnSelectInputForm(
-                                    icon: Icons.search, lblText: 'Vendedor'),
-                                const BtnSelectInputForm(
-                                    icon: Icons.search, lblText: 'Almacén'),
+                                BtnSelectInputForm(
+                                  icon: Icons.search,
+                                  lblText: 'Vendedor',
+                                  controller: vendorCtrl,
+                                  onChanged: (value) {
+                                    upForm.vendorTf.value = value;
+                                    upForm.vendorTf.position =
+                                        vendorCtrl.selection.base.offset;
+                                    context
+                                        .read<SaleNoteAddForm>()
+                                        .setForm(upForm);
+                                  },
+                                  onSubmitted: (value) {
+                                    context.read<SaleNoteAddCubit>().load();
+                                  },
+                                ),
+                                BtnSelectInputForm(
+                                  icon: Icons.search,
+                                  lblText: 'Almacén',
+                                  controller: warehouseCtrl,
+                                  onChanged: (value) {
+                                    upForm.warehouseTf.value = value;
+                                    upForm.warehouseTf.position =
+                                        warehouseCtrl.selection.base.offset;
+                                    context
+                                        .read<SaleNoteAddForm>()
+                                        .setForm(upForm);
+                                  },
+                                  onSubmitted: (value) {
+                                    context.read<SaleNoteAddCubit>().load();
+                                  },
+                                ),
                               ],
                             ),
                           )),

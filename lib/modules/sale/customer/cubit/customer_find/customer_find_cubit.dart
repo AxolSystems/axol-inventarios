@@ -17,7 +17,7 @@ class CustomerFindCubit extends Cubit<DrawerFindState> {
       emit(LoadingDrawerFindState());
       customersDB = await CustomerRepo().fetchCustomersIlike(find);
       for (var customer in customersDB) {
-        data = DataFind(id: customer.id, description: customer.name);
+        data = DataFind(id: customer.id, description: customer.name, data: customer);
         dataList.add(data);
       }
       emit(LoadedDrawerFindState(dataList: dataList));

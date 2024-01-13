@@ -28,11 +28,11 @@ class TextfieldSalenote extends StatelessWidget {
     SaleNoteAddFormModel form = context.read<SalenoteFormCubit>().state;
     TextfieldFormModel formElement = TextfieldFormModel.empty();
     if (keyFormElement == 0) {
-      formElement = form.customer;
+      formElement = form.customerTf;
     } else if (keyFormElement == 1) {
-      formElement = form.vendor;
+      formElement = form.vendorTf;
     } else if (keyFormElement == 2) {
-      formElement = form.warehouse;
+      formElement = form.warehouseTf;
     }
     textController.value = TextEditingValue(
         text: formElement.value,

@@ -6,23 +6,36 @@ import '../../customer/model/customer_model.dart';
 import 'salenote_row_form_model.dart';
 
 class SaleNoteAddFormModel {
-  TextfieldFormModel customer;
-  TextfieldFormModel vendor;
-  TextfieldFormModel warehouse;
+  TextfieldFormModel customerTf;
+  TextfieldFormModel vendorTf;
+  TextfieldFormModel warehouseTf;
+  int id;
+  CustomerModel customer;
+  DateTime dateTime;
   List<SaleNoteRowFormModel> content;
 
+  final String _emInvalidData = 'Dato invalido';
+
+  String get emInvalidData => _emInvalidData;
+
   SaleNoteAddFormModel({
-    required this.customer,
-    required this.vendor,
-    required this.warehouse,
+    required this.customerTf,
+    required this.vendorTf,
+    required this.warehouseTf,
     required this.content,
+    required this.customer,
+    required this.dateTime,
+    required this.id,
   });
 
   SaleNoteAddFormModel.empty()
-      : customer = TextfieldFormModel.empty(),
-        vendor = TextfieldFormModel.empty(),
-        warehouse = TextfieldFormModel.empty(),
-        content = [];
+      : customerTf = TextfieldFormModel.empty(),
+        vendorTf = TextfieldFormModel.empty(),
+        warehouseTf = TextfieldFormModel.empty(),
+        content = [],
+        customer = CustomerModel.empty(),
+        dateTime = DateTime.now(),
+        id = -1;
 
   static const String pCustomer = 'customer';
   static const String pVendor = 'vendor';

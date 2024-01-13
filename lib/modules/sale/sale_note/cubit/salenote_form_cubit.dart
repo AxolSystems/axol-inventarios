@@ -8,33 +8,33 @@ class SalenoteFormCubit extends Cubit<SaleNoteAddFormModel> {
 
   SaleNoteAddFormModel _validCustomer(SaleNoteAddFormModel salenoteForm) {
     SaleNoteAddFormModel newSalenoteForm = salenoteForm;
-    if (salenoteForm.customer.value == '') {
-      newSalenoteForm.customer.validation =
+    if (salenoteForm.customerTf.value == '') {
+      newSalenoteForm.customerTf.validation =
           ValidationFormModel(isValid: false, errorMessage: 'Dato no valido');
     } else {
-      newSalenoteForm.customer.validation = ValidationFormModel.trueValid();
+      newSalenoteForm.customerTf.validation = ValidationFormModel.trueValid();
     }
     return newSalenoteForm;
   }
 
   SaleNoteAddFormModel _validVendor(SaleNoteAddFormModel salenoteForm) {
     SaleNoteAddFormModel newSalenoteForm = salenoteForm;
-    if (salenoteForm.vendor.value == '') {
-      newSalenoteForm.vendor.validation =
+    if (salenoteForm.vendorTf.value == '') {
+      newSalenoteForm.vendorTf.validation =
           ValidationFormModel(isValid: false, errorMessage: 'Dato no valido');
     } else {
-      newSalenoteForm.vendor.validation = ValidationFormModel.trueValid();
+      newSalenoteForm.vendorTf.validation = ValidationFormModel.trueValid();
     }
     return newSalenoteForm;
   }
 
   SaleNoteAddFormModel _validWarehouse(SaleNoteAddFormModel salenoteForm) {
     SaleNoteAddFormModel newSalenoteForm = salenoteForm;
-    if (salenoteForm.warehouse.value == '') {
-      newSalenoteForm.warehouse.validation =
+    if (salenoteForm.warehouseTf.value == '') {
+      newSalenoteForm.warehouseTf.validation =
           ValidationFormModel(isValid: false, errorMessage: 'Dato no valido');
     } else {
-      newSalenoteForm.warehouse.validation = ValidationFormModel.trueValid();
+      newSalenoteForm.warehouseTf.validation = ValidationFormModel.trueValid();
     }
     return newSalenoteForm;
   }
@@ -42,18 +42,18 @@ class SalenoteFormCubit extends Cubit<SaleNoteAddFormModel> {
   Future<void> change(String text, int position, int elementForm) async {
     SaleNoteAddFormModel salenoteForm = state;
     if (elementForm == 0) {
-      salenoteForm.customer.value = text;
-      salenoteForm.customer.position = position;
+      salenoteForm.customerTf.value = text;
+      salenoteForm.customerTf.position = position;
       salenoteForm = _validCustomer(salenoteForm);
     }
     if (elementForm == 1) {
-      salenoteForm.vendor.value = text;
-      salenoteForm.vendor.position = position;
+      salenoteForm.vendorTf.value = text;
+      salenoteForm.vendorTf.position = position;
       salenoteForm = _validVendor(salenoteForm);
     }
     if (elementForm == 2) {
-      salenoteForm.warehouse.value = text;
-      salenoteForm.warehouse.position = position;
+      salenoteForm.warehouseTf.value = text;
+      salenoteForm.warehouseTf.position = position;
       salenoteForm = _validWarehouse(salenoteForm);
     }
     emit(SaleNoteAddFormModel.empty());

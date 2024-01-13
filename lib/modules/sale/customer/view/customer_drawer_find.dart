@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../models/textfield_form_model.dart';
 import '../../../../utilities/widgets/drawer_find.dart';
 import '../cubit/customer_find/customer_find_cubit.dart';
 
@@ -22,7 +23,10 @@ class CustomerDrawerFind extends StatelessWidget {
         } else if (state is LoadedDrawerFindState) {
           return DrawerFind(
             lblText: lblText,
-            onPressed: () {},
+            onPressed: () {
+              context.read<FinderForm>().setForm(TextfieldFormModel.empty());
+              context.read<CustomerFindCubit>().load('');
+            },
             onSubmitted: (value) {
               context.read<CustomerFindCubit>().load(value);
             },

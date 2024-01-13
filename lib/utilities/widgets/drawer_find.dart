@@ -32,7 +32,7 @@ class DrawerFind extends StatelessWidget {
     TextfieldFormModel upForm = form;
     TextEditingController controller = TextEditingController();
     controller.value = TextEditingValue(
-        text: controller.text,
+        text: form.value,
         selection: TextSelection.collapsed(offset: form.position));
     return DrawerBox(
       padding: const EdgeInsets.all(8),
