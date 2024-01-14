@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../global_widgets/appbar/appbar_global.dart';
+import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../global_widgets/toolbar.dart';
 import '../../../../../models/elemnets_bar_model.dart';
 import '../../../../../utilities/theme/theme.dart';
-import '../../../../../utilities/widgets/button.dart';
-import '../../../../sale/view/sale_view.dart';
-import '../../../../user/view/views/home_view.dart';
 import '../../../product/cubit/products/products_cubit.dart';
 import '../../cubit/inventory_load/inventory_load_cubit.dart';
 import '../../cubit/textfield_finder_invrow_cubit.dart';
@@ -38,14 +35,7 @@ class WarehouseView extends StatelessWidget {
         initialIndex: 0,
         child: Scaffold(
           backgroundColor: ColorPalette.darkBackground,
-          appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(50),
-            child: AppBarGlobal(
-              title: title,
-              iconButton: null,
-              iconActions: [],
-            ),
-          ),
+          appBar: const AppBarAxol(title: title).appBarAxol(),
           body: SizedBox(
             height: double.infinity,
             width: double.infinity,

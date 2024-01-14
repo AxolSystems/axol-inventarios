@@ -25,7 +25,7 @@ import '../../modules/sale/vendor/cubit/vendor_delete/customer_delete_cubit.dart
 import '../../modules/sale/vendor/cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_tab/vendor_tab_form.dart';
 import '../../modules/sale/vendor/model/vendor_model.dart';
-import '../../modules/sale/vendor/view/customer_dialog_delete.dart';
+import '../../modules/sale/vendor/view/vendor_dialog_delete.dart';
 import '../../modules/sale/vendor/view/vendor_drawer_add.dart';
 import '../../modules/sale/vendor/view/vendor_tab.dart';
 

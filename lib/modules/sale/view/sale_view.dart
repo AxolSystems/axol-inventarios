@@ -2,7 +2,7 @@ import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../global_widgets/appbar/appbar_global.dart';
+import '../../../utilities/widgets/appbar_axol.dart';
 import '../../../utilities/navigation_utilities.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../inventory_/inventory/view/views/inventory_view.dart';
@@ -24,14 +24,7 @@ class SaleView extends StatelessWidget {
           length: 4,
           child: Scaffold(
             backgroundColor: ColorPalette.darkBackground,
-            appBar: const PreferredSize(
-              preferredSize: Size.fromHeight(50),
-              child: AppBarGlobal(
-                title: 'Notas de venta',
-                iconButton: null,
-                iconActions: [],
-              ),
-            ),
+            appBar: const AppBarAxol(title: 'Notas de venta').appBarAxol(),
             body: SizedBox(
               height: double.infinity,
               width: double.infinity,

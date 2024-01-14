@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../global_widgets/appbar/appbar_global.dart';
+import '../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../utilities/navigation_utilities.dart';
-import '../../../../utilities/widgets/providers.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../inventory_/inventory/view/views/inventory_view.dart';
-import '../../../sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
-import '../../../sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../../../sale/view/sale_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -19,14 +15,7 @@ class HomeView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBarGlobal(
-          title: title,
-          iconButton: null,
-          iconActions: [],
-        ),
-      ),
+      appBar: const AppBarAxol(title: title).appBarAxol(),
       body: SizedBox(
         height: double.infinity,
         width: double.infinity,

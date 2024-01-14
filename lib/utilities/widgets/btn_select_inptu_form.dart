@@ -11,6 +11,7 @@ class BtnSelectInputForm extends StatelessWidget {
   final String? lblText;
   final TextEditingController? controller;
   final String? errorText;
+  final bool? isLoading;
 
   const BtnSelectInputForm({
     super.key,
@@ -21,15 +22,22 @@ class BtnSelectInputForm extends StatelessWidget {
     this.onSubmitted,
     this.controller,
     this.errorText,
+    this.isLoading,
   });
 
   @override
   Widget build(BuildContext context) {
     final Function() onPressed_ = onPressed ?? () {};
+    final isLoading_ = isLoading ?? false;
+    final icon_ = Icon(
+      icon,
+      color: ColorPalette.lightItems,
+    );
     return Row(
       children: [
         Expanded(
             child: TextField(
+          enabled: !isLoading_,
           controller: controller,
           onChanged: onChanged,
           onSubmitted: onSubmitted,
@@ -38,12 +46,14 @@ class BtnSelectInputForm extends StatelessWidget {
           decoration: TextFieldDecoration.inputForm(
               lblText: lblText, errorText: errorText),
         )),
-        IconButton(
-          onPressed: onPressed_,
-          icon: Icon(
-            icon,
-            color: ColorPalette.lightItems,
+        Visibility(
+          visible: isLoading_,
+          replacement: IconButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: onPressed_,
+            icon: icon_,
           ),
+          child: icon_
         ),
       ],
     );

@@ -31,9 +31,9 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       find = find.replaceAll(' ', '');
       findSplit = find.split('-');
       if (findSplit.isNotEmpty) {
-        upFind = 
+        upFind = findSplit.first;
       }
-      customerList = await CustomerRepo().fetchCustomersIlike(find);
+      customerList = await CustomerRepo().fetchCustomersIlike(upFind);
       if (customerList.length == 1) {
         upForm.customer = customerList.first;
         upForm.customerTf.validation = ValidationFormModel.trueValid();

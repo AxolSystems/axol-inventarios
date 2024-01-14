@@ -2,7 +2,7 @@ import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../global_widgets/appbar/appbar_global.dart';
+import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
@@ -12,7 +12,6 @@ import '../../cubit/salenote_add/salenote_add_cubit.dart';
 import '../../cubit/salenote_add/salenote_add_form.dart';
 import '../../cubit/salenote_add/salenote_add_state.dart';
 import '../../model/saelnote_add_form_model.dart';
-import '../../model/sale_note_model.dart';
 import '../../model/salenote_row_form_model.dart';
 
 class SaleNoteAdd extends StatelessWidget {
@@ -55,14 +54,10 @@ class SaleNoteAdd extends StatelessWidget {
         selection: TextSelection.collapsed(offset: form.warehouseTf.position));
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBarGlobal(
-          title: 'Nueva nota de venta',
-          iconButton: null,
-          iconActions: [],
-        ),
-      ),
+      appBar: AppBarAxol(
+        title: 'Nueva nota de venta',
+        isLoading: isLoading,
+      ).appBarAxol(),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -84,6 +79,7 @@ class SaleNoteAdd extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 BtnSelectInputForm(
+                                  isLoading: isLoading,
                                   controller: customerCtrl,
                                   icon: Icons.search,
                                   lblText: 'Cliente',

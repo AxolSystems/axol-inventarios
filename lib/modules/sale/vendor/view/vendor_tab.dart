@@ -12,7 +12,7 @@ import '../cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../cubit/vendor_tab/vendor_tab_form.dart';
 import '../cubit/vendor_tab/vendor_tab_state.dart';
 import '../model/vendor_model.dart';
-import 'customer_drawer_details.dart';
+import 'vendor_drawer_details.dart';
 import 'vendor_drawer_add.dart';
 
 class VendorTab extends StatelessWidget {

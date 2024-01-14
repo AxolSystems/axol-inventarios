@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../global_widgets/appbar/appbar_global.dart';
+import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../utilities/navigation_utilities.dart';
-import '../../../../../global_widgets/plugins_bar.dart';
-import '../../../../../global_widgets/views_bar.dart';
-import '../../../../../models/elemnets_bar_model.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../../../../sale/view/sale_view.dart';
 import '../../../../user/view/views/home_view.dart';
-import '../../../inventory/view/views/inventory_view.dart';
 import '../../cubit/routcustomer cubit/routcustomer_cubit.dart';
 import '../controller/listview_rc_controller.dart';
 
@@ -26,14 +22,7 @@ class RoutCustomers extends StatelessWidget {
       ],
       child: Scaffold(
         backgroundColor: ColorPalette.darkBackground,
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: AppBarGlobal(
-            title: 'Clientes de ruta',
-            iconButton: null,
-            iconActions: [],
-          ),
-        ),
+        appBar: const AppBarAxol(title: 'Clientes de ruta').appBarAxol(),
         body: SizedBox(
           height: double.infinity,
           width: double.infinity,

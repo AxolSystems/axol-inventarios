@@ -3,7 +3,7 @@ import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_mo
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../global_widgets/appbar/appbar_global.dart';
+import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../cubit/inventory_load/inventory_load_cubit.dart';
 import '../../cubit/inventory_movements/inventory_moves_cubit.dart';
@@ -33,14 +33,7 @@ class InventoryMovementView extends StatelessWidget {
         child: Builder(
           builder: (context) => Scaffold(
             backgroundColor: ColorPalette.darkBackground,
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(50),
-              child: AppBarGlobal(
-                title: title,
-                iconButton: null,
-                iconActions: const [],
-              ),
-            ),
+            appBar: AppBarAxol(title: title).appBarAxol(),
             body: BlocConsumer<InventoryMovesCubit, InventoryMovesState>(
               bloc: context.read<InventoryMovesCubit>()..initLoad(),
               listener: (context, state) {
