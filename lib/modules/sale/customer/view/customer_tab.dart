@@ -57,7 +57,7 @@ class CustomerTab extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [*/
-        ToolBar(children: [
+        VerticalToolBar(children: [
           Expanded(
             child: FinderBar(
               padding: const EdgeInsets.only(left: 12),

@@ -7,6 +7,7 @@ import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
+import '../../../../../utilities/widgets/toolbar.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../vendor/model/vendor_model.dart';
@@ -38,7 +39,7 @@ class SaleNoteAdd extends StatelessWidget {
         if (state is LoadingSaleNoteAddState) {
           return saleNoteAdd(context, [], true);
         } else if (state is LoadedSaleNoteAddState) {
-          return saleNoteAdd(context, state.rowFormList, false);
+          return saleNoteAdd(context, form.productList, false);
         } else {
           return saleNoteAdd(context, [], false);
         }
@@ -50,9 +51,8 @@ class SaleNoteAdd extends StatelessWidget {
   }
 
   Widget saleNoteAdd(BuildContext context,
-      List<SaleNoteRowFormModel> rowFormList, bool isLoading) {
+      List<SaleNoteRowFormModel> productList, bool isLoading) {
     final form = context.read<SaleNoteAddForm>().state;
-    String idText = form.id < 0 ? '' : form.id.toString();
     String dateText =
         '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
     SaleNoteAddFormModel upForm = form;
@@ -182,7 +182,8 @@ class SaleNoteAdd extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Folio: ${_toEmptyString(form.id)}', style: Typo.labelLight),
+                                Text('Folio: ${_toEmptyString(form.id)}',
+                                    style: Typo.labelLight),
                                 Text('Fecha: $dateText',
                                     style: Typo.labelLight),
                                 BtnSelectInputForm(
@@ -313,50 +314,112 @@ class SaleNoteAdd extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: rowFormList.length,
-                    itemBuilder: (context, index) {
-                      final row = rowFormList[index];
-                      //final total =
-                      return Container(
-                        decoration: BoxDecorationTheme.rowTable(),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: TextField(),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Row(
-                                children: [
-                                  Expanded(child: TextField()),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.search),
+                    child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: productList.length,
+                        itemBuilder: (context, index) {
+                          final row = productList[index];
+                          final int quantity =
+                              int.tryParse(row.quantity.value) ?? 0;
+                          final int price =
+                              int.tryParse(row.unitPrice.value) ?? 0;
+                          final total = quantity * price;
+                          return Container(
+                            height: 30,
+                            decoration: BoxDecorationTheme.rowTable(),
+                            child: Row(
+                              children: [
+                                //Cantidad
+                                Expanded(
+                                  flex: 1,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                //Calve de producto
+                                Expanded(
+                                  flex: 1,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: TextField(
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                        ),
+                                      )),
+                                      IconButton(
+                                        padding: EdgeInsets.all(0),
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.search,
+                                          color: ColorPalette.lightItems,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                //Descripcion del producto
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(row.description),
+                                ),
+                                //Precio unitario
+                                Expanded(
+                                  flex: 1,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.all(Radius.zero)),
+                                      isDense: true,
+                                    ),
+                                  ),
+                                ),
+                                //Total
+                                Expanded(
+                                  flex: 1,
+                                  child: Text('$total'),
+                                ),
+                                Expanded(
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(0),
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.edit_note,
+                                      color: ColorPalette.lightItems,
+                                      size: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(row.description),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: TextField(),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(row.description),
-                            ),
-                          ],
+                          );
+                        },
+                      ),
+                    ),
+                    HorizontalToolBar(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {},
+                          color: ColorPalette.lightItems,
                         ),
-                      );
-                    },
-                  ),
-                ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.save),
+                          color: ColorPalette.lightItems,
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
               ],
             ),
           ),

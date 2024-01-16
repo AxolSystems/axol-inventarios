@@ -9,7 +9,7 @@ class SaleNoteAddFormModel {
   int id;
   CustomerModel customer;
   DateTime dateTime;
-  List<SaleNoteRowFormModel> content;
+  List<SaleNoteRowFormModel> productList;
 
   final String _emInvalidData = 'Dato invalido';
 
@@ -19,7 +19,7 @@ class SaleNoteAddFormModel {
     required this.customerTf,
     required this.vendorTf,
     required this.warehouseTf,
-    required this.content,
+    required this.productList,
     required this.customer,
     required this.dateTime,
     required this.id,
@@ -29,7 +29,7 @@ class SaleNoteAddFormModel {
       : customerTf = TextfieldFormModel.empty(),
         vendorTf = TextfieldFormModel.empty(),
         warehouseTf = TextfieldFormModel.empty(),
-        content = [],
+        productList = [],
         customer = CustomerModel.empty(),
         dateTime = DateTime.now(),
         id = -1;

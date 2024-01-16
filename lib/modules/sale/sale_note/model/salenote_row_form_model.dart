@@ -1,5 +1,4 @@
 import '../../../../models/textfield_form_model.dart';
-import 'sale_note_model.dart';
 
 class SaleNoteRowFormModel {
   TextfieldFormModel quantity;

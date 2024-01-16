@@ -44,7 +44,7 @@ class SaleNoteTab extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              ToolBar(children: [
+              VerticalToolBar(children: [
                 Expanded(
                     child: FinderBar(
                   padding: const EdgeInsets.only(left: 12),

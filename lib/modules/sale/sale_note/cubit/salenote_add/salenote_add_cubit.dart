@@ -8,6 +8,7 @@ import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
 import '../../../vendor/repository/vendor_repo.dart';
 import '../../model/saelnote_add_form_model.dart';
+import '../../model/salenote_row_form_model.dart';
 import '../../repository/sale_note_repo.dart';
 import 'salenote_add_state.dart';
 
@@ -22,6 +23,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       emit(LoadingSaleNoteAddState());
       availableId = await SaleNoteRepo().fetchAvailableId();
       upForm.id = availableId;
+      upForm.productList = [SaleNoteRowFormModel.empty(), SaleNoteRowFormModel.empty()];
       emit(const LoadedSaleNoteAddState(rowFormList: []));
     } catch (e) {
       emit(InitialSaleNoteAddState());
