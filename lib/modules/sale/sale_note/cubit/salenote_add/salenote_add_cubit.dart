@@ -1,8 +1,12 @@
 import 'package:axol_inventarios/models/validation_form_model.dart';
+import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../inventory_/inventory/model/warehouse_model.dart';
+import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
+import '../../../vendor/repository/vendor_repo.dart';
 import '../../model/saelnote_add_form_model.dart';
 import 'salenote_add_state.dart';
 
@@ -41,6 +45,60 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       } else {
         upForm.customer = CustomerModel.empty();
         upForm.customerTf.validation = ValidationFormModel(isValid: false, errorMessage: form.emInvalidData);
+      }
+      emit(const LoadedSaleNoteAddState(rowFormList: []));
+    } catch (e) {
+      emit(InitialSaleNoteAddState());
+      emit(ErrorSaleNoteAddState(error: e.toString()));
+    }
+  }
+
+  Future<void> fetchVendor(String find, SaleNoteAddFormModel form) async {
+    SaleNoteAddFormModel upForm = form;
+    List<VendorModel> vendorList;
+    List<String> findSplit;
+    String upFind = find;
+    try {
+      emit(InitialSaleNoteAddState());
+      emit(LoadingSaleNoteAddState());
+      find = find.replaceAll(' ', '');
+      findSplit = find.split('-');
+      if (findSplit.isNotEmpty) {
+        upFind = findSplit.first;
+      }
+      vendorList = await VendorRepo().fetchVendorIlike(upFind);
+      if (vendorList.length == 1) {
+        upForm.vendorTf.validation = ValidationFormModel.trueValid();
+        upForm.vendorTf.value = '${vendorList.first.id} - ${vendorList.first.name}';
+      } else {
+        upForm.vendorTf.validation = ValidationFormModel(isValid: false, errorMessage: form.emInvalidData);
+      }
+      emit(const LoadedSaleNoteAddState(rowFormList: []));
+    } catch (e) {
+      emit(InitialSaleNoteAddState());
+      emit(ErrorSaleNoteAddState(error: e.toString()));
+    }
+  }
+
+  Future<void> fetchWarehouse(String find, SaleNoteAddFormModel form) async {
+    SaleNoteAddFormModel upForm = form;
+    List<WarehouseModel> warehouseList;
+    List<String> findSplit;
+    String upFind = find;
+    try {
+      emit(InitialSaleNoteAddState());
+      emit(LoadingSaleNoteAddState());
+      find = find.replaceAll(' ', '');
+      findSplit = find.split('-');
+      if (findSplit.isNotEmpty) {
+        upFind = findSplit.first;
+      }
+      warehouseList = await WarehousesRepo().fetchWarehouseIlike(upFind);
+      if (warehouseList.length == 1) {
+        upForm.warehouseTf.validation = ValidationFormModel.trueValid();
+        upForm.warehouseTf.value = '${warehouseList.first.id} - ${warehouseList.first.name}';
+      } else {
+        upForm.warehouseTf.validation = ValidationFormModel(isValid: false, errorMessage: form.emInvalidData);
       }
       emit(const LoadedSaleNoteAddState(rowFormList: []));
     } catch (e) {

@@ -7,7 +7,9 @@ import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
+import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../customer/model/customer_model.dart';
+import '../../../vendor/model/vendor_model.dart';
 import '../../cubit/salenote_add/salenote_add_cubit.dart';
 import '../../cubit/salenote_add/salenote_add_form.dart';
 import '../../cubit/salenote_add/salenote_add_state.dart';
@@ -115,7 +117,10 @@ class SaleNoteAdd extends StatelessWidget {
                                         context
                                             .read<SaleNoteAddForm>()
                                             .setForm(upForm);
-                                        context.read<SaleNoteAddCubit>().load();
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .fetchCustomer(
+                                                value.id.toString(), upForm);
                                       }
                                     });
                                   },
@@ -170,6 +175,10 @@ class SaleNoteAdd extends StatelessWidget {
                                   icon: Icons.search,
                                   lblText: 'Vendedor',
                                   controller: vendorCtrl,
+                                  isLoading: isLoading,
+                                  errorText: form.vendorTf.validation.isValid
+                                      ? null
+                                      : form.vendorTf.validation.errorMessage,
                                   onChanged: (value) {
                                     upForm.vendorTf.value = value;
                                     upForm.vendorTf.position =
@@ -179,13 +188,41 @@ class SaleNoteAdd extends StatelessWidget {
                                         .setForm(upForm);
                                   },
                                   onSubmitted: (value) {
-                                    context.read<SaleNoteAddCubit>().load();
+                                    upForm =
+                                        context.read<SaleNoteAddForm>().state;
+                                    context
+                                        .read<SaleNoteAddCubit>()
+                                        .fetchVendor(value, upForm);
+                                  },
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const ProviderVendorFind(),
+                                    ).then((value) {
+                                      if (value is DataFind &&
+                                          value.data is VendorModel) {
+                                        upForm.vendorTf.value =
+                                            '${value.id} - ${value.data.name}';
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(upForm);
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .fetchVendor(
+                                                value.id.toString(), upForm);
+                                      }
+                                    });
                                   },
                                 ),
                                 BtnSelectInputForm(
                                   icon: Icons.search,
                                   lblText: 'Almacén',
                                   controller: warehouseCtrl,
+                                  isLoading: isLoading,
+                                  errorText: form.warehouseTf.validation.isValid
+                                      ? null
+                                      : form.warehouseTf.validation.errorMessage,
                                   onChanged: (value) {
                                     upForm.warehouseTf.value = value;
                                     upForm.warehouseTf.position =
@@ -195,7 +232,31 @@ class SaleNoteAdd extends StatelessWidget {
                                         .setForm(upForm);
                                   },
                                   onSubmitted: (value) {
-                                    context.read<SaleNoteAddCubit>().load();
+                                    upForm =
+                                        context.read<SaleNoteAddForm>().state;
+                                    context
+                                        .read<SaleNoteAddCubit>()
+                                        .fetchWarehouse(value, upForm);
+                                  },
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const ProviderWarehouseFind(),
+                                    ).then((value) {
+                                      if (value is DataFind &&
+                                          value.data is WarehouseModel) {
+                                        upForm.vendorTf.value =
+                                            '${value.id} - ${value.data.name}';
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(upForm);
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .fetchWarehouse(
+                                                value.id.toString(), upForm);
+                                      }
+                                    });
                                   },
                                 ),
                               ],

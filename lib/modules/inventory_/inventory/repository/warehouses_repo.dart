@@ -94,10 +94,21 @@ class WarehousesRepo {
     List<Map<String, dynamic>> warehousesDB = [];
     List<WarehouseModel> warehouses = [];
     WarehouseModel warehouse;
-    warehousesDB = await _supabase
-        .from(_table)
-        .select<List<Map<String, dynamic>>>()
-        .or('$_id.ilike.$inText,$_name.ilike.$inText');
+    String textOr;
+    if (inText == '') {
+      warehousesDB =
+          await _supabase.from(_table).select<List<Map<String, dynamic>>>();
+    } else {
+      if (int.tryParse(inText) == null) {
+        textOr = '$_name.ilike.%$inText%';
+      } else {
+        textOr = '$_id.eq.$inText';
+      }
+      warehousesDB = await _supabase
+          .from(_table)
+          .select<List<Map<String, dynamic>>>()
+          .or(textOr);
+    }
     if (warehousesDB.isNotEmpty) {
       for (var element in warehousesDB) {
         warehouse = WarehouseModel(

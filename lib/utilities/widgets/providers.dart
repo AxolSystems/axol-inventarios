@@ -3,6 +3,8 @@ import 'package:axol_inventarios/utilities/widgets/drawer_find.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../modules/inventory_/inventory/cubit/warehouse_find/warehouse_find_cubit.dart';
+import '../../modules/inventory_/inventory/view/views/warehouse_drawer_find.dart';
 import '../../modules/sale/customer/cubit/customer_add/customer_add_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_add/customer_add_form.dart';
 import '../../modules/sale/customer/cubit/customer_delete/customer_delete_cubit.dart';
@@ -22,11 +24,13 @@ import '../../modules/sale/sale_note/view/views/salenote_add.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_form.dart';
 import '../../modules/sale/vendor/cubit/vendor_delete/customer_delete_cubit.dart';
+import '../../modules/sale/vendor/cubit/vendor_find/vendor_find_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_tab/vendor_tab_form.dart';
 import '../../modules/sale/vendor/model/vendor_model.dart';
 import '../../modules/sale/vendor/view/vendor_dialog_delete.dart';
 import '../../modules/sale/vendor/view/vendor_drawer_add.dart';
+import '../../modules/sale/vendor/view/vendor_drawer_find.dart';
 import '../../modules/sale/vendor/view/vendor_tab.dart';
 
 abstract class Providers extends StatelessWidget {
@@ -128,4 +132,25 @@ class ProviderVendorDelete extends Providers {
   Widget build(BuildContext context) => MultiBlocProvider(providers: [
         BlocProvider(create: (_) => VendorDeleteCubit()),
       ], child: VendorDialogDelete(vendor: vendor));
+}
+
+class ProviderVendorFind extends Providers {
+  const ProviderVendorFind({super.key});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => VendorFindCubit()),
+        BlocProvider(create: (_) => FinderForm()),
+      ], child: const VendorDrawerFind());
+}
+
+//----Warehouse
+class ProviderWarehouseFind extends Providers {
+  const ProviderWarehouseFind({super.key});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => WarehouseFindCubit()),
+        BlocProvider(create: (_) => FinderForm()),
+      ], child: const WarehouseDrawerFind());
 }

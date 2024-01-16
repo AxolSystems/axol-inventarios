@@ -1,7 +1,4 @@
-import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
-
 import '../../../../models/textfield_form_model.dart';
-import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../customer/model/customer_model.dart';
 import 'salenote_row_form_model.dart';
 
