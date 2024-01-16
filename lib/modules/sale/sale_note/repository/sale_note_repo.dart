@@ -84,4 +84,24 @@ class SaleNoteRepo {
 
     return salesNotes;
   }
+
+  Future<int> fetchAvailableId() async {
+    List<Map<String, dynamic>> saleNoteIdDB = [];
+    List<int> listId = [];
+    int newId = -1;
+    saleNoteIdDB =
+        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id);
+    for (var element in saleNoteIdDB) {
+      listId.add(int.parse(element[_id].toString()));
+    }
+    listId.sort((a, b) => a.compareTo(b));
+    for (int i = 0; i <= listId.length; i++) {
+      if (listId.contains(i) == false) {
+        listId.add(i);
+        newId = i;
+        i = listId.length + 1;
+      }
+    }
+    return newId;
+  }
 }

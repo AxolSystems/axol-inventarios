@@ -8,10 +8,26 @@ import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
 import '../../../vendor/repository/vendor_repo.dart';
 import '../../model/saelnote_add_form_model.dart';
+import '../../repository/sale_note_repo.dart';
 import 'salenote_add_state.dart';
 
 class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   SaleNoteAddCubit() : super(InitialSaleNoteAddState());
+
+  Future<void> initLoad(SaleNoteAddFormModel form) async {
+    SaleNoteAddFormModel upForm = form;
+    int availableId = -1;
+    try {
+      emit(InitialSaleNoteAddState());
+      emit(LoadingSaleNoteAddState());
+      availableId = await SaleNoteRepo().fetchAvailableId();
+      upForm.id = availableId;
+      emit(const LoadedSaleNoteAddState(rowFormList: []));
+    } catch (e) {
+      emit(InitialSaleNoteAddState());
+      emit(ErrorSaleNoteAddState(error: e.toString()));
+    }
+  }
 
   Future<void> load() async {
     try {

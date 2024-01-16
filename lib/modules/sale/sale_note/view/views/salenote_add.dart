@@ -19,10 +19,21 @@ import '../../model/salenote_row_form_model.dart';
 class SaleNoteAdd extends StatelessWidget {
   const SaleNoteAdd({super.key});
 
+  String _toEmptyString(int num) {
+    final String string;
+    if (num < 0) {
+      string = '';
+    } else {
+      string = num.toString();
+    }
+    return string;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final form = context.read<SaleNoteAddForm>().state;
     return BlocConsumer<SaleNoteAddCubit, SaleNoteAddState>(
-      bloc: context.read<SaleNoteAddCubit>()..load(),
+      bloc: context.read<SaleNoteAddCubit>()..initLoad(form),
       builder: (context, state) {
         if (state is LoadingSaleNoteAddState) {
           return saleNoteAdd(context, [], true);
@@ -41,6 +52,9 @@ class SaleNoteAdd extends StatelessWidget {
   Widget saleNoteAdd(BuildContext context,
       List<SaleNoteRowFormModel> rowFormList, bool isLoading) {
     final form = context.read<SaleNoteAddForm>().state;
+    String idText = form.id < 0 ? '' : form.id.toString();
+    String dateText =
+        '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
     SaleNoteAddFormModel upForm = form;
     TextEditingController customerCtrl = TextEditingController();
     TextEditingController vendorCtrl = TextEditingController();
@@ -54,6 +68,7 @@ class SaleNoteAdd extends StatelessWidget {
     warehouseCtrl.value = TextEditingValue(
         text: form.warehouseTf.value,
         selection: TextSelection.collapsed(offset: form.warehouseTf.position));
+
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol(
@@ -126,7 +141,7 @@ class SaleNoteAdd extends StatelessWidget {
                                   },
                                 ),
                                 Text(
-                                    '${CustomerModel.lblPhoneNumber} ${form.customer.phoneNumber}',
+                                    '${CustomerModel.lblPhoneNumber} ${_toEmptyString(form.customer.phoneNumber ?? -1)}',
                                     style: Typo.labelLight),
                                 Text(
                                     '${CustomerModel.lblRfc} ${form.customer.rfc}',
@@ -135,10 +150,10 @@ class SaleNoteAdd extends StatelessWidget {
                                     '${CustomerModel.lblStreet} ${form.customer.street}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblOutNumber} ${form.customer.outNumber}',
+                                    '${CustomerModel.lblOutNumber} ${_toEmptyString(form.customer.outNumber ?? -1)}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblIntNumber} ${form.customer.intNumber}',
+                                    '${CustomerModel.lblIntNumber} ${_toEmptyString(form.customer.intNumber ?? -1)}',
                                     style: Typo.labelLight),
                                 Text(
                                     '${CustomerModel.lblHood} ${form.customer.hood}',
@@ -167,9 +182,8 @@ class SaleNoteAdd extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Número: ${form.id}',
-                                    style: Typo.labelLight),
-                                Text('Fecha: ${form.dateTime}',
+                                Text('Folio: ${_toEmptyString(form.id)}', style: Typo.labelLight),
+                                Text('Fecha: $dateText',
                                     style: Typo.labelLight),
                                 BtnSelectInputForm(
                                   icon: Icons.search,
@@ -222,7 +236,8 @@ class SaleNoteAdd extends StatelessWidget {
                                   isLoading: isLoading,
                                   errorText: form.warehouseTf.validation.isValid
                                       ? null
-                                      : form.warehouseTf.validation.errorMessage,
+                                      : form
+                                          .warehouseTf.validation.errorMessage,
                                   onChanged: (value) {
                                     upForm.warehouseTf.value = value;
                                     upForm.warehouseTf.position =
