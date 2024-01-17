@@ -7,6 +7,7 @@ import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
+import '../../../../../utilities/widgets/input_table.dart';
 import '../../../../../utilities/widgets/toolbar.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../customer/model/customer_model.dart';
@@ -262,7 +263,7 @@ class SaleNoteAdd extends StatelessWidget {
                                     ).then((value) {
                                       if (value is DataFind &&
                                           value.data is WarehouseModel) {
-                                        upForm.vendorTf.value =
+                                        upForm.warehouseTf.value =
                                             '${value.id} - ${value.data.name}';
                                         context
                                             .read<SaleNoteAddForm>()
@@ -328,7 +329,70 @@ class SaleNoteAdd extends StatelessWidget {
                           final int price =
                               int.tryParse(row.unitPrice.value) ?? 0;
                           final total = quantity * price;
-                          return Container(
+                          final bool isQuantityFocus =
+                              upForm.productList[index].quantity.isFocus ??
+                                  false;
+                          final bool isProductFocus =
+                              upForm.productList[index].productCode.isFocus ??
+                                  false;
+                          final bool isPriceFocus =
+                              upForm.productList[index].unitPrice.isFocus ??
+                                  false;
+                          return InputRow(
+                            children: [
+                              TextFieldCell(
+                                onFocusChange: (value) {
+                                  if (value) {
+                                    upForm.productList[index].quantity.isFocus =
+                                        true;
+                                    context.read<SaleNoteAddCubit>().load();
+                                  } else {
+                                    upForm.productList[index].quantity.isFocus =
+                                        false;
+                                    context.read<SaleNoteAddCubit>().load();
+                                  }
+                                },
+                                borderColor: isQuantityFocus
+                                    ? ColorPalette.primary
+                                    : ColorPalette.darkItems,
+                              ),
+                              TextFieldCell(
+                                borderColor: isProductFocus
+                                    ? ColorPalette.primary
+                                    : ColorPalette.darkItems,
+                                onFocusChange: (value) {
+                                  if (value) {
+                                    upForm.productList[index].productCode.isFocus =
+                                        true;
+                                    context.read<SaleNoteAddCubit>().load();
+                                  } else {
+                                    upForm.productList[index].productCode.isFocus =
+                                        false;
+                                    context.read<SaleNoteAddCubit>().load();
+                                  }
+                                },
+                              ),
+                              LabelCell('Descripción'),
+                              TextFieldCell(
+                                borderColor: isPriceFocus
+                                    ? ColorPalette.primary
+                                    : ColorPalette.darkItems,
+                                onFocusChange: (value) {
+                                  if (value) {
+                                    upForm.productList[index].unitPrice.isFocus =
+                                        true;
+                                    context.read<SaleNoteAddCubit>().load();
+                                  } else {
+                                    upForm.productList[index].unitPrice.isFocus =
+                                        false;
+                                    context.read<SaleNoteAddCubit>().load();
+                                  }
+                                },
+                              ),
+                              LabelCell('Total')
+                            ],
+                          );
+                          /*Container(
                             height: 30,
                             decoration: BoxDecorationTheme.rowTable(),
                             child: Row(
@@ -400,7 +464,7 @@ class SaleNoteAdd extends StatelessWidget {
                                 )
                               ],
                             ),
-                          );
+                          );*/
                         },
                       ),
                     ),

@@ -9,6 +9,7 @@ class TextfieldFormModel {
   int position;
   ValidationFormModel validation;
   bool isLoading;
+  bool? isFocus;
 
   TextfieldFormModel({
     required this.position,
@@ -18,6 +19,7 @@ class TextfieldFormModel {
     required this.controller,
     required this.isLoading,
     required this.tags,
+    this.isFocus,
   });
 
   TextfieldFormModel.empty()
