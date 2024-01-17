@@ -19,22 +19,26 @@ class VerticalToolBar extends StatelessWidget {
 }
 
 class HorizontalToolBar extends StatelessWidget {
-  final BoxDecoration? boxDecoration;
+  final BoxBorder? border;
+  final Color? color;
   final List<Widget> children;
-  const HorizontalToolBar(
-      {super.key, required this.children, this.boxDecoration});
+  const HorizontalToolBar({
+    super.key,
+    required this.children,
+    this.border,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final boxDecoration_ = boxDecoration ??
-        const BoxDecoration(
-          backgroundBlendMode: BlendMode.color,
-            color: ColorPalette.darkBackground,
-            border: Border(left: BorderSide(color: ColorPalette.darkItems)));
     return Container(
       width: 50,
-      decoration: boxDecoration_,
-      child: Column(
+      decoration: BoxDecoration(
+        backgroundBlendMode: BlendMode.color,
+        color: color ?? ColorPalette.darkBackground,
+        border: border,
+      ),
+      child: ListView(
         children: children,
       ),
     );

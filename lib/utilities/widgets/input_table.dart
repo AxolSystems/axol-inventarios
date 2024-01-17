@@ -24,9 +24,11 @@ class TextFieldCell extends InputCell {
   final int? flex;
   final Function(bool value) onFocusChange;
   final Color borderColor;
+  final bool? isBtnVisible;
   const TextFieldCell({
     super.key,
     this.flex,
+    this.isBtnVisible,
     required this.onFocusChange,
     required this.borderColor,
   });
@@ -47,19 +49,31 @@ class TextFieldCell extends InputCell {
                 children: [
                   const Expanded(
                     child: TextField(
+                      style: Typo.bodyLight,
+                      cursorColor: ColorPalette.primary,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         isDense: true,
                       ),
                     ),
                   ),
-                  OutlinedButton(
+                  Visibility(
+                    visible: isBtnVisible ?? false,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide.none,
+                        foregroundColor: ColorPalette.primary,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                      ),
                       onPressed: () {},
                       child: const Icon(
                         Icons.search,
                         size: 20,
                         color: ColorPalette.lightItems,
-                      ))
+                      ),
+                    ),
+                  )
                 ],
               ),
             )));
@@ -69,7 +83,8 @@ class TextFieldCell extends InputCell {
 class LabelCell extends InputCell {
   final String text;
   final int? flex;
-  const LabelCell(this.text, {super.key, this.flex});
+  final AlignmentGeometry? alignment;
+  const LabelCell(this.text, {super.key, this.flex, this.alignment});
   @override
   Widget build(BuildContext context) {
     final flex_ = flex ?? 1;
@@ -80,7 +95,40 @@ class LabelCell extends InputCell {
           height: 30,
           decoration:
               BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
-          child: Text(text_),
+          child: Align(
+            alignment: alignment ?? Alignment.centerLeft,
+            child: Text(
+              text_,
+              style: Typo.bodyLight,
+            ),
+          ),
+        ));
+  }
+}
+
+class ButtonCell extends InputCell {
+  final Function()? onPressed;
+  final Widget child;
+  final int? flex;
+  const ButtonCell({super.key, this.onPressed, required this.child, this.flex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        flex: flex ?? 1,
+        child: Container(
+          height: 30,
+          decoration:
+              BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide.none,
+              shape: const RoundedRectangleBorder(),
+              foregroundColor: ColorPalette.primary,
+            ),
+            onPressed: onPressed,
+            child: child,
+          ),
         ));
   }
 }

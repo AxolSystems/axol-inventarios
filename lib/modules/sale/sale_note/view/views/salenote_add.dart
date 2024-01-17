@@ -53,6 +53,8 @@ class SaleNoteAdd extends StatelessWidget {
 
   Widget saleNoteAdd(BuildContext context,
       List<SaleNoteRowFormModel> productList, bool isLoading) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     final form = context.read<SaleNoteAddForm>().state;
     String dateText =
         '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
@@ -282,117 +284,154 @@ class SaleNoteAdd extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  decoration: BoxDecorationTheme.headerTable(),
-                  child: const Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text('Cantidad', style: Typo.subtitleLight),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text('Producto', style: Typo.subtitleLight),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text('Descripición', style: Typo.subtitleLight),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child:
-                            Text('Precio unitario', style: Typo.subtitleLight),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text('Subtotal', style: Typo.subtitleLight),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text('Nota', style: Typo.subtitleLight),
-                      ),
-                    ],
-                  ),
-                ),
                 Expanded(
                     child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: productList.length,
-                        itemBuilder: (context, index) {
-                          final row = productList[index];
-                          final int quantity =
-                              int.tryParse(row.quantity.value) ?? 0;
-                          final int price =
-                              int.tryParse(row.unitPrice.value) ?? 0;
-                          final total = quantity * price;
-                          final bool isQuantityFocus =
-                              upForm.productList[index].quantity.isFocus ??
-                                  false;
-                          final bool isProductFocus =
-                              upForm.productList[index].productCode.isFocus ??
-                                  false;
-                          final bool isPriceFocus =
-                              upForm.productList[index].unitPrice.isFocus ??
-                                  false;
-                          return InputRow(
+                        child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecorationTheme.headerTable(),
+                          child: const Row(
                             children: [
-                              TextFieldCell(
-                                onFocusChange: (value) {
-                                  if (value) {
-                                    upForm.productList[index].quantity.isFocus =
-                                        true;
-                                    context.read<SaleNoteAddCubit>().load();
-                                  } else {
-                                    upForm.productList[index].quantity.isFocus =
-                                        false;
-                                    context.read<SaleNoteAddCubit>().load();
-                                  }
-                                },
-                                borderColor: isQuantityFocus
-                                    ? ColorPalette.primary
-                                    : ColorPalette.darkItems,
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Cantidad',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              TextFieldCell(
-                                borderColor: isProductFocus
-                                    ? ColorPalette.primary
-                                    : ColorPalette.darkItems,
-                                onFocusChange: (value) {
-                                  if (value) {
-                                    upForm.productList[index].productCode.isFocus =
-                                        true;
-                                    context.read<SaleNoteAddCubit>().load();
-                                  } else {
-                                    upForm.productList[index].productCode.isFocus =
-                                        false;
-                                    context.read<SaleNoteAddCubit>().load();
-                                  }
-                                },
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Producto',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              LabelCell('Descripción'),
-                              TextFieldCell(
-                                borderColor: isPriceFocus
-                                    ? ColorPalette.primary
-                                    : ColorPalette.darkItems,
-                                onFocusChange: (value) {
-                                  if (value) {
-                                    upForm.productList[index].unitPrice.isFocus =
-                                        true;
-                                    context.read<SaleNoteAddCubit>().load();
-                                  } else {
-                                    upForm.productList[index].unitPrice.isFocus =
-                                        false;
-                                    context.read<SaleNoteAddCubit>().load();
-                                  }
-                                },
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Descripición',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              LabelCell('Total')
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Precio unitario',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Subtotal',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Nota',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ],
-                          );
-                          /*Container(
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: productList.length,
+                            itemBuilder: (context, index) {
+                              final row = productList[index];
+                              final int quantity =
+                                  int.tryParse(row.quantity.value) ?? 0;
+                              final int price =
+                                  int.tryParse(row.unitPrice.value) ?? 0;
+                              final total = quantity * price;
+                              final bool isQuantityFocus =
+                                  upForm.productList[index].quantity.isFocus ??
+                                      false;
+                              final bool isProductFocus = upForm
+                                      .productList[index].productCode.isFocus ??
+                                  false;
+                              final bool isPriceFocus =
+                                  upForm.productList[index].unitPrice.isFocus ??
+                                      false;
+                              return InputRow(
+                                children: [
+                                  TextFieldCell(
+                                    isBtnVisible: true,
+                                    onFocusChange: (value) {
+                                      if (value) {
+                                        upForm.productList[index].quantity
+                                            .isFocus = true;
+                                        context.read<SaleNoteAddCubit>().load();
+                                      } else {
+                                        upForm.productList[index].quantity
+                                            .isFocus = false;
+                                        context.read<SaleNoteAddCubit>().load();
+                                      }
+                                    },
+                                    borderColor: isQuantityFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                  ),
+                                  TextFieldCell(
+                                    borderColor: isProductFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (value) {
+                                      if (value) {
+                                        upForm.productList[index].productCode
+                                            .isFocus = true;
+                                        context.read<SaleNoteAddCubit>().load();
+                                      } else {
+                                        upForm.productList[index].productCode
+                                            .isFocus = false;
+                                        context.read<SaleNoteAddCubit>().load();
+                                      }
+                                    },
+                                  ),
+                                  LabelCell(
+                                    'Descripción',
+                                    alignment: Alignment.center,
+                                  ),
+                                  TextFieldCell(
+                                    borderColor: isPriceFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (value) {
+                                      if (value) {
+                                        upForm.productList[index].unitPrice
+                                            .isFocus = true;
+                                        context.read<SaleNoteAddCubit>().load();
+                                      } else {
+                                        upForm.productList[index].unitPrice
+                                            .isFocus = false;
+                                        context.read<SaleNoteAddCubit>().load();
+                                      }
+                                    },
+                                  ),
+                                  LabelCell('Total'),
+                                  ButtonCell(
+                                      onPressed: () {},
+                                      child: Icon(
+                                        Icons.sticky_note_2,
+                                        color: ColorPalette.lightItems,
+                                        size: 20,
+                                      )),
+                                ],
+                              );
+                              /*Container(
                             height: 30,
                             decoration: BoxDecorationTheme.rowTable(),
                             child: Row(
@@ -465,20 +504,50 @@ class SaleNoteAdd extends StatelessWidget {
                               ],
                             ),
                           );*/
-                        },
-                      ),
-                    ),
-                    HorizontalToolBar(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {},
-                          color: ColorPalette.lightItems,
+                            },
+                          ),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.save),
-                          color: ColorPalette.lightItems,
+                      ],
+                    )),
+                    HorizontalToolBar(
+                      border: const Border(
+                        left: BorderSide(color: ColorPalette.darkItems),
+                        top: BorderSide(color: ColorPalette.darkItems),
+                      ),
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: OutlinedButton(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide.none,
+                              foregroundColor: ColorPalette.primary,
+                              shape: const RoundedRectangleBorder(),
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: ColorPalette.lightItems,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: OutlinedButton(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide.none,
+                              foregroundColor: ColorPalette.primary,
+                              shape: const RoundedRectangleBorder(),
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: const Icon(
+                              Icons.save,
+                              color: ColorPalette.lightItems,
+                              size: 30,
+                            ),
+                          ),
                         ),
                       ],
                     ),
