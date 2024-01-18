@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/widgets/appbar_axol.dart';
@@ -53,8 +54,6 @@ class SaleNoteAdd extends StatelessWidget {
 
   Widget saleNoteAdd(BuildContext context,
       List<SaleNoteRowFormModel> productList, bool isLoading) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
     final form = context.read<SaleNoteAddForm>().state;
     String dateText =
         '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
@@ -352,6 +351,26 @@ class SaleNoteAdd extends StatelessWidget {
                             itemCount: productList.length,
                             itemBuilder: (context, index) {
                               final row = productList[index];
+                              TextEditingController quantityCtrl =
+                                  TextEditingController.fromValue(
+                                      TextEditingValue(
+                                text: row.quantity.value,
+                                selection: TextSelection.collapsed(
+                                    offset: row.quantity.position),
+                              ));
+                              TextEditingController productCtrl =
+                                  TextEditingController.fromValue(
+                                      TextEditingValue(
+                                text: row.productCode.value,
+                                selection: TextSelection.collapsed(
+                                    offset: row.productCode.position),
+                              ));
+                              TextEditingController priceCtrl =
+                                  TextEditingController.fromValue(
+                                      TextEditingValue(
+                                          text: row.unitPrice.value,
+                                          selection: TextSelection.collapsed(
+                                              offset: row.unitPrice.position)));
                               final int quantity =
                                   int.tryParse(row.quantity.value) ?? 0;
                               final int price =
@@ -369,23 +388,69 @@ class SaleNoteAdd extends StatelessWidget {
                               return InputRow(
                                 children: [
                                   TextFieldCell(
-                                    isBtnVisible: true,
-                                    onFocusChange: (value) {
-                                      if (value) {
+                                      valid: row.quantity.validation,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'^\d*\.?\d*$'))
+                                      ],
+                                      controller: quantityCtrl,
+                                      onSubmitted: (value) {
+                                        upForm = context
+                                            .read<SaleNoteAddForm>()
+                                            .state;
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .validateCell(
+                                                upForm, row.keyQuantity, index);
+                                      },
+                                      onChanged: (value) {
                                         upForm.productList[index].quantity
-                                            .isFocus = true;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      } else {
+                                            .value = value;
                                         upForm.productList[index].quantity
-                                            .isFocus = false;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      }
-                                    },
-                                    borderColor: isQuantityFocus
-                                        ? ColorPalette.primary
-                                        : ColorPalette.darkItems,
-                                  ),
+                                                .position =
+                                            quantityCtrl.selection.base.offset;
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(upForm);
+                                      },
+                                      onFocusChange: (value) {
+                                        if (value) {
+                                          upForm.productList[index].quantity
+                                              .isFocus = true;
+                                          context
+                                              .read<SaleNoteAddCubit>()
+                                              .load();
+                                        } else {
+                                          upForm.productList[index].quantity
+                                              .isFocus = false;
+                                          context
+                                              .read<SaleNoteAddCubit>()
+                                              .load();
+                                        }
+                                      },
+                                      borderColor: isQuantityFocus
+                                          ? ColorPalette.primary
+                                          : ColorPalette.darkItems),
                                   TextFieldCell(
+                                    controller: productCtrl,
+                                    isActionVisible: true,
+                                    valid: row.productCode.validation,
+                                    onChanged: (value) {
+                                      upForm.productList[index].productCode
+                                          .value = value;
+                                      upForm.productList[index].productCode
+                                              .position =
+                                          quantityCtrl.selection.base.offset;
+                                      context
+                                          .read<SaleNoteAddForm>()
+                                          .setForm(upForm);
+                                    },
+                                    onSubmitted: (value) {
+                                      context
+                                          .read<SaleNoteAddCubit>()
+                                          .validateCell(
+                                              upForm, row.keyProduct, index);
+                                    },
                                     borderColor: isProductFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
@@ -406,6 +471,27 @@ class SaleNoteAdd extends StatelessWidget {
                                     alignment: Alignment.center,
                                   ),
                                   TextFieldCell(
+                                    controller: priceCtrl,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'^\d*\.?\d*$'))
+                                    ],
+                                    onChanged: (value) {
+                                      upForm.productList[index].unitPrice
+                                          .value = value;
+                                      upForm.productList[index].unitPrice
+                                              .position =
+                                          quantityCtrl.selection.base.offset;
+                                      context
+                                          .read<SaleNoteAddForm>()
+                                          .setForm(upForm);
+                                    },
+                                    onSubmitted: (value) {
+                                      context
+                                          .read<SaleNoteAddCubit>()
+                                          .validateCell(
+                                              upForm, row.keyPrice, index);
+                                    },
                                     borderColor: isPriceFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,

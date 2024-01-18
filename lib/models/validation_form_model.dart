@@ -7,4 +7,7 @@ class ValidationFormModel {
   ValidationFormModel.trueValid()
       : isValid = true,
         errorMessage = '';
+
+  ValidationFormModel.falseValid(this.errorMessage)
+      : isValid = false;
 }

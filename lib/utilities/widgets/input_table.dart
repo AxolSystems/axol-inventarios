@@ -1,6 +1,9 @@
+import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/validation_form_model.dart';
 import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_cubit.dart';
 import '../theme/theme.dart';
 
@@ -24,16 +27,30 @@ class TextFieldCell extends InputCell {
   final int? flex;
   final Function(bool value) onFocusChange;
   final Color borderColor;
-  final bool? isBtnVisible;
+  final bool? isActionVisible;
+  final TextEditingController? controller;
+  final Function(String value)? onSubmitted;
+  final Function(String value)? onChanged;
+  final Function()? onPressed;
+  final List<TextInputFormatter>? inputFormatters;
+  final ValidationFormModel? valid;
   const TextFieldCell({
     super.key,
     this.flex,
-    this.isBtnVisible,
+    this.isActionVisible,
     required this.onFocusChange,
     required this.borderColor,
+    this.controller,
+    this.onSubmitted,
+    this.onChanged,
+    this.onPressed,
+    this.inputFormatters,
+    this.valid,
   });
   @override
   Widget build(BuildContext context) {
+    final bool isValid = valid?.isValid ?? true;
+    final String errorText = valid?.errorMessage ?? '';
     final flex_ = flex ?? 1;
     return Expanded(
         flex: flex_,
@@ -42,38 +59,71 @@ class TextFieldCell extends InputCell {
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(
-                color: borderColor,
+                color: isValid ? borderColor : ColorPalette.caution,
               )),
               height: 30,
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: TextField(
+                      inputFormatters: inputFormatters,
+                      onChanged: onChanged,
+                      onSubmitted: onSubmitted,
+                      controller: controller,
                       style: Typo.bodyLight,
-                      cursorColor: ColorPalette.primary,
+                      cursorColor:
+                          isValid ? ColorPalette.primary : ColorPalette.caution,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         isDense: true,
+                        prefixIcon: isValid
+                            ? null
+                            : SizedBox.square(
+                                dimension: 30,
+                                child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: BorderSide.none,
+                                      foregroundColor: ColorPalette.caution,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.zero),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            AlertDialogAxol(text: errorText),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.error_outline,
+                                      color: ColorPalette.caution,
+                                      size: 20,
+                                    )),
+                              ),
+                        suffixIcon: isActionVisible ?? false
+                            ? SizedBox.square(
+                                dimension: 30,
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    side: BorderSide.none,
+                                    foregroundColor: ColorPalette.primary,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero),
+                                  ),
+                                  onPressed: () {},
+                                  child: const Icon(
+                                    Icons.search,
+                                    size: 20,
+                                    color: ColorPalette.lightItems,
+                                  ),
+                                ),
+                              )
+                            : null,
                       ),
                     ),
                   ),
-                  Visibility(
-                    visible: isBtnVisible ?? false,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide.none,
-                        foregroundColor: ColorPalette.primary,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero),
-                      ),
-                      onPressed: () {},
-                      child: const Icon(
-                        Icons.search,
-                        size: 20,
-                        color: ColorPalette.lightItems,
-                      ),
-                    ),
-                  )
                 ],
               ),
             )));
