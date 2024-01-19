@@ -47,6 +47,18 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     }
   }
 
+  Future<void> test() async {
+    try {
+      emit(InitialSaleNoteAddState());
+      emit(LoadingSaleNoteAddState());
+
+      //emit(const LoadedSaleNoteAddState(rowFormList: []));
+    } catch (e) {
+      emit(InitialSaleNoteAddState());
+      emit(ErrorSaleNoteAddState(error: e.toString()));
+    }
+  }
+
   Future<void> fetchCustomer(String find, SaleNoteAddFormModel form) async {
     SaleNoteAddFormModel upForm = form;
     List<CustomerModel> customerList;
@@ -138,14 +150,14 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
 
   Future<void> validateCell(
       SaleNoteAddFormModel form, String key, int index) async {
-    SaleNoteRowFormModel row = form.productList[index];
-    InventoryModel? inventoryRow;
-    final String inventoryName = form.warehouseTf.validation.isValid
-        ? form.warehouseTf.value.split(' - ').last
-        : '';
-    final code = row.productCode.value;
-    double? quantity = double.tryParse(row.quantity.value);
     try {
+      SaleNoteRowFormModel row = form.productList[index];
+      InventoryModel? inventoryRow;
+      final String inventoryName = form.warehouseTf.validation.isValid
+          ? form.warehouseTf.value.split(' - ').last
+          : '';
+      final code = row.productCode.value;
+      double? quantity = double.tryParse(row.quantity.value);
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
       if (key == row.keyQuantity) {
@@ -153,11 +165,14 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emInvalidData);
         } else if (code != '') {
-          inventoryRow = await InventoryRepo()
-              .fetchRowByCode(code, inventoryName);
+          inventoryRow = 
+              await InventoryRepo().fetchRowByCode(code, inventoryName);
           if (inventoryRow == null || quantity > inventoryRow.stock) {
             row.quantity.validation =
                 ValidationFormModel.falseValid(row.emNotStock);
+          } else {
+            row.quantity.validation = ValidationFormModel.trueValid();
+            row.productCode.validation = ValidationFormModel.trueValid();
           }
         } else {
           row.quantity.validation = ValidationFormModel.trueValid();

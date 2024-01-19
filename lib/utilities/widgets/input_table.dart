@@ -25,7 +25,6 @@ abstract class InputCell extends StatelessWidget {
 
 class TextFieldCell extends InputCell {
   final int? flex;
-  final Function(bool value) onFocusChange;
   final Color borderColor;
   final bool? isActionVisible;
   final TextEditingController? controller;
@@ -38,7 +37,6 @@ class TextFieldCell extends InputCell {
     super.key,
     this.flex,
     this.isActionVisible,
-    required this.onFocusChange,
     required this.borderColor,
     this.controller,
     this.onSubmitted,
@@ -55,78 +53,85 @@ class TextFieldCell extends InputCell {
     return Expanded(
         flex: flex_,
         child: Focus(
-            onFocusChange: onFocusChange,
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                color: isValid ? borderColor : ColorPalette.caution,
-              )),
-              height: 30,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      inputFormatters: inputFormatters,
-                      onChanged: onChanged,
-                      onSubmitted: onSubmitted,
-                      controller: controller,
-                      style: Typo.bodyLight,
-                      cursorColor:
-                          isValid ? ColorPalette.primary : ColorPalette.caution,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        isDense: true,
-                        prefixIcon: isValid
-                            ? null
-                            : SizedBox.square(
-                                dimension: 30,
-                                child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      side: BorderSide.none,
-                                      foregroundColor: ColorPalette.caution,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.zero),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            AlertDialogAxol(text: errorText),
-                                      );
-                                    },
-                                    child: const Icon(
-                                      Icons.error_outline,
-                                      color: ColorPalette.caution,
-                                      size: 20,
-                                    )),
-                              ),
-                        suffixIcon: isActionVisible ?? false
-                            ? SizedBox.square(
-                                dimension: 30,
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    side: BorderSide.none,
-                                    foregroundColor: ColorPalette.primary,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero),
-                                  ),
-                                  onPressed: () {},
-                                  child: const Icon(
-                                    Icons.search,
-                                    size: 20,
-                                    color: ColorPalette.lightItems,
-                                  ),
-                                ),
-                              )
-                            : null,
-                      ),
-                    ),
-                  ),
-                ],
+            child: SizedBox(
+          height: 30,
+          child: TextField(
+            inputFormatters: inputFormatters,
+            onChanged: onChanged,
+            onSubmitted: onSubmitted,
+            controller: controller,
+            style: Typo.bodyLight,
+            cursorColor: isValid ? ColorPalette.primary : ColorPalette.caution,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 9, horizontal: 2),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.zero,
+                borderSide: BorderSide(
+                    color: isValid
+                        ? ColorPalette.darkItems
+                        : ColorPalette.caution),
               ),
-            )));
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.zero,
+                borderSide: BorderSide(color: isValid
+                        ? ColorPalette.darkItems
+                        : ColorPalette.caution),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.zero,
+                borderSide: BorderSide(color: isValid
+                        ? ColorPalette.primary
+                        : Colors.red),
+              ),
+              isDense: true,
+              prefixIcon: isValid
+                  ? null
+                  : SizedBox.square(
+                      dimension: 30,
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide.none,
+                            foregroundColor: ColorPalette.caution,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero),
+                            padding: EdgeInsets.zero,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialogAxol(text: errorText),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.error_outline,
+                            color: ColorPalette.caution,
+                            size: 20,
+                          )),
+                    ),
+              suffixIcon: isActionVisible ?? false
+                  ? SizedBox.square(
+                      dimension: 30,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          side: BorderSide.none,
+                          foregroundColor: ColorPalette.primary,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero),
+                        ),
+                        onPressed: () {},
+                        child: const Icon(
+                          Icons.search,
+                          size: 20,
+                          color: ColorPalette.lightItems,
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+        )));
   }
 }
 

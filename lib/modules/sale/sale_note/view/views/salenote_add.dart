@@ -39,7 +39,7 @@ class SaleNoteAdd extends StatelessWidget {
       bloc: context.read<SaleNoteAddCubit>()..initLoad(form),
       builder: (context, state) {
         if (state is LoadingSaleNoteAddState) {
-          return saleNoteAdd(context, [], true);
+          return saleNoteAdd(context, form.productList, true);
         } else if (state is LoadedSaleNoteAddState) {
           return saleNoteAdd(context, form.productList, false);
         } else {
@@ -47,7 +47,9 @@ class SaleNoteAdd extends StatelessWidget {
         }
       },
       listener: (context, state) {
-        if (state is ErrorSaleNoteAddState) {}
+        if (state is ErrorSaleNoteAddState) {
+          print(state.error);
+        }
       },
     );
   }
@@ -413,21 +415,6 @@ class SaleNoteAdd extends StatelessWidget {
                                             .read<SaleNoteAddForm>()
                                             .setForm(upForm);
                                       },
-                                      onFocusChange: (value) {
-                                        if (value) {
-                                          upForm.productList[index].quantity
-                                              .isFocus = true;
-                                          context
-                                              .read<SaleNoteAddCubit>()
-                                              .load();
-                                        } else {
-                                          upForm.productList[index].quantity
-                                              .isFocus = false;
-                                          context
-                                              .read<SaleNoteAddCubit>()
-                                              .load();
-                                        }
-                                      },
                                       borderColor: isQuantityFocus
                                           ? ColorPalette.primary
                                           : ColorPalette.darkItems),
@@ -454,17 +441,6 @@ class SaleNoteAdd extends StatelessWidget {
                                     borderColor: isProductFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
-                                    onFocusChange: (value) {
-                                      if (value) {
-                                        upForm.productList[index].productCode
-                                            .isFocus = true;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      } else {
-                                        upForm.productList[index].productCode
-                                            .isFocus = false;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      }
-                                    },
                                   ),
                                   LabelCell(
                                     'Descripción',
@@ -495,17 +471,6 @@ class SaleNoteAdd extends StatelessWidget {
                                     borderColor: isPriceFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
-                                    onFocusChange: (value) {
-                                      if (value) {
-                                        upForm.productList[index].unitPrice
-                                            .isFocus = true;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      } else {
-                                        upForm.productList[index].unitPrice
-                                            .isFocus = false;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      }
-                                    },
                                   ),
                                   LabelCell('Total'),
                                   ButtonCell(
@@ -621,7 +586,10 @@ class SaleNoteAdd extends StatelessWidget {
                         SizedBox(
                           height: 50,
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context
+                                  .read<SaleNoteAddCubit>().test();
+                            },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide.none,
                               foregroundColor: ColorPalette.primary,
