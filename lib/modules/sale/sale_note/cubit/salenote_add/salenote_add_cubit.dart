@@ -125,6 +125,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         upForm.warehouseTf.validation = ValidationFormModel.trueValid();
         upForm.warehouseTf.value =
             '${warehouseList.first.id} - ${warehouseList.first.name}';
+        await validateAllList(upForm);
       } else {
         upForm.warehouseTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
@@ -149,18 +150,27 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
       if (key == row.keyQuantity) {
+        if (row.quantity.value == '') {
+          row.quantity.value = '0';
+          quantity = 0;
+        }
         if (quantity == null) {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emInvalidData);
         } else if (code != '') {
-          inventoryRow = await InventoryRepo()
-              .fetchRowByCode(code, inventoryName);
+          inventoryRow =
+              await InventoryRepo().fetchRowByCode(code, inventoryName);
           if (inventoryRow == null || quantity > inventoryRow.stock) {
             row.quantity.validation =
                 ValidationFormModel.falseValid(row.emNotStock);
+          } else {
+            row.quantity.validation = ValidationFormModel.trueValid();
+            row.productCode.validation = ValidationFormModel.trueValid();
+            row.quantity.value = quantity.toString();
           }
         } else {
           row.quantity.validation = ValidationFormModel.trueValid();
+          row.quantity.value = quantity.toString();
         }
       }
       if (key == row.keyProduct) {
@@ -175,11 +185,15 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         }
       }
       if (key == row.keyPrice) {
+        if (row.unitPrice.value == '') {
+          row.unitPrice.value = '0';
+        }
         if (double.tryParse(row.unitPrice.value) == null) {
           row.unitPrice.validation =
               ValidationFormModel.falseValid(row.emInvalidData);
         } else {
           row.unitPrice.validation = ValidationFormModel.trueValid();
+          row.unitPrice.value = double.parse(row.unitPrice.value).toString();
         }
       }
       form.productList[index] = row;
@@ -187,6 +201,48 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
+    }
+  }
+
+  Future<void> validateAllList(SaleNoteAddFormModel form) async {
+    InventoryModel? inventoryRow;
+    double? quantity;
+    String code;
+    final String inventoryName = form.warehouseTf.validation.isValid
+        ? form.warehouseTf.value.split(' - ').last
+        : '';
+    for (int i = 0; i < form.productList.length; i++) {
+      var row = form.productList[i];
+      code = row.productCode.value;
+      quantity = double.tryParse(row.quantity.value);
+      if (quantity != null && row.productCode.value != '') {
+        inventoryRow =
+            await InventoryRepo().fetchRowByCode(code, inventoryName);
+        if (inventoryRow != null && quantity < inventoryRow.stock) {
+          row.quantity.validation = ValidationFormModel.trueValid();
+          row.productCode.validation = ValidationFormModel.trueValid();
+          row.quantity.value = quantity.toString();
+        } else {
+          row.quantity.validation =
+              ValidationFormModel.falseValid(row.emNotStock);
+          row.productCode.validation =
+              ValidationFormModel.falseValid(row.emNotStock);
+        }
+      } else if (row.productCode.value == '') {
+        row.quantity.validation = ValidationFormModel.trueValid();
+        row.quantity.value = quantity.toString();
+      } else {
+        row.quantity.validation =
+            ValidationFormModel.falseValid(row.emInvalidData);
+      }
+      if (double.tryParse(row.unitPrice.value) == null) {
+        row.unitPrice.validation =
+            ValidationFormModel.falseValid(row.emInvalidData);
+      } else {
+        row.unitPrice.validation = ValidationFormModel.trueValid();
+        row.unitPrice.value = double.parse(row.unitPrice.value).toString();
+      }
+      form.productList[i] = row;
     }
   }
 }

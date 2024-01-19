@@ -118,6 +118,11 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.lightItems);
+      static const bodyCaution = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: ColorPalette.caution);
 }
 
 class BoxDecorationTheme {

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class FormatDate {
   static String dmy(String dateSB) {
     List<String> listDate;
@@ -22,7 +24,13 @@ class FormatNumber {
     } else {
       newNumber = partList[0];
     }
-
     return newNumber;
+  }
+
+  static String format2dec(double number) {
+    String finalNumber;
+    finalNumber = NumberFormat('#,##0.00', 'en_US').format(number);
+    
+    return finalNumber;
   }
 }

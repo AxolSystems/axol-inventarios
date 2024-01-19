@@ -27,9 +27,9 @@ class SaleNoteRowFormModel {
   });
 
   SaleNoteRowFormModel.empty() :
-        quantity =  TextfieldFormModel.empty(),
+        quantity =  TextfieldFormModel.zero(),
         productCode = TextfieldFormModel.empty(),
-        unitPrice = TextfieldFormModel.empty(),
+        unitPrice = TextfieldFormModel.zero(),
         description = '',
         note = '';
 }

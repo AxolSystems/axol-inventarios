@@ -31,6 +31,15 @@ class TextfieldFormModel {
         isLoading = false,
         tags = [];
 
+        TextfieldFormModel.zero()
+      : position = 1,
+        validation = ValidationFormModel.trueValid(),
+        value = '0',
+        key = '',
+        controller = TextEditingController(),
+        isLoading = false,
+        tags = [];
+
   TextfieldFormModel.initKey({
     required this.key,
     required this.tags,

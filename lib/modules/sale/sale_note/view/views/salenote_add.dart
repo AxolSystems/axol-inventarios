@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../utilities/format.dart';
 import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
@@ -39,7 +40,7 @@ class SaleNoteAdd extends StatelessWidget {
       bloc: context.read<SaleNoteAddCubit>()..initLoad(form),
       builder: (context, state) {
         if (state is LoadingSaleNoteAddState) {
-          return saleNoteAdd(context, [], true);
+          return saleNoteAdd(context, form.productList, true);
         } else if (state is LoadedSaleNoteAddState) {
           return saleNoteAdd(context, form.productList, false);
         } else {
@@ -337,7 +338,7 @@ class SaleNoteAdd extends StatelessWidget {
                               Expanded(
                                 flex: 1,
                                 child: Text(
-                                  'Nota',
+                                  'Opciones',
                                   style: Typo.subtitleLight,
                                   textAlign: TextAlign.center,
                                 ),
@@ -371,10 +372,10 @@ class SaleNoteAdd extends StatelessWidget {
                                           text: row.unitPrice.value,
                                           selection: TextSelection.collapsed(
                                               offset: row.unitPrice.position)));
-                              final int quantity =
-                                  int.tryParse(row.quantity.value) ?? 0;
-                              final int price =
-                                  int.tryParse(row.unitPrice.value) ?? 0;
+                              final double quantity =
+                                  double.tryParse(row.quantity.value) ?? 0;
+                              final double price =
+                                  double.tryParse(row.unitPrice.value) ?? 0;
                               final total = quantity * price;
                               final bool isQuantityFocus =
                                   upForm.productList[index].quantity.isFocus ??
@@ -413,21 +414,6 @@ class SaleNoteAdd extends StatelessWidget {
                                             .read<SaleNoteAddForm>()
                                             .setForm(upForm);
                                       },
-                                      onFocusChange: (value) {
-                                        if (value) {
-                                          upForm.productList[index].quantity
-                                              .isFocus = true;
-                                          context
-                                              .read<SaleNoteAddCubit>()
-                                              .load();
-                                        } else {
-                                          upForm.productList[index].quantity
-                                              .isFocus = false;
-                                          context
-                                              .read<SaleNoteAddCubit>()
-                                              .load();
-                                        }
-                                      },
                                       borderColor: isQuantityFocus
                                           ? ColorPalette.primary
                                           : ColorPalette.darkItems),
@@ -454,23 +440,13 @@ class SaleNoteAdd extends StatelessWidget {
                                     borderColor: isProductFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
-                                    onFocusChange: (value) {
-                                      if (value) {
-                                        upForm.productList[index].productCode
-                                            .isFocus = true;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      } else {
-                                        upForm.productList[index].productCode
-                                            .isFocus = false;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      }
-                                    },
                                   ),
                                   LabelCell(
                                     'Descripción',
                                     alignment: Alignment.center,
                                   ),
                                   TextFieldCell(
+                                    valid: row.unitPrice.validation,
                                     controller: priceCtrl,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.allow(
@@ -495,101 +471,40 @@ class SaleNoteAdd extends StatelessWidget {
                                     borderColor: isPriceFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
-                                    onFocusChange: (value) {
-                                      if (value) {
-                                        upForm.productList[index].unitPrice
-                                            .isFocus = true;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      } else {
-                                        upForm.productList[index].unitPrice
-                                            .isFocus = false;
-                                        context.read<SaleNoteAddCubit>().load();
-                                      }
-                                    },
                                   ),
-                                  LabelCell('Total'),
-                                  ButtonCell(
+                                  LabelCell(FormatNumber.format2dec(total)),
+                                  /*ButtonCell(
                                       onPressed: () {},
                                       child: Icon(
                                         Icons.sticky_note_2,
                                         color: ColorPalette.lightItems,
                                         size: 20,
-                                      )),
-                                ],
-                              );
-                              /*Container(
-                            height: 30,
-                            decoration: BoxDecorationTheme.rowTable(),
-                            child: Row(
-                              children: [
-                                //Cantidad
-                                Expanded(
-                                  flex: 1,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      isDense: true,
+                                      )),*/
+                                  MenuCell(
+                                    icon: Icon(
+                                      Icons.more_horiz,
+                                      size: 20,
+                                      color: ColorPalette.lightItems,
                                     ),
-                                  ),
-                                ),
-                                //Calve de producto
-                                Expanded(
-                                  flex: 1,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: TextField(
-                                        decoration: InputDecoration(
-                                          isDense: true,
+                                    menuChildren: [
+                                      MenuItemButton(
+                                        child: Text(
+                                          'Nota',
+                                          style: Typo.bodyDark,
                                         ),
-                                      )),
-                                      IconButton(
-                                        padding: EdgeInsets.all(0),
                                         onPressed: () {},
-                                        icon: Icon(
-                                          Icons.search,
-                                          color: ColorPalette.lightItems,
-                                          size: 20,
+                                      ),
+                                      MenuItemButton(
+                                        child: Text(
+                                          'Eliminar',
+                                          style: Typo.bodyCaution,
                                         ),
+                                        onPressed: () {},
                                       ),
                                     ],
                                   ),
-                                ),
-                                //Descripcion del producto
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(row.description),
-                                ),
-                                //Precio unitario
-                                Expanded(
-                                  flex: 1,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.all(Radius.zero)),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                                //Total
-                                Expanded(
-                                  flex: 1,
-                                  child: Text('$total'),
-                                ),
-                                Expanded(
-                                  child: IconButton(
-                                    padding: EdgeInsets.all(0),
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.edit_note,
-                                      color: ColorPalette.lightItems,
-                                      size: 20,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );*/
+                                ],
+                              );
                             },
                           ),
                         ),
