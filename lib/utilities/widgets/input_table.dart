@@ -20,11 +20,13 @@ class InputRow extends StatelessWidget {
 }
 
 abstract class InputCell extends StatelessWidget {
-  const InputCell({super.key});
+  final int? flex;
+  const InputCell({super.key, this.flex});
 }
 
 class TextFieldCell extends InputCell {
   final int? flex;
+  final Function(bool value) onFocusChange;
   final Color borderColor;
   final bool? isActionVisible;
   final TextEditingController? controller;
@@ -33,10 +35,12 @@ class TextFieldCell extends InputCell {
   final Function()? onPressed;
   final List<TextInputFormatter>? inputFormatters;
   final ValidationFormModel? valid;
+  final IconData? suffixIcon;
   const TextFieldCell({
     super.key,
     this.flex,
     this.isActionVisible,
+    required this.onFocusChange,
     required this.borderColor,
     this.controller,
     this.onSubmitted,
@@ -44,6 +48,7 @@ class TextFieldCell extends InputCell {
     this.onPressed,
     this.inputFormatters,
     this.valid,
+    this.suffixIcon,
   });
   @override
   Widget build(BuildContext context) {
@@ -53,93 +58,94 @@ class TextFieldCell extends InputCell {
     return Expanded(
         flex: flex_,
         child: Focus(
-            child: SizedBox(
-          height: 30,
-          child: TextField(
-            inputFormatters: inputFormatters,
-            onChanged: onChanged,
-            onSubmitted: onSubmitted,
-            controller: controller,
-            style: Typo.bodyLight,
-            cursorColor: isValid ? ColorPalette.primary : ColorPalette.caution,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 9, horizontal: 2),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.zero,
-                borderSide: BorderSide(
-                    color: isValid
-                        ? ColorPalette.darkItems
-                        : ColorPalette.caution),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.zero,
-                borderSide: BorderSide(color: isValid
-                        ? ColorPalette.darkItems
-                        : ColorPalette.caution),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.zero,
-                borderSide: BorderSide(color: isValid
-                        ? ColorPalette.primary
-                        : Colors.red),
-              ),
-              isDense: true,
-              prefixIcon: isValid
-                  ? null
-                  : SizedBox.square(
-                      dimension: 30,
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide.none,
-                            foregroundColor: ColorPalette.caution,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero),
-                            padding: EdgeInsets.zero,
-                          ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  AlertDialogAxol(text: errorText),
-                            );
-                          },
-                          child: const Icon(
-                            Icons.error_outline,
-                            color: ColorPalette.caution,
-                            size: 20,
-                          )),
-                    ),
-              suffixIcon: isActionVisible ?? false
-                  ? SizedBox.square(
-                      dimension: 30,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          side: BorderSide.none,
-                          foregroundColor: ColorPalette.primary,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero),
-                        ),
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.search,
-                          size: 20,
-                          color: ColorPalette.lightItems,
-                        ),
+            onFocusChange: onFocusChange,
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                color: isValid ? borderColor : ColorPalette.caution,
+              )),
+              height: 30,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      inputFormatters: inputFormatters,
+                      onChanged: onChanged,
+                      onSubmitted: onSubmitted,
+                      controller: controller,
+                      style: Typo.bodyLight,
+                      cursorColor:
+                          isValid ? ColorPalette.primary : ColorPalette.caution,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        isDense: true,
+                        prefixIcon: isValid
+                            ? null
+                            : SizedBox.square(
+                                dimension: 30,
+                                child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: BorderSide.none,
+                                      foregroundColor: ColorPalette.caution,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.zero),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            AlertDialogAxol(text: errorText),
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.error_outline,
+                                      color: ColorPalette.caution,
+                                      size: 20,
+                                    )),
+                              ),
+                        suffixIcon: isActionVisible ?? false
+                            ? SizedBox.square(
+                                dimension: 30,
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    side: BorderSide.none,
+                                    foregroundColor: ColorPalette.primary,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero),
+                                  ),
+                                  onPressed: () {},
+                                  child: const Icon(
+                                    Icons.search,
+                                    size: 20,
+                                    color: ColorPalette.lightItems,
+                                  ),
+                                ),
+                              )
+                            : null,
                       ),
-                    )
-                  : null,
-            ),
-          ),
-        )));
+                    ),
+                  ),
+                ],
+              ),
+            )));
   }
 }
 
 class LabelCell extends InputCell {
   final String text;
-  final int? flex;
   final AlignmentGeometry? alignment;
-  const LabelCell(this.text, {super.key, this.flex, this.alignment});
+  final IconData? suffixIcon;
+  final Function()? onPressedSuffix;
+  const LabelCell(
+    this.text, {
+    super.key,
+    super.flex,
+    this.alignment,
+    this.suffixIcon,
+    this.onPressedSuffix,
+  });
   @override
   Widget build(BuildContext context) {
     final flex_ = flex ?? 1;
@@ -150,12 +156,38 @@ class LabelCell extends InputCell {
           height: 30,
           decoration:
               BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
-          child: Align(
-            alignment: alignment ?? Alignment.centerLeft,
-            child: Text(
-              text_,
-              style: Typo.bodyLight,
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Align(
+                alignment: alignment ?? Alignment.centerLeft,
+                child: Text(
+                  text_,
+                  overflow: TextOverflow.ellipsis,
+                  style: Typo.bodyLight,
+                ),
+              )),
+              Visibility(
+                  visible: suffixIcon != null,
+                  child: SizedBox.square(
+                    dimension: 30,
+                    child: OutlinedButton(
+                      onPressed: onPressedSuffix,
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        side: BorderSide.none,
+                        foregroundColor: ColorPalette.primary,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                      ),
+                      child: Icon(
+                        suffixIcon,
+                        color: ColorPalette.lightItems,
+                        size: 20,
+                      ),
+                    ),
+                  ))
+            ],
           ),
         ));
   }
@@ -164,8 +196,8 @@ class LabelCell extends InputCell {
 class ButtonCell extends InputCell {
   final Function()? onPressed;
   final Widget child;
-  final int? flex;
-  const ButtonCell({super.key, this.onPressed, required this.child, this.flex});
+  const ButtonCell(
+      {super.key, this.onPressed, required this.child, super.flex});
 
   @override
   Widget build(BuildContext context) {
@@ -185,5 +217,43 @@ class ButtonCell extends InputCell {
             child: child,
           ),
         ));
+  }
+}
+
+class MenuCell extends InputCell {
+  final List<Widget> menuChildren;
+  final Icon icon;
+  const MenuCell({
+    super.key,
+    super.flex,
+    required this.menuChildren,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        flex: flex ?? 1,
+        child: Container(
+            height: 30,
+            decoration: BoxDecoration(
+                border: Border.all(color: ColorPalette.darkItems)),
+            child: MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  splashRadius: 15,
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                  icon: icon,
+                );
+              },
+              menuChildren: menuChildren,
+            )));
   }
 }

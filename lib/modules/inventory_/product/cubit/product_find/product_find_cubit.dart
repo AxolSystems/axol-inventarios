@@ -2,22 +2,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/data_find.dart';
 import '../../../../../utilities/widgets/drawer_find.dart';
-import '../../model/customer_model.dart';
-import '../../repository/customer_repo.dart';
+import '../../model/product_model.dart';
+import '../../repository/product_repo.dart';
 
-class CustomerFindCubit extends Cubit<DrawerFindState> {
-  CustomerFindCubit() : super(InitialDrawerFindState());
+class ProductFindCubit extends Cubit<DrawerFindState> {
+  ProductFindCubit() : super(InitialDrawerFindState());
 
   Future<void> load(String find) async {
-    List<CustomerModel> customersDB;
+    List<ProductModel> productsDB;
     List<DataFind> dataList = [];
     DataFind data;
     try {
       emit(InitialDrawerFindState());
       emit(LoadingDrawerFindState());
-      customersDB = await CustomerRepo().fetchCustomersIlike(find);
-      for (var customer in customersDB) {
-        data = DataFind(id: customer.id.toString(), description: customer.name, data: customer);
+      productsDB = await ProductRepo().fetchProductFinder(find);
+      for (var product in productsDB) {
+        data = DataFind(id: product.code, description: product.description, data: product);
         dataList.add(data);
       }
       emit(LoadedDrawerFindState(dataList: dataList));
