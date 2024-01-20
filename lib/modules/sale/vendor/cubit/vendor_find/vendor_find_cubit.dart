@@ -17,7 +17,7 @@ class VendorFindCubit extends Cubit<DrawerFindState> {
       emit(LoadingDrawerFindState());
       vendorsDB = await VendorRepo().fetchVendorIlike(find);
       for (var vendor in vendorsDB) {
-        data = DataFind(id: vendor.id, description: vendor.name, data: vendor);
+        data = DataFind(id: vendor.id.toString(), description: vendor.name, data: vendor);
         dataList.add(data);
       }
       emit(LoadedDrawerFindState(dataList: dataList));

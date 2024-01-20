@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/models/validation_form_model.dart';
+import 'package:axol_inventarios/modules/inventory_/product/repository/product_repo.dart';
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,6 +7,7 @@ import '../../../../../models/inventory_model.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../../inventory_/inventory/repository/inventory_repo.dart';
 import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
+import '../../../../inventory_/product/model/product_model.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
 import '../../../vendor/repository/vendor_repo.dart';
@@ -141,6 +143,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       SaleNoteAddFormModel form, String key, int index) async {
     SaleNoteRowFormModel row = form.productList[index];
     InventoryModel? inventoryRow;
+    ProductModel? productDB;
     final String inventoryName = form.warehouseTf.validation.isValid
         ? form.warehouseTf.value.split(' - ').last
         : '';
@@ -164,9 +167,12 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
             row.quantity.validation =
                 ValidationFormModel.falseValid(row.emNotStock);
           } else {
+            productDB =
+                await ProductRepo().fetchProductByCode(inventoryRow.code);
             row.quantity.validation = ValidationFormModel.trueValid();
             row.productCode.validation = ValidationFormModel.trueValid();
             row.quantity.value = quantity.toString();
+            row.description = productDB?.description ?? '';
           }
         } else {
           row.quantity.validation = ValidationFormModel.trueValid();
@@ -180,8 +186,11 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         if (inventoryRow == null || quantity > inventoryRow.stock) {
           row.productCode.validation =
               ValidationFormModel.falseValid(row.emNotStock);
+          row.description = '';
         } else {
+          productDB = await ProductRepo().fetchProductByCode(inventoryRow.code);
           row.productCode.validation = ValidationFormModel.trueValid();
+          row.description = productDB?.description ?? '';
         }
       }
       if (key == row.keyPrice) {
@@ -208,6 +217,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     InventoryModel? inventoryRow;
     double? quantity;
     String code;
+    ProductModel? productDB;
     final String inventoryName = form.warehouseTf.validation.isValid
         ? form.warehouseTf.value.split(' - ').last
         : '';
@@ -219,14 +229,17 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         inventoryRow =
             await InventoryRepo().fetchRowByCode(code, inventoryName);
         if (inventoryRow != null && quantity < inventoryRow.stock) {
+          productDB = await ProductRepo().fetchProductByCode(inventoryRow.code);
           row.quantity.validation = ValidationFormModel.trueValid();
           row.productCode.validation = ValidationFormModel.trueValid();
           row.quantity.value = quantity.toString();
+          row.description = productDB?.description ?? '';
         } else {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emNotStock);
           row.productCode.validation =
               ValidationFormModel.falseValid(row.emNotStock);
+          row.description = '';
         }
       } else if (row.productCode.value == '') {
         row.quantity.validation = ValidationFormModel.trueValid();

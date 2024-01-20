@@ -17,7 +17,7 @@ class WarehouseFindCubit extends Cubit<DrawerFindState> {
       emit(LoadingDrawerFindState());
       warehouseDB = await WarehousesRepo().fetchWarehouseIlike(find);
       for (var warehouse in warehouseDB) {
-        data = DataFind(id: warehouse.id, description: warehouse.name, data: warehouse);
+        data = DataFind(id: warehouse.id.toString(), description: warehouse.name, data: warehouse);
         dataList.add(data);
       }
       emit(LoadedDrawerFindState(dataList: dataList));

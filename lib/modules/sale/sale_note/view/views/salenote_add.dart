@@ -12,6 +12,8 @@ import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
 import '../../../../../utilities/widgets/input_table.dart';
 import '../../../../../utilities/widgets/toolbar.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
+import '../../../../inventory_/product/model/product_model.dart';
+import '../../../../inventory_/product/view/product_drawer_details.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../vendor/model/vendor_model.dart';
 import '../../cubit/salenote_add/salenote_add_cubit.dart';
@@ -312,7 +314,7 @@ class SaleNoteAdd extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                flex: 1,
+                                flex: 2,
                                 child: Text(
                                   'Descripición',
                                   style: Typo.subtitleLight,
@@ -388,6 +390,7 @@ class SaleNoteAdd extends StatelessWidget {
                                       false;
                               return InputRow(
                                 children: [
+                                  // --- Quantity
                                   TextFieldCell(
                                       valid: row.quantity.validation,
                                       inputFormatters: [
@@ -417,9 +420,10 @@ class SaleNoteAdd extends StatelessWidget {
                                       borderColor: isQuantityFocus
                                           ? ColorPalette.primary
                                           : ColorPalette.darkItems),
+                                  // --- Product code
                                   TextFieldCell(
                                     controller: productCtrl,
-                                    isActionVisible: true,
+                                    suffixIcon: Icons.search,
                                     valid: row.productCode.validation,
                                     onChanged: (value) {
                                       upForm.productList[index].productCode
@@ -437,14 +441,46 @@ class SaleNoteAdd extends StatelessWidget {
                                           .validateCell(
                                               upForm, row.keyProduct, index);
                                     },
+                                    onPressed: () {
+                                      showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  const ProviderProductFind())
+                                          .then((value) {
+                                        if (value is DataFind &&
+                                            value.data is ProductModel) {
+                                          final ProductModel product =
+                                              value.data;
+                                          form.productList[index].productCode
+                                              .value = product.code;
+                                          context
+                                              .read<SaleNoteAddCubit>()
+                                              .validateCell(
+                                                  form, row.keyProduct, index);
+                                        }
+                                      });
+                                    },
                                     borderColor: isProductFocus
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
                                   ),
+                                  // --- Descriprtion
                                   LabelCell(
-                                    'Descripción',
+                                    row.description,
+                                    flex: 2,
                                     alignment: Alignment.center,
+                                    suffixIcon: Icons.arrow_outward,
+                                    onPressedSuffix: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            ProductDrawerDetails(
+                                          product: product,
+                                        ),
+                                      );
+                                    },
                                   ),
+                                  // --- Unit price
                                   TextFieldCell(
                                     valid: row.unitPrice.validation,
                                     controller: priceCtrl,
@@ -472,30 +508,38 @@ class SaleNoteAdd extends StatelessWidget {
                                         ? ColorPalette.primary
                                         : ColorPalette.darkItems,
                                   ),
+                                  // --- Total
                                   LabelCell(FormatNumber.format2dec(total)),
-                                  /*ButtonCell(
-                                      onPressed: () {},
-                                      child: Icon(
-                                        Icons.sticky_note_2,
-                                        color: ColorPalette.lightItems,
-                                        size: 20,
-                                      )),*/
+                                  // --- Options
                                   MenuCell(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.more_horiz,
                                       size: 20,
                                       color: ColorPalette.lightItems,
                                     ),
                                     menuChildren: [
                                       MenuItemButton(
-                                        child: Text(
+                                        child: const Text(
                                           'Nota',
                                           style: Typo.bodyDark,
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                ProviderSaleNoteNote(row: row),
+                                          ).then((value) {
+                                            if (value is SaleNoteRowFormModel) {
+                                              form.productList[index] = value;
+                                              context
+                                                  .read<SaleNoteAddCubit>()
+                                                  .load();
+                                            }
+                                          });
+                                        },
                                       ),
                                       MenuItemButton(
-                                        child: Text(
+                                        child: const Text(
                                           'Eliminar',
                                           style: Typo.bodyCaution,
                                         ),

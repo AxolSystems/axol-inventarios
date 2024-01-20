@@ -26,17 +26,18 @@ abstract class InputCell extends StatelessWidget {
 
 class TextFieldCell extends InputCell {
   final Color borderColor;
-  final bool? isActionVisible;
+  //final bool? isActionVisible;
   final TextEditingController? controller;
   final Function(String value)? onSubmitted;
   final Function(String value)? onChanged;
   final Function()? onPressed;
   final List<TextInputFormatter>? inputFormatters;
   final ValidationFormModel? valid;
+  final IconData? suffixIcon;
   const TextFieldCell({
     super.key,
     super.flex,
-    this.isActionVisible,
+    //this.isActionVisible,
     required this.borderColor,
     this.controller,
     this.onSubmitted,
@@ -44,6 +45,7 @@ class TextFieldCell extends InputCell {
     this.onPressed,
     this.inputFormatters,
     this.valid,
+    this.suffixIcon,
   });
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class TextFieldCell extends InputCell {
                             size: 20,
                           )),
                     ),
-              suffixIcon: isActionVisible ?? false
+              suffixIcon: suffixIcon != null
                   ? SizedBox.square(
                       dimension: 30,
                       child: OutlinedButton(
@@ -118,9 +120,9 @@ class TextFieldCell extends InputCell {
                           shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero),
                         ),
-                        onPressed: () {},
-                        child: const Icon(
-                          Icons.search,
+                        onPressed: onPressed,
+                        child: Icon(
+                          suffixIcon,
                           size: 20,
                           color: ColorPalette.lightItems,
                         ),
@@ -136,7 +138,16 @@ class TextFieldCell extends InputCell {
 class LabelCell extends InputCell {
   final String text;
   final AlignmentGeometry? alignment;
-  const LabelCell(this.text, {super.key, super.flex, this.alignment});
+  final IconData? suffixIcon;
+  final Function()? onPressedSuffix;
+  const LabelCell(
+    this.text, {
+    super.key,
+    super.flex,
+    this.alignment,
+    this.suffixIcon,
+    this.onPressedSuffix,
+  });
   @override
   Widget build(BuildContext context) {
     final flex_ = flex ?? 1;
@@ -147,13 +158,38 @@ class LabelCell extends InputCell {
           height: 30,
           decoration:
               BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
-          child: Align(
-            alignment: alignment ?? Alignment.centerLeft,
-            child: Text(
-              text_,
-              overflow: TextOverflow.ellipsis,
-              style: Typo.bodyLight,
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Align(
+                alignment: alignment ?? Alignment.centerLeft,
+                child: Text(
+                  text_,
+                  overflow: TextOverflow.ellipsis,
+                  style: Typo.bodyLight,
+                ),
+              )),
+              Visibility(
+                  visible: suffixIcon != null,
+                  child: SizedBox.square(
+                    dimension: 30,
+                    child: OutlinedButton(
+                      onPressed: onPressedSuffix,
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        side: BorderSide.none,
+                        foregroundColor: ColorPalette.primary,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
+                      ),
+                      child: Icon(
+                        suffixIcon,
+                        color: ColorPalette.lightItems,
+                        size: 20,
+                      ),
+                    ),
+                  ))
+            ],
           ),
         ));
   }
