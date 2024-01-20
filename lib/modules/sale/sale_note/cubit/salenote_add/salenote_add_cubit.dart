@@ -155,6 +155,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       SaleNoteAddFormModel form, String key, int index) async {
     SaleNoteRowFormModel row = form.productList[index];
     InventoryModel? inventoryRow;
+    ProductModel? productDB;
     final String inventoryName = form.warehouseTf.validation.isValid
         ? form.warehouseTf.value.split(' - ').last
         : '';
@@ -192,9 +193,9 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               ValidationFormModel.falseValid(row.emNotStock);
           row.description = '';
         } else {
-          //productDB = await ProductRepo().fetchProductByCode(inventoryRow.code);
+          productDB = await ProductRepo().fetchProductByCode(inventoryRow.code);
           row.productCode.validation = ValidationFormModel.trueValid();
-          //row.description = productDB?.description ?? '';
+          row.description = productDB?.description ?? '';
         }
       }
       if (key == row.keyPrice) {

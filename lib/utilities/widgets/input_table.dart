@@ -28,7 +28,7 @@ class TextFieldCell extends InputCell {
   final int? flex;
   final Function(bool value) onFocusChange;
   final Color borderColor;
-  final bool? isActionVisible;
+  //final bool? isActionVisible;
   final TextEditingController? controller;
   final Function(String value)? onSubmitted;
   final Function(String value)? onChanged;
@@ -39,7 +39,7 @@ class TextFieldCell extends InputCell {
   const TextFieldCell({
     super.key,
     this.flex,
-    this.isActionVisible,
+    //this.isActionVisible,
     required this.onFocusChange,
     required this.borderColor,
     this.controller,
@@ -104,7 +104,7 @@ class TextFieldCell extends InputCell {
                                       size: 20,
                                     )),
                               ),
-                        suffixIcon: isActionVisible ?? false
+                        suffixIcon: suffixIcon != null
                             ? SizedBox.square(
                                 dimension: 30,
                                 child: OutlinedButton(
@@ -115,7 +115,7 @@ class TextFieldCell extends InputCell {
                                     shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.zero),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: onPressed,
                                   child: const Icon(
                                     Icons.search,
                                     size: 20,
