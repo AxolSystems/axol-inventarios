@@ -1,10 +1,8 @@
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/validation_form_model.dart';
-import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_cubit.dart';
 import '../theme/theme.dart';
 
 class InputRow extends StatelessWidget {
@@ -25,7 +23,6 @@ abstract class InputCell extends StatelessWidget {
 }
 
 class TextFieldCell extends InputCell {
-  final int? flex;
   final Function(bool value) onFocusChange;
   final Color borderColor;
   //final bool? isActionVisible;
@@ -38,7 +35,7 @@ class TextFieldCell extends InputCell {
   final IconData? suffixIcon;
   const TextFieldCell({
     super.key,
-    this.flex,
+    super.flex,
     //this.isActionVisible,
     required this.onFocusChange,
     required this.borderColor,

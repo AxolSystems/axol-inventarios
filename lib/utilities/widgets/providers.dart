@@ -93,7 +93,7 @@ class ProviderProductFind extends Providers {
   Widget build(BuildContext context) => MultiBlocProvider(providers: [
         BlocProvider(create: (_) => ProductFindCubit()),
         BlocProvider(create: (_) => FinderForm()),
-      ], child: const ProductDrawerFind());
+      ], child: const ProductDrawerFindAll());
 }
 
 //----SaleNote

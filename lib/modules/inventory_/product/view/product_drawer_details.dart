@@ -16,8 +16,12 @@ class ProductDrawerDetails extends StatelessWidget {
           'Detalles del producto',
           style: Typo.subtitleDark,
         ),
-        actions: const [
-          ButtonReturnDialog()
+        actions: [
+          ButtonReturnDialog(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
         ],
         children: [
           rowDrawer('Clave: ', product.code),
@@ -29,7 +33,8 @@ class ProductDrawerDetails extends StatelessWidget {
           rowDrawer('Calibre: ',
               product.gauge == null ? '' : product.gauge.toString()),
           rowDrawer('Presentación: ', product.pieces ?? ''),
-          rowDrawer('Peso: ', product.weight == null ? '' : product.weight.toString()),
+          rowDrawer('Peso: ',
+              product.weight == null ? '' : product.weight.toString()),
         ]);
   }
 

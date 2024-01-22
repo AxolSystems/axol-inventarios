@@ -16,6 +16,7 @@ class DrawerFind extends StatelessWidget {
   final Function()? onPressed;
   final Function(String value)? onSubmitted;
   final bool? isLoading;
+  final List<DrawerColumn>? headerTable;
 
   const DrawerFind({
     super.key,
@@ -24,6 +25,7 @@ class DrawerFind extends StatelessWidget {
     required this.listData,
     this.isLoading,
     this.onSubmitted,
+    this.headerTable,
   });
 
   @override
@@ -34,32 +36,57 @@ class DrawerFind extends StatelessWidget {
     controller.value = TextEditingValue(
         text: form.value,
         selection: TextSelection.collapsed(offset: form.position));
+    final headerTable_ = headerTable ?? [];
+    List<Widget> subtitleList = [];
+    Widget subtitle;
+    List<Widget> contentList;
+    for (DrawerColumn element in headerTable_) {
+      subtitle = Expanded(
+        flex: element.flex ?? 1,
+          child: Text(
+        element.subtitle,
+        style: Typo.bodyDark,
+      ));
+      subtitleList.add(subtitle);
+    }
+    if () {
+      
+    }
     return DrawerBox(
       padding: const EdgeInsets.all(8),
-      header: Row(
+      header: Column(
         children: [
-          Expanded(
-            child: TextField(
-              controller: controller,
-              autofocus: true,
-              decoration: TextFieldDecoration.inputForm(lblText: lblText),
-              cursorColor: ColorPalette.primary,
-              style: Typo.bodyDark,
-              onSubmitted: onSubmitted,
-              onChanged: (value) {
-                upForm.value = value;
-                upForm.position = controller.selection.base.offset;
-                context.read<FinderForm>().setForm(upForm);
-              },
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  autofocus: true,
+                  decoration: TextFieldDecoration.inputForm(lblText: lblText),
+                  cursorColor: ColorPalette.primary,
+                  style: Typo.bodyDark,
+                  onSubmitted: onSubmitted,
+                  onChanged: (value) {
+                    upForm.value = value;
+                    upForm.position = controller.selection.base.offset;
+                    context.read<FinderForm>().setForm(upForm);
+                  },
+                ),
+              ),
+              IconButton(
+                onPressed: onPressed,
+                icon: const Icon(
+                  Icons.close,
+                  color: ColorPalette.lightItems,
+                ),
+              )
+            ],
           ),
-          IconButton(
-            onPressed: onPressed,
-            icon: const Icon(
-              Icons.close,
-              color: ColorPalette.lightItems,
-            ),
-          )
+          Visibility(
+              visible: headerTable != null && headerTable != [],
+              child: Row(
+                children: subtitleList,
+              ))
         ],
       ),
       actions: [
@@ -150,4 +177,11 @@ class FinderForm extends Cubit<TextfieldFormModel> {
     emit(TextfieldFormModel.empty());
     emit(form);
   }
+}
+
+class DrawerColumn {
+  final String subtitle;
+  final int? flex;
+
+  DrawerColumn(this.subtitle, {this.flex});
 }
