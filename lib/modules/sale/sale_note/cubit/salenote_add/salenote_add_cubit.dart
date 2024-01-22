@@ -49,18 +49,6 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     }
   }
 
-  Future<void> test() async {
-    try {
-      emit(InitialSaleNoteAddState());
-      emit(LoadingSaleNoteAddState());
-
-      //emit(const LoadedSaleNoteAddState(rowFormList: []));
-    } catch (e) {
-      emit(InitialSaleNoteAddState());
-      emit(ErrorSaleNoteAddState(error: e.toString()));
-    }
-  }
-
   Future<void> fetchCustomer(String find, SaleNoteAddFormModel form) async {
     SaleNoteAddFormModel upForm = form;
     List<CustomerModel> customerList;
@@ -191,11 +179,11 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         if (inventoryRow == null || quantity > inventoryRow.stock) {
           row.productCode.validation =
               ValidationFormModel.falseValid(row.emNotStock);
-          row.description = '';
+          row.product = ProductModel.empty();
         } else {
-          productDB = await ProductRepo().fetchProductByCode(inventoryRow.code);
+          productDB = await ProductRepo().fetchProduct(inventoryRow.code);
           row.productCode.validation = ValidationFormModel.trueValid();
-          row.description = productDB?.description ?? '';
+          row.product = productDB ?? ProductModel.empty();
         }
       }
       if (key == row.keyPrice) {
@@ -234,17 +222,17 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         inventoryRow =
             await InventoryRepo().fetchRowByCode(code, inventoryName);
         if (inventoryRow != null && quantity < inventoryRow.stock) {
-          productDB = await ProductRepo().fetchProductByCode(inventoryRow.code);
+          productDB = await ProductRepo().fetchProduct(inventoryRow.code);
           row.quantity.validation = ValidationFormModel.trueValid();
           row.productCode.validation = ValidationFormModel.trueValid();
           row.quantity.value = quantity.toString();
-          row.description = productDB?.description ?? '';
+          row.product = productDB ?? ProductModel.empty();
         } else {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emNotStock);
           row.productCode.validation =
               ValidationFormModel.falseValid(row.emNotStock);
-          row.description = '';
+          row.product = ProductModel.empty();
         }
       } else if (row.productCode.value == '') {
         row.quantity.validation = ValidationFormModel.trueValid();

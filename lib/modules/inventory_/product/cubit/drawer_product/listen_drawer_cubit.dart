@@ -34,7 +34,7 @@ class ListenProductCubit extends Cubit<ProductModel> {
         class_: class_
         );
     //print(changedProduct.properties);
-    emit(ProductModel.emptyValue());
+    emit(ProductModel.empty());
     emit(changedProduct);
   }
 

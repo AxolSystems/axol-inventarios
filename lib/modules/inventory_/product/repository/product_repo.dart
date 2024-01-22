@@ -112,7 +112,7 @@ class ProductRepo {
           code: element[_code],
           description: element[_description] ?? '',
           properties:
-              element[_properties] ?? ProductModel.emptyValue().properties,
+              element[_properties] ?? ProductModel.empty().properties,
           class_: element[_class],
         );
         products.add(product);

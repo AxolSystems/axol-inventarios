@@ -1,10 +1,11 @@
 import '../../../../models/textfield_form_model.dart';
+import '../../../inventory_/product/model/product_model.dart';
 
 class SaleNoteRowFormModel {
   TextfieldFormModel quantity;
   TextfieldFormModel productCode;
   TextfieldFormModel unitPrice;
-  String description;
+  ProductModel product;
   String note;
 
   final String _keyQuantity = 'quantity';
@@ -22,7 +23,7 @@ class SaleNoteRowFormModel {
     required this.quantity,
     required this.productCode,
     required this.unitPrice,
-    required this.description,
+    required this.product,
     required this.note,
   });
 
@@ -30,6 +31,6 @@ class SaleNoteRowFormModel {
         quantity =  TextfieldFormModel.zero(),
         productCode = TextfieldFormModel.empty(),
         unitPrice = TextfieldFormModel.zero(),
-        description = '',
+        product = ProductModel.empty(),
         note = '';
 }

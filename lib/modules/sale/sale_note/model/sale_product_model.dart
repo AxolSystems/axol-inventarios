@@ -21,7 +21,7 @@ class SaleProductModel {
   static SaleProductModel empty() => SaleProductModel(
     note: '',
     price: 0,
-    product: ProductModel.emptyValue(),
+    product: ProductModel.empty(),
     quantity: 0,
   );
 }

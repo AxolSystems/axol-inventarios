@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/format.dart';
+import '../../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../models/data_find.dart';
 import '../../../../../utilities/navigation_utilities.dart';
@@ -51,7 +52,12 @@ class SaleNoteAdd extends StatelessWidget {
       },
       listener: (context, state) {
         if (state is ErrorSaleNoteAddState) {
-          print(state.error);
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialogAxol(
+              text: state.error,
+            ),
+          );
         }
       },
     );
@@ -394,34 +400,35 @@ class SaleNoteAdd extends StatelessWidget {
                                 children: [
                                   // --- Quantity
                                   TextFieldCell(
-                                      valid: row.quantity.validation,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'^\d*\.?\d*$'))
-                                      ],
-                                      controller: quantityCtrl,
-                                      onSubmitted: (value) {
-                                        upForm = context
-                                            .read<SaleNoteAddForm>()
-                                            .state;
-                                        context
-                                            .read<SaleNoteAddCubit>()
-                                            .validateCell(
-                                                upForm, row.keyQuantity, index);
-                                      },
-                                      onChanged: (value) {
-                                        upForm.productList[index].quantity
-                                            .value = value;
-                                        upForm.productList[index].quantity
-                                                .position =
-                                            quantityCtrl.selection.base.offset;
-                                        context
-                                            .read<SaleNoteAddForm>()
-                                            .setForm(upForm);
-                                      },
-                                      borderColor: isQuantityFocus
-                                          ? ColorPalette.primary
-                                          : ColorPalette.darkItems, onFocusChange: (bool value) {  },),
+                                    valid: row.quantity.validation,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'^\d*\.?\d*$'))
+                                    ],
+                                    controller: quantityCtrl,
+                                    onSubmitted: (value) {
+                                      upForm =
+                                          context.read<SaleNoteAddForm>().state;
+                                      context
+                                          .read<SaleNoteAddCubit>()
+                                          .validateCell(
+                                              upForm, row.keyQuantity, index);
+                                    },
+                                    onChanged: (value) {
+                                      upForm.productList[index].quantity.value =
+                                          value;
+                                      upForm.productList[index].quantity
+                                              .position =
+                                          quantityCtrl.selection.base.offset;
+                                      context
+                                          .read<SaleNoteAddForm>()
+                                          .setForm(upForm);
+                                    },
+                                    borderColor: isQuantityFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (bool value) {},
+                                  ),
                                   // --- Product code
                                   TextFieldCell(
                                     controller: productCtrl,
@@ -464,22 +471,23 @@ class SaleNoteAdd extends StatelessWidget {
                                     },
                                     borderColor: isProductFocus
                                         ? ColorPalette.primary
-                                        : ColorPalette.darkItems, onFocusChange: (bool value) {  },
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (bool value) {},
                                   ),
                                   // --- Descriprtion
                                   LabelCell(
-                                    row.description,
+                                    row.product.description,
                                     flex: 2,
                                     alignment: Alignment.center,
                                     suffixIcon: Icons.arrow_outward,
                                     onPressedSuffix: () {
-                                      /*showDialog(
+                                      showDialog(
                                         context: context,
                                         builder: (context) =>
                                             ProductDrawerDetails(
-                                          product: product,
+                                          product: row.product,
                                         ),
-                                      );*/
+                                      );
                                     },
                                   ),
                                   // --- Unit price
@@ -508,7 +516,8 @@ class SaleNoteAdd extends StatelessWidget {
                                     },
                                     borderColor: isPriceFocus
                                         ? ColorPalette.primary
-                                        : ColorPalette.darkItems, onFocusChange: (bool value) {  },
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (bool value) {},
                                   ),
                                   // --- Total
                                   LabelCell(FormatNumber.format2dec(total)),
@@ -582,10 +591,7 @@ class SaleNoteAdd extends StatelessWidget {
                         SizedBox(
                           height: 50,
                           child: OutlinedButton(
-                            onPressed: () {
-                              context
-                                  .read<SaleNoteAddCubit>().test();
-                            },
+                            onPressed: () {},
                             style: OutlinedButton.styleFrom(
                               side: BorderSide.none,
                               foregroundColor: ColorPalette.primary,

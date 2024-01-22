@@ -33,11 +33,11 @@ class ToolbarProducts extends StatelessWidget {
                       BlocProvider(create: (_) => DrawerProductCubit()),
                       BlocProvider(
                           create: (_) => ListenProductCubit(
-                              initialProduct: ProductModel.emptyValue())),
+                              initialProduct: ProductModel.empty())),
                     ],
                     child: DrawerProductController(
                       mode: mode,
-                      initialProduct: ProductModel.emptyValue(),
+                      initialProduct: ProductModel.empty(),
                     )),
               ).then((value) {
                 if (value == true) {

@@ -35,7 +35,7 @@ class ProductModel {
     this.capacity,
   });
 
-  static ProductModel emptyValue() {
+  static ProductModel empty() {
     return ProductModel(
         code: '',
         description: '',
@@ -57,7 +57,7 @@ class ProductModel {
     ProductModel newProduct;
     Map<String, dynamic> newMap = {};
     final List<String> propList =
-        List.from(ProductModel.emptyValue().properties!.keys);
+        List.from(ProductModel.empty().properties!.keys);
     for (var element in propList) {
       if (product.properties!.containsKey(element)) {
         newMap[element] = product.properties![element];
