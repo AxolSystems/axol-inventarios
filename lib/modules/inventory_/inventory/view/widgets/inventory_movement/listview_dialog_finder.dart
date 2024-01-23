@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import '../../../../../../models/inventory_row_model.dart';
 import '../../../../../../utilities/theme/theme.dart';
 
-class ListviewFindProdcut extends StatelessWidget {
+class ListviewFindProduct extends StatelessWidget {
   final List<InventoryRowModel>? inventoryList;
   final List<ProductModel>? productList;
   final bool isWithStock;
 
-  const ListviewFindProdcut(
+  const ListviewFindProduct(
       {super.key, this.inventoryList, required this.isWithStock, this.productList});
 
   @override

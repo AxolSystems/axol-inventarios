@@ -105,12 +105,12 @@ class DrawerFindProduct extends StatelessWidget {
               children: [const LinearProgressIndicator(), Container()],
             ));
           } else if (state is LoadedInventory) {
-            return ListviewFindProdcut(
+            return ListviewFindProduct(
               inventoryList: state.inventoryList,
               isWithStock: true,
             );
           } else if (state is LoadedProducts) {
-            return ListviewFindProdcut(
+            return ListviewFindProduct(
               productList: state.productList,
               isWithStock: false,
             );

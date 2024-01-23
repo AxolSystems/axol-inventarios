@@ -232,6 +232,7 @@ class SaleNoteAdd extends StatelessWidget {
                                           value.data is VendorModel) {
                                         upForm.vendorTf.value =
                                             '${value.id} - ${value.data.name}';
+                                        upForm.warehouse = value.data;
                                         context
                                             .read<SaleNoteAddForm>()
                                             .setForm(upForm);
@@ -452,10 +453,11 @@ class SaleNoteAdd extends StatelessWidget {
                                     },
                                     onPressed: () {
                                       showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  const ProviderProductFind())
-                                          .then((value) {
+                                          context: context,
+                                          builder: (context) =>
+                                              ProviderProductFind(
+                                                warehouse: upForm.warehouse,
+                                              )).then((value) {
                                         if (value is DataFind &&
                                             value.data is ProductModel) {
                                           final ProductModel product =

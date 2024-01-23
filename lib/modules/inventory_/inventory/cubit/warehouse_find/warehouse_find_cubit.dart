@@ -20,7 +20,7 @@ class WarehouseFindCubit extends Cubit<DrawerFindState> {
         data = DataFind(id: warehouse.id.toString(), description: warehouse.name, data: warehouse);
         dataList.add(data);
       }
-      emit(LoadedDrawerFindState(dataList: dataList));
+      emit(LoadedDrawerFindState(dataList: dataList, valuesList: const []));
     } catch (e) {
       emit(InitialDrawerFindState());
       emit(ErrorDrawerFindState(error: e.toString()));

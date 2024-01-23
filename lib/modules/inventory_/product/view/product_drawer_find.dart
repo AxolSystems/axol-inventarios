@@ -3,72 +3,43 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/textfield_form_model.dart';
 import '../../../../utilities/widgets/drawer_find.dart';
+import '../../inventory/model/warehouse_model.dart';
 import '../cubit/product_find/product_find_cubit.dart';
 
-class ProductDrawerFindAll extends StatelessWidget {
-  const ProductDrawerFindAll({super.key});
+class ProductDrawerFind extends StatelessWidget {
+  final WarehouseModel warehouse;
+  const ProductDrawerFind({super.key, required this.warehouse});
 
   @override
   Widget build(BuildContext context) {
     const String lblText = 'Producto';
+    final List<DrawerColumn> subtitleList = [
+      DrawerColumn('Id', flex: 1),
+      DrawerColumn('Descripción', flex: 5),
+    ];
     return BlocBuilder<ProductFindCubit, DrawerFindState>(
-      bloc: context.read<ProductFindCubit>()..load(''),
+      bloc: context.read<ProductFindCubit>()..load('', warehouse),
       builder: (context, state) {
         if (state is LoadingDrawerFindState) {
-          return const DrawerFind(
+          return DrawerFind(
+            headerTable: subtitleList,
             lblText: lblText,
-            listData: [],
+            listValues: const [],
             isLoading: true,
           );
         } else if (state is LoadedDrawerFindState) {
+          print('flag1: ${state.valuesList.length}');
           return DrawerFind(
+            headerTable: subtitleList,
             lblText: lblText,
             onPressed: () {
               context.read<FinderForm>().setForm(TextfieldFormModel.empty());
-              context.read<ProductFindCubit>().load('');
+              context.read<ProductFindCubit>().load('', warehouse);
             },
             onSubmitted: (value) {
-              context.read<ProductFindCubit>().load(value);
+              context.read<ProductFindCubit>().load(value, warehouse);
             },
-            listData: state.dataList,
-          );
-        } else {
-          return const DrawerFind(
-            lblText: lblText,
-            listData: [],
-          );
-        }
-      },
-    );
-  }
-}
-
-class ProductDrawerFindInv extends StatelessWidget {
-  const ProductDrawerFindInv({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    const String lblText = 'Producto';
-    return BlocBuilder<ProductFindCubit, DrawerFindState>(
-      bloc: context.read<ProductFindCubit>()..load(''),
-      builder: (context, state) {
-        if (state is LoadingDrawerFindState) {
-          return const DrawerFind(
-            lblText: lblText,
-            listData: [],
-            isLoading: true,
-          );
-        } else if (state is LoadedDrawerFindState) {
-          return DrawerFind(
-            lblText: lblText,
-            onPressed: () {
-              context.read<FinderForm>().setForm(TextfieldFormModel.empty());
-              context.read<ProductFindCubit>().load('');
-            },
-            onSubmitted: (value) {
-              context.read<ProductFindCubit>().load(value);
-            },
-            listData: state.dataList,
+            listValues: state.valuesList,
           );
         } else {
           return const DrawerFind(

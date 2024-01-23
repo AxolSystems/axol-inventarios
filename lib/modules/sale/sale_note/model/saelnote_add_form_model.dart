@@ -1,4 +1,5 @@
 import '../../../../models/textfield_form_model.dart';
+import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../customer/model/customer_model.dart';
 import 'salenote_row_form_model.dart';
 
@@ -8,6 +9,7 @@ class SaleNoteAddFormModel {
   TextfieldFormModel warehouseTf;
   int id;
   CustomerModel customer;
+  WarehouseModel warehouse;
   DateTime dateTime;
   List<SaleNoteRowFormModel> productList;
 
@@ -23,6 +25,7 @@ class SaleNoteAddFormModel {
     required this.customer,
     required this.dateTime,
     required this.id,
+    required this.warehouse,
   });
 
   SaleNoteAddFormModel.empty()
@@ -31,6 +34,7 @@ class SaleNoteAddFormModel {
         warehouseTf = TextfieldFormModel.empty(),
         productList = [],
         customer = CustomerModel.empty(),
+        warehouse = WarehouseModel.empty(),
         dateTime = DateTime.now(),
         id = -1;
 

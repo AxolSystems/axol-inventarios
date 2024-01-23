@@ -20,7 +20,7 @@ class CustomerFindCubit extends Cubit<DrawerFindState> {
         data = DataFind(id: customer.id.toString(), description: customer.name, data: customer);
         dataList.add(data);
       }
-      emit(LoadedDrawerFindState(dataList: dataList));
+      emit(LoadedDrawerFindState(dataList: dataList, valuesList: const []));
     } catch (e) {
       emit(InitialDrawerFindState());
       emit(ErrorDrawerFindState(error: e.toString()));

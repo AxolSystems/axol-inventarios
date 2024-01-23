@@ -12,7 +12,8 @@ import 'progress_indicator.dart';
 
 class DrawerFind extends StatelessWidget {
   final String lblText;
-  final List<DataFind> listData;
+  final List<DataFind>? listData;
+  final List<DataFindValues>? listValues;
   final Function()? onPressed;
   final Function(String value)? onSubmitted;
   final bool? isLoading;
@@ -22,10 +23,11 @@ class DrawerFind extends StatelessWidget {
     super.key,
     required this.lblText,
     this.onPressed,
-    required this.listData,
+    this.listData,
     this.isLoading,
     this.onSubmitted,
     this.headerTable,
+    this.listValues,
   });
 
   @override
@@ -39,18 +41,23 @@ class DrawerFind extends StatelessWidget {
     final headerTable_ = headerTable ?? [];
     List<Widget> subtitleList = [];
     Widget subtitle;
-    List<Widget> contentList;
+    final List listData_;
     for (DrawerColumn element in headerTable_) {
       subtitle = Expanded(
-        flex: element.flex ?? 1,
+          flex: element.flex ?? 1,
           child: Text(
-        element.subtitle,
-        style: Typo.bodyDark,
-      ));
+            element.subtitle,
+            style: Typo.subtitleDark,
+            textAlign: TextAlign.center,
+          ));
       subtitleList.add(subtitle);
     }
-    if () {
-      
+    if (listValues != null) {
+      listData_ = listValues ?? [];
+    } else if (listData != null) {
+      listData_ = listData ?? [];
+    } else {
+      listData_ = [];
     }
     return DrawerBox(
       padding: const EdgeInsets.all(8),
@@ -83,10 +90,11 @@ class DrawerFind extends StatelessWidget {
             ],
           ),
           Visibility(
-              visible: headerTable != null && headerTable != [],
-              child: Row(
-                children: subtitleList,
-              ))
+            visible: subtitleList.isNotEmpty && isLoading != true,
+            child: Row(
+              children: subtitleList,
+            )
+          )
         ],
       ),
       actions: [
@@ -101,32 +109,54 @@ class DrawerFind extends StatelessWidget {
           ? Expanded(
               child: ListView.builder(
               shrinkWrap: true,
-              itemCount: listData.length,
+              itemCount: listData_.length,
               itemBuilder: (context, index) {
-                final data = listData[index];
-                return ButtonRowTable(
-                  onPressed: () {
-                    Navigator.pop(context, data);
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          data.id.toString(),
-                          style: Typo.bodyDark,
+                final data = listData_[index];
+                if (data is DataFind) {
+                  return ButtonRowTable(
+                    onPressed: () {
+                      Navigator.pop(context, data);
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            data.id.toString(),
+                            style: Typo.bodyDark,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Text(
-                          data.description,
-                          style: Typo.bodyDark,
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            data.description,
+                            style: Typo.bodyDark,
+                          ),
                         ),
+                      ],
+                    ),
+                  );
+                } else if (data is DataFindValues) {
+                  print(data.values.length);
+                  Widget contentElement;
+                  List<Widget> listContent = [];
+                  for (int i = 0; i < data.values.length; i++) {
+                    final value = data.values[i];
+                    contentElement = Expanded(
+                      flex: headerTable_[i].flex ?? 1,
+                      child: Text(
+                        value,
+                        style: Typo.bodyDark,
                       ),
-                    ],
-                  ),
-                );
+                    );
+                    listContent.add(contentElement);
+                  }
+                  return Row(
+                    children: listContent,
+                  );
+                } else {
+                  return null;
+                }
               },
             ))
           : const Expanded(
@@ -155,10 +185,11 @@ class LoadingDrawerFindState extends DrawerFindState {
 }
 
 class LoadedDrawerFindState extends DrawerFindState {
+  final List<DataFindValues> valuesList;
   final List<DataFind> dataList;
-  const LoadedDrawerFindState({required this.dataList});
+  const LoadedDrawerFindState({required this.dataList, required this.valuesList});
   @override
-  List<Object?> get props => [dataList];
+  List<Object?> get props => [dataList, valuesList];
 }
 
 class ErrorDrawerFindState extends DrawerFindState {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../modules/inventory_/inventory/cubit/warehouse_find/warehouse_find_cubit.dart';
+import '../../modules/inventory_/inventory/model/warehouse_model.dart';
 import '../../modules/inventory_/inventory/view/views/warehouse_drawer_find.dart';
 import '../../modules/inventory_/product/cubit/product_find/product_find_cubit.dart';
 import '../../modules/inventory_/product/view/product_drawer_find.dart';
@@ -87,13 +88,14 @@ class ProviderCustomerFind extends Providers {
 
 //----Product
 class ProviderProductFind extends Providers {
-  const ProviderProductFind({super.key});
+  final WarehouseModel warehouse;
+  const ProviderProductFind({super.key, required this.warehouse});
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(providers: [
         BlocProvider(create: (_) => ProductFindCubit()),
         BlocProvider(create: (_) => FinderForm()),
-      ], child: const ProductDrawerFindAll());
+      ], child: ProductDrawerFind(warehouse: warehouse,));
 }
 
 //----SaleNote
