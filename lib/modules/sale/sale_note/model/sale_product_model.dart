@@ -6,10 +6,15 @@ class SaleProductModel {
   final double price;
   final String note;
 
-  static const String propProduct = 'product';
-  static const String propQuantity = 'quantity';
-  static const String propPrice = 'price';
-  static const String propNote = 'note';
+  static const String _product = 'product';
+  static const String _quantity = 'quantity';
+  static const String _price = 'price';
+  static const String _note = 'note';
+
+  String get tProduct => _product;
+  String get tQuantity => _quantity;
+  String get tPrice => _price;
+  String get tNote => _note;
 
   SaleProductModel({
     required this.product,

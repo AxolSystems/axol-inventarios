@@ -21,6 +21,11 @@ class LoadedSaleNoteAddState extends SaleNoteAddState {
   List<Object?> get props => [];
 }
 
+class SavedNoteAddState extends SaleNoteAddState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorSaleNoteAddState extends SaleNoteAddState {
   final String error;
   const ErrorSaleNoteAddState({required this.error});

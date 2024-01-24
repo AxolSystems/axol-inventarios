@@ -223,12 +223,12 @@ class SaleNoteTab extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               // 4) Estado
                               flex: 1,
                               child: Center(
                                 child: Text(
-                                  saleNoteRow.status.toString(),
+                                  '',
                                   style: Typo.labelText1,
                                 ),
                               ),

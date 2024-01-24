@@ -3,9 +3,13 @@ class WarehouseModel {
   final String name;
   final String retailManager;
 
-  static const String propId = 'id';
-  static const String propName = 'name';
-  static const String propManager = 'retail_manager';
+  static const String id_ = 'id';
+  static const String name_ = 'name';
+  static const String manager_ = 'retail_manager';
+
+  String get tId => id_;
+  String get tName => name_;
+  String get tManager => manager_;
 
   const WarehouseModel({
     required this.id,
@@ -18,13 +22,13 @@ class WarehouseModel {
 
   static WarehouseModel fillMap(Map<String, dynamic> map) {
     WarehouseModel warehouseModel;
-    if (map.containsKey(propId) &&
-        map.containsKey(propName) &&
-        map.containsKey(propManager)) {
+    if (map.containsKey(id_) &&
+        map.containsKey(name_) &&
+        map.containsKey(manager_)) {
       warehouseModel = WarehouseModel(
-          id: map[propId],
-          name: map[propName],
-          retailManager: map[propManager]);
+          id: map[id_],
+          name: map[name_],
+          retailManager: map[manager_]);
     } else {
       warehouseModel = WarehouseModel.empty();
     }

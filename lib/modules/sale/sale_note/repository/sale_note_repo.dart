@@ -11,7 +11,6 @@ class SaleNoteRepo {
   static const String _table = 'sales_notes';
   static const String _id = 'id';
   static const String _customer = 'customer';
-  static const String _status = 'status';
   static const String _time = 'date';
   static const String _subtotal = 'subtotal';
   static const String _iva = 'iva';
@@ -43,7 +42,7 @@ class SaleNoteRepo {
           filter.vendor;
     }
     if (filter.warehouse > -1) {
-      filters['${SaleNoteModel.tWarehouse}->>${WarehouseModel.propId}'] =
+      filters['${SaleNoteModel.tWarehouse}->>${WarehouseModel.id_}'] =
           filter.warehouse;
     }
 
@@ -70,12 +69,10 @@ class SaleNoteRepo {
       saleNote = SaleNoteModel(
         id: element[_id],
         customer: CustomerModel.fill(element[_customer]),
-        status: element[_status],
         date: DateTime.fromMillisecondsSinceEpoch(element[_time]),
         total: element[_total],
         warehouse: WarehouseModel.fillMap(element[_warehouse]),
         vendor: VendorModel.fillMap(element[_vendor]),
-        type: element[_type],
         note: element[_note],
         saleProduct: [],
       );
@@ -103,5 +100,52 @@ class SaleNoteRepo {
       }
     }
     return newId;
+  }
+
+  Future<void> insert(SaleNoteModel saleNote) async {
+    final Map<String,dynamic> customerMap = {
+      saleNote.customer.tId: saleNote.customer.id,
+      saleNote.customer.tName: saleNote.customer.name,
+      saleNote.customer.tCountry: saleNote.customer.country,
+      saleNote.customer.tHood: saleNote.customer.hood,
+      saleNote.customer.tIntNumber: saleNote.customer.intNumber,
+      saleNote.customer.tOutNumbre: saleNote.customer.outNumber,
+      saleNote.customer.tPhoneNumber: saleNote.customer.phoneNumber,
+      saleNote.customer.tPostalCode: saleNote.customer.postalCode,
+      saleNote.customer.tRfc: saleNote.customer.rfc,
+      saleNote.customer.tStreet: saleNote.customer.street,
+      saleNote.customer.tTown: saleNote.customer.town,
+    };
+    final Map<String,dynamic> warehouseMap = {
+      saleNote.warehouse.tId: saleNote.warehouse.id,
+      saleNote.warehouse.tName: saleNote.warehouse.name,
+      saleNote.warehouse.tManager: saleNote.warehouse.retailManager,
+    };
+    final Map<String,dynamic> vendorMap = {
+      saleNote.vendor.tId: saleNote.vendor.id,
+      saleNote.vendor.tName: saleNote.vendor.name,
+    };
+    Map<int,Map<String,dynamic>> productsMap = {};
+    for (int i = 0; i < saleNote.saleProduct.length; i++) {
+      SaleProductModel row = saleNote.saleProduct[i];
+      productsMap[i] = {
+        row.tProduct: row.product.code,
+        row.tQuantity: row.quantity,
+        row.tPrice: row.price,
+        row.tNote: row.note,
+      };
+    }
+    await _supabase.from(_table).insert({
+      _id: saleNote.id,
+      _customer: customerMap,
+      _time: saleNote.date.millisecondsSinceEpoch,
+      _subtotal: saleNote.subtotal,
+      _iva: saleNote.iva,
+      _total: saleNote.total,
+      _warehouse: warehouseMap,
+      _vendor: vendorMap,
+      _note: saleNote.note,
+      _products: productsMap
+    });
   }
 }

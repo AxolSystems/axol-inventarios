@@ -27,10 +27,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       emit(LoadingSaleNoteAddState());
       availableId = await SaleNoteRepo().fetchAvailableId();
       upForm.id = availableId;
-      upForm.productList = [
-        SaleNoteRowFormModel.empty(),
-        SaleNoteRowFormModel.empty()
-      ];
+      upForm.productList = [SaleNoteRowFormModel.empty()];
       emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
@@ -260,14 +257,66 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   }
 
   Future<void> save(SaleNoteAddFormModel form) async {
+    bool validSave = true;
+    String errorMessage = '';
     try {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
-      validateAllList(form);
+      await fetchCustomer(form.customerTf.value, form);
+      await fetchVendor(form.vendorTf.value, form);
+      await fetchWarehouse(form.warehouseTf.value, form);
+      await validateAllList(form);
+      form.productList.removeWhere((x) => x.quantity.value == '0');
+      if (form.customerTf.validation.isValid == false) {
+        validSave = false;
+        errorMessage =
+            'Error en cliente: ${form.customerTf.validation.errorMessage}';
+        return;
+      }
+      if (form.vendorTf.validation.isValid == false) {
+        validSave = false;
+        errorMessage =
+            'Error en vendedor: ${form.vendorTf.validation.errorMessage}';
+        return;
+      }
+      if (form.warehouseTf.validation.isValid == false) {
+        validSave = false;
+        errorMessage =
+            'Error en almacén: ${form.warehouseTf.validation.errorMessage}';
+        return;
+      }
+      for (int i = 0; i < form.productList.length; i++) {
+        final row = form.productList[i];
+        if (row.quantity.validation.isValid == false ||
+            row.productCode.validation.isValid == false ||
+            row.unitPrice.validation.isValid == false) {
+          validSave = false;
+          errorMessage = 'Error en los datos de los productos.';
+          return;
+        }
+        if (row.productCode.value == '') {
+          validSave = false;
+          errorMessage = 'Campo de producto vacío.';
+          form.productList[i].productCode.validation = ValidationFormModel(
+              isValid: false, errorMessage: row.emInvalidData);
+          return;
+        }
+      }
+      if (form.productList.isEmpty) {
+        validSave = false;
+        errorMessage = 'Agregue al menos un producto.';
+        return;
+      }
       emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
+    } finally {
+      if (validSave) {
+        emit(SavedNoteAddState());
+      } else {
+        emit(ErrorSaleNoteAddState(error: errorMessage));
+      }
     }
   }
 }

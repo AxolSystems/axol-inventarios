@@ -47,7 +47,7 @@ class SaleNoteAdd extends StatelessWidget {
         } else if (state is LoadedSaleNoteAddState) {
           return saleNoteAdd(context, form.productList, false);
         } else {
-          return saleNoteAdd(context, [], false);
+          return saleNoteAdd(context, form.productList, false);
         }
       },
       listener: (context, state) {
@@ -59,6 +59,17 @@ class SaleNoteAdd extends StatelessWidget {
             ),
           );
         }
+
+        if (state is SavedNoteAddState) {
+          showDialog(
+            context: context,
+            builder: (context) => const AlertDialogAxol(
+              text: 'Guardado correctamente',
+              icon: Icons.check_circle,
+              iconColor: Colors.green,
+            ),
+          );
+        }
       },
     );
   }
@@ -66,6 +77,7 @@ class SaleNoteAdd extends StatelessWidget {
   Widget saleNoteAdd(BuildContext context,
       List<SaleNoteRowFormModel> productList, bool isLoading) {
     final form = context.read<SaleNoteAddForm>().state;
+    int linesNote = 3;
     String dateText =
         '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
     SaleNoteAddFormModel upForm = form;
@@ -81,6 +93,12 @@ class SaleNoteAdd extends StatelessWidget {
     warehouseCtrl.value = TextEditingValue(
         text: form.warehouseTf.value,
         selection: TextSelection.collapsed(offset: form.warehouseTf.position));
+    if (form.vendorTf.validation.isValid == false) {
+      linesNote = linesNote - 1;
+    }
+    if (form.warehouseTf.validation.isValid == false) {
+      linesNote = linesNote - 1;
+    }
 
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
@@ -331,7 +349,7 @@ class SaleNoteAdd extends StatelessWidget {
                                   form.note,
                                   style: Typo.labelLight,
                                   overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
+                                  maxLines: linesNote,
                                 ),
                               ],
                             ),
@@ -615,6 +633,10 @@ class SaleNoteAdd extends StatelessWidget {
                             },
                           ),
                         ),
+                        Container(
+                          decoration: BoxDecorationTheme.headerTable(),
+                          child: Row(),
+                        )
                       ],
                     )),
                     HorizontalToolBar(
@@ -647,7 +669,9 @@ class SaleNoteAdd extends StatelessWidget {
                         SizedBox(
                           height: 50,
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<SaleNoteAddCubit>().save(form);
+                            },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide.none,
                               foregroundColor: ColorPalette.primary,
