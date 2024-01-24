@@ -557,7 +557,10 @@ class SaleNoteAdd extends StatelessWidget {
                                           'Eliminar',
                                           style: Typo.bodyCaution,
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          form.productList.removeAt(index);
+                                          context.read<SaleNoteAddCubit>().load();
+                                        },
                                       ),
                                     ],
                                   ),
@@ -577,7 +580,10 @@ class SaleNoteAdd extends StatelessWidget {
                         SizedBox(
                           height: 50,
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              form.productList.add(SaleNoteRowFormModel.empty());
+                              context.read<SaleNoteAddCubit>().load();
+                            },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide.none,
                               foregroundColor: ColorPalette.primary,
