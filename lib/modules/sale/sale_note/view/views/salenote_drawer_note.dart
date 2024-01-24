@@ -11,8 +11,9 @@ import '../../cubit/salenote_note/salenote_note_state.dart';
 import '../../model/salenote_row_form_model.dart';
 
 class SaleNoteDrawerNote extends StatelessWidget {
-  final SaleNoteRowFormModel row;
-  const SaleNoteDrawerNote({super.key, required this.row});
+  final SaleNoteRowFormModel? row;
+  final String? textNote;
+  const SaleNoteDrawerNote({super.key, this.row, this.textNote});
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +29,24 @@ class SaleNoteDrawerNote extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is LoadingSaleNoteNoteState) {
-          return saleNoteDrawerNote(context, true, row);
+          return saleNoteDrawerNote(context, true, row, textNote);
         } else if (state is LoadedSaleNoteNoteState) {
-          return saleNoteDrawerNote(context, false, row);
+          return saleNoteDrawerNote(context, false, row, textNote);
         } else {
-          return saleNoteDrawerNote(context, false, row);
+          return saleNoteDrawerNote(context, false, row, textNote);
         }
       },
     );
   }
 
-  Widget saleNoteDrawerNote(
-      BuildContext context, bool isLoading, SaleNoteRowFormModel row) {
+  Widget saleNoteDrawerNote(BuildContext context, bool isLoading,
+      SaleNoteRowFormModel? row, String? tenxtNote) {
+    String textNote_ = textNote ?? '';
     TextEditingController controller = TextEditingController.fromValue(
         TextEditingValue(
-            text: row.note,
-            selection: TextSelection.collapsed(offset: row.note.length)));
+            text: row?.note ?? textNote_,
+            selection: TextSelection.collapsed(
+                offset: row?.note.length ?? textNote_.length)));
     return DrawerBox(
       header: Column(
         children: [
@@ -68,8 +71,13 @@ class SaleNoteDrawerNote extends StatelessWidget {
         ButtonDrawerSave(
           isLoading: isLoading,
           onPressed: () {
-            row.note = controller.value.text;
-            Navigator.pop(context, row);
+            if (row == null) {
+              textNote_ = controller.value.text;
+              Navigator.pop(context, textNote_);
+            } else {
+              row.note = controller.value.text;
+              Navigator.pop(context, row);
+            }
           },
         ),
       ],

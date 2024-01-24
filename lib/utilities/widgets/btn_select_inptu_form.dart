@@ -47,14 +47,17 @@ class BtnSelectInputForm extends StatelessWidget {
               lblText: lblText, errorText: errorText),
         )),
         Visibility(
-          visible: isLoading_,
-          replacement: IconButton(
-            padding: const EdgeInsets.all(0),
-            onPressed: onPressed_,
-            icon: icon_,
-          ),
-          child: icon_
-        ),
+            visible: isLoading_,
+            replacement: SizedBox.square(
+              dimension: 30,
+              child: IconButton(
+                splashRadius: 20,
+                padding: const EdgeInsets.all(0),
+                onPressed: onPressed_,
+                icon: icon_,
+              ),
+            ),
+            child: icon_),
       ],
     );
   }

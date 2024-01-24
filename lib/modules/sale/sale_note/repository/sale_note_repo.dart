@@ -77,7 +77,7 @@ class SaleNoteRepo {
         vendor: VendorModel.fillMap(element[_vendor]),
         type: element[_type],
         note: element[_note],
-        saleProduct: SaleProductModel.empty(),
+        saleProduct: [],
       );
       salesNotes.add(saleNote);
     }

@@ -7,7 +7,6 @@ import '../../../../../utilities/widgets/button.dart';
 import '../../../../../utilities/widgets/finder_bar.dart';
 import '../../../../../utilities/widgets/providers.dart';
 import '../../../../../utilities/widgets/toolbar.dart';
-import '../../cubit/salenote_add/salenote_add_cubit.dart';
 import '../../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../../cubit/salenote_tab/salenote_tab_state.dart';
 import '../../cubit/salenote_tab/salenote_tab_form.dart';

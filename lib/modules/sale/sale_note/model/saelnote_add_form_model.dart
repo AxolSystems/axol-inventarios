@@ -11,6 +11,7 @@ class SaleNoteAddFormModel {
   CustomerModel customer;
   WarehouseModel warehouse;
   DateTime dateTime;
+  String note;
   List<SaleNoteRowFormModel> productList;
 
   final String _emInvalidData = 'Dato invalido';
@@ -26,6 +27,7 @@ class SaleNoteAddFormModel {
     required this.dateTime,
     required this.id,
     required this.warehouse,
+    required this.note,
   });
 
   SaleNoteAddFormModel.empty()
@@ -36,7 +38,8 @@ class SaleNoteAddFormModel {
         customer = CustomerModel.empty(),
         warehouse = WarehouseModel.empty(),
         dateTime = DateTime.now(),
-        id = -1;
+        id = -1,
+        note = '';
 
   static const String pCustomer = 'customer';
   static const String pVendor = 'vendor';

@@ -17,10 +17,8 @@ class LoadingSaleNoteAddState extends SaleNoteAddState {
 }
 
 class LoadedSaleNoteAddState extends SaleNoteAddState {
-  final List<SaleNoteRowFormModel> rowFormList;
-  const LoadedSaleNoteAddState({required this.rowFormList});
   @override
-  List<Object?> get props => [rowFormList];
+  List<Object?> get props => [];
 }
 
 class ErrorSaleNoteAddState extends SaleNoteAddState {

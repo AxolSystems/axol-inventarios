@@ -92,10 +92,14 @@ class ProviderProductFind extends Providers {
   const ProviderProductFind({super.key, required this.warehouse});
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(providers: [
-        BlocProvider(create: (_) => ProductFindCubit()),
-        BlocProvider(create: (_) => FinderForm()),
-      ], child: ProductDrawerFind(warehouse: warehouse,));
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => ProductFindCubit()),
+            BlocProvider(create: (_) => FinderForm()),
+          ],
+          child: ProductDrawerFind(
+            warehouse: warehouse,
+          ));
 }
 
 //----SaleNote
@@ -120,13 +124,23 @@ class ProviderSaleNoteAdd extends Providers {
 }
 
 class ProviderSaleNoteNote extends Providers {
-  final SaleNoteRowFormModel row;
-  const ProviderSaleNoteNote({super.key, required this.row});
+  final SaleNoteRowFormModel? row;
+  final String? textNote;
+  const ProviderSaleNoteNote({
+    super.key,
+    this.row,
+    this.textNote,
+  });
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(providers: [
-        BlocProvider(create: (_) => SaleNoteNoteCubit()),
-      ], child: SaleNoteDrawerNote(row: row,));
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => SaleNoteNoteCubit()),
+          ],
+          child: SaleNoteDrawerNote(
+            row: row,
+            textNote: textNote,
+          ));
 }
 
 //----Vendor

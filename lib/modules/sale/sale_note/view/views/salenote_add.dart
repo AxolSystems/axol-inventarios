@@ -14,7 +14,6 @@ import '../../../../../utilities/widgets/btn_select_inptu_form.dart';
 import '../../../../../utilities/widgets/input_table.dart';
 import '../../../../../utilities/widgets/toolbar.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
-import '../../../../inventory_/product/model/product_model.dart';
 import '../../../../inventory_/product/view/product_drawer_details.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../vendor/model/vendor_model.dart';
@@ -290,6 +289,50 @@ class SaleNoteAdd extends StatelessWidget {
                                     });
                                   },
                                 ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text(
+                                        'Nota:',
+                                        style: Typo.labelLight,
+                                      ),
+                                    ),
+                                    SizedBox.square(
+                                      dimension: 30,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: ((context) =>
+                                                ProviderSaleNoteNote(
+                                                  textNote: form.note,
+                                                )),
+                                          ).then((value) {
+                                            if (value is String) {
+                                              form.note = value;
+                                              context.read<SaleNoteAddCubit>().load();
+                                            }
+                                          });
+                                        },
+                                        padding: EdgeInsets.zero,
+                                        splashRadius: 20,
+                                        icon: const Icon(
+                                          Icons.sticky_note_2_outlined,
+                                          color: ColorPalette.lightItems,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  form.note,
+                                  style: Typo.labelLight,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                ),
                               ],
                             ),
                           )),
@@ -464,7 +507,8 @@ class SaleNoteAdd extends StatelessWidget {
                                           final InventoryRowModel inventoryRow =
                                               value.data;
                                           form.productList[index].productCode
-                                              .value = inventoryRow.product.code;
+                                                  .value =
+                                              inventoryRow.product.code;
                                           context
                                               .read<SaleNoteAddCubit>()
                                               .validateCell(
@@ -559,7 +603,9 @@ class SaleNoteAdd extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           form.productList.removeAt(index);
-                                          context.read<SaleNoteAddCubit>().load();
+                                          context
+                                              .read<SaleNoteAddCubit>()
+                                              .load();
                                         },
                                       ),
                                     ],
@@ -581,7 +627,8 @@ class SaleNoteAdd extends StatelessWidget {
                           height: 50,
                           child: OutlinedButton(
                             onPressed: () {
-                              form.productList.add(SaleNoteRowFormModel.empty());
+                              form.productList
+                                  .add(SaleNoteRowFormModel.empty());
                               context.read<SaleNoteAddCubit>().load();
                             },
                             style: OutlinedButton.styleFrom(

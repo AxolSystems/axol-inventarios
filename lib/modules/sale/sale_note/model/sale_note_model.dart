@@ -15,7 +15,7 @@ class SaleNoteModel {
   final VendorModel vendor;
   final int type;
   final String note;
-  final SaleProductModel saleProduct;
+  final List<SaleProductModel> saleProduct;
 
   static const String tId = 'id';
   static const String tCustomer = 'customer';
@@ -57,5 +57,5 @@ class SaleNoteModel {
         vendor = VendorModel.empty(),
         type = -1,
         note = '',
-        saleProduct = SaleProductModel.empty();
+        saleProduct = [];
 }

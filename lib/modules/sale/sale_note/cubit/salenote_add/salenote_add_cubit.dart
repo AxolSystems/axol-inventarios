@@ -31,7 +31,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         SaleNoteRowFormModel.empty(),
         SaleNoteRowFormModel.empty()
       ];
-      emit(const LoadedSaleNoteAddState(rowFormList: []));
+      emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
@@ -42,7 +42,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     try {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
-      emit(const LoadedSaleNoteAddState(rowFormList: []));
+      emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
@@ -73,7 +73,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         upForm.customerTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
       }
-      emit(const LoadedSaleNoteAddState(rowFormList: []));
+      emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
@@ -102,7 +102,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         upForm.vendorTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
       }
-      emit(const LoadedSaleNoteAddState(rowFormList: []));
+      emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
@@ -132,7 +132,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         upForm.warehouseTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
       }
-      emit(const LoadedSaleNoteAddState(rowFormList: []));
+      emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
@@ -206,7 +206,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         }
       }
       form.productList[index] = row;
-      emit(const LoadedSaleNoteAddState(rowFormList: []));
+      emit(LoadedSaleNoteAddState());
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
@@ -256,6 +256,18 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         row.unitPrice.value = double.parse(row.unitPrice.value).toString();
       }
       form.productList[i] = row;
+    }
+  }
+
+  Future<void> save(SaleNoteAddFormModel form) async {
+    try {
+      emit(InitialSaleNoteAddState());
+      emit(LoadingSaleNoteAddState());
+      validateAllList(form);
+      emit(LoadedSaleNoteAddState());
+    } catch (e) {
+      emit(InitialSaleNoteAddState());
+      emit(ErrorSaleNoteAddState(error: e.toString()));
     }
   }
 }
