@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../models/inventory_row_model.dart';
 import '../../../../../utilities/format.dart';
 import '../../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../../utilities/widgets/appbar_axol.dart';
@@ -232,7 +233,6 @@ class SaleNoteAdd extends StatelessWidget {
                                           value.data is VendorModel) {
                                         upForm.vendorTf.value =
                                             '${value.id} - ${value.data.name}';
-                                        upForm.warehouse = value.data;
                                         context
                                             .read<SaleNoteAddForm>()
                                             .setForm(upForm);
@@ -278,6 +278,7 @@ class SaleNoteAdd extends StatelessWidget {
                                           value.data is WarehouseModel) {
                                         upForm.warehouseTf.value =
                                             '${value.id} - ${value.data.name}';
+                                        upForm.warehouse = value.data;
                                         context
                                             .read<SaleNoteAddForm>()
                                             .setForm(upForm);
@@ -458,12 +459,12 @@ class SaleNoteAdd extends StatelessWidget {
                                               ProviderProductFind(
                                                 warehouse: upForm.warehouse,
                                               )).then((value) {
-                                        if (value is DataFind &&
-                                            value.data is ProductModel) {
-                                          final ProductModel product =
+                                        if (value is DataFindValues &&
+                                            value.data is InventoryRowModel) {
+                                          final InventoryRowModel inventoryRow =
                                               value.data;
                                           form.productList[index].productCode
-                                              .value = product.code;
+                                              .value = inventoryRow.product.code;
                                           context
                                               .read<SaleNoteAddCubit>()
                                               .validateCell(

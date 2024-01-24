@@ -15,7 +15,8 @@ class ProductDrawerFind extends StatelessWidget {
     const String lblText = 'Producto';
     final List<DrawerColumn> subtitleList = [
       DrawerColumn('Id', flex: 1),
-      DrawerColumn('Descripción', flex: 5),
+      DrawerColumn('Descripción', flex: 3),
+      DrawerColumn('Stock', flex: 1),
     ];
     return BlocBuilder<ProductFindCubit, DrawerFindState>(
       bloc: context.read<ProductFindCubit>()..load('', warehouse),
@@ -28,7 +29,6 @@ class ProductDrawerFind extends StatelessWidget {
             isLoading: true,
           );
         } else if (state is LoadedDrawerFindState) {
-          print('flag1: ${state.valuesList.length}');
           return DrawerFind(
             headerTable: subtitleList,
             lblText: lblText,

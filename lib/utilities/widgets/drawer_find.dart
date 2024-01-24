@@ -90,11 +90,10 @@ class DrawerFind extends StatelessWidget {
             ],
           ),
           Visibility(
-            visible: subtitleList.isNotEmpty && isLoading != true,
-            child: Row(
-              children: subtitleList,
-            )
-          )
+              visible: subtitleList.isNotEmpty && isLoading != true,
+              child: Row(
+                children: subtitleList,
+              ))
         ],
       ),
       actions: [
@@ -137,22 +136,34 @@ class DrawerFind extends StatelessWidget {
                     ),
                   );
                 } else if (data is DataFindValues) {
-                  print(data.values.length);
                   Widget contentElement;
                   List<Widget> listContent = [];
+                  int flex;
                   for (int i = 0; i < data.values.length; i++) {
                     final value = data.values[i];
+                    if (i >= headerTable_.length ||
+                        headerTable_[i].flex == null) {
+                      flex = 1;
+                    } else {
+                      flex = headerTable_[i].flex ?? 1;
+                    }
                     contentElement = Expanded(
-                      flex: headerTable_[i].flex ?? 1,
+                      flex: flex,
                       child: Text(
                         value,
                         style: Typo.bodyDark,
+                        textAlign: TextAlign.center,
                       ),
                     );
                     listContent.add(contentElement);
                   }
-                  return Row(
-                    children: listContent,
+                  return ButtonRowTable(
+                    onPressed: () {
+                      Navigator.pop(context, data);
+                    },
+                    child: Row(
+                      children: listContent,
+                    ),
                   );
                 } else {
                   return null;
@@ -187,7 +198,8 @@ class LoadingDrawerFindState extends DrawerFindState {
 class LoadedDrawerFindState extends DrawerFindState {
   final List<DataFindValues> valuesList;
   final List<DataFind> dataList;
-  const LoadedDrawerFindState({required this.dataList, required this.valuesList});
+  const LoadedDrawerFindState(
+      {required this.dataList, required this.valuesList});
   @override
   List<Object?> get props => [dataList, valuesList];
 }

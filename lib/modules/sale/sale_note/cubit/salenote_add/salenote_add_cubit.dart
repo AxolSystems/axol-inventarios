@@ -161,11 +161,18 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emInvalidData);
         } else if (code != '') {
-          inventoryRow = await InventoryRepo()
-              .fetchRowByCode(code, inventoryName);
+          inventoryRow =
+              await InventoryRepo().fetchRowByCode(code, inventoryName);
+
           if (inventoryRow == null || quantity > inventoryRow.stock) {
             row.quantity.validation =
                 ValidationFormModel.falseValid(row.emNotStock);
+          } else {
+            productDB = await ProductRepo().fetchProduct(inventoryRow.code);
+            row.quantity.validation = ValidationFormModel.trueValid();
+            row.quantity.value = quantity.toString();
+            row.productCode.validation = ValidationFormModel.trueValid();
+            row.product = productDB ?? ProductModel.empty();
           }
         } else {
           row.quantity.validation = ValidationFormModel.trueValid();
