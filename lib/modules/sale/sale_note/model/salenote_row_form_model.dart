@@ -6,6 +6,7 @@ class SaleNoteRowFormModel {
   TextfieldFormModel productCode;
   TextfieldFormModel unitPrice;
   ProductModel product;
+  double subtotal;
   String note;
 
   final String _keyQuantity = 'quantity';
@@ -20,6 +21,7 @@ class SaleNoteRowFormModel {
   String get emInvalidData => 'Dato invalido';
 
   SaleNoteRowFormModel({
+    required this.subtotal,
     required this.quantity,
     required this.productCode,
     required this.unitPrice,
@@ -32,5 +34,6 @@ class SaleNoteRowFormModel {
         productCode = TextfieldFormModel.empty(),
         unitPrice = TextfieldFormModel.zero(),
         product = ProductModel.empty(),
-        note = '';
+        note = '',
+        subtotal = 0;
 }

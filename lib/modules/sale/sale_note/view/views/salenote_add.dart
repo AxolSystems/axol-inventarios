@@ -76,7 +76,7 @@ class SaleNoteAdd extends StatelessWidget {
 
   Widget saleNoteAdd(BuildContext context,
       List<SaleNoteRowFormModel> productList, bool isLoading) {
-    final form = context.read<SaleNoteAddForm>().state;
+    SaleNoteAddFormModel form = context.read<SaleNoteAddForm>().state;
     int linesNote = 3;
     String dateText =
         '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
@@ -99,6 +99,12 @@ class SaleNoteAdd extends StatelessWidget {
     if (form.warehouseTf.validation.isValid == false) {
       linesNote = linesNote - 1;
     }
+    /*for (var row in form.productList) {
+      final quantity = double.tryParse(row.quantity.value) ?? 0;
+      final unitPrice = double.tryParse(row.unitPrice.value) ?? 0;
+      final subtotal = quantity * unitPrice;
+      total = total + subtotal;
+    }*/
 
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
@@ -331,7 +337,9 @@ class SaleNoteAdd extends StatelessWidget {
                                           ).then((value) {
                                             if (value is String) {
                                               form.note = value;
-                                              context.read<SaleNoteAddCubit>().load();
+                                              context
+                                                  .read<SaleNoteAddCubit>()
+                                                  .load();
                                             }
                                           });
                                         },
@@ -445,11 +453,11 @@ class SaleNoteAdd extends StatelessWidget {
                                           text: row.unitPrice.value,
                                           selection: TextSelection.collapsed(
                                               offset: row.unitPrice.position)));
-                              final double quantity =
+                              /*final double quantity =
                                   double.tryParse(row.quantity.value) ?? 0;
                               final double price =
                                   double.tryParse(row.unitPrice.value) ?? 0;
-                              final total = quantity * price;
+                              final total = quantity * price;*/
                               final bool isQuantityFocus =
                                   upForm.productList[index].quantity.isFocus ??
                                       false;
@@ -478,14 +486,16 @@ class SaleNoteAdd extends StatelessWidget {
                                               upForm, row.keyQuantity, index);
                                     },
                                     onChanged: (value) {
-                                      upForm.productList[index].quantity.value =
+                                      form.productList[index].quantity.value =
                                           value;
-                                      upForm.productList[index].quantity
+                                      form.productList[index].quantity
                                               .position =
                                           quantityCtrl.selection.base.offset;
-                                      context
+                                      context.read<SaleNoteAddForm>().sumTotal(index);
+                                      context.read<SaleNoteAddCubit>().load();
+                                      /*context
                                           .read<SaleNoteAddForm>()
-                                          .setForm(upForm);
+                                          .setForm(upForm);*/
                                     },
                                     borderColor: isQuantityFocus
                                         ? ColorPalette.primary
@@ -564,14 +574,16 @@ class SaleNoteAdd extends StatelessWidget {
                                           RegExp(r'^\d*\.?\d*$'))
                                     ],
                                     onChanged: (value) {
-                                      upForm.productList[index].unitPrice
+                                      form.productList[index].unitPrice
                                           .value = value;
-                                      upForm.productList[index].unitPrice
+                                      form.productList[index].unitPrice
                                               .position =
-                                          quantityCtrl.selection.base.offset;
-                                      context
+                                          priceCtrl.selection.base.offset;
+                                      context.read<SaleNoteAddForm>().sumTotal(index);
+                                      context.read<SaleNoteAddCubit>().load();
+                                      /*context
                                           .read<SaleNoteAddForm>()
-                                          .setForm(upForm);
+                                          .setForm(upForm);*/
                                     },
                                     onSubmitted: (value) {
                                       context
@@ -584,8 +596,8 @@ class SaleNoteAdd extends StatelessWidget {
                                         : ColorPalette.darkItems,
                                     onFocusChange: (bool value) {},
                                   ),
-                                  // --- Total
-                                  LabelCell(FormatNumber.format2dec(total)),
+                                  // --- Subtotal
+                                  LabelCell(FormatNumber.format2dec(form.productList[index].subtotal)),
                                   // --- Options
                                   MenuCell(
                                     icon: const Icon(
@@ -635,7 +647,18 @@ class SaleNoteAdd extends StatelessWidget {
                         ),
                         Container(
                           decoration: BoxDecorationTheme.headerTable(),
-                          child: Row(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Total: \$${FormatNumber.format2dec(form.total)}',
+                                style: Typo.subtitleLight,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              )
+                            ],
+                          ),
                         )
                       ],
                     )),
