@@ -63,7 +63,7 @@ class LocalUser extends UserRepo {
     if (localUser != null && localRol != null) {
       user = UserModel(name: localUser, id: -1, rol: localRol, password: '');
     } else {
-      user = UserModel(name: '', id: -1, rol: '', password: '');
+      user = const UserModel(name: '', id: -1, rol: '', password: '');
     }
     return user;
   }

@@ -8,7 +8,10 @@ import '../../../../../models/inventory_model.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../../inventory_/inventory/repository/inventory_repo.dart';
 import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
+import '../../../../inventory_/movements/model/movement_model.dart';
+import '../../../../inventory_/movements/repository/movement_repo.dart';
 import '../../../../inventory_/product/model/product_model.dart';
+import '../../../../user/repository/user_repo.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
 import '../../../vendor/repository/vendor_repo.dart';
@@ -219,12 +222,12 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     double? quantity;
     String code;
     ProductModel? productDB;
-    Map<String,double> inventoryMap = {};
+    Map<String, double> inventoryMap = {};
     ValidationFormModel validationForm = ValidationFormModel.trueValid();
     final String inventoryName = form.warehouseTf.validation.isValid
         ? form.warehouseTf.value.split(' - ').last
         : '';
-    
+
     for (int i = 0; i < form.productList.length; i++) {
       var row = form.productList[i];
       code = row.productCode.value;
@@ -351,7 +354,9 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       InventoryModel inventory;
       InventoryModel? inventoryDB;
       double stock;
-      Map<String,double> inventoryMap = {};
+      Map<String, double> inventoryMap = {};
+      List<MovementModel> movementList = [];
+      MovementModel movement;
 
       if (validSave) {
         for (var row in form.productList) {
@@ -366,7 +371,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
             if (stock < 0) {
               throw Exception('Stock no puede ser menor a cero');
             }
-            
+
             inventory = InventoryModel(
               code: row.product.code,
               id: const Uuid().v4(),
@@ -375,11 +380,28 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               stock: stock,
             );
             inventoryList.add(inventory);
+
+            final user = await LocalUser().getLocalUser();
+            movement = MovementModel(
+              id: const Uuid().v4(),
+              code: row.product.code,
+              concept: 51,
+              conceptType: 1,
+              description: row.product.description,
+              document: form.id.toString(),
+              quantity: stockRow,
+              time: form.dateTime,
+              warehouse: form.warehouse.name,
+              user: user.name,
+              stock: stock,
+            );
+            movementList.add(movement);
           } else {
             throw Exception('Stock no puede ser menor a cero');
           }
         }
         await InventoryRepo().updateInventory(inventoryList);
+        await MovementRepo().insertMovemets(movementList);
         await SaleNoteRepo().insert(saleNote);
         emit(SavedNoteAddState());
       } else {
