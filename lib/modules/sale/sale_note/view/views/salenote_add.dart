@@ -38,7 +38,7 @@ class SaleNoteAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final form = context.read<SaleNoteAddForm>().state;
+    SaleNoteAddFormModel form = context.read<SaleNoteAddForm>().state;
     return BlocConsumer<SaleNoteAddCubit, SaleNoteAddState>(
       bloc: context.read<SaleNoteAddCubit>()..initLoad(form),
       builder: (context, state) {
@@ -68,7 +68,9 @@ class SaleNoteAdd extends StatelessWidget {
               icon: Icons.check_circle,
               iconColor: Colors.green,
             ),
-          );
+          ).then((value) {
+            Navigator.pop(context);
+          });
         }
       },
     );
@@ -99,12 +101,6 @@ class SaleNoteAdd extends StatelessWidget {
     if (form.warehouseTf.validation.isValid == false) {
       linesNote = linesNote - 1;
     }
-    /*for (var row in form.productList) {
-      final quantity = double.tryParse(row.quantity.value) ?? 0;
-      final unitPrice = double.tryParse(row.unitPrice.value) ?? 0;
-      final subtotal = quantity * unitPrice;
-      total = total + subtotal;
-    }*/
 
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
@@ -453,11 +449,6 @@ class SaleNoteAdd extends StatelessWidget {
                                           text: row.unitPrice.value,
                                           selection: TextSelection.collapsed(
                                               offset: row.unitPrice.position)));
-                              /*final double quantity =
-                                  double.tryParse(row.quantity.value) ?? 0;
-                              final double price =
-                                  double.tryParse(row.unitPrice.value) ?? 0;
-                              final total = quantity * price;*/
                               final bool isQuantityFocus =
                                   upForm.productList[index].quantity.isFocus ??
                                       false;
@@ -491,11 +482,10 @@ class SaleNoteAdd extends StatelessWidget {
                                       form.productList[index].quantity
                                               .position =
                                           quantityCtrl.selection.base.offset;
-                                      context.read<SaleNoteAddForm>().sumTotal(index);
-                                      context.read<SaleNoteAddCubit>().load();
-                                      /*context
+                                      context
                                           .read<SaleNoteAddForm>()
-                                          .setForm(upForm);*/
+                                          .sumTotal(index);
+                                      context.read<SaleNoteAddCubit>().load();
                                     },
                                     borderColor: isQuantityFocus
                                         ? ColorPalette.primary
@@ -574,16 +564,15 @@ class SaleNoteAdd extends StatelessWidget {
                                           RegExp(r'^\d*\.?\d*$'))
                                     ],
                                     onChanged: (value) {
-                                      form.productList[index].unitPrice
-                                          .value = value;
+                                      form.productList[index].unitPrice.value =
+                                          value;
                                       form.productList[index].unitPrice
                                               .position =
                                           priceCtrl.selection.base.offset;
-                                      context.read<SaleNoteAddForm>().sumTotal(index);
-                                      context.read<SaleNoteAddCubit>().load();
-                                      /*context
+                                      context
                                           .read<SaleNoteAddForm>()
-                                          .setForm(upForm);*/
+                                          .sumTotal(index);
+                                      context.read<SaleNoteAddCubit>().load();
                                     },
                                     onSubmitted: (value) {
                                       context
@@ -597,7 +586,8 @@ class SaleNoteAdd extends StatelessWidget {
                                     onFocusChange: (bool value) {},
                                   ),
                                   // --- Subtotal
-                                  LabelCell(FormatNumber.format2dec(form.productList[index].subtotal)),
+                                  LabelCell(FormatNumber.format2dec(
+                                      form.productList[index].subtotal)),
                                   // --- Options
                                   MenuCell(
                                     icon: const Icon(

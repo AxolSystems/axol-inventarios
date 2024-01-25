@@ -2,6 +2,7 @@ import 'package:axol_inventarios/models/validation_form_model.dart';
 import 'package:axol_inventarios/modules/inventory_/product/repository/product_repo.dart';
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../../models/inventory_model.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
@@ -12,6 +13,8 @@ import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
 import '../../../vendor/repository/vendor_repo.dart';
 import '../../model/saelnote_add_form_model.dart';
+import '../../model/sale_note_model.dart';
+import '../../model/sale_product_model.dart';
 import '../../model/salenote_row_form_model.dart';
 import '../../repository/sale_note_repo.dart';
 import 'salenote_add_state.dart';
@@ -95,6 +98,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         upForm.vendorTf.validation = ValidationFormModel.trueValid();
         upForm.vendorTf.value =
             '${vendorList.first.id} - ${vendorList.first.name}';
+        upForm.vendor = vendorList.first;
       } else {
         upForm.vendorTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
@@ -210,14 +214,17 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     }
   }
 
-  Future<void> validateAllList(SaleNoteAddFormModel form) async {
+  Future<ValidationFormModel> validateAllList(SaleNoteAddFormModel form) async {
     InventoryModel? inventoryRow;
     double? quantity;
     String code;
     ProductModel? productDB;
+    Map<String,double> inventoryMap = {};
+    ValidationFormModel validationForm = ValidationFormModel.trueValid();
     final String inventoryName = form.warehouseTf.validation.isValid
         ? form.warehouseTf.value.split(' - ').last
         : '';
+    
     for (int i = 0; i < form.productList.length; i++) {
       var row = form.productList[i];
       code = row.productCode.value;
@@ -253,19 +260,33 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         row.unitPrice.value = double.parse(row.unitPrice.value).toString();
       }
       form.productList[i] = row;
+
+      final stockInvMap = inventoryMap[row.product.code] ?? 0;
+      final stockRow = double.tryParse(row.quantity.value) ?? 0;
+      final stockDB = inventoryRow?.stock ?? 0;
+      inventoryMap[row.product.code] = stockInvMap + stockRow;
+      if (inventoryMap[row.product.code]! > stockDB) {
+        validationForm = ValidationFormModel.falseValid('Stock insuficiente');
+      }
     }
+    return validationForm;
   }
 
   Future<void> save(SaleNoteAddFormModel form) async {
     bool validSave = true;
     String errorMessage = '';
+    ValidationFormModel validationForm;
     try {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
       await fetchCustomer(form.customerTf.value, form);
+      emit(LoadingSaleNoteAddState());
       await fetchVendor(form.vendorTf.value, form);
+      emit(LoadingSaleNoteAddState());
       await fetchWarehouse(form.warehouseTf.value, form);
-      await validateAllList(form);
+      emit(LoadingSaleNoteAddState());
+      validationForm = await validateAllList(form);
+      emit(LoadingSaleNoteAddState());
       form.productList.removeWhere((x) => x.quantity.value == '0');
       if (form.customerTf.validation.isValid == false) {
         validSave = false;
@@ -307,12 +328,59 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         errorMessage = 'Agregue al menos un producto.';
         return;
       }
-      emit(LoadedSaleNoteAddState());
+      if (validationForm.isValid == false) {
+        validSave = false;
+        errorMessage = validationForm.errorMessage;
+        return;
+      }
     } catch (e) {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
     } finally {
+      SaleNoteModel saleNote = SaleNoteModel(
+        id: form.id,
+        customer: form.customer,
+        date: form.dateTime,
+        total: form.total,
+        warehouse: form.warehouse,
+        vendor: form.vendor,
+        note: form.note,
+        saleProduct: SaleProductModel.rowToSale(form.productList),
+      );
+      List<InventoryModel> inventoryList = [];
+      InventoryModel inventory;
+      InventoryModel? inventoryDB;
+      double stock;
+      Map<String,double> inventoryMap = {};
+
       if (validSave) {
+        for (var row in form.productList) {
+          inventoryDB = await InventoryRepo()
+              .fetchRowByCode(row.product.code, form.warehouse.name);
+
+          if (inventoryDB != null) {
+            final stockRow = double.tryParse(row.quantity.value) ?? 0;
+            final stockMap = inventoryMap[row.product.code] ?? 0;
+            inventoryMap[row.product.code] = stockMap + stockRow;
+            stock = inventoryDB.stock - inventoryMap[row.product.code]!;
+            if (stock < 0) {
+              throw Exception('Stock no puede ser menor a cero');
+            }
+            
+            inventory = InventoryModel(
+              code: row.product.code,
+              id: const Uuid().v4(),
+              name: form.warehouse.name,
+              retailManager: form.warehouse.retailManager,
+              stock: stock,
+            );
+            inventoryList.add(inventory);
+          } else {
+            throw Exception('Stock no puede ser menor a cero');
+          }
+        }
+        await InventoryRepo().updateInventory(inventoryList);
+        await SaleNoteRepo().insert(saleNote);
         emit(SavedNoteAddState());
       } else {
         emit(ErrorSaleNoteAddState(error: errorMessage));

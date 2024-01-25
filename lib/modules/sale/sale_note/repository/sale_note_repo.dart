@@ -125,10 +125,10 @@ class SaleNoteRepo {
       saleNote.vendor.tId: saleNote.vendor.id,
       saleNote.vendor.tName: saleNote.vendor.name,
     };
-    Map<int,Map<String,dynamic>> productsMap = {};
+    Map<String,Map<String,dynamic>> productsMap = {};
     for (int i = 0; i < saleNote.saleProduct.length; i++) {
       SaleProductModel row = saleNote.saleProduct[i];
-      productsMap[i] = {
+      productsMap[i.toString()] = {
         row.tProduct: row.product.code,
         row.tQuantity: row.quantity,
         row.tPrice: row.price,
@@ -145,7 +145,7 @@ class SaleNoteRepo {
       _warehouse: warehouseMap,
       _vendor: vendorMap,
       _note: saleNote.note,
-      _products: productsMap
+      _products: productsMap,
     });
   }
 }

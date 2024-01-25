@@ -170,7 +170,10 @@ class InventoryRepo {
     }
   }
 
-  //Falta probar!!
+  //Envía una lista de inventario para actualizar la base de datos.
+  //Solo actualizara en la base de datos los elementos que aparecén en la lista
+  // que se recibío. Si el elemento no existe en la base de datos lo crea. Si el nuevo
+  // elemento que se envía es igual a cero, lo elimina de la base de datos.
   Future<void> updateInventory(List<InventoryModel> inventoryList) async {
     InventoryModel? invRowDB;
     for (var row in inventoryList) {

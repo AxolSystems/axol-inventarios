@@ -1,4 +1,5 @@
 import '../../../inventory_/product/model/product_model.dart';
+import 'salenote_row_form_model.dart';
 
 class SaleProductModel {
   final ProductModel product;
@@ -24,9 +25,26 @@ class SaleProductModel {
   });
 
   static SaleProductModel empty() => SaleProductModel(
-    note: '',
-    price: 0,
-    product: ProductModel.empty(),
-    quantity: 0,
-  );
+        note: '',
+        price: 0,
+        product: ProductModel.empty(),
+        quantity: 0,
+      );
+
+  static List<SaleProductModel> rowToSale(List<SaleNoteRowFormModel> rowList) {
+    List<SaleProductModel> saleProductList = [];
+    SaleProductModel saleProduct;
+
+    for (var row in rowList) {
+      saleProduct = SaleProductModel(
+        product: row.product,
+        quantity: double.tryParse(row.quantity.value) ?? 0,
+        price: double.tryParse(row.unitPrice.value) ?? 0,
+        note: row.note,
+      );
+      saleProductList.add(saleProduct);
+    }
+
+    return saleProductList;
+  }
 }

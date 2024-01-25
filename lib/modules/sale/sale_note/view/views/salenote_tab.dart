@@ -129,14 +129,6 @@ class SaleNoteTab extends StatelessWidget {
                         flex: 1,
                         child: Center(
                             child: Text(
-                          'Estado',
-                          style: Typo.subtitleLight,
-                        )),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(
                           'Fecha de elaboración',
                           style: Typo.subtitleLight,
                         )),
@@ -223,18 +215,8 @@ class SaleNoteTab extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const Expanded(
-                              // 4) Estado
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  '',
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
                             Expanded(
-                              // 5) Fecha de elaboración
+                              // 4) Fecha de elaboración
                               flex: 1,
                               child: Center(
                                 child: Text(
@@ -244,7 +226,7 @@ class SaleNoteTab extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              // 6) Importe total
+                              // 5) Importe total
                               flex: 1,
                               child: Center(
                                 child: Text(
@@ -254,7 +236,7 @@ class SaleNoteTab extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              // 7) Almacen
+                              // 6) Almacen
                               flex: 1,
                               child: Center(
                                 child: Text(
