@@ -11,6 +11,7 @@ import '../../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../../cubit/salenote_tab/salenote_tab_state.dart';
 import '../../cubit/salenote_tab/salenote_tab_form.dart';
 import '../../model/sale_note_model.dart';
+import 'salenote_drawer_details.dart';
 
 class SaleNoteTab extends StatelessWidget {
   const SaleNoteTab({super.key});
@@ -177,11 +178,11 @@ class SaleNoteTab extends StatelessWidget {
                       ),
                       child: ButtonRowTable(
                         onPressed: () {
-                          /*showDialog(
+                          showDialog(
                             context: context,
                             builder: (context) =>
-                                DrawerDetailsProduct(product: productRow),
-                          );*/
+                                SaleNoteDrawerDetails(saleNote: saleNoteRow)
+                          );
                         },
                         child: Row(
                           children: [
@@ -265,9 +266,6 @@ class SaleNoteTab extends StatelessWidget {
             ],
           ),
         ),
-        /*const ToolbarSaleNote(
-          isLoading: false,
-        ),*/
       ],
     );
   }

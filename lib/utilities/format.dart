@@ -1,14 +1,11 @@
 import 'package:intl/intl.dart';
 
 class FormatDate {
-  static String dmy(String dateSB) {
-    List<String> listDate;
-    String newDate;
-    listDate = dateSB.split('T');
-    listDate = listDate.first.split('-');
-    newDate =
-        '${listDate.elementAt(2)}/${listDate.elementAt(1)}/${listDate.elementAt(0)}';
-    return newDate;
+  static String dmy(DateTime dateTime) {
+    String dateText;
+    dateText =
+        '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    return dateText;
   }
 }
 

@@ -97,4 +97,72 @@ class DrawerBox extends StatelessWidget {
       );
     }
   }
+
+  static Widget rowKeyValue(String key, String value) => Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              key,
+              style: Typo.bodyDark,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: Typo.bodyDark,
+            ),
+          ),
+        ],
+      );
+
+  static Widget rowValues(List<DrawerCellText> values) {
+    List<Widget> children = [];
+    for (Widget value in values) {
+      children.add(value);
+    }
+    return Row(
+      children: children,
+    );
+  }
+
+  static Widget headTable(List<DrawerCellText> values, {Color? color}) {
+    List<Widget> children = [];
+    for (Widget value in values) {
+      children.add(value);
+    }
+    return Container(
+      color: color,
+      child: Row(
+        children: children,
+      ),
+    );
+  }
+}
+
+class DrawerCellText extends StatelessWidget {
+  final String text;
+  final int? flex;
+  final TextStyle? style;
+  final TextAlign? aligin;
+  const DrawerCellText(
+    this.text, {
+    super.key,
+    this.flex,
+    this.style,
+    this.aligin,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flex ?? 1,
+      child: Text(
+        text,
+        style: style,
+        textAlign: aligin,
+      ),
+    );
+  }
 }

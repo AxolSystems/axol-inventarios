@@ -66,6 +66,7 @@ class SaleNoteRepo {
           .or(textOr);
     }
     for (var element in saleNoteDB) {
+      //Convertir jsonb de saleProduct a List<SaleProductModel>
       saleNote = SaleNoteModel(
         id: element[_id],
         customer: CustomerModel.fill(element[_customer]),
