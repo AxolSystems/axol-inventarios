@@ -71,4 +71,16 @@ class ProductModel {
     );
     return newProduct;
   }
+
+  ProductModel.singleCode(this.code)
+      : description = '',
+        capacity = null,
+        class_ = -1,
+        gauge = null,
+        measure = null,
+        packing = null,
+        pieces = null,
+        properties = null,
+        type = null,
+        weight = null;
 }

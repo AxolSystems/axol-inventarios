@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/inventory_/product/model/product_model.dart';
 import 'package:axol_inventarios/modules/sale/customer/model/customer_model.dart';
 import 'package:axol_inventarios/modules/sale/sale_note/model/sale_product_model.dart';
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
@@ -17,7 +18,6 @@ class SaleNoteRepo {
   static const String _total = 'total';
   static const String _warehouse = 'warehouse';
   static const String _vendor = 'vendor';
-  static const String _type = 'type';
   static const String _note = 'note';
   static const String _products = 'products';
   final _supabase = Supabase.instance.client;
@@ -30,12 +30,15 @@ class SaleNoteRepo {
     List<Map<String, dynamic>> saleNoteDB = [];
     Map<String, dynamic> filters = {};
     String textOr;
-    int filterStartDate = 0;
-    int filterEndDate = 32503708800000;
+    List<SaleProductModel> productList = [];
+    SaleProductModel saleProduct;
+    Map<String, dynamic> jsonbProducts;
+    List mapList;
+    //int filterStartDate = 0;
+    //int filterEndDate = 32503708800000;
 
     if (filter.customer > -1) {
-      filters['${SaleNoteModel.tCustomer}->>${customer.tId}'] =
-          filter.customer;
+      filters['${SaleNoteModel.tCustomer}->>${customer.tId}'] = filter.customer;
     }
     if (filter.vendor > -1) {
       filters['${SaleNoteModel.tVendor}->>${VendorModel.empty().tId}'] =
@@ -66,7 +69,18 @@ class SaleNoteRepo {
           .or(textOr);
     }
     for (var element in saleNoteDB) {
-      //Convertir jsonb de saleProduct a List<SaleProductModel>
+      jsonbProducts = element[_products];
+      mapList = jsonbProducts.values.toList();
+      for (Map<String, dynamic> map in mapList) {
+        saleProduct = SaleProductModel(
+          product:
+              ProductModel.singleCode(map[SaleProductModel.empty().tProduct]),
+          quantity: map[SaleProductModel.empty().tQuantity],
+          price: map[SaleProductModel.empty().tPrice],
+          note: map[SaleProductModel.empty().tNote],
+        );
+        productList.add(saleProduct);
+      }
       saleNote = SaleNoteModel(
         id: element[_id],
         customer: CustomerModel.fill(element[_customer]),
@@ -75,11 +89,10 @@ class SaleNoteRepo {
         warehouse: WarehouseModel.fillMap(element[_warehouse]),
         vendor: VendorModel.fillMap(element[_vendor]),
         note: element[_note],
-        saleProduct: [],
+        saleProduct: productList,
       );
       salesNotes.add(saleNote);
     }
-
     return salesNotes;
   }
 
@@ -104,7 +117,7 @@ class SaleNoteRepo {
   }
 
   Future<void> insert(SaleNoteModel saleNote) async {
-    final Map<String,dynamic> customerMap = {
+    final Map<String, dynamic> customerMap = {
       saleNote.customer.tId: saleNote.customer.id,
       saleNote.customer.tName: saleNote.customer.name,
       saleNote.customer.tCountry: saleNote.customer.country,
@@ -117,16 +130,16 @@ class SaleNoteRepo {
       saleNote.customer.tStreet: saleNote.customer.street,
       saleNote.customer.tTown: saleNote.customer.town,
     };
-    final Map<String,dynamic> warehouseMap = {
+    final Map<String, dynamic> warehouseMap = {
       saleNote.warehouse.tId: saleNote.warehouse.id,
       saleNote.warehouse.tName: saleNote.warehouse.name,
       saleNote.warehouse.tManager: saleNote.warehouse.retailManager,
     };
-    final Map<String,dynamic> vendorMap = {
+    final Map<String, dynamic> vendorMap = {
       saleNote.vendor.tId: saleNote.vendor.id,
       saleNote.vendor.tName: saleNote.vendor.name,
     };
-    Map<String,Map<String,dynamic>> productsMap = {};
+    Map<String, Map<String, dynamic>> productsMap = {};
     for (int i = 0; i < saleNote.saleProduct.length; i++) {
       SaleProductModel row = saleNote.saleProduct[i];
       productsMap[i.toString()] = {

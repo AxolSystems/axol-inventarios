@@ -31,6 +31,12 @@ class SaleProductModel {
         quantity: 0,
       );
 
+  SaleProductModel.setProduct(
+      {required this.product, required SaleProductModel productSale})
+      : quantity = productSale.quantity,
+        price = productSale.price,
+        note = productSale.note;
+
   static List<SaleProductModel> rowToSale(List<SaleNoteRowFormModel> rowList) {
     List<SaleProductModel> saleProductList = [];
     SaleProductModel saleProduct;

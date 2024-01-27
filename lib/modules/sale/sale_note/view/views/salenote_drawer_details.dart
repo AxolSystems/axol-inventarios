@@ -1,10 +1,14 @@
+import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/format.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/button.dart';
 import '../../../../../utilities/widgets/drawer_box.dart';
 import '../../../customer/model/customer_model.dart';
+import '../../cubit/salenote_details/salenote_details_cubit.dart';
+import '../../cubit/salenote_details/salenote_details_state.dart';
 import '../../model/sale_note_model.dart';
 import '../../model/sale_product_model.dart';
 
@@ -13,10 +17,37 @@ class SaleNoteDrawerDetails extends StatelessWidget {
   const SaleNoteDrawerDetails({super.key, required this.saleNote});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => SaleNoteDetailsCubit()),
+      ], child: blocBuilder(context));
+
+  Widget blocBuilder(BuildContext context) {
+    return BlocConsumer<SaleNoteDetailsCubit, SaleNoteDetailsState>(
+      bloc: context.read<SaleNoteDetailsCubit>()..load(''),
+      builder: (context, state) {
+        if (state is LoadingSaleNoteDetailsState) {
+          return saleNoteDrawerDetails(context, true);
+        } else if (state is LoadedSaleNoteDetailsState) {
+          return saleNoteDrawerDetails(context, false);
+        } else {
+          return saleNoteDrawerDetails(context, false);
+        }
+      },
+      listener: (context, state) {
+        if (state is ErrorSaleNoteDetailsState) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialogAxol(text: state.error),
+          );
+        }
+      },
+    );
+  }
+
+  Widget saleNoteDrawerDetails(BuildContext context, bool isLoading) {
     List<Widget> productList = [];
     Widget product;
-    Widget test;
+    //Widget test;
     for (SaleProductModel element in saleNote.saleProduct) {
       product = DrawerBox.rowValues([
         DrawerCellText(element.product.code, style: Typo.bodyDark),
@@ -25,7 +56,7 @@ class SaleNoteDrawerDetails extends StatelessWidget {
       ]);
       productList.add(product);
     }
-    test = DrawerBox.rowValues([
+    /*test = DrawerBox.rowValues([
       const DrawerCellText('Clave1', style: Typo.bodyDark),
       const DrawerCellText('0', style: Typo.bodyDark),
       const DrawerCellText('0', style: Typo.bodyDark),
@@ -42,7 +73,7 @@ class SaleNoteDrawerDetails extends StatelessWidget {
       const DrawerCellText('0', style: Typo.bodyDark),
       const DrawerCellText('0', style: Typo.bodyDark),
     ]);
-    productList.add(test);
+    productList.add(test);*/
     return DrawerBox(
       header: const Text(
         'Nota de venta',
