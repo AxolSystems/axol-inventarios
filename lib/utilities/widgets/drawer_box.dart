@@ -19,6 +19,19 @@ class DrawerBox extends StatelessWidget {
     this.padding,
   });
 
+  double drawerWidth(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double drawerWidth;
+    if (width == null) {
+      drawerWidth = screenWidth * 0.5;
+    } else if (width! <= 1 && width! > 0) {
+      drawerWidth = screenWidth * width!;
+    } else {
+      drawerWidth = screenWidth * 0.5;
+    }
+    return drawerWidth;
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;

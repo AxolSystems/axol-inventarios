@@ -9,18 +9,26 @@ class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
   SaleNoteDetailsCubit() : super(InitialSaleNoteDetailsState());
 
   Future<void> load(List<SaleProductModel> productList) async {
-    final ProductModel? productDB;
-    final sale product;
+    ProductModel? productDB;
+    ProductModel product;
     List<SaleProductModel> upProductList = [];
+    SaleProductModel upProductSale;
     try {
       emit(InitialSaleNoteDetailsState());
       emit(LoadingSaleNoteDetailsState());
       for (SaleProductModel productSale in productList) {
-        
+        productDB =
+            await ProductRepo().fetchProductByCode(productSale.product.code);
+        product = productDB ?? ProductModel.empty();
+        upProductSale = SaleProductModel(
+            product: product,
+            quantity: productSale.quantity,
+            price: productSale.price,
+            note: productSale.note);
+        upProductList.add(upProductSale);
       }
-      productDB = await ProductRepo().fetchProductByCode(productCode);
-      product = productDB ?? ProductModel.empty();
-      emit(LoadedSaleNoteDetailsState(product: product));
+
+      emit(LoadedSaleNoteDetailsState(productList: upProductList));
     } catch (e) {
       emit(InitialSaleNoteDetailsState());
       emit(ErrorSaleNoteDetailsState(error: e.toString()));

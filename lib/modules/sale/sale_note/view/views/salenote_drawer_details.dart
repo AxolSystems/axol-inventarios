@@ -1,11 +1,13 @@
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../utilities/format.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../../utilities/widgets/button.dart';
 import '../../../../../utilities/widgets/drawer_box.dart';
+import '../../../../../utilities/widgets/loading_indicator/shimmer_indicator.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../cubit/salenote_details/salenote_details_cubit.dart';
 import '../../cubit/salenote_details/salenote_details_state.dart';
@@ -19,16 +21,23 @@ class SaleNoteDrawerDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(providers: [
         BlocProvider(create: (_) => SaleNoteDetailsCubit()),
-      ], child: blocBuilder(context));
+      ], child: SaleNoteDrawerDetailsBuild(saleNote: saleNote));
+}
 
-  Widget blocBuilder(BuildContext context) {
+class SaleNoteDrawerDetailsBuild extends StatelessWidget {
+  final SaleNoteModel saleNote;
+  const SaleNoteDrawerDetailsBuild({super.key, required this.saleNote});
+
+  @override
+  Widget build(BuildContext context) {
     return BlocConsumer<SaleNoteDetailsCubit, SaleNoteDetailsState>(
-      bloc: context.read<SaleNoteDetailsCubit>()..load(''),
+      bloc: context.read<SaleNoteDetailsCubit>()..load(saleNote.saleProduct),
       builder: (context, state) {
         if (state is LoadingSaleNoteDetailsState) {
           return saleNoteDrawerDetails(context, true);
         } else if (state is LoadedSaleNoteDetailsState) {
-          return saleNoteDrawerDetails(context, false);
+          return saleNoteDrawerDetails(context, false,
+              upProductList: state.productList);
         } else {
           return saleNoteDrawerDetails(context, false);
         }
@@ -44,11 +53,12 @@ class SaleNoteDrawerDetails extends StatelessWidget {
     );
   }
 
-  Widget saleNoteDrawerDetails(BuildContext context, bool isLoading) {
+  Widget saleNoteDrawerDetails(BuildContext context, bool isLoading,
+      {List<SaleProductModel>? upProductList}) {
+    List<SaleProductModel> upProductList_ = upProductList ?? [];
     List<Widget> productList = [];
     Widget product;
-    //Widget test;
-    for (SaleProductModel element in saleNote.saleProduct) {
+    for (SaleProductModel element in upProductList_) {
       product = DrawerBox.rowValues([
         DrawerCellText(element.product.code, style: Typo.bodyDark),
         DrawerCellText(element.quantity.toString(), style: Typo.bodyDark),
@@ -56,24 +66,6 @@ class SaleNoteDrawerDetails extends StatelessWidget {
       ]);
       productList.add(product);
     }
-    /*test = DrawerBox.rowValues([
-      const DrawerCellText('Clave1', style: Typo.bodyDark),
-      const DrawerCellText('0', style: Typo.bodyDark),
-      const DrawerCellText('0', style: Typo.bodyDark),
-    ]);
-    productList.add(test);
-    test = DrawerBox.rowValues([
-      const DrawerCellText('Clave2', style: Typo.bodyDark),
-      const DrawerCellText('0', style: Typo.bodyDark),
-      const DrawerCellText('0', style: Typo.bodyDark),
-    ]);
-    productList.add(test);
-    test = DrawerBox.rowValues([
-      const DrawerCellText('Clave3', style: Typo.bodyDark),
-      const DrawerCellText('0', style: Typo.bodyDark),
-      const DrawerCellText('0', style: Typo.bodyDark),
-    ]);
-    productList.add(test);*/
     return DrawerBox(
       header: const Text(
         'Nota de venta',
@@ -81,6 +73,7 @@ class SaleNoteDrawerDetails extends StatelessWidget {
       ),
       actions: [
         ButtonReturnDialog(
+          isLoading: isLoading,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -124,7 +117,31 @@ class SaleNoteDrawerDetails extends StatelessWidget {
           const DrawerCellText('Importe', style: Typo.subtitleDark),
         ], color: ColorPalette.lightItems),
         Column(
-          children: productList,
+          children: isLoading
+              ? [
+                  Row(
+                    children: [
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                      ShimmerIndicator.horizontalExpanded(height: 15),
+                    ],
+                  ),
+                ]
+              : productList,
         ),
       ],
     );

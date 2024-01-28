@@ -69,6 +69,7 @@ class SaleNoteRepo {
           .or(textOr);
     }
     for (var element in saleNoteDB) {
+      productList = [];
       jsonbProducts = element[_products];
       mapList = jsonbProducts.values.toList();
       for (Map<String, dynamic> map in mapList) {

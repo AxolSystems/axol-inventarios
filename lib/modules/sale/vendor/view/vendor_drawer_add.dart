@@ -7,7 +7,7 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
-import '../../../../utilities/widgets/progress_indicator.dart';
+import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/textfield_input_form.dart';
 import '../../customer/model/customer_add_form_model.dart';
 import '../cubit/vendor_add/vendor_add_cubit.dart';

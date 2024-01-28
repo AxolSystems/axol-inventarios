@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/utilities/widgets/progress_indicator.dart';
+import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

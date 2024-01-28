@@ -7,7 +7,7 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
-import '../../../../utilities/widgets/progress_indicator.dart';
+import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../cubit/vendor_tab/vendor_tab_form.dart';
 import '../cubit/vendor_tab/vendor_tab_state.dart';

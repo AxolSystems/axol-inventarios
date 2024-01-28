@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
 import '../../global_widgets/appbar/iconbutton_return.dart';
-import 'progress_indicator.dart';
+import 'loading_indicator/progress_indicator.dart';
 
 class AppBarAxol extends StatelessWidget {
   final String title;
