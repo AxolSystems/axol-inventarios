@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
-import '../cubit/vendor_delete/customer_delete_cubit.dart';
+import '../cubit/vendor_delete/vendor_delete_cubit.dart';
 import '../cubit/vendor_delete/vendor_delete_state.dart';
 import '../model/vendor_model.dart';
 

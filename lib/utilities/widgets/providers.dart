@@ -29,7 +29,7 @@ import '../../modules/sale/sale_note/model/salenote_row_form_model.dart';
 import '../../modules/sale/sale_note/view/views/salenote_add.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_form.dart';
-import '../../modules/sale/vendor/cubit/vendor_delete/customer_delete_cubit.dart';
+import '../../modules/sale/vendor/cubit/vendor_delete/vendor_delete_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_find/vendor_find_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_tab/vendor_tab_form.dart';

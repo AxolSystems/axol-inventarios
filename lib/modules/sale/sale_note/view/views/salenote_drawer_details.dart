@@ -1,7 +1,6 @@
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../../../utilities/format.dart';
 import '../../../../../utilities/theme/theme.dart';
@@ -13,6 +12,7 @@ import '../../cubit/salenote_details/salenote_details_cubit.dart';
 import '../../cubit/salenote_details/salenote_details_state.dart';
 import '../../model/sale_note_model.dart';
 import '../../model/sale_product_model.dart';
+import 'salenote_dialog_delete.dart';
 
 class SaleNoteDrawerDetails extends StatelessWidget {
   final SaleNoteModel saleNote;
@@ -72,6 +72,16 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
         style: Typo.subtitleDark,
       ),
       actions: [
+        ButtonDelete(
+          isLoading: isLoading,
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => SaleNoteDialogDelete(
+                      saleNote: saleNote,
+                    ));
+          },
+        ),
         ButtonReturnDialog(
           isLoading: isLoading,
           onPressed: () {

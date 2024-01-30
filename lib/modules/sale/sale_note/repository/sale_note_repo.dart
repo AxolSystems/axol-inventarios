@@ -163,4 +163,8 @@ class SaleNoteRepo {
       _products: productsMap,
     });
   }
+
+  Future<void> delete(SaleNoteModel saleNote) async {
+    await _supabase.from(_table).delete().eq(_id, saleNote.id);
+  }
 }
