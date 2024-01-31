@@ -12,7 +12,7 @@ import '../../cubit/salenote_details/salenote_details_cubit.dart';
 import '../../cubit/salenote_details/salenote_details_state.dart';
 import '../../model/sale_note_model.dart';
 import '../../model/sale_product_model.dart';
-import 'salenote_dialog_delete.dart';
+import 'salenote_dialog_cancel.dart';
 
 class SaleNoteDrawerDetails extends StatelessWidget {
   final SaleNoteModel saleNote;
@@ -73,11 +73,12 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
       ),
       actions: [
         ButtonDelete(
+          text: 'Cancelar nota',
           isLoading: isLoading,
           onPressed: () {
             showDialog(
                 context: context,
-                builder: (context) => SaleNoteDialogDelete(
+                builder: (context) => SaleNoteDialogCancel(
                       saleNote: saleNote,
                     ));
           },
@@ -87,7 +88,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-        )
+        ),
       ],
       children: [
         DrawerBox.rowKeyValue('Folio: ', saleNote.id.toString()),

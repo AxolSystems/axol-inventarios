@@ -13,6 +13,7 @@ class SaleNoteModel {
   final WarehouseModel warehouse;
   final VendorModel vendor;
   final String note;
+  final int status;
   final List<SaleProductModel> saleProduct;
 
   static const String tId = 'id';
@@ -38,6 +39,7 @@ class SaleNoteModel {
     required this.warehouse,
     required this.vendor,
     required this.note,
+    required this.status,
     required this.saleProduct,
   });
 
@@ -51,5 +53,6 @@ class SaleNoteModel {
         warehouse = WarehouseModel.empty(),
         vendor = VendorModel.empty(),
         note = '',
+        status = -1,
         saleProduct = [];
 }

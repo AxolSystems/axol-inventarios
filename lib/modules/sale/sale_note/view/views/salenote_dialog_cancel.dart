@@ -4,32 +4,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../../utilities/widgets/button.dart';
 import '../../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
-import '../../cubit/salenote_delete/salenote_delete_cubit.dart';
-import '../../cubit/salenote_delete/salenote_delete_state.dart';
+import '../../cubit/salenote_delete/salenote_cancel_cubit.dart';
+import '../../cubit/salenote_delete/salenote_cancel_state.dart';
 import '../../model/sale_note_model.dart';
 
-class SaleNoteDialogDelete extends StatelessWidget {
+class SaleNoteDialogCancel extends StatelessWidget {
   final SaleNoteModel saleNote;
-  const SaleNoteDialogDelete({super.key, required this.saleNote});
+  const SaleNoteDialogCancel({super.key, required this.saleNote});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider(create: (_) => SaleNoteDeleteCubit()),
-    ], child: SaleNoteDialogDeleteBuild(saleNote: saleNote));
+      BlocProvider(create: (_) => SaleNoteCancelCubit()),
+    ], child: SaleNoteDialogCancelBuild(saleNote: saleNote));
   }
 }
 
-class SaleNoteDialogDeleteBuild extends StatelessWidget {
+class SaleNoteDialogCancelBuild extends StatelessWidget {
   final SaleNoteModel saleNote;
-  const SaleNoteDialogDeleteBuild({super.key, required this.saleNote});
+  const SaleNoteDialogCancelBuild({super.key, required this.saleNote});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SaleNoteDeleteCubit, SaleNoteDeleteState>(
-      bloc: context.read<SaleNoteDeleteCubit>()..load(),
+    return BlocConsumer<SaleNoteCancelCubit, SaleNoteCancelState>(
+      bloc: context.read<SaleNoteCancelCubit>()..load(),
       listener: (context, state) {
-        if (state is CloseSaleNoteDeleteState) {
+        if (state is CloseSaleNoteCancelState) {
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -37,11 +37,11 @@ class SaleNoteDialogDeleteBuild extends StatelessWidget {
       builder: (context, state) {
         if (state is LoadedSaleNoteDeleteState) {
           return customerDialogDelete(context, saleNote);
-        } else if (state is LoadingSaleNoteDeleteState) {
+        } else if (state is LoadingSaleNoteCancelState) {
           return const Center(
             child: LinearProgressIndicatorAxol(),
           );
-        } else if (state is ErrorSaleNoteDeleteState) {
+        } else if (state is ErrorSaleNoteCancelState) {
           return AlertDialogAxol(
             text: state.error,
           );
@@ -57,16 +57,19 @@ class SaleNoteDialogDeleteBuild extends StatelessWidget {
   AlertDialogAxol customerDialogDelete(
       BuildContext context, SaleNoteModel customer) {
     const String message =
-        '¿Estás seguro de eliminar esta nota de venta?\n Esta acción no se podrá desasear';
+        '¿Estás seguro desea cancelar esta nota de venta?\n Esta acción no se podrá desasear';
     final List<Widget> actions = [
       ButtonReturnDialog(
         onPressed: () {
           Navigator.pop(context);
         },
       ),
-      ButtonDelete(onPressed: () {
-        context.read<SaleNoteDeleteCubit>().deleteCustomer(customer);
-      }),
+      ButtonDelete(
+        text: 'Cancelar',
+        onPressed: () {
+          context.read<SaleNoteCancelCubit>().cancelSaleNote(customer);
+        },
+      ),
     ];
     return AlertDialogAxol(
       text: message,

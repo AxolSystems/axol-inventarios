@@ -20,6 +20,7 @@ class SaleNoteRepo {
   static const String _vendor = 'vendor';
   static const String _note = 'note';
   static const String _products = 'products';
+  static const String _status = SaleNoteModel.tStatus;
   final _supabase = Supabase.instance.client;
 
   Future<List<SaleNoteModel>> fetchNotes(
@@ -90,6 +91,7 @@ class SaleNoteRepo {
         warehouse: WarehouseModel.fillMap(element[_warehouse]),
         vendor: VendorModel.fillMap(element[_vendor]),
         note: element[_note],
+        status: element[_status],
         saleProduct: productList,
       );
       salesNotes.add(saleNote);
@@ -160,11 +162,16 @@ class SaleNoteRepo {
       _warehouse: warehouseMap,
       _vendor: vendorMap,
       _note: saleNote.note,
+      _status: saleNote.status,
       _products: productsMap,
     });
   }
 
   Future<void> delete(SaleNoteModel saleNote) async {
     await _supabase.from(_table).delete().eq(_id, saleNote.id);
+  }
+
+  Future<void> cancelNote(SaleNoteModel saleNote) async {
+    await _supabase.from(_table).update({_status: 0}).eq(_id, saleNote.id);
   }
 }

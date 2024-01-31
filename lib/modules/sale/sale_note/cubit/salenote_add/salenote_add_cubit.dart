@@ -348,6 +348,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         warehouse: form.warehouse,
         vendor: form.vendor,
         note: form.note,
+        status: 1,
         saleProduct: SaleProductModel.rowToSale(form.productList),
       );
       List<InventoryModel> inventoryList = [];

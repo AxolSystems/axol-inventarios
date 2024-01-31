@@ -86,6 +86,9 @@ class SaleNoteTab extends StatelessWidget {
                       builder: (context) => const ProviderSaleNoteAdd(),
                     ).then((value) {
                       context.read<SaleNoteTabCubit>().load('');
+                      context
+                          .read<SaleNoteTabForm>()
+                          .setForm(TextfieldModel.empty());
                     });
                   },
                   icon: const Icon(
@@ -158,6 +161,14 @@ class SaleNoteTab extends StatelessWidget {
                           style: Typo.subtitleLight,
                         )),
                       ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                            child: Text(
+                          'Estado',
+                          style: Typo.subtitleLight,
+                        )),
+                      ),
                     ],
                   ),
                 ),
@@ -168,6 +179,14 @@ class SaleNoteTab extends StatelessWidget {
                   itemCount: listData.length,
                   itemBuilder: (context, index) {
                     final saleNoteRow = listData[index];
+                    final String status;
+                    if (saleNoteRow.status == 0) {
+                      status = 'Cancelado';
+                    } else if (saleNoteRow.status == 1) {
+                      status = 'Emitido';
+                    } else {
+                      status = '';
+                    }
                     return Container(
                       height: 30,
                       width: double.infinity,
@@ -179,10 +198,14 @@ class SaleNoteTab extends StatelessWidget {
                       child: ButtonRowTable(
                         onPressed: () {
                           showDialog(
-                            context: context,
-                            builder: (context) =>
-                                SaleNoteDrawerDetails(saleNote: saleNoteRow)
-                          );
+                              context: context,
+                              builder: (context) => SaleNoteDrawerDetails(
+                                  saleNote: saleNoteRow)).then((value) {
+                            context.read<SaleNoteTabCubit>().load('');
+                            context
+                                .read<SaleNoteTabForm>()
+                                .setForm(TextfieldModel.empty());
+                          });
                         },
                         child: Row(
                           children: [
@@ -252,6 +275,16 @@ class SaleNoteTab extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   saleNoteRow.vendor.name,
+                                  style: Typo.labelText1,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              // 8) Estado
+                              flex: 1,
+                              child: Center(
+                                child: Text(
+                                  status,
                                   style: Typo.labelText1,
                                 ),
                               ),
