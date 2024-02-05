@@ -18,7 +18,7 @@ class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
       emit(LoadingSaleNoteDetailsState());
       for (SaleProductModel productSale in productList) {
         productDB =
-            await ProductRepo().fetchProductByCode(productSale.product.code);
+            await ProductRepo().fetchProduct(productSale.product.code);
         product = productDB ?? ProductModel.empty();
         upProductSale = SaleProductModel(
             product: product,

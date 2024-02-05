@@ -10,12 +10,11 @@ class ProductsCubit extends Cubit<ProductsState> {
 
   Future<void> initialList() async {
     try {
-      TextfieldModel initialFinder = TextfieldModel(text: '', position: 0);
+      TextfieldModel initialFinder = const TextfieldModel(text: '', position: 0);
       List<ProductModel> products;
       emit(InitialState());
       emit(LoadingState(finder: initialFinder, mode: 0));
       products = await ProductRepo().fetchAllProducts();
-      print(products.length);
       emit(LoadedState(products: products, finder: initialFinder, mode: 0));
     } catch (e) {
       emit(ErrorState(error: e.toString()));

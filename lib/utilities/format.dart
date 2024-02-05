@@ -7,6 +7,28 @@ class FormatDate {
         '${dateTime.day}/${dateTime.month}/${dateTime.year}';
     return dateText;
   }
+
+  static String ddMonthYear(DateTime dateTime) {
+    String dateText;
+    Map<int, String> month = {
+      0: '',
+      1: 'enero',
+      2: 'febrero',
+      3: 'marzo',
+      4: 'abril',
+      5: 'mayo',
+      6: 'junio',
+      7: 'julio',
+      8: 'agosto',
+      9: 'septiembre',
+      10: 'octubre',
+      11: 'noviembre', 
+      12: 'diciembre',
+    };
+    dateText =
+        '${dateTime.day} de ${month[dateTime.month]}, ${dateTime.year}';
+    return dateText;
+  }
 }
 
 class FormatNumber {
@@ -27,7 +49,16 @@ class FormatNumber {
   static String format2dec(double number) {
     String finalNumber;
     finalNumber = NumberFormat('#,##0.00', 'en_US').format(number);
-    
     return finalNumber;
+  }
+
+  static String format2dig(int number) {
+    final String textNum;
+    if (number < 10) {
+      textNum = number.toString().padLeft(2,'0');
+    } else {
+      textNum = number.toString();
+    }
+    return textNum;
   }
 }
