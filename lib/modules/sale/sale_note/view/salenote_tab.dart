@@ -5,21 +5,38 @@ import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
-import '../../../../utilities/widgets/providers.dart';
+import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../cubit/salenote_tab/salenote_tab_state.dart';
 import '../cubit/salenote_tab/salenote_tab_form.dart';
 import '../model/sale_note_model.dart';
+import 'salenote_add.dart';
 import 'salenote_drawer_details.dart';
 
 class SaleNoteTab extends StatelessWidget {
-  const SaleNoteTab({super.key});
+  final int saleType;
+  const SaleNoteTab({super.key, required this.saleType});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => SaleNoteTabCubit()),
+            BlocProvider(create: (_) => SaleNoteTabForm()),
+          ],
+          child: SaleNoteTabBuild(
+            saleType: saleType,
+          ));
+}
+
+class SaleNoteTabBuild extends StatelessWidget {
+  final int saleType;
+  const SaleNoteTabBuild({super.key, required this.saleType});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SaleNoteTabCubit, SaleNoteTabState>(
-      bloc: context.read<SaleNoteTabCubit>()..loadList(),
+      bloc: context.read<SaleNoteTabCubit>()..initLoad(saleType),
       builder: (context, state) {
         if (state is LoadingSaleNoteState) {
           return saleNoteTab(context, [], true);
@@ -54,7 +71,7 @@ class SaleNoteTab extends StatelessWidget {
                   autoFocus: true,
                   isTxtExpand: true,
                   onSubmitted: (value) {
-                    context.read<SaleNoteTabCubit>().load(value);
+                    context.read<SaleNoteTabCubit>().load(value, saleType);
                   },
                   onChanged: (value) {
                     form = TextfieldModel(
@@ -67,7 +84,7 @@ class SaleNoteTab extends StatelessWidget {
                       context
                           .read<SaleNoteTabForm>()
                           .setForm(TextfieldModel.empty());
-                      context.read<SaleNoteTabCubit>().load('');
+                      context.read<SaleNoteTabCubit>().load('', saleType);
                     }
                   },
                 )),
@@ -83,9 +100,11 @@ class SaleNoteTab extends StatelessWidget {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => const ProviderSaleNoteAdd(),
+                      builder: (context) => SaleNoteAdd(
+                        saleType: saleType,
+                      ),
                     ).then((value) {
-                      context.read<SaleNoteTabCubit>().load('');
+                      context.read<SaleNoteTabCubit>().load('', saleType);
                       context
                           .read<SaleNoteTabForm>()
                           .setForm(TextfieldModel.empty());
@@ -174,127 +193,138 @@ class SaleNoteTab extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: listData.length,
-                  itemBuilder: (context, index) {
-                    final saleNoteRow = listData[index];
-                    final String status;
-                    if (saleNoteRow.status == 0) {
-                      status = 'Cancelado';
-                    } else if (saleNoteRow.status == 1) {
-                      status = 'Emitido';
-                    } else {
-                      status = '';
-                    }
-                    return Container(
-                      height: 30,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Colors.white12),
-                        ),
-                      ),
-                      child: ButtonRowTable(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => SaleNoteDrawerDetails(
-                                  saleNote: saleNoteRow)).then((value) {
-                            context.read<SaleNoteTabCubit>().load('');
-                            context
-                                .read<SaleNoteTabForm>()
-                                .setForm(TextfieldModel.empty());
-                          });
+                child: isLoading
+                    ? const Column(
+                        children: [
+                          LinearProgressIndicatorAxol(),
+                          Expanded(child: SizedBox())
+                        ],
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: listData.length,
+                        itemBuilder: (context, index) {
+                          final saleNoteRow = listData[index];
+                          final String status;
+                          if (saleNoteRow.status == 0) {
+                            status = 'Cancelado';
+                          } else if (saleNoteRow.status == 1) {
+                            status = 'Emitido';
+                          } else {
+                            status = '';
+                          }
+                          return Container(
+                            height: 30,
+                            width: double.infinity,
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: Colors.white12),
+                              ),
+                            ),
+                            child: ButtonRowTable(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => SaleNoteDrawerDetails(
+                                          saleNote: saleNoteRow,
+                                          saleType: saleType,
+                                        )).then((value) {
+                                  context
+                                      .read<SaleNoteTabCubit>()
+                                      .load('', saleType);
+                                  context
+                                      .read<SaleNoteTabForm>()
+                                      .setForm(TextfieldModel.empty());
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    //1) Clave
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        saleNoteRow.id.toString(),
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 2) Cliente
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        saleNoteRow.customer.id.toString(),
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 3) Nombre de cliente
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        saleNoteRow.customer.name,
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 4) Fecha de elaboración
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        '${saleNoteRow.date.day}/${saleNoteRow.date.month}/${saleNoteRow.date.year}',
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 5) Importe total
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        '\$${saleNoteRow.total}',
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 6) Almacen
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        saleNoteRow.warehouse.id.toString(),
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 7) Vendedor
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        saleNoteRow.vendor.name,
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    // 8) Estado
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        status,
+                                        style: Typo.labelText1,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
-                        child: Row(
-                          children: [
-                            Expanded(
-                              //1) Clave
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  saleNoteRow.id.toString(),
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 2) Cliente
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  saleNoteRow.customer.id.toString(),
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 3) Nombre de cliente
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  saleNoteRow.customer.name,
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 4) Fecha de elaboración
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  '${saleNoteRow.date.day}/${saleNoteRow.date.month}/${saleNoteRow.date.year}',
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 5) Importe total
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  '\$${saleNoteRow.total}',
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 6) Almacen
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  saleNoteRow.warehouse.id.toString(),
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 7) Vendedor
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  saleNoteRow.vendor.name,
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // 8) Estado
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  status,
-                                  style: Typo.labelText1,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    );
-                  },
-                ),
               ),
             ],
           ),

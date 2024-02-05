@@ -10,10 +10,30 @@ import '../cubit/salenote_note/salenote_note_cubit.dart';
 import '../cubit/salenote_note/salenote_note_state.dart';
 import '../model/salenote_row_form_model.dart';
 
-class SaleNoteDrawerNote extends StatelessWidget {
+class SaleNoteNote extends StatelessWidget {
   final SaleNoteRowFormModel? row;
   final String? textNote;
-  const SaleNoteDrawerNote({super.key, this.row, this.textNote});
+  const SaleNoteNote({
+    super.key,
+    this.row,
+    this.textNote,
+  });
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => SaleNoteNoteCubit()),
+          ],
+          child: SaleNoteDrawerNoteBuild(
+            row: row,
+            textNote: textNote,
+          ));
+}
+
+class SaleNoteDrawerNoteBuild extends StatelessWidget {
+  final SaleNoteRowFormModel? row;
+  final String? textNote;
+  const SaleNoteDrawerNoteBuild({super.key, this.row, this.textNote});
 
   @override
   Widget build(BuildContext context) {

@@ -22,9 +22,23 @@ import '../cubit/salenote_add/salenote_add_form.dart';
 import '../cubit/salenote_add/salenote_add_state.dart';
 import '../model/saelnote_add_form_model.dart';
 import '../model/salenote_row_form_model.dart';
+import 'salenote_drawer_note.dart';
 
-class SaleNoteAdd extends StatelessWidget {
-  const SaleNoteAdd({super.key});
+
+class SaleNoteAdd extends Providers {
+  final int saleType;
+  const SaleNoteAdd({super.key, required this.saleType});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => SaleNoteAddCubit()),
+        BlocProvider(create: (_) => SaleNoteAddForm()),
+      ], child: SaleNoteAddBuild(saleType: saleType,));
+}
+
+class SaleNoteAddBuild extends StatelessWidget {
+  final int saleType;
+  const SaleNoteAddBuild({super.key, required this.saleType});
 
   String _toEmptyString(int num) {
     final String string;
@@ -40,14 +54,14 @@ class SaleNoteAdd extends StatelessWidget {
   Widget build(BuildContext context) {
     SaleNoteAddFormModel form = context.read<SaleNoteAddForm>().state;
     return BlocConsumer<SaleNoteAddCubit, SaleNoteAddState>(
-      bloc: context.read<SaleNoteAddCubit>()..initLoad(form),
+      bloc: context.read<SaleNoteAddCubit>()..initLoad(form, saleType),
       builder: (context, state) {
         if (state is LoadingSaleNoteAddState) {
-          return saleNoteAdd(context, form.productList, true);
+          return saleNoteAdd(context, form.productList, true, saleType);
         } else if (state is LoadedSaleNoteAddState) {
-          return saleNoteAdd(context, form.productList, false);
+          return saleNoteAdd(context, form.productList, false, saleType);
         } else {
-          return saleNoteAdd(context, form.productList, false);
+          return saleNoteAdd(context, form.productList, false, saleType);
         }
       },
       listener: (context, state) {
@@ -77,7 +91,8 @@ class SaleNoteAdd extends StatelessWidget {
   }
 
   Widget saleNoteAdd(BuildContext context,
-      List<SaleNoteRowFormModel> productList, bool isLoading) {
+      List<SaleNoteRowFormModel> productList, bool isLoading, int saleType) {
+    String title = '';
     SaleNoteAddFormModel form = context.read<SaleNoteAddForm>().state;
     int linesNote = 3;
     String dateText =
@@ -102,10 +117,17 @@ class SaleNoteAdd extends StatelessWidget {
       linesNote = linesNote - 1;
     }
 
+    if (saleType == 0) {
+      title = 'Nueva de nota de venta';
+    }
+    if (saleType == 1) {
+      title = 'Nueva remisión';
+    }
+
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol(
-        title: 'Nueva nota de venta',
+        title: title,
         isLoading: isLoading,
       ).appBarAxol(),
       body: Row(
@@ -327,7 +349,7 @@ class SaleNoteAdd extends StatelessWidget {
                                           showDialog(
                                             context: context,
                                             builder: ((context) =>
-                                                ProviderSaleNoteNote(
+                                                SaleNoteNote(
                                                   textNote: form.note,
                                                 )),
                                           ).then((value) {
@@ -605,7 +627,7 @@ class SaleNoteAdd extends StatelessWidget {
                                           showDialog(
                                             context: context,
                                             builder: (context) =>
-                                                ProviderSaleNoteNote(row: row),
+                                                SaleNoteNote(row: row),
                                           ).then((value) {
                                             if (value is SaleNoteRowFormModel) {
                                               form.productList[index] = value;
@@ -683,7 +705,7 @@ class SaleNoteAdd extends StatelessWidget {
                           height: 50,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.read<SaleNoteAddCubit>().save(form);
+                              context.read<SaleNoteAddCubit>().save(form, saleType);
                             },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide.none,

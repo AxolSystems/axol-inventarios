@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/sale/sale_note/repository/sale_referral_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/inventory_model.dart';
@@ -19,13 +20,18 @@ class SaleNoteCancelCubit extends Cubit<SaleNoteCancelState> {
     }
   }
 
-  Future<void> cancelSaleNote(SaleNoteModel saleNote) async {
+  Future<void> cancelSaleNote(SaleNoteModel saleNote, int saleType) async {
     try {
       InventoryModel? inventoryDB;
       InventoryModel inventory;
       emit(InitialSaleNoteDeleteState());
       emit(LoadingSaleNoteCancelState());
-      await SaleNoteRepo().cancelNote(saleNote);
+      if (saleType == 0) {
+        await SaleNoteRepo().cancelNote(saleNote);
+      }
+      if (saleType == 1) {
+        await SaleReferralRepo().cancelReferral(saleNote);
+      }
       for (var saleProduct in saleNote.saleProduct) {
         inventoryDB = await InventoryRepo()
             .fetchRowByCode(saleProduct.product.code, saleNote.warehouse.name);

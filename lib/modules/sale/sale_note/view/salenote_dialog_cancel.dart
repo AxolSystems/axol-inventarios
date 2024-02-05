@@ -10,19 +10,28 @@ import '../model/sale_note_model.dart';
 
 class SaleNoteDialogCancel extends StatelessWidget {
   final SaleNoteModel saleNote;
-  const SaleNoteDialogCancel({super.key, required this.saleNote});
+  final int saleType;
+  const SaleNoteDialogCancel(
+      {super.key, required this.saleNote, required this.saleType});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(providers: [
-      BlocProvider(create: (_) => SaleNoteCancelCubit()),
-    ], child: SaleNoteDialogCancelBuild(saleNote: saleNote));
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => SaleNoteCancelCubit()),
+        ],
+        child: SaleNoteDialogCancelBuild(
+          saleNote: saleNote,
+          saleType: saleType,
+        ));
   }
 }
 
 class SaleNoteDialogCancelBuild extends StatelessWidget {
   final SaleNoteModel saleNote;
-  const SaleNoteDialogCancelBuild({super.key, required this.saleNote});
+  final int saleType;
+  const SaleNoteDialogCancelBuild(
+      {super.key, required this.saleNote, required this.saleType});
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +65,16 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
 
   AlertDialogAxol customerDialogDelete(
       BuildContext context, SaleNoteModel customer) {
-    const String message =
-        '¿Estás seguro desea cancelar esta nota de venta?\n Esta acción no se podrá desasear';
+    String saleTypeText = '-';
+    String message;
+    if (saleType == 0) {
+      saleTypeText = 'nota de venta';
+    }
+    if (saleType == 1) {
+      saleTypeText = 'remisión';
+    }
+    message =
+        '¿Estás seguro desea cancelar esta $saleTypeText?\n Esta acción no se podrá desasear';
     final List<Widget> actions = [
       ButtonReturnDialog(
         onPressed: () {
@@ -67,7 +84,9 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
       ButtonDelete(
         text: 'Cancelar',
         onPressed: () {
-          context.read<SaleNoteCancelCubit>().cancelSaleNote(customer);
+          context
+              .read<SaleNoteCancelCubit>()
+              .cancelSaleNote(customer, saleType);
         },
       ),
     ];

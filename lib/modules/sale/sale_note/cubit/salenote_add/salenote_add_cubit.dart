@@ -20,18 +20,24 @@ import '../../model/sale_note_model.dart';
 import '../../model/sale_product_model.dart';
 import '../../model/salenote_row_form_model.dart';
 import '../../repository/sale_note_repo.dart';
+import '../../repository/sale_referral_repo.dart';
 import 'salenote_add_state.dart';
 
 class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   SaleNoteAddCubit() : super(InitialSaleNoteAddState());
 
-  Future<void> initLoad(SaleNoteAddFormModel form) async {
+  Future<void> initLoad(SaleNoteAddFormModel form, int saleType) async {
     SaleNoteAddFormModel upForm = form;
     int availableId = -1;
     try {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
-      availableId = await SaleNoteRepo().fetchAvailableId();
+      if (saleType == 0) {
+        availableId = await SaleNoteRepo().fetchAvailableId();
+      }
+      if (saleType == 1) {
+        availableId = await SaleReferralRepo().fetchAvailableId();
+      }
       upForm.id = availableId;
       upForm.productList = [SaleNoteRowFormModel.empty()];
       emit(LoadedSaleNoteAddState());
@@ -275,7 +281,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
     return validationForm;
   }
 
-  Future<void> save(SaleNoteAddFormModel form) async {
+  Future<void> save(SaleNoteAddFormModel form, int saleType) async {
     bool validSave = true;
     String errorMessage = '';
     ValidationFormModel validationForm;
@@ -403,7 +409,13 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         }
         await InventoryRepo().updateInventory(inventoryList);
         await MovementRepo().insertMovemets(movementList);
-        await SaleNoteRepo().insert(saleNote);
+        if (saleType == 0) {
+          await SaleNoteRepo().insert(saleNote);
+        }
+        if (saleType == 1) {
+          await SaleReferralRepo().insert(saleNote);
+        }
+        
         emit(SavedNoteAddState());
       } else {
         emit(ErrorSaleNoteAddState(error: errorMessage));

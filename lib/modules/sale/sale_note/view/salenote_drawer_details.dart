@@ -15,18 +15,20 @@ import '../model/sale_product_model.dart';
 import 'salenote_dialog_cancel.dart';
 
 class SaleNoteDrawerDetails extends StatelessWidget {
+  final int saleType;
   final SaleNoteModel saleNote;
-  const SaleNoteDrawerDetails({super.key, required this.saleNote});
+  const SaleNoteDrawerDetails({super.key, required this.saleNote, required this.saleType});
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(providers: [
         BlocProvider(create: (_) => SaleNoteDetailsCubit()),
-      ], child: SaleNoteDrawerDetailsBuild(saleNote: saleNote));
+      ], child: SaleNoteDrawerDetailsBuild(saleNote: saleNote, saleType: saleType,));
 }
 
 class SaleNoteDrawerDetailsBuild extends StatelessWidget {
   final SaleNoteModel saleNote;
-  const SaleNoteDrawerDetailsBuild({super.key, required this.saleNote});
+  final int saleType;
+  const SaleNoteDrawerDetailsBuild({super.key, required this.saleNote, required this.saleType});
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
 
   Widget saleNoteDrawerDetails(BuildContext context, bool isLoading,
       {List<SaleProductModel>? upProductList}) {
+    String title = '';
     List<SaleProductModel> upProductList_ = upProductList ?? [];
     List<Widget> productList = [];
     Widget product;
@@ -66,22 +69,30 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
       ]);
       productList.add(product);
     }
+
+    if (saleType == 0) {
+      title = 'Nota de venta';
+    }
+    if (saleType == 1) {
+      title = 'Remisión';
+    }
+
     return DrawerBox(
-      header: const Text(
-        'Nota de venta',
+      header: Text(
+        title,
         style: Typo.subtitleDark,
       ),
       actions: [
         Visibility(
             visible: saleNote.status == 1,
             child: ButtonDelete(
-              text: 'Cancelar nota',
+              text: 'Cancelar',
               isLoading: isLoading,
               onPressed: () {
                 showDialog(
                     context: context,
                     builder: (context) => SaleNoteDialogCancel(
-                          saleNote: saleNote,
+                          saleNote: saleNote, saleType: saleType,
                         ));
               },
             )),

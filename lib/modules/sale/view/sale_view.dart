@@ -9,6 +9,7 @@ import '../../inventory_/inventory/view/views/inventory_view.dart';
 import '../../user/view/views/home_view.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
+import '../sale_note/view/salenote_tab.dart';
 
 class SaleView extends StatelessWidget {
   const SaleView({super.key});
@@ -24,7 +25,7 @@ class SaleView extends StatelessWidget {
           length: 4,
           child: Scaffold(
             backgroundColor: ColorPalette.darkBackground,
-            appBar: const AppBarAxol(title: 'Notas de venta').appBarAxol(),
+            appBar: const AppBarAxol(title: 'Ventas').appBarAxol(),
             body: SizedBox(
               height: double.infinity,
               width: double.infinity,
@@ -78,8 +79,8 @@ class SaleView extends StatelessWidget {
                       ),
                       Expanded(
                           child: TabBarView(children: [
-                        ProviderSaleNoteTab(),
-                        Text('Remisiones', style: Typo.bodyLight),
+                        SaleNoteTab(saleType: 0,),
+                        SaleNoteTab(saleType: 1,),
                         ProviderCustomerTab(),
                         ProviderVendorTab(),
                         //Text('Vendedores', style: Typo.bodyLight),
