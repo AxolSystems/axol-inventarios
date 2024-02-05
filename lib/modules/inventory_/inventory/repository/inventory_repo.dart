@@ -200,6 +200,14 @@ class InventoryRepo {
     }
   }
 
+  Future<void> updateInventoryRow(InventoryModel inventory) async {
+    await _supabase
+        .from(_table)
+        .update({_stock: inventory.stock})
+        .eq(_code, inventory.code)
+        .eq(_name, inventory.name);
+  }
+
   Future<void> insertInventoryRow(InventoryModel inventory) async {
     await _supabase.from(_table).insert({
       _id: inventory.id,

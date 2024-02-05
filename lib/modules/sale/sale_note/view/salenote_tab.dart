@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../models/textfield_model.dart';
-import '../../../../../utilities/theme/theme.dart';
-import '../../../../../utilities/widgets/button.dart';
-import '../../../../../utilities/widgets/finder_bar.dart';
-import '../../../../../utilities/widgets/providers.dart';
-import '../../../../../utilities/widgets/toolbar.dart';
-import '../../cubit/salenote_tab/salenote_tab_cubit.dart';
-import '../../cubit/salenote_tab/salenote_tab_state.dart';
-import '../../cubit/salenote_tab/salenote_tab_form.dart';
-import '../../model/sale_note_model.dart';
+import '../../../../models/textfield_model.dart';
+import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/finder_bar.dart';
+import '../../../../utilities/widgets/providers.dart';
+import '../../../../utilities/widgets/toolbar.dart';
+import '../cubit/salenote_tab/salenote_tab_cubit.dart';
+import '../cubit/salenote_tab/salenote_tab_state.dart';
+import '../cubit/salenote_tab/salenote_tab_form.dart';
+import '../model/sale_note_model.dart';
 import 'salenote_drawer_details.dart';
 
 class SaleNoteTab extends StatelessWidget {

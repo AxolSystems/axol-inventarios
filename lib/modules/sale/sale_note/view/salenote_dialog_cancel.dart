@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../utilities/widgets/alert_dialog_axol.dart';
-import '../../../../../utilities/widgets/button.dart';
-import '../../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
-import '../../cubit/salenote_delete/salenote_cancel_cubit.dart';
-import '../../cubit/salenote_delete/salenote_cancel_state.dart';
-import '../../model/sale_note_model.dart';
+import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
+import '../cubit/salenote_delete/salenote_cancel_cubit.dart';
+import '../cubit/salenote_delete/salenote_cancel_state.dart';
+import '../model/sale_note_model.dart';
 
 class SaleNoteDialogCancel extends StatelessWidget {
   final SaleNoteModel saleNote;

@@ -2,16 +2,16 @@ import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../utilities/format.dart';
-import '../../../../../utilities/theme/theme.dart';
-import '../../../../../utilities/widgets/button.dart';
-import '../../../../../utilities/widgets/drawer_box.dart';
-import '../../../../../utilities/widgets/loading_indicator/shimmer_indicator.dart';
-import '../../../customer/model/customer_model.dart';
-import '../../cubit/salenote_details/salenote_details_cubit.dart';
-import '../../cubit/salenote_details/salenote_details_state.dart';
-import '../../model/sale_note_model.dart';
-import '../../model/sale_product_model.dart';
+import '../../../../utilities/format.dart';
+import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/drawer_box.dart';
+import '../../../../utilities/widgets/loading_indicator/shimmer_indicator.dart';
+import '../../customer/model/customer_model.dart';
+import '../cubit/salenote_details/salenote_details_cubit.dart';
+import '../cubit/salenote_details/salenote_details_state.dart';
+import '../model/sale_note_model.dart';
+import '../model/sale_product_model.dart';
 import 'salenote_dialog_cancel.dart';
 
 class SaleNoteDrawerDetails extends StatelessWidget {
@@ -72,17 +72,19 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
         style: Typo.subtitleDark,
       ),
       actions: [
-        ButtonDelete(
-          text: 'Cancelar nota',
-          isLoading: isLoading,
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) => SaleNoteDialogCancel(
-                      saleNote: saleNote,
-                    ));
-          },
-        ),
+        Visibility(
+            visible: saleNote.status == 1,
+            child: ButtonDelete(
+              text: 'Cancelar nota',
+              isLoading: isLoading,
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => SaleNoteDialogCancel(
+                          saleNote: saleNote,
+                        ));
+              },
+            )),
         ButtonReturnDialog(
           isLoading: isLoading,
           onPressed: () {

@@ -1,5 +1,5 @@
-import 'package:axol_inventarios/modules/sale/sale_note/view/views/salenote_drawer_note.dart';
-import 'package:axol_inventarios/modules/sale/sale_note/view/views/salenote_tab.dart';
+import 'package:axol_inventarios/modules/sale/sale_note/view/salenote_drawer_note.dart';
+import 'package:axol_inventarios/modules/sale/sale_note/view/salenote_tab.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_find.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +26,7 @@ import '../../modules/sale/sale_note/cubit/salenote_note/salenote_note_cubit.dar
 import '../../modules/sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../../modules/sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../../modules/sale/sale_note/model/salenote_row_form_model.dart';
-import '../../modules/sale/sale_note/view/views/salenote_add.dart';
+import '../../modules/sale/sale_note/view/salenote_add.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_form.dart';
 import '../../modules/sale/vendor/cubit/vendor_delete/vendor_delete_cubit.dart';
