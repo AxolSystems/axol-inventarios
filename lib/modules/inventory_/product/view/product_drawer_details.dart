@@ -17,7 +17,7 @@ class ProductDrawerDetails extends StatelessWidget {
           style: Typo.subtitleDark,
         ),
         actions: [
-          ButtonReturnDialog(
+          SecondaryButtonDialog(
             onPressed: () {
               Navigator.pop(context);
             },

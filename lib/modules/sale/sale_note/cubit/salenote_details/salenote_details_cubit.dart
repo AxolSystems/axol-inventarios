@@ -1,8 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+
 import '../../../../inventory_/product/model/product_model.dart';
 import '../../../../inventory_/product/repository/product_repo.dart';
+import '../../model/sale_note_model.dart';
 import '../../model/sale_product_model.dart';
+import '../../repository/sale_pdf_repo.dart';
 import 'salenote_details_state.dart';
 
 class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
@@ -17,8 +20,7 @@ class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
       emit(InitialSaleNoteDetailsState());
       emit(LoadingSaleNoteDetailsState());
       for (SaleProductModel productSale in productList) {
-        productDB =
-            await ProductRepo().fetchProduct(productSale.product.code);
+        productDB = await ProductRepo().fetchProduct(productSale.product.code);
         product = productDB ?? ProductModel.empty();
         upProductSale = SaleProductModel(
             product: product,
@@ -29,6 +31,19 @@ class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
       }
 
       emit(LoadedSaleNoteDetailsState(productList: upProductList));
+    } catch (e) {
+      emit(InitialSaleNoteDetailsState());
+      emit(ErrorSaleNoteDetailsState(error: e.toString()));
+    }
+  }
+
+  Future<void> downloadPdf(SaleNoteModel saleNote,
+      List<SaleProductModel> productList, int saleType) async {
+    try {
+      emit(InitialSaleNoteDetailsState());
+      emit(LoadingSaleNoteDetailsState());
+      await SalePdfRepo.saleNoteSave(saleNote, productList, saleType);
+      emit(LoadedSaleNoteDetailsState(productList: productList));
     } catch (e) {
       emit(InitialSaleNoteDetailsState());
       emit(ErrorSaleNoteDetailsState(error: e.toString()));

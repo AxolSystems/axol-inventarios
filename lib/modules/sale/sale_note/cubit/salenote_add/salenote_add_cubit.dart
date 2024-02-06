@@ -415,8 +415,8 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         if (saleType == 1) {
           await SaleReferralRepo().insert(saleNote);
         }
-        
-        emit(SavedNoteAddState());
+      
+        emit(SavedNoteAddState(saleNote, saleNote.saleProduct, saleType ));
       } else {
         emit(ErrorSaleNoteAddState(error: errorMessage));
       }

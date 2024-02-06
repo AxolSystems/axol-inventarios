@@ -42,12 +42,12 @@ class VendorDialogDelete extends StatelessWidget {
     const String message =
         '¿Estás seguro de eliminar este vendedor?\n Esta acción no se podrá desasear';
     final List<Widget> actions = [
-      ButtonReturnDialog(
+      SecondaryButtonDialog(
         onPressed: () {
           Navigator.pop(context);
         },
       ),
-      ButtonDelete(onPressed: () {
+      AlertButtonDialog(onPressed: () {
         context.read<VendorDeleteCubit>().deleteCustomer(customer);
       }),
     ];

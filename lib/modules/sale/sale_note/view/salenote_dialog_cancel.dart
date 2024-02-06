@@ -76,12 +76,12 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
     message =
         '¿Estás seguro desea cancelar esta $saleTypeText?\n Esta acción no se podrá desasear';
     final List<Widget> actions = [
-      ButtonReturnDialog(
+      SecondaryButtonDialog(
         onPressed: () {
           Navigator.pop(context);
         },
       ),
-      ButtonDelete(
+      AlertButtonDialog(
         text: 'Cancelar',
         onPressed: () {
           context

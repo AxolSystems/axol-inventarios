@@ -82,13 +82,13 @@ class SaleNoteDrawerNoteBuild extends StatelessWidget {
         ],
       ),
       actions: [
-        ButtonReturnDialog(
+        SecondaryButtonDialog(
           isLoading: isLoading,
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        ButtonDrawerSave(
+        PrimaryButtonDialog(
           isLoading: isLoading,
           onPressed: () {
             if (row == null) {

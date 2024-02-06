@@ -114,13 +114,13 @@ class VendorDrawerAdd extends StatelessWidget {
         ],
       ),
       actions: [
-        ButtonReturnDialog(
+        SecondaryButtonDialog(
           isLoading: isLoading,
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        ButtonDrawerSave(
+        PrimaryButtonDialog(
           isLoading: isLoading,
           onPressed: () {
             context.read<VendorAddCubit>().save(form);

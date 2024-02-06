@@ -37,7 +37,10 @@ class SaleNotePDF {
     }
 
     charNum = SpellingNumber(lang: 'es').convert(totalAmount);
-    cents = (double.parse((totalAmount - totalAmount.toInt()).toStringAsFixed(2)) * 100).toInt();
+    cents =
+        (double.parse((totalAmount - totalAmount.toInt()).toStringAsFixed(2)) *
+                100)
+            .toInt();
 
     pdf.addPage(pw.MultiPage(
       header: (context) =>
@@ -144,7 +147,8 @@ class SaleNotePDF {
                   ),
                   pw.Text(
                       'Ciudad: ${saleNote.customer.town ?? ''}, ${saleNote.customer.country ?? ''}',
-                      textAlign: pw.TextAlign.left, style: bodyText),
+                      textAlign: pw.TextAlign.left,
+                      style: bodyText),
                   pw.Text(
                     'Colonia: ${saleNote.customer.hood ?? ''}',
                     textAlign: pw.TextAlign.left,
@@ -222,7 +226,9 @@ class SaleNotePDF {
                 pw.Container(
                   height: 15,
                   alignment: pw.Alignment.center,
-                  child: pw.Text('${charNum.toUpperCase()} PESOS ${FormatNumber.format2dig(cents)}/100 M.N.', style: bodyText),
+                  child: pw.Text(
+                      '${charNum.toUpperCase()} PESOS ${FormatNumber.format2dig(cents)}/100 M.N.',
+                      style: bodyText),
                 )
               ],
             ),
@@ -247,7 +253,8 @@ class SaleNotePDF {
                         height: 15,
                         alignment: pw.Alignment.centerRight,
                         color: PdfColors.white,
-                        child: pw.Text(FormatNumber.format2dec(totalAmount), style: bodyText),
+                        child: pw.Text(FormatNumber.format2dec(totalAmount),
+                            style: bodyText),
                       )),
                       pw.SizedBox(width: 8),
                     ]),
@@ -280,7 +287,8 @@ class SaleNotePDF {
               ),
               pw.Container(
                 alignment: pw.Alignment.center,
-                child: pw.Text('${FormatNumber.format2dec(totalWight)} KG', style: bodyText),
+                child: pw.Text('${FormatNumber.format2dec(totalWight)} KG',
+                    style: bodyText),
               ),
             ],
           )),

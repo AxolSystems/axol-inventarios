@@ -97,7 +97,7 @@ class DrawerFind extends StatelessWidget {
         ],
       ),
       actions: [
-        ButtonReturnDialog(
+        SecondaryButtonDialog(
           isLoading: false,
           onPressed: () {
             Navigator.pop(context);

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/sale_note_model.dart';
+import '../../model/sale_product_model.dart';
 import '../../model/salenote_row_form_model.dart';
 
 abstract class SaleNoteAddState extends Equatable {
@@ -22,8 +24,12 @@ class LoadedSaleNoteAddState extends SaleNoteAddState {
 }
 
 class SavedNoteAddState extends SaleNoteAddState {
+  final SaleNoteModel saleNote;
+  final List<SaleProductModel> productsList;
+  final int saleType;
+  const SavedNoteAddState(this.saleNote, this.productsList, this.saleType);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [saleNote, productsList, saleType];
 }
 
 class ErrorSaleNoteAddState extends SaleNoteAddState {

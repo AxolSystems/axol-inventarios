@@ -1,7 +1,3 @@
-import 'dart:typed_data';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
-
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +13,6 @@ import '../cubit/salenote_details/salenote_details_state.dart';
 import '../model/sale_note_model.dart';
 import '../model/sale_product_model.dart';
 import 'salenote_dialog_cancel.dart';
-import 'salenote_pdf.dart';
 
 class SaleNoteDrawerDetails extends StatelessWidget {
   final int saleType;
@@ -95,25 +90,9 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
         style: Typo.subtitleDark,
       ),
       actions: [
-        ButtonReturnDialog(
-          text: 'Descargar PDF',
-          isLoading: isLoading,
-          onPressed: () async {
-            Uint8List pdfInBytes = await SaleNotePDF().saleNotePDF(saleNote, upProductList_, saleType);
-            final blob = html.Blob([pdfInBytes], 'application/pdf');
-            final url = html.Url.createObjectUrlFromBlob(blob);
-            final anchor =
-                html.document.createElement('a') as html.AnchorElement
-                  ..href = url
-                  ..style.display = 'none'
-                  ..download = 'NotaDeVenta.pdf';
-            html.document.body!.children.add(anchor);
-            anchor.click();
-          },
-        ),
         Visibility(
             visible: saleNote.status == 1,
-            child: ButtonDelete(
+            child: AlertButtonDialog(
               text: 'Cancelar',
               isLoading: isLoading,
               onPressed: () {
@@ -125,7 +104,16 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
                         ));
               },
             )),
-        ButtonReturnDialog(
+        SecondaryButtonDialog(
+          text: 'Descargar PDF',
+          isLoading: isLoading,
+          onPressed: () {
+            context
+                .read<SaleNoteDetailsCubit>()
+                .downloadPdf(saleNote, upProductList_, saleType);
+          },
+        ),
+        SecondaryButtonDialog(
           isLoading: isLoading,
           onPressed: () {
             Navigator.pop(context);

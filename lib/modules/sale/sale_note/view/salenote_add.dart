@@ -22,18 +22,22 @@ import '../cubit/salenote_add/salenote_add_form.dart';
 import '../cubit/salenote_add/salenote_add_state.dart';
 import '../model/saelnote_add_form_model.dart';
 import '../model/salenote_row_form_model.dart';
+import 'salenote_dialog_save.dart';
 import 'salenote_drawer_note.dart';
-
 
 class SaleNoteAdd extends Providers {
   final int saleType;
   const SaleNoteAdd({super.key, required this.saleType});
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(providers: [
-        BlocProvider(create: (_) => SaleNoteAddCubit()),
-        BlocProvider(create: (_) => SaleNoteAddForm()),
-      ], child: SaleNoteAddBuild(saleType: saleType,));
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => SaleNoteAddCubit()),
+            BlocProvider(create: (_) => SaleNoteAddForm()),
+          ],
+          child: SaleNoteAddBuild(
+            saleType: saleType,
+          ));
 }
 
 class SaleNoteAddBuild extends StatelessWidget {
@@ -77,10 +81,10 @@ class SaleNoteAddBuild extends StatelessWidget {
         if (state is SavedNoteAddState) {
           showDialog(
             context: context,
-            builder: (context) => const AlertDialogAxol(
-              text: 'Guardado correctamente',
-              icon: Icons.check_circle,
-              iconColor: Colors.green,
+            builder: (context) => SaleNoteDialogSave(
+              saleNote: state.saleNote,
+              productList: state.productsList,
+              saleType: state.saleType,
             ),
           ).then((value) {
             Navigator.pop(context);
@@ -348,8 +352,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                         onPressed: () {
                                           showDialog(
                                             context: context,
-                                            builder: ((context) =>
-                                                SaleNoteNote(
+                                            builder: ((context) => SaleNoteNote(
                                                   textNote: form.note,
                                                 )),
                                           ).then((value) {
@@ -705,7 +708,9 @@ class SaleNoteAddBuild extends StatelessWidget {
                           height: 50,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.read<SaleNoteAddCubit>().save(form, saleType);
+                              context
+                                  .read<SaleNoteAddCubit>()
+                                  .save(form, saleType);
                             },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide.none,

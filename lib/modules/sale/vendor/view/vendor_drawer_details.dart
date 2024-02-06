@@ -20,12 +20,12 @@ class VendorDrawerDetails extends StatelessWidget {
         style: Typo.subtitleDark,
       ),
       actions: [
-        ButtonReturnDialog(
+        SecondaryButtonDialog(
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        ButtonDelete(
+        AlertButtonDialog(
           onPressed: () {
             showDialog(
               context: context,

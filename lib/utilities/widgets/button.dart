@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
 
-class ButtonDrawerSave extends StatefulWidget {
+class PrimaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final bool? isLoading;
 
-  const ButtonDrawerSave({
+  const PrimaryButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
@@ -15,10 +15,10 @@ class ButtonDrawerSave extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State createState() => _ButtonDrawerSave();
+  State createState() => _PrimaryButtonDialog();
 }
 
-class _ButtonDrawerSave extends State<ButtonDrawerSave> {
+class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
   @override
   Widget build(BuildContext context) {
     final String fText = widget.text ?? 'Guardar';
@@ -37,12 +37,12 @@ class _ButtonDrawerSave extends State<ButtonDrawerSave> {
   }
 }
 
-class ButtonReturnDialog extends StatefulWidget {
+class SecondaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final bool? isLoading;
 
-  const ButtonReturnDialog({
+  const SecondaryButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
@@ -50,10 +50,10 @@ class ButtonReturnDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State createState() => _ButtonReturnDialog();
+  State createState() => _SecondaryButtonDialog();
 }
 
-class _ButtonReturnDialog extends State<ButtonReturnDialog> {
+class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
   @override
   Widget build(BuildContext context) {
     final String fText = widget.text ?? 'Regresar';
@@ -72,12 +72,12 @@ class _ButtonReturnDialog extends State<ButtonReturnDialog> {
   }
 }
 
-class ButtonDelete extends StatefulWidget {
+class AlertButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final bool? isLoading;
 
-  const ButtonDelete({
+  const AlertButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
@@ -85,10 +85,10 @@ class ButtonDelete extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State createState() => _ButtonDrawerDelete();
+  State createState() => _AlertButtonDialog();
 }
 
-class _ButtonDrawerDelete extends State<ButtonDelete> {
+class _AlertButtonDialog extends State<AlertButtonDialog> {
   @override
   Widget build(BuildContext context) {
     final String fText = widget.text ?? 'Eliminar';
