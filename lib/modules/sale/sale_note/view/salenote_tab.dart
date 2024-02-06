@@ -326,6 +326,30 @@ class SaleNoteTabBuild extends StatelessWidget {
                         },
                       ),
               ),
+              Container(
+                height: 30,
+                decoration: const BoxDecoration(
+                    border:
+                        Border(top: BorderSide(color: ColorPalette.darkItems))),
+                child: const Row(
+                  children: [
+                    SystemButton(
+                      width: 30,
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: ColorPalette.lightItems,
+                      ),
+                    ),
+                    SystemButton(
+                      width: 30,
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: ColorPalette.lightItems,
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),

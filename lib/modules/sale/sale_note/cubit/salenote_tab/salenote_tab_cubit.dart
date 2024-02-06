@@ -33,6 +33,7 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
     try {
       emit(InitialSaleNoteState());
       emit(LoadingSaleNoteState());
+      await SaleNoteRepo().countRecords();
       List<SaleNoteModel> notesDB = [];
       //Nota de venta
       if (saleType == 0) {

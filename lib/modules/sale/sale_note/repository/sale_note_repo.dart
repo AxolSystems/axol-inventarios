@@ -174,4 +174,14 @@ class SaleNoteRepo {
   Future<void> cancelNote(SaleNoteModel saleNote) async {
     await _supabase.from(_table).update({_status: 0}).eq(_id, saleNote.id);
   }
+
+  Future<void> countRecords() async {
+    PostgrestResponse dataDB;
+
+    dataDB = await _supabase
+        .from(_table)
+        .select('*', const FetchOptions(count: CountOption.exact));
+
+    //print('Count: ${dataDB.count}');
+  }
 }

@@ -171,3 +171,49 @@ class _ButtonReturnView extends State<ButtonReturnView> {
     );
   }
 }
+
+class SystemButton extends StatefulWidget {
+  final Function()? onPressed;
+  final Widget child;
+  final bool? isLoading;
+  final double? height;
+  final double? width;
+
+  const SystemButton({
+    Key? key,
+    this.onPressed,
+    required this.child,
+    this.isLoading,
+    this.height,
+    this.width,
+  }) : super(key: key);
+
+  @override
+  State createState() => _SystemButton();
+}
+
+class _SystemButton extends State<SystemButton> {
+  @override
+  Widget build(BuildContext context) {
+    final Widget child = widget.child;
+    final double? height = widget.height;
+    final double? width = widget.width;
+    final Function() fOnPressed = widget.onPressed ?? () {};
+    final bool isLoading_ = widget.isLoading ?? false;
+    return SizedBox(
+      height: height,
+      width: width,
+      child: OutlinedButton(
+      onPressed: isLoading_ ? () {} : fOnPressed,
+      style: OutlinedButton.styleFrom(
+        padding: EdgeInsets.zero,
+        backgroundColor: ColorPalette.darkBackground,
+        side: const BorderSide(color: ColorPalette.darkItems, width: 1),
+        foregroundColor: ColorPalette.primary,
+        shape: const ContinuousRectangleBorder()
+      ),
+      child: child,
+    ),
+    );
+  }
+}
