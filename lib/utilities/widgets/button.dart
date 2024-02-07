@@ -178,6 +178,7 @@ class SystemButton extends StatefulWidget {
   final bool? isLoading;
   final double? height;
   final double? width;
+  final BorderSide? side;
 
   const SystemButton({
     Key? key,
@@ -186,6 +187,7 @@ class SystemButton extends StatefulWidget {
     this.isLoading,
     this.height,
     this.width,
+    this.side,
   }) : super(key: key);
 
   @override
@@ -198,6 +200,7 @@ class _SystemButton extends State<SystemButton> {
     final Widget child = widget.child;
     final double? height = widget.height;
     final double? width = widget.width;
+    final BorderSide side = widget.side ?? const BorderSide(color: ColorPalette.darkItems, width: 1);
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
     return SizedBox(
@@ -208,7 +211,7 @@ class _SystemButton extends State<SystemButton> {
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.zero,
         backgroundColor: ColorPalette.darkBackground,
-        side: const BorderSide(color: ColorPalette.darkItems, width: 1),
+        side: side,
         foregroundColor: ColorPalette.primary,
         shape: const ContinuousRectangleBorder()
       ),

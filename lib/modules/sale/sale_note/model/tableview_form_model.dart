@@ -1,0 +1,20 @@
+import '../../../../models/textfield_model.dart';
+
+class TableViewFormModel {
+  TextfieldModel finder;
+  int currentPage;
+  int limitPage;
+  int totalReg; 
+  TableViewFormModel({
+    required this.finder,
+    required this.currentPage,
+    required this.limitPage,
+    required this.totalReg,
+  });
+
+  TableViewFormModel.empty()
+      : finder = TextfieldModel.empty(),
+        currentPage = 0,
+        limitPage = 0,
+        totalReg = 0;
+}

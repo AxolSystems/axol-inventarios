@@ -8,7 +8,6 @@ import '../cubit/sale_dialog_save/sale_dialog_save_cubit.dart';
 import '../cubit/sale_dialog_save/sale_dialog_save_state.dart';
 import '../model/sale_note_model.dart';
 import '../model/sale_product_model.dart';
-import '../repository/sale_pdf_repo.dart';
 
 class SaleNoteDialogSave extends StatelessWidget {
   final SaleNoteModel saleNote;

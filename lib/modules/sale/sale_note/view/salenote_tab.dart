@@ -6,6 +6,7 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
+import '../../../../utilities/widgets/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../cubit/salenote_tab/salenote_tab_state.dart';
@@ -326,30 +327,13 @@ class SaleNoteTabBuild extends StatelessWidget {
                         },
                       ),
               ),
-              Container(
-                height: 30,
-                decoration: const BoxDecoration(
-                    border:
-                        Border(top: BorderSide(color: ColorPalette.darkItems))),
-                child: const Row(
-                  children: [
-                    SystemButton(
-                      width: 30,
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: ColorPalette.lightItems,
-                      ),
-                    ),
-                    SystemButton(
-                      width: 30,
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: ColorPalette.lightItems,
-                      ),
-                    )
-                  ],
-                ),
-              )
+              NavigateBar(
+                currentPage: 0,
+                limitPaga: 0,
+                totalReg: 0,
+                onPressedLeft: () {},
+                onPressedRight: () {},
+              ),
             ],
           ),
         ),
