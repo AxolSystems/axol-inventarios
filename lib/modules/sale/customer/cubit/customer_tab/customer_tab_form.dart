@@ -1,27 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../models/textfield_model.dart';
+import '../../../../../models/tableview_form_model.dart';
 
-class CustomerTabForm extends Cubit<TextfieldModel> {
-  CustomerTabForm() : super(TextfieldModel.empty());
-
-  void setText(String text) {
-    final TextfieldModel form = state;
-    final TextfieldModel upForm = TextfieldModel(text: text, position: form.position);
-    emit(TextfieldModel.empty());
-    emit(upForm);
-  }
-
-  void setPosition(int position) {
-    final TextfieldModel form = state;
-    final TextfieldModel upForm = TextfieldModel(text: form.text, position: position);
-    emit(TextfieldModel.empty());
-    emit(upForm);
-  }
-
-  void setForm(TextfieldModel form) {
-    final TextfieldModel upForm = form;
-    emit(TextfieldModel.empty());
+class CustomerTabForm extends Cubit<TableViewFormModel> {
+  CustomerTabForm() : super(TableViewFormModel.empty());
+  
+  void setForm(TableViewFormModel form) {
+    final TableViewFormModel upForm = form;
+    emit(TableViewFormModel.empty());
     emit(upForm);
   }
 }

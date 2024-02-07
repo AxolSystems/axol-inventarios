@@ -3,6 +3,7 @@ import 'package:axol_inventarios/modules/sale/customer/view/customer_drawer_deta
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../models/tableview_form_model.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
@@ -10,13 +11,24 @@ import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart'
 import '../../../../utilities/widgets/providers.dart';
 import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/customer_tab/customer_tab_cubit.dart';
 import '../cubit/customer_tab/customer_tab_state.dart';
 import '../model/customer_model.dart';
 
-class CustomerTab extends StatelessWidget {
+class CustomerTab extends Providers {
   const CustomerTab({super.key});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(providers: [
+        BlocProvider(create: (_) => CustomerTabCubit()),
+        BlocProvider(create: (_) => CustomerTabForm()),
+      ], child: const CustomerTabBuild());
+}
+
+class CustomerTabBuild extends StatelessWidget {
+  const CustomerTabBuild({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,26 +55,20 @@ class CustomerTab extends StatelessWidget {
 
   Column customerTab(
       BuildContext context, List<CustomerModel> customerList, bool isLoading) {
-    TextfieldModel form = context.read<CustomerTabForm>().state;
-    TextfieldModel upForm;
+    TableViewFormModel form = context.read<CustomerTabForm>().state;
+    //TableViewFormModel upForm;
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
-        text: form.text,
-        selection: TextSelection.collapsed(offset: form.position));
+        text: form.finder.text,
+        selection: TextSelection.collapsed(offset: form.finder.position));
     return Column(
       children: [
-        /*Container(
-          height: 50,
-          color: ColorPalette.lightBackground,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [*/
         VerticalToolBar(children: [
           Expanded(
             child: FinderBar(
               padding: const EdgeInsets.only(left: 12),
               textController: textController,
-              txtForm: form,
+              txtForm: form.finder,
               enabled: !isLoading,
               autoFocus: true,
               isTxtExpand: true,
@@ -70,16 +76,17 @@ class CustomerTab extends StatelessWidget {
                 context.read<CustomerTabCubit>().load(value);
               },
               onChanged: (value) {
-                upForm = TextfieldModel(
+                form.finder = TextfieldModel(
                     text: value,
                     position: textController.selection.base.offset);
-                context.read<CustomerTabForm>().setForm(upForm);
+                //context.read<CustomerTabForm>().setForm(form);
               },
               onPressed: () {
                 if (isLoading == false) {
-                  context
+                  /*context
                       .read<CustomerTabForm>()
-                      .setForm(TextfieldModel.empty());
+                      .setForm(TextfieldModel.empty());*/
+                  form.finder = TextfieldModel.empty();
                   context.read<CustomerTabCubit>().load('');
                 }
               },
@@ -99,7 +106,7 @@ class CustomerTab extends StatelessWidget {
                 context: context,
                 builder: (context) => const ProviderCustomerAdd(),
               ).then((value) {
-                context.read<CustomerTabCubit>().load(form.text);
+                context.read<CustomerTabCubit>().load(form.finder.text);
               });
             },
             icon: const Icon(
@@ -109,10 +116,6 @@ class CustomerTab extends StatelessWidget {
             ),
           ),
         ]),
-
-        //],
-        //),
-        //),
         Container(
           decoration: BoxDecorationTheme.headerTable(),
           child: const Padding(
@@ -181,13 +184,30 @@ class CustomerTab extends StatelessWidget {
                             builder: (context) =>
                                 CustomerDrawerDetails(customer: customer),
                           ).then((value) {
-                            context.read<CustomerTabCubit>().load(form.text);
+                            context.read<CustomerTabCubit>().load(form.finder.text);
                           });
                         },
                       ),
                     );
                   },
                 ),
+        ),
+        NavigateBar(
+          currentPage: form.currentPage,
+          limitPaga: form.limitPage,
+          totalReg: form.totalReg,
+          onPressedLeft: () {
+            if (form.currentPage > 1) {
+              form.currentPage = form.currentPage - 1;
+              context.read<SaleNoteTabCubit>().load(saleType, form);
+            }
+          },
+          onPressedRight: () {
+            if (form.currentPage < form.limitPage) {
+              form.currentPage = form.currentPage + 1;
+              context.read<SaleNoteTabCubit>().load(saleType, form);
+            }
+          },
         ),
       ],
     );

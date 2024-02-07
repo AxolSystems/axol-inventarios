@@ -1,5 +1,3 @@
-import 'package:axol_inventarios/modules/sale/sale_note/view/salenote_drawer_note.dart';
-import 'package:axol_inventarios/modules/sale/sale_note/view/salenote_tab.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_find.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,20 +11,10 @@ import '../../modules/sale/customer/cubit/customer_add/customer_add_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_add/customer_add_form.dart';
 import '../../modules/sale/customer/cubit/customer_delete/customer_delete_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_find/customer_find_cubit.dart';
-import '../../modules/sale/customer/cubit/customer_tab/customer_tab_cubit.dart';
-import '../../modules/sale/customer/cubit/customer_tab/customer_tab_form.dart';
 import '../../modules/sale/customer/model/customer_model.dart';
 import '../../modules/sale/customer/view/customer_dialog_delete.dart';
 import '../../modules/sale/customer/view/customer_drawer_add.dart';
 import '../../modules/sale/customer/view/customer_drawer_find.dart';
-import '../../modules/sale/customer/view/customer_tab.dart';
-import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_cubit.dart';
-import '../../modules/sale/sale_note/cubit/salenote_add/salenote_add_form.dart';
-import '../../modules/sale/sale_note/cubit/salenote_note/salenote_note_cubit.dart';
-import '../../modules/sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
-import '../../modules/sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
-import '../../modules/sale/sale_note/model/salenote_row_form_model.dart';
-import '../../modules/sale/sale_note/view/salenote_add.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_cubit.dart';
 import '../../modules/sale/vendor/cubit/vendor_add/vendor_add_form.dart';
 import '../../modules/sale/vendor/cubit/vendor_delete/vendor_delete_cubit.dart';
@@ -66,15 +54,7 @@ class ProviderCustomerDelete extends Providers {
       ], child: CustomerDialogDelete(customer: customer));
 }
 
-class ProviderCustomerTab extends Providers {
-  const ProviderCustomerTab({super.key});
 
-  @override
-  Widget build(BuildContext context) => MultiBlocProvider(providers: [
-        BlocProvider(create: (_) => CustomerTabCubit()),
-        BlocProvider(create: (_) => CustomerTabForm()),
-      ], child: const CustomerTab());
-}
 
 class ProviderCustomerFind extends Providers {
   const ProviderCustomerFind({super.key});

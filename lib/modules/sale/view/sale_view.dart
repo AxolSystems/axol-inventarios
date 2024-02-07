@@ -7,6 +7,7 @@ import '../../../utilities/navigation_utilities.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../inventory_/inventory/view/views/inventory_view.dart';
 import '../../user/view/views/home_view.dart';
+import '../customer/view/customer_tab.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../sale_note/view/salenote_tab.dart';
@@ -81,7 +82,7 @@ class SaleView extends StatelessWidget {
                           child: TabBarView(children: [
                         SaleNoteTab(saleType: 0,),
                         SaleNoteTab(saleType: 1,),
-                        ProviderCustomerTab(),
+                        CustomerTab(),
                         ProviderVendorTab(),
                         //Text('Vendedores', style: Typo.bodyLight),
                       ])),

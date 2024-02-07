@@ -55,11 +55,14 @@ class CustomerRepo {
     return customers;
   }
 
-  Future<List<CustomerModel>> fetchCustomersIlike(String inText) async {
+  Future<List<CustomerModel>> fetchCustomersIlike(String inText,
+      {int? rangeMax, int? rangeMin}) async {
     List<Map<String, dynamic>> customersDB = [];
     List<CustomerModel> customers = [];
     CustomerModel customer = CustomerModel.empty();
-    //Map<String, dynamic> mapProp;
+    final int rangeMax_ = rangeMax ?? 0;
+    final int rangeMin_ = rangeMin ?? 0;
+
     String textOr;
     if (int.tryParse(inText) == null) {
       textOr = '$_name.ilike.$inText';
@@ -67,18 +70,19 @@ class CustomerRepo {
       textOr = '$_id.eq.$inText';
     }
     if (inText == '') {
-      customersDB =
-          await _supabase.from(_table).select<List<Map<String, dynamic>>>();
+      customersDB = await _supabase
+          .from(_table)
+          .select<List<Map<String, dynamic>>>()
+          .range(rangeMin_, rangeMax_);
     } else {
       customersDB = await _supabase
           .from(_table)
           .select<List<Map<String, dynamic>>>()
-          .or(textOr);
+          .or(textOr)
+          .range(rangeMin_, rangeMax_);
     }
-    //.or('$_id.eq.$inText,$_name.eq.$inText');
     if (customersDB.isNotEmpty) {
       for (var element in customersDB) {
-        //mapProp = element[_properties] ?? {};
         customer = CustomerModel(
           id: element[customer.tId],
           name: element[customer.tName],
@@ -118,7 +122,6 @@ class CustomerRepo {
     return newId;
   }
 
-
   Future<bool> existId(int id) async {
     List<Map<String, dynamic>> customersDB = [];
     bool exist;
@@ -152,5 +155,14 @@ class CustomerRepo {
 
   Future<void> delete(CustomerModel customer) async {
     await _supabase.from(_table).delete().eq(_id, customer.id);
+  }
+
+  Future<int> countRecords() async {
+    PostgrestResponse dataDB;
+
+    dataDB = await _supabase
+        .from(_table)
+        .select('*', const FetchOptions(count: CountOption.exact));
+    return dataDB.count ?? 0;
   }
 }

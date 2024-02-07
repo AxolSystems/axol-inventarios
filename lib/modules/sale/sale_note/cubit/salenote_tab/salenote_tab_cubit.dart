@@ -2,7 +2,7 @@ import 'package:axol_inventarios/modules/sale/sale_note/model/salenote_filter_mo
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/sale_note_model.dart';
-import '../../model/tableview_form_model.dart';
+import '../../../../../models/tableview_form_model.dart';
 import '../../repository/sale_note_repo.dart';
 import '../../repository/sale_referral_repo.dart';
 import 'salenote_tab_state.dart';

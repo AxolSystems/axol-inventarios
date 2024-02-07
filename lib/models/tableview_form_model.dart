@@ -1,4 +1,4 @@
-import '../../../../models/textfield_model.dart';
+import 'textfield_model.dart';
 
 class TableViewFormModel {
   TextfieldModel finder;

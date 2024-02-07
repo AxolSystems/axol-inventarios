@@ -12,7 +12,7 @@ import '../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../cubit/salenote_tab/salenote_tab_state.dart';
 import '../cubit/salenote_tab/salenote_tab_form.dart';
 import '../model/sale_note_model.dart';
-import '../model/tableview_form_model.dart';
+import '../../../../models/tableview_form_model.dart';
 import 'salenote_add.dart';
 import 'salenote_drawer_details.dart';
 
