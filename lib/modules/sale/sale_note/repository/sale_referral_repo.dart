@@ -24,7 +24,7 @@ class SaleReferralRepo {
   final _supabase = Supabase.instance.client;
 
   Future<List<SaleNoteModel>> fetchReferral(
-      SaleNoteFilterModel filter, String finder) async {
+      SaleFilterModel filter, String finder) async {
     CustomerModel customer = CustomerModel.empty();
     List<SaleNoteModel> salesNotes = [];
     SaleNoteModel saleNote;
@@ -35,8 +35,8 @@ class SaleReferralRepo {
     SaleProductModel saleProduct;
     Map<String, dynamic> jsonbProducts;
     List mapList;
-    //int filterStartDate = 0;
-    //int filterEndDate = 32503708800000;
+    final int rangeMin = filter.rangeMin ?? 0;
+    final int rangeMax = filter.rangeMax ?? 0;
 
     if (filter.customer > -1) {
       filters['${SaleNoteModel.tCustomer}->>${customer.tId}'] = filter.customer;
@@ -52,10 +52,9 @@ class SaleReferralRepo {
 
     if (finder == '') {
       saleNoteDB =
-          await _supabase.from(_table).select<List<Map<String, dynamic>>>();
-      /*.match(filters)
-          .lte(_time, filterEndDate)
-          .gte(_time, filterStartDate);*/
+          await _supabase.from(_table).select<List<Map<String, dynamic>>>()
+          .order(_time, ascending: true)
+          .range(rangeMin, rangeMax);
     } else {
       textOr =
           '${SaleNoteModel.tCustomer}->>${customer.tName}.ilike.%$finder%,';
@@ -67,7 +66,9 @@ class SaleReferralRepo {
       saleNoteDB = await _supabase
           .from(_table)
           .select<List<Map<String, dynamic>>>()
-          .or(textOr);
+          .or(textOr)
+          .order(_time, ascending: true)
+          .range(rangeMin, rangeMax);
     }
     for (var element in saleNoteDB) {
       productList = [];
@@ -173,5 +174,14 @@ class SaleReferralRepo {
 
   Future<void> cancelReferral(SaleNoteModel saleNote) async {
     await _supabase.from(_table).update({_status: 0}).eq(_id, saleNote.id);
+  }
+
+  Future<int> countRecords() async {
+    PostgrestResponse dataDB;
+
+    dataDB = await _supabase
+        .from(_table)
+        .select('*', const FetchOptions(count: CountOption.exact));
+    return dataDB.count ?? 0;
   }
 }

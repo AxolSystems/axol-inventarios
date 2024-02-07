@@ -12,6 +12,7 @@ import '../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../cubit/salenote_tab/salenote_tab_state.dart';
 import '../cubit/salenote_tab/salenote_tab_form.dart';
 import '../model/sale_note_model.dart';
+import '../model/tableview_form_model.dart';
 import 'salenote_add.dart';
 import 'salenote_drawer_details.dart';
 
@@ -32,31 +33,32 @@ class SaleNoteTab extends StatelessWidget {
 
 class SaleNoteTabBuild extends StatelessWidget {
   final int saleType;
+
   const SaleNoteTabBuild({super.key, required this.saleType});
 
   @override
   Widget build(BuildContext context) {
+    TableViewFormModel form = context.read<SaleNoteTabForm>().state;
     return BlocBuilder<SaleNoteTabCubit, SaleNoteTabState>(
-      bloc: context.read<SaleNoteTabCubit>()..initLoad(saleType),
+      bloc: context.read<SaleNoteTabCubit>()..initLoad(saleType, form),
       builder: (context, state) {
         if (state is LoadingSaleNoteState) {
-          return saleNoteTab(context, [], true);
+          return saleNoteTab(context, [], true, form);
         } else if (state is LoadedSaleNoteState) {
-          return saleNoteTab(context, state.salenoteList, false);
+          return saleNoteTab(context, state.salenoteList, false, form);
         } else {
-          return saleNoteTab(context, [], false);
+          return saleNoteTab(context, [], false, form);
         }
       },
     );
   }
 
-  Widget saleNoteTab(
-      BuildContext context, List<SaleNoteModel> listData, bool isLoading) {
-    TextfieldModel form = context.read<SaleNoteTabForm>().state;
+  Widget saleNoteTab(BuildContext context, List<SaleNoteModel> listData,
+      bool isLoading, TableViewFormModel form) {
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
-        text: form.text,
-        selection: TextSelection.collapsed(offset: form.position));
+        text: form.finder.text,
+        selection: TextSelection.collapsed(offset: form.finder.position));
     return Row(
       children: [
         Expanded(
@@ -67,25 +69,31 @@ class SaleNoteTabBuild extends StatelessWidget {
                     child: FinderBar(
                   padding: const EdgeInsets.only(left: 12),
                   textController: textController,
-                  txtForm: form,
+                  txtForm: form.finder,
                   enabled: !isLoading,
                   autoFocus: true,
                   isTxtExpand: true,
                   onSubmitted: (value) {
-                    context.read<SaleNoteTabCubit>().load(value, saleType);
-                  },
-                  onChanged: (value) {
-                    form = TextfieldModel(
+                    form.finder = TextfieldModel(
                         text: value,
                         position: textController.selection.base.offset);
+                    context.read<SaleNoteTabCubit>().load(saleType, form);
+                  },
+                  onChanged: (value) {
+                    form = TableViewFormModel.finder(
+                        TextfieldModel(
+                            text: value,
+                            position: textController.selection.base.offset),
+                        form: form);
                     context.read<SaleNoteTabForm>().setForm(form);
                   },
                   onPressed: () {
                     if (isLoading == false) {
+                      form.finder = TextfieldModel.empty();
                       context
                           .read<SaleNoteTabForm>()
-                          .setForm(TextfieldModel.empty());
-                      context.read<SaleNoteTabCubit>().load('', saleType);
+                          .setForm(TableViewFormModel.empty());
+                      context.read<SaleNoteTabCubit>().load(saleType, form);
                     }
                   },
                 )),
@@ -105,10 +113,11 @@ class SaleNoteTabBuild extends StatelessWidget {
                         saleType: saleType,
                       ),
                     ).then((value) {
-                      context.read<SaleNoteTabCubit>().load('', saleType);
+                      form.finder = TextfieldModel.empty();
+                      context.read<SaleNoteTabCubit>().load(saleType, form);
                       context
                           .read<SaleNoteTabForm>()
-                          .setForm(TextfieldModel.empty());
+                          .setForm(TableViewFormModel.empty());
                     });
                   },
                   icon: const Icon(
@@ -230,12 +239,13 @@ class SaleNoteTabBuild extends StatelessWidget {
                                           saleNote: saleNoteRow,
                                           saleType: saleType,
                                         )).then((value) {
+                                  form.finder = TextfieldModel.empty();
                                   context
                                       .read<SaleNoteTabCubit>()
-                                      .load('', saleType);
+                                      .load(saleType, form);
                                   context
                                       .read<SaleNoteTabForm>()
-                                      .setForm(TextfieldModel.empty());
+                                      .setForm(TableViewFormModel.empty());
                                 });
                               },
                               child: Row(
@@ -328,11 +338,21 @@ class SaleNoteTabBuild extends StatelessWidget {
                       ),
               ),
               NavigateBar(
-                currentPage: 0,
-                limitPaga: 0,
-                totalReg: 0,
-                onPressedLeft: () {},
-                onPressedRight: () {},
+                currentPage: form.currentPage,
+                limitPaga: form.limitPage,
+                totalReg: form.totalReg,
+                onPressedLeft: () {
+                  if (form.currentPage > 1) {
+                    form.currentPage = form.currentPage - 1;
+                    context.read<SaleNoteTabCubit>().load(saleType, form);
+                  }
+                },
+                onPressedRight: () {
+                  if (form.currentPage < form.limitPage) {
+                    form.currentPage = form.currentPage + 1;
+                    context.read<SaleNoteTabCubit>().load(saleType, form);
+                  }
+                },
               ),
             ],
           ),
