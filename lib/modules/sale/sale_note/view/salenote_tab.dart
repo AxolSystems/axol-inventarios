@@ -74,18 +74,12 @@ class SaleNoteTabBuild extends StatelessWidget {
                   autoFocus: true,
                   isTxtExpand: true,
                   onSubmitted: (value) {
-                    form.finder = TextfieldModel(
-                        text: value,
-                        position: textController.selection.base.offset);
                     context.read<SaleNoteTabCubit>().load(saleType, form);
                   },
                   onChanged: (value) {
-                    form = TableViewFormModel.finder(
-                        TextfieldModel(
-                            text: value,
-                            position: textController.selection.base.offset),
-                        form: form);
-                    context.read<SaleNoteTabForm>().setForm(form);
+                    form.finder = TextfieldModel(
+                        text: value,
+                        position: textController.selection.base.offset);
                   },
                   onPressed: () {
                     if (isLoading == false) {
