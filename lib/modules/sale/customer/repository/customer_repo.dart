@@ -73,12 +73,14 @@ class CustomerRepo {
       customersDB = await _supabase
           .from(_table)
           .select<List<Map<String, dynamic>>>()
+          .order(_id, ascending: true)
           .range(rangeMin_, rangeMax_);
     } else {
       customersDB = await _supabase
           .from(_table)
           .select<List<Map<String, dynamic>>>()
           .or(textOr)
+          .order(_id, ascending: true)
           .range(rangeMin_, rangeMax_);
     }
     if (customersDB.isNotEmpty) {

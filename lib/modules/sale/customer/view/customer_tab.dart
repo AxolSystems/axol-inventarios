@@ -32,8 +32,9 @@ class CustomerTabBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TableViewFormModel form = context.read<CustomerTabForm>().state;
     return BlocConsumer<CustomerTabCubit, CustomerTabState>(
-      bloc: context.read<CustomerTabCubit>()..load(''),
+      bloc: context.read<CustomerTabCubit>()..initLoad(form),
       listener: (context, state) {
         if (state is ErrorCustomerTabState) {
           showDialog(
@@ -43,19 +44,18 @@ class CustomerTabBuild extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is LoadingCustomerTabState) {
-          return customerTab(context, [], true);
+          return customerTab(context, [], true, form);
         } else if (state is LoadedCustomerTabState) {
-          return customerTab(context, state.customerList, false);
+          return customerTab(context, state.customerList, false, form);
         } else {
-          return customerTab(context, [], false);
+          return customerTab(context, [], false, form);
         }
       },
     );
   }
 
-  Column customerTab(
-      BuildContext context, List<CustomerModel> customerList, bool isLoading) {
-    TableViewFormModel form = context.read<CustomerTabForm>().state;
+  Column customerTab(BuildContext context, List<CustomerModel> customerList,
+      bool isLoading, TableViewFormModel form) {
     //TableViewFormModel upForm;
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
@@ -73,7 +73,10 @@ class CustomerTabBuild extends StatelessWidget {
               autoFocus: true,
               isTxtExpand: true,
               onSubmitted: (value) {
-                context.read<CustomerTabCubit>().load(value);
+                form.finder = TextfieldModel(
+                    text: value,
+                    position: textController.selection.base.offset);
+                context.read<CustomerTabCubit>().load(form);
               },
               onChanged: (value) {
                 form.finder = TextfieldModel(
@@ -87,7 +90,7 @@ class CustomerTabBuild extends StatelessWidget {
                       .read<CustomerTabForm>()
                       .setForm(TextfieldModel.empty());*/
                   form.finder = TextfieldModel.empty();
-                  context.read<CustomerTabCubit>().load('');
+                  context.read<CustomerTabCubit>().load(form);
                 }
               },
             ),
@@ -106,7 +109,7 @@ class CustomerTabBuild extends StatelessWidget {
                 context: context,
                 builder: (context) => const ProviderCustomerAdd(),
               ).then((value) {
-                context.read<CustomerTabCubit>().load(form.finder.text);
+                context.read<CustomerTabCubit>().load(form);
               });
             },
             icon: const Icon(
@@ -184,7 +187,9 @@ class CustomerTabBuild extends StatelessWidget {
                             builder: (context) =>
                                 CustomerDrawerDetails(customer: customer),
                           ).then((value) {
-                            context.read<CustomerTabCubit>().load(form.finder.text);
+                            context
+                                .read<CustomerTabCubit>()
+                                .load(form);
                           });
                         },
                       ),
@@ -199,13 +204,13 @@ class CustomerTabBuild extends StatelessWidget {
           onPressedLeft: () {
             if (form.currentPage > 1) {
               form.currentPage = form.currentPage - 1;
-              context.read<SaleNoteTabCubit>().load(saleType, form);
+              context.read<CustomerTabCubit>().load(form);
             }
           },
           onPressedRight: () {
             if (form.currentPage < form.limitPage) {
               form.currentPage = form.currentPage + 1;
-              context.read<SaleNoteTabCubit>().load(saleType, form);
+              context.read<CustomerTabCubit>().load(form);
             }
           },
         ),
