@@ -1,4 +1,6 @@
-import 'textfield_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../models/textfield_model.dart';
 
 class TableViewFormModel {
   TextfieldModel finder;
@@ -26,4 +28,8 @@ class TableViewFormModel {
       : currentPage = form.currentPage,
         limitPage = form.limitPage,
         totalReg = form.totalReg;
+}
+
+class TableViewFormCubit extends Cubit<TableViewFormModel> {
+  TableViewFormCubit() : super(TableViewFormModel.empty());
 }

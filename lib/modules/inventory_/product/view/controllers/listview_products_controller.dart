@@ -2,21 +2,21 @@ import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/products/products_cubit.dart';
-import '../../cubit/products/products_state.dart';
+import '../../cubit/product_tab/product_tab_cubit.dart';
+import '../../cubit/product_tab/product_tab_state.dart';
 import '../widgets/finder_products.dart';
 import '../widgets/listview_products.dart';
 import '../widgets/toolbar_products.dart';
 
-class ListviewProductsController extends StatelessWidget {
+/*class ListviewProductsController extends StatelessWidget {
   const ListviewProductsController({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductsCubit, ProductsState>(
-      bloc: context.read<ProductsCubit>()..initialList(),
+    return BlocBuilder<ProductTabCubit, ProductTabState>(
+      bloc: context.read<ProductTabCubit>()..initLoad(),
       builder: (context, state) {
-        if (state is LoadingState) {
+        if (state is LoadingProductTabState) {
           return Row(
             children: [
               Expanded(
@@ -37,13 +37,13 @@ class ListviewProductsController extends StatelessWidget {
               ),
             ],
           );
-        } else if (state is LoadedState) {
+        } else if (state is LoadedProductTabState) {
           return ListviewProducts(
             mode: state.mode,
             finder: state.finder,
             listData: state.products,
           );
-        } else if (state is ErrorState) {
+        } else if (state is ErrorProductTabState) {
           return Text(state.error, style: Typo.bodyText5,);
         } else {
           return Container();
@@ -51,4 +51,4 @@ class ListviewProductsController extends StatelessWidget {
       },
     );
   }
-}
+}*/

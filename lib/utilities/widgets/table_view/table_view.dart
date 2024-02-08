@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
-import 'button.dart';
+import '../../theme/theme.dart';
+import '../button.dart';
 
 abstract class TableView extends StatelessWidget {
   const TableView({super.key});

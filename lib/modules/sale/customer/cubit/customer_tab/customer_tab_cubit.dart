@@ -2,7 +2,7 @@ import 'package:axol_inventarios/modules/sale/customer/model/customer_model.dart
 import 'package:axol_inventarios/modules/sale/customer/repository/customer_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../models/tableview_form_model.dart';
+import '../../../../../utilities/widgets/table_view/tableview_form.dart';
 import 'customer_tab_state.dart';
 
 class CustomerTabCubit extends Cubit<CustomerTabState> {

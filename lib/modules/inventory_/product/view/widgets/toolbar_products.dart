@@ -7,10 +7,10 @@ import '../../../../../global_widgets/toolbar.dart';
 import '../../../../../models/elemnets_bar_model.dart';
 import '../../cubit/drawer_product/drawer_product_cubit.dart';
 import '../../cubit/drawer_product/listen_drawer_cubit.dart';
-import '../../cubit/products/products_cubit.dart';
+import '../../cubit/product_tab/product_tab_cubit.dart';
 import '../controllers/drawer_product_controller.dart';
 
-class ToolbarProducts extends StatelessWidget {
+/*class ToolbarProducts extends StatelessWidget {
   final bool isLoading;
   final int mode;
 
@@ -42,8 +42,8 @@ class ToolbarProducts extends StatelessWidget {
               ).then((value) {
                 if (value == true) {
                   context
-                      .read<ProductsCubit>()
-                      .reloadList(TextfieldModel(text: '', position: 0), 0);
+                      .read<ProductTabCubit>()
+                      .load(TextfieldModel(text: '', position: 0), 0);
                 }
               });
             }
@@ -57,12 +57,12 @@ class ToolbarProducts extends StatelessWidget {
             if (isLoading == false) {
               if (mode == 1) {
                 context
-                    .read<ProductsCubit>()
-                    .reloadList(TextfieldModel(text: '', position: 0), 0);
+                    .read<ProductTabCubit>()
+                    .load(TextfieldModel(text: '', position: 0), 0);
               } else {
                 context
-                    .read<ProductsCubit>()
-                    .reloadList(TextfieldModel(text: '', position: 0), 1);
+                    .read<ProductTabCubit>()
+                    .load(TextfieldModel(text: '', position: 0), 1);
               }
             }
           },
@@ -75,12 +75,12 @@ class ToolbarProducts extends StatelessWidget {
             if (isLoading == false) {
               if (mode == 2) {
                 context
-                    .read<ProductsCubit>()
-                    .reloadList(TextfieldModel(text: '', position: 0), 0);
+                    .read<ProductTabCubit>()
+                    .load(TextfieldModel(text: '', position: 0), 0);
               } else {
                 context
-                    .read<ProductsCubit>()
-                    .reloadList(TextfieldModel(text: '', position: 0), 2);
+                    .read<ProductTabCubit>()
+                    .load(TextfieldModel(text: '', position: 0), 2);
               }
             }
           },
@@ -90,11 +90,11 @@ class ToolbarProducts extends StatelessWidget {
           icon: const Icon(Icons.restart_alt),
           action: () {
             if (isLoading == false) {
-              context.read<ProductsCubit>().initialList();
+              context.read<ProductTabCubit>().initLoad();
             }
           },
         ),
       ],
     );
   }
-}
+}*/

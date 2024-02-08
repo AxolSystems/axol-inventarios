@@ -6,7 +6,7 @@ import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../global_widgets/toolbar.dart';
 import '../../../../../models/elemnets_bar_model.dart';
 import '../../../../../utilities/theme/theme.dart';
-import '../../../product/cubit/products/products_cubit.dart';
+import '../../../product/cubit/product_tab/product_tab_cubit.dart';
 import '../../cubit/inventory_load/inventory_load_cubit.dart';
 import '../../cubit/textfield_finder_invrow_cubit.dart';
 import '../../model/warehouse_model.dart';
@@ -28,7 +28,7 @@ class WarehouseView extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => InventoryLoadCubit()),
         BlocProvider(create: (_) => TextfieldFinderInvrowCubit()),
-        BlocProvider(create: (_) => ProductsCubit()),
+        BlocProvider(create: (_) => ProductTabCubit()),
       ],
       child: DefaultTabController(
         length: 3,

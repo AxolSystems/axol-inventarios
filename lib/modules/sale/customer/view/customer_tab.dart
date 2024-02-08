@@ -3,7 +3,7 @@ import 'package:axol_inventarios/modules/sale/customer/view/customer_drawer_deta
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../models/tableview_form_model.dart';
+import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
@@ -11,7 +11,7 @@ import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart'
 import '../../../../utilities/widgets/providers.dart';
 import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/table_view.dart';
+import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/customer_tab/customer_tab_cubit.dart';
 import '../cubit/customer_tab/customer_tab_state.dart';

@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../model/product_model.dart';
+import '../model/product_response_model.dart';
 
 class ProductRepo {
   static const String _table = 'products';
@@ -111,8 +112,7 @@ class ProductRepo {
         product = ProductModel(
           code: element[_code],
           description: element[_description] ?? '',
-          properties:
-              element[_properties] ?? ProductModel.empty().properties,
+          properties: element[_properties] ?? ProductModel.empty().properties,
           class_: element[_class],
         );
         products.add(product);
@@ -121,20 +121,24 @@ class ProductRepo {
     return products;
   }
 
-  Future<List<ProductModel>> fetchProductFinder(String finder) async {
+  Future<List<ProductResponseModel>> fetchProductFinder(String finder,
+      {int? rangeMin, int? rangeMax}) async {
     ProductModel product;
-    List<ProductModel> products = [];
-    List<Map<String, dynamic>> productsDB;
-    productsDB = await _supabase
+    ProductResponseModel productResponse;
+    final List<Map<String, dynamic>> productsDB;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponseDB;
+    final int rangeMin_ = rangeMin ?? 0;
+    final int rangeMax_ = rangeMax ?? 0;
+
+    postgrestResponseDB = await _supabase
         .from(_table)
-        .select<List<Map<String, dynamic>>>()
-        .or('$_code.ilike.%$finder%,$_description.ilike.%$finder%');
-    //funcionan con jsonb:
-    /*.match({
-          'attributes->>code':'B5067',
-          'attributes->>description':'100x150x.230 C/10kg',
-        });*/
-    //.or('attributes->>code.eq.B5067');
+        .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+            '*', const FetchOptions(count: CountOption.exact))
+        .or('$_code.ilike.%$finder%,$_description.ilike.%$finder%')
+        .order(_code, ascending: true)
+        .range(rangeMin_, rangeMax_);
+
+    productsDB = postgrestResponseDB.data ?? [];
 
     if (productsDB.isNotEmpty) {
       for (var element in productsDB) {
@@ -167,5 +171,14 @@ class ProductRepo {
 
   Future<void> deleteProduct(ProductModel product) async {
     await _supabase.from(_table).delete().eq(_code, product.code);
+  }
+
+  Future<int> countRecords() async {
+    PostgrestResponse dataDB;
+
+    dataDB = await _supabase
+        .from(_table)
+        .select('*', const FetchOptions(count: CountOption.exact));
+    return dataDB.count ?? 0;
   }
 }

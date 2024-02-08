@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/textfield_model.dart';
 import '../../../../../utilities/theme/theme.dart';
-import '../../cubit/products/products_cubit.dart';
+import '../../cubit/product_tab/product_tab_cubit.dart';
 
-class FinderProducts extends StatelessWidget {
+/*class FinderProducts extends StatelessWidget {
   final TextfieldModel currentFinder;
   final bool isLoading;
   final int mode;
@@ -42,7 +42,7 @@ class FinderProducts extends StatelessWidget {
                     text: value,
                     position: textController.selection.base.offset,
                   );
-                  context.read<ProductsCubit>().reloadList(textFinder, mode);
+                  context.read<ProductTabCubit>().load(textFinder, mode);
                 },
                 onChanged: (value) {
                   text = value;
@@ -68,7 +68,7 @@ class FinderProducts extends StatelessWidget {
                 text: text,
                 position: textController.selection.base.offset,
               );
-              context.read<ProductsCubit>().reloadList(textFinder, mode);
+              context.read<ProductTabCubit>().load(textFinder, mode);
             },
           ),
           IconButton(
@@ -79,7 +79,7 @@ class FinderProducts extends StatelessWidget {
             ),
             onPressed: () {
               if (text != '') {
-                context.read<ProductsCubit>().initialList();
+                context.read<ProductTabCubit>().initLoad();
               }
             },
           ),
@@ -87,4 +87,4 @@ class FinderProducts extends StatelessWidget {
       ),
     );
   }
-}
+}*/

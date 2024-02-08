@@ -6,10 +6,11 @@ import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../movements/cubit/movements_view/movements_cubit.dart';
 import '../../../movements/view/controllers/listview_movements_controller.dart';
-import '../../../product/cubit/products/products_cubit.dart';
+import '../../../product/cubit/product_tab/product_tab_cubit.dart';
 import '../../../product/view/controllers/listview_products_controller.dart';
 import '../../../../sale/view/sale_view.dart';
 import '../../../../user/view/views/home_view.dart';
+import '../../../product/view/product_tab.dart';
 import '../../cubit/warehouses_load/warehouses_load_cubit.dart';
 import '../controllers/listview_whmenu_controller.dart';
 
@@ -23,7 +24,7 @@ class InventoryView extends StatelessWidget {
         providers: [
           BlocProvider(create: (_) => MovementsCuibit()),
           BlocProvider(create: (_) => WarehousesLoadCubit()),
-          BlocProvider(create: (_) => ProductsCubit()),
+          BlocProvider(create: (_) => ProductTabCubit()),
         ],
         child: DefaultTabController(
             length: 3,
@@ -83,7 +84,7 @@ class InventoryView extends StatelessWidget {
                             child: TabBarView(children: [
                           ListviewWHMenuController(),
                           ListviewMovementsController(),
-                          ListviewProductsController(),
+                          ProductTab(),
                         ]))
                       ],
                     )),

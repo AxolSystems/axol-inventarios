@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubit/drawer_product/drawer_product_cubit.dart';
 import '../../cubit/drawer_product/listen_drawer_cubit.dart';
-import '../../cubit/products/products_cubit.dart';
+import '../../cubit/product_tab/product_tab_cubit.dart';
 import '../../model/product_model.dart';
 import '../../../../../models/textfield_model.dart';
 import '../../../../../utilities/theme/theme.dart';
@@ -13,7 +13,7 @@ import 'drawer_details_product.dart';
 import 'finder_products.dart';
 import 'toolbar_products.dart';
 
-class ListviewProducts extends StatelessWidget {
+/*class ListviewProducts extends StatelessWidget {
   final List<ProductModel> listData;
   final TextfieldModel finder;
   final int mode;
@@ -129,7 +129,7 @@ class ListviewProducts extends StatelessWidget {
                               )),
                         ).then((value) {
                           if (value == true) {
-                            context.read<ProductsCubit>().reloadList(
+                            context.read<ProductTabCubit>().load(
                                 TextfieldModel(text: '', position: 0), 0);
                           }
                         });
@@ -256,4 +256,4 @@ class ListviewProducts extends StatelessWidget {
       ],
     );
   }
-}
+}*/

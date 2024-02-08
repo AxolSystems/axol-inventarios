@@ -6,13 +6,13 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
-import '../../../../utilities/widgets/table_view.dart';
+import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../cubit/salenote_tab/salenote_tab_state.dart';
 import '../cubit/salenote_tab/salenote_tab_form.dart';
 import '../model/sale_note_model.dart';
-import '../../../../models/tableview_form_model.dart';
+import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import 'salenote_add.dart';
 import 'salenote_drawer_details.dart';
 
