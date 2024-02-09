@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/inventory_/product/view/product_drawer_details.dart';
 import 'package:axol_inventarios/utilities/widgets/table_view/tableview_form.dart';
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../cubit/product_details/product_details_cubit.dart';
 import '../cubit/product_tab/product_tab_cubit.dart';
 import '../cubit/product_tab/product_tab_state.dart';
 import '../model/product_model.dart';
@@ -185,68 +187,73 @@ class ProductTabBuild extends StatelessWidget {
                           bottom: BorderSide(color: ColorPalette.darkItems),
                         ),
                       ),
-                      child: ButtonRowTable(
-                        onPressed: () {
-                          /*showDialog(
-                      context: context,
-                      builder: (context) =>
-                          DrawerDetailsProduct(product: productRow),
-                    );*/
-                        },
-                        child: Row(
-                          children: [
-                            Expanded(
-                              //1) Clave
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  productRow.code,
-                                  style: Typo.labelText1,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: ButtonRowTable(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => ProductDrawerDetails(
+                                        product: productRow,
+                                      ));
+                            },
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  //1) Clave
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      productRow.code,
+                                      style: Typo.labelText1,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              // 2) Descripción
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  productRow.description,
-                                  style: Typo.labelText1,
+                                Expanded(
+                                  // 2) Descripción
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      productRow.description,
+                                      style: Typo.labelText1,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              // 3) Tipo
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  productRow.properties![_type],
-                                  style: Typo.labelText1,
+                                Expanded(
+                                  // 3) Tipo
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      productRow.properties![_type],
+                                      style: Typo.labelText1,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              // 4) Peso
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  '${productRow.properties![_weight]} KG',
-                                  style: Typo.labelText1,
+                                Expanded(
+                                  // 4) Peso
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      '${productRow.properties![_weight]} KG',
+                                      style: Typo.labelText1,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              // 5) Empaque
-                              flex: 1,
-                              child: Center(
-                                child: Text(
-                                  productRow.properties![_packing],
-                                  style: Typo.labelText1,
+                                Expanded(
+                                  // 5) Empaque
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      productRow.properties![_packing],
+                                      style: Typo.labelText1,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          )),
+                        ],
                       ),
                     );
                   },

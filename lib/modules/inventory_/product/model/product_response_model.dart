@@ -1,8 +1,12 @@
 import 'product_model.dart';
 
 class ProductResponseModel {
-  final List<ProductModel> productList;
-  final int count;
+  List<ProductModel> productList;
+  int count;
 
   ProductResponseModel({required this.productList, required this.count});
+
+  ProductResponseModel.empty()
+      : productList = [],
+        count = 0;
 }

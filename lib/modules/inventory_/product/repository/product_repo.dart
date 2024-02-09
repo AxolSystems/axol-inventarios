@@ -121,16 +121,16 @@ class ProductRepo {
     return products;
   }
 
-  Future<List<ProductResponseModel>> fetchProductFinder(String finder,
+  Future<ProductResponseModel> fetchProductFinder(String finder,
       {int? rangeMin, int? rangeMax}) async {
     ProductModel product;
-    ProductResponseModel productResponse;
+    ProductResponseModel productResponse = ProductResponseModel.empty();
     final List<Map<String, dynamic>> productsDB;
-    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponseDB;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
 
-    postgrestResponseDB = await _supabase
+    postgrestResponse = await _supabase
         .from(_table)
         .select<PostgrestResponse<List<Map<String, dynamic>>>>(
             '*', const FetchOptions(count: CountOption.exact))
@@ -138,7 +138,8 @@ class ProductRepo {
         .order(_code, ascending: true)
         .range(rangeMin_, rangeMax_);
 
-    productsDB = postgrestResponseDB.data ?? [];
+    productsDB = postgrestResponse.data ?? [];
+    productResponse.count = postgrestResponse.count ?? 0;
 
     if (productsDB.isNotEmpty) {
       for (var element in productsDB) {
@@ -148,10 +149,10 @@ class ProductRepo {
           properties: element[_properties],
           class_: element[_class],
         );
-        products.add(product);
+        productResponse.productList.add(product);
       }
     }
-    return products;
+    return productResponse;
   }
 
   Future<void> insertProduct(ProductModel product) async {

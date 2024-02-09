@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/inventory_/product/model/product_model.
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/inventory_row_model.dart';
+import '../../../product/model/product_response_model.dart';
 import '../../../product/repository/product_repo.dart';
 import '../../repository/inventory_repo.dart';
 import 'inventory_load_state.dart';
@@ -36,8 +37,8 @@ class InventoryLoadCubit extends Cubit<InventoryLoadState> {
     try {
       emit(InitialState());
       emit(LoadingState());
-      final List<ProductModel> productList = await ProductRepo().fetchProductFinder(filter);
-      emit(LoadedProducts(productList: productList));
+      final ProductResponseModel productList = await ProductRepo().fetchProductFinder(filter);
+      emit(LoadedProducts(productList: productList.productList));
     } catch (e) {
       emit(ErrorState(error: e.toString()));
     }
