@@ -39,7 +39,8 @@ class TextFieldInputForm extends StatelessWidget {
     final labelTf = label ?? '';
     final labelStyleTf = labelStyle ?? Typo.bodyDark;
     final spaceTf = space ?? 8;
-    final decorationTf = decoration ?? TextFieldDecoration.inputForm(errorText: errorText);
+    final decorationTf = decoration ??
+        TextFieldDecoration.inputForm(errorText: errorText, lblText: label);
     final bool enabledTf = enabled ?? true;
     final FocusNode focusNode = FocusNode();
     if (isFocus == true) {
@@ -47,13 +48,13 @@ class TextFieldInputForm extends StatelessWidget {
     }
     return Row(
       children: [
-        Text(
+       /* Text(
           labelTf,
           style: labelStyleTf,
         ),
         SizedBox(
           width: spaceTf,
-        ),
+        ),*/
         Expanded(
           child: TextField(
             inputFormatters: inputFormatters,

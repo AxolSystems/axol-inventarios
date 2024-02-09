@@ -21,6 +21,12 @@ class ProductModel {
   static const String tPacking = 'packing';
   static const String tCapacity = 'capacity';
 
+  static String get lblCode => 'Clave';
+  static String get lblDescription => 'Descripción';
+  static String get lblType => 'Tipo';
+  static String get lblGauge => 'Calibre';
+  static String get lblPieces => 'Piezas'; //Seguir aqui
+
   ProductModel({
     required this.code,
     required this.description,

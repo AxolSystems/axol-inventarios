@@ -7,10 +7,12 @@ import '../../../../utilities/theme/theme.dart';
 import '../cubit/product_details/product_details_cubit.dart';
 import '../cubit/product_details/product_details_state.dart';
 import '../model/product_model.dart';
+import 'product_drawer_edit.dart';
 
 class ProductDrawerDetails extends StatelessWidget {
   final ProductModel product;
-  const ProductDrawerDetails({super.key, required this.product});
+  final bool? actions;
+  const ProductDrawerDetails({super.key, required this.product, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class ProductDrawerDetails extends StatelessWidget {
       providers: [BlocProvider(create: (_) => ProductDetailsCubit())],
       child: ProductDrawerDetailsBuild(
         product: product,
+        actions: actions ?? false,
       ),
     );
   }
@@ -25,7 +28,9 @@ class ProductDrawerDetails extends StatelessWidget {
 
 class ProductDrawerDetailsBuild extends StatelessWidget {
   final ProductModel product;
-  const ProductDrawerDetailsBuild({super.key, required this.product});
+  final bool actions;
+  const ProductDrawerDetailsBuild(
+      {super.key, required this.product, required this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,25 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
           style: Typo.subtitleDark,
         ),
         actions: [
+          Visibility(
+            visible: actions,
+            child: AlertButtonDialog(),
+          ),
+          Visibility(
+            visible: actions,
+            child: SecondaryButtonDialog(
+              text: 'Editar',
+              onPressed: () {
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) => ProductDrawerEdit(
+                    product: product,
+                  ),
+                );
+              },
+            ),
+          ),
           SecondaryButtonDialog(
             onPressed: () {
               Navigator.pop(context);

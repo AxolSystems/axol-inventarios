@@ -144,11 +144,17 @@ class ProductRepo {
     if (productsDB.isNotEmpty) {
       for (var element in productsDB) {
         product = ProductModel(
-          code: element[_code],
-          description: element[_description] ?? '',
-          properties: element[_properties],
-          class_: element[_class],
-        );
+        code: element[_code] ?? '',
+        description: element[_description] ?? '',
+        class_:  element[_class] ?? -1,
+        capacity: element[_properties]?[_capacity] ?? '',
+        gauge: double.tryParse(element[_properties]?[_gauge] ?? '') ?? 0,
+        measure: element[_properties]?[_measure] ?? '',
+        packing: element[_properties]?[_packing] ?? '',
+        pieces: element[_properties]?[_pieces] ?? '',
+        type: element[_properties]?[_type] ?? '',
+        weight: double.tryParse(element[_properties]?[_weight] ?? '') ?? 0,
+      );
         productResponse.productList.add(product);
       }
     }

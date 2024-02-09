@@ -11,7 +11,6 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
-import '../cubit/product_details/product_details_cubit.dart';
 import '../cubit/product_tab/product_tab_cubit.dart';
 import '../cubit/product_tab/product_tab_state.dart';
 import '../model/product_model.dart';
@@ -32,9 +31,6 @@ class ProductTab extends StatelessWidget {
 }
 
 class ProductTabBuild extends StatelessWidget {
-  static const String _type = 'type';
-  static const String _weight = 'weight';
-  static const String _packing = 'packing';
   const ProductTabBuild({super.key});
 
   @override
@@ -196,6 +192,7 @@ class ProductTabBuild extends StatelessWidget {
                                   context: context,
                                   builder: (context) => ProductDrawerDetails(
                                         product: productRow,
+                                        actions: true,
                                       ));
                             },
                             child: Row(
@@ -225,7 +222,7 @@ class ProductTabBuild extends StatelessWidget {
                                   flex: 1,
                                   child: Center(
                                     child: Text(
-                                      productRow.properties![_type],
+                                      productRow.type.toString(),
                                       style: Typo.labelText1,
                                     ),
                                   ),
@@ -235,7 +232,7 @@ class ProductTabBuild extends StatelessWidget {
                                   flex: 1,
                                   child: Center(
                                     child: Text(
-                                      '${productRow.properties![_weight]} KG',
+                                      '${productRow.weight} KG',
                                       style: Typo.labelText1,
                                     ),
                                   ),
@@ -245,7 +242,7 @@ class ProductTabBuild extends StatelessWidget {
                                   flex: 1,
                                   child: Center(
                                     child: Text(
-                                      productRow.properties![_packing],
+                                      productRow.packing.toString(),
                                       style: Typo.labelText1,
                                     ),
                                   ),
