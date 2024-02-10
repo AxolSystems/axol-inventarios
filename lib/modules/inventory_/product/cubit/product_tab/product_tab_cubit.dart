@@ -56,6 +56,6 @@ class ProductTabCubit extends Cubit<ProductTabState> {
   }
 
   Future<void> deleteProduct(ProductModel product) async {
-    await ProductRepo().updateProduct(product);
+    await ProductRepo().update(product);
   }
 }

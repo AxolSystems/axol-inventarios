@@ -25,7 +25,11 @@ class ProductModel {
   static String get lblDescription => 'Descripción';
   static String get lblType => 'Tipo';
   static String get lblGauge => 'Calibre';
-  static String get lblPieces => 'Piezas'; //Seguir aqui
+  static String get lblPieces => 'Piezas';
+  static String get lblWeight => 'Peso';
+  static String get lblMeasure => 'Medida';
+  static String get lblPacking => 'Empaque';
+  static String get lblCapacity => 'Capacidad';
 
   ProductModel({
     required this.code,

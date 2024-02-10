@@ -169,10 +169,11 @@ class ProductRepo {
     });
   }
 
-  Future<void> updateProduct(ProductModel product) async {
+  Future<void> update(ProductModel product) async {
     await _supabase.from(_table).update({
       _description: product.description,
       _properties: product.properties,
+      _class: product.class_,
     }).eq(_code, product.code);
   }
 

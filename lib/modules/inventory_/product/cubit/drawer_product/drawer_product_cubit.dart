@@ -170,6 +170,6 @@ class DrawerProductCubit extends Cubit<DrawerProductState> {
   }
 
   Future<void> updateProduct(ProductModel product) async {
-    await ProductRepo().updateProduct(product);
+    await ProductRepo().update(product);
   }
 }

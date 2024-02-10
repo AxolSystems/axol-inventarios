@@ -12,8 +12,8 @@ class TextFieldInputForm extends StatelessWidget {
   final InputDecoration? decoration;
   final String? errorText;
   final TextStyle? style;
-  final Function(String)? onSubmitted;
-  final Function(String)? onChanged;
+  final Function(String value)? onSubmitted;
+  final Function(String value)? onChanged;
   final bool? enabled;
   final bool? isFocus;
   final List<TextInputFormatter>? inputFormatters;
