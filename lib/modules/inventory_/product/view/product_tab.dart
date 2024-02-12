@@ -193,7 +193,9 @@ class ProductTabBuild extends StatelessWidget {
                                   builder: (context) => ProductDrawerDetails(
                                         product: productRow,
                                         actions: true,
-                                      ));
+                                      )).then((value) {
+                                        context.read<ProductTabCubit>().load(form);
+                                      });
                             },
                             child: Row(
                               children: [

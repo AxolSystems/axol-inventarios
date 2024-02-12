@@ -57,14 +57,13 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
         actions: [
           Visibility(
             visible: actions,
-            child: AlertButtonDialog(),
+            child: const AlertButtonDialog(),
           ),
           Visibility(
             visible: actions,
             child: SecondaryButtonDialog(
               text: 'Editar',
               onPressed: () {
-                Navigator.pop(context);
                 showDialog(
                   context: context,
                   builder: (context) => ProductDrawerEdit(

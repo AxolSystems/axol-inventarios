@@ -88,6 +88,7 @@ class ProductEditCubit extends Cubit<ProductEditState> {
           });
       await ProductRepo().update(product);
       emit(LoadedProductEditState());
+      emit(SavedProductEditState());
     } catch (e) {
       emit(ErrorProductEditState(error: e.toString()));
     }

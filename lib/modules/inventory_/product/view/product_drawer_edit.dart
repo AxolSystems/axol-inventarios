@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
+import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../cubit/product_edit/product_edit_cubit.dart';
 import '../cubit/product_edit/product_edit_form.dart';
 import '../cubit/product_edit/product_edit_state.dart';
@@ -46,7 +47,7 @@ class ProductDrawerEditBuild extends StatelessWidget {
         } else if (state is LoadedProductEditState) {
           return productEditCubit(context, false, form);
         } else {
-          return productEditCubit(context, true, form);
+          return productEditCubit(context, false, form);
         }
       },
       listener: (context, state) {
@@ -56,6 +57,10 @@ class ProductDrawerEditBuild extends StatelessWidget {
             builder: (context) => AlertDialogAxol(text: state.error),
           );
         }
+        if (state is SavedProductEditState) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
       },
     );
   }
@@ -63,6 +68,7 @@ class ProductDrawerEditBuild extends StatelessWidget {
   Widget productEditCubit(
       BuildContext context, bool isLoading, ProductEditFormModel form) {
     return DrawerBox(
+        width: 0.45,
         header: const Text(
           'Editar producto',
           style: Typo.subtitleDark,
@@ -70,7 +76,9 @@ class ProductDrawerEditBuild extends StatelessWidget {
         actions: [
           PrimaryButtonDialog(
             text: 'Guardar',
-            onPressed: () {},
+            onPressed: () async {
+              context.read<ProductEditCubit>().save(form, product.code);
+            },
           ),
           SecondaryButtonDialog(
             onPressed: () {
@@ -78,6 +86,15 @@ class ProductDrawerEditBuild extends StatelessWidget {
             },
           )
         ],
+        child: isLoading
+            ? const Expanded(
+                child: Column(
+                children: [
+                  LinearProgressIndicatorAxol(),
+                  Expanded(child: SizedBox())
+                ],
+              ))
+            : null,
         children: [
           DrawerBox.rowKeyValue('Clave: ', product.code),
           TextFieldInputForm(

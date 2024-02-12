@@ -19,6 +19,11 @@ class LoadedProductEditState extends ProductEditState {
   List<Object?> get props => [];
 }
 
+class SavedProductEditState extends ProductEditState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorProductEditState extends ProductEditState {
   final String error;
   const ErrorProductEditState({required this.error});
