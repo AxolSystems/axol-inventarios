@@ -68,6 +68,7 @@ class ProductDrawerEditBuild extends StatelessWidget {
   Widget productEditCubit(
       BuildContext context, bool isLoading, ProductEditFormModel form) {
     return DrawerBox(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
         width: 0.45,
         header: const Text(
           'Editar producto',
