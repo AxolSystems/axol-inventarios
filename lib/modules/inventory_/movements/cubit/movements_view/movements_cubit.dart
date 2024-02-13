@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../models/textfield_model.dart';
 import '../../model/movement_filter_model.dart';
 import '../../model/movement_model.dart';
+import '../../model/movement_response_model.dart';
 import 'movements_state.dart';
 
 class MovementsCuibit extends Cubit<MovementsState> {
@@ -12,17 +13,17 @@ class MovementsCuibit extends Cubit<MovementsState> {
   Future<void> loadList() async {
     try {
       MovementFilterModel filters = MovementFilterModel.initialValue();
-      List<MovementModel> movements;
+      MovementResponseModel movements;
       emit(InitialState());
       emit(LoadingState(
           filters: filters,
-          finder: TextfieldModel(text: '', position: 0),
+          finder: const TextfieldModel(text: '', position: 0),
           mode: 0));
       //Obtener lista de movimientos de base de datos
-      movements = await MovementRepo().fetchMovements(filters, null, false, 0);
+      movements = await MovementRepo().fetchMovements('' , moveFilter: filters, mode: 0);
       emit(LoadedState(
-        movements: movements,
-        finder: TextfieldModel(text: '', position: 0),
+        movements: movements.movementList,
+        finder: const TextfieldModel(text: '', position: 0),
         filters: filters,
         mode: 0,
       ));
@@ -35,13 +36,12 @@ class MovementsCuibit extends Cubit<MovementsState> {
   Future<void> filterMode(
       MovementFilterModel filters, TextfieldModel finder) async {
     try {
-      List<MovementModel> movements;
+      MovementResponseModel movements;
       emit(InitialState());
       emit(LoadingState(finder: finder, filters: filters, mode: 0));
-      movements =
-          await MovementRepo().fetchMovements(filters, finder.text, false, 0);
+      movements = await MovementRepo().fetchMovements(finder.text , moveFilter: filters, mode: 0);
       emit(LoadedState(
-        movements: movements,
+        movements: movements.movementList,
         finder: finder,
         filters: filters,
         mode: 0,
@@ -54,13 +54,12 @@ class MovementsCuibit extends Cubit<MovementsState> {
   Future<void> historyMode(
       MovementFilterModel filters, TextfieldModel finder) async {
     try {
-      List<MovementModel> movements;
+      MovementResponseModel movements;
       emit(InitialState());
       emit(LoadingState(finder: finder, filters: filters, mode: 1));
-      movements =
-          await MovementRepo().fetchMovements(filters, finder.text, true, 1);
+      movements = await MovementRepo().fetchMovements(finder.text , moveFilter: filters, mode: 1);
       emit(LoadedState(
-        movements: movements,
+        movements: movements.movementList,
         finder: finder,
         filters: filters,
         mode: 1,

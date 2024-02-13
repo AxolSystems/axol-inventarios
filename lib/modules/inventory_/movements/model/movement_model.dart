@@ -15,6 +15,7 @@ class MovementModel {
   final double quantity;
   final String user;
   final double stock;
+  final int folio;
 
   MovementModel({
     required this.id,
@@ -28,7 +29,22 @@ class MovementModel {
     required this.warehouse,
     required this.user,
     required this.stock,
+    required this.folio,
   });
+
+  MovementModel.empty()
+      : id = '',
+        code = '',
+        concept = -1,
+        conceptType = -1,
+        description = '',
+        document = '',
+        quantity = 0,
+        time = DateTime.now(),
+        warehouse = '',
+        user = '',
+        stock = 0,
+        folio = -1;
 
   MovementModel.fromRowOfDoc(InventoryMoveModel doc, InventoryMoveRowModel row,
       String warehouseName, String userName, double newStock)
@@ -42,10 +58,15 @@ class MovementModel {
         time = DateTime.now(),
         warehouse = warehouseName,
         user = userName,
-        stock = newStock;
+        stock = newStock,
+        folio = 0; //Modificar
 
-  MovementModel.transferDestiny(InventoryMoveModel doc, InventoryMoveRowModel row,
-      String warehouseDestiny, String userName, double newStock)
+  MovementModel.transferDestiny(
+      InventoryMoveModel doc,
+      InventoryMoveRowModel row,
+      String warehouseDestiny,
+      String userName,
+      double newStock)
       : id = const Uuid().v4(),
         code = row.code,
         concept = 7,
@@ -56,5 +77,6 @@ class MovementModel {
         time = DateTime.now(),
         warehouse = warehouseDestiny,
         user = userName,
-        stock = newStock;
+        stock = newStock,
+        folio = 0; //Modificar
 }

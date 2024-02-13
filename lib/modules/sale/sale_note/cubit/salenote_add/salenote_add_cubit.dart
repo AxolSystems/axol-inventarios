@@ -401,6 +401,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               warehouse: form.warehouse.name,
               user: user.name,
               stock: stock,
+              folio: -1 //Cambiar
             );
             movementList.add(movement);
           } else {

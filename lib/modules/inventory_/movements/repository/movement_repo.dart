@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../model/movement_filter_model.dart';
 import '../model/movement_model.dart';
+import '../model/movement_response_model.dart';
 
 class MovementRepo {
   //Table
@@ -18,6 +19,7 @@ class MovementRepo {
   static const String _quantity = 'quantity';
   static const String _user = 'user';
   static const String _stock = 'stock';
+  static const String _folio = 'folio_number';
   //Database
   static final _supabase = Supabase.instance.client;
 
@@ -40,65 +42,74 @@ class MovementRepo {
     }
   }
 
-  Future<List<MovementModel>> fetchMovements(MovementFilterModel moveFilter,
-      String? filter, bool ascending, int mode) async {
+  Future<MovementResponseModel> fetchMovements(String? filter,
+      {int? rangeMin,
+      int? rangeMax,
+      MovementFilterModel? moveFilter,
+      int? mode}) async {
     List<MovementModel> movements = [];
+    final MovementResponseModel movementResponse;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     MovementModel move;
     int filterLimit = 50;
     int filterStartDate = 0;
     int filterEndDate = 32503708800000;
     Map<String, dynamic> filters = {};
     List<Map<String, dynamic>> movementsDB = [];
+    final int rangeMin_ = rangeMin ?? 0;
+    final int rangeMax_ = rangeMax ?? 0;
+    MovementFilterModel moveFilter_ = moveFilter ?? MovementFilterModel.initialValue();
 
-    if (moveFilter.warehouse.id > -1) {
-      filters[_warehouse] = moveFilter.warehouse.name;
+    if (moveFilter_.warehouse.id > -1) {
+      filters[_warehouse] = moveFilter_.warehouse.name;
       //print(filters[_warehouse].warehouse as MovementFilterModel);
     }
-    if (moveFilter.date[0]!.year != 0) {
-      filterStartDate = moveFilter.date[0]!.millisecondsSinceEpoch;
-      filterEndDate = moveFilter.date[1]!.millisecondsSinceEpoch;
+    if (moveFilter_.date[0]!.year != 0) {
+      filterStartDate = moveFilter_.date[0]!.millisecondsSinceEpoch;
+      filterEndDate = moveFilter_.date[1]!.millisecondsSinceEpoch;
     }
-    if (moveFilter.concept.id != -1) {
-      filters[_concept] = moveFilter.concept.id;
+    if (moveFilter_.concept.id != -1) {
+      filters[_concept] = moveFilter_.concept.id;
     }
-    if (moveFilter.user.id != -1) {
-      filters[_user] = moveFilter.user.name;
+    if (moveFilter_.user.id != -1) {
+      filters[_user] = moveFilter_.user.name;
     }
-    if (moveFilter.currentLimit.text != '50') {
-      filterLimit = int.parse(moveFilter.currentLimit.text);
+    if (moveFilter_.currentLimit.text != '50') {
+      filterLimit = int.parse(moveFilter_.currentLimit.text);
     }
     if (filter == null || filter == '') {
-      movementsDB = await _supabase
+      postgrestResponse = await _supabase
           .from(_table)
-          .select<List<Map<String, dynamic>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>()
           .match(filters)
           .lte(_time, filterEndDate)
           .gte(_time, filterStartDate)
-          .order(_time, ascending: ascending)
-          .limit(filterLimit);
+          .order(_time, ascending: true)
+          .range(rangeMin_, rangeMax_);
     } else {
       if (mode == 1) {
-        movementsDB = await _supabase
+        postgrestResponse = await _supabase
             .from(_table)
-            .select<List<Map<String, dynamic>>>()
+            .select<PostgrestResponse<List<Map<String, dynamic>>>>()
             .or('$_code.ilike.%$filter%,$_description.ilike.%$filter%,$_document.ilike.%$filter%')
             .match(filters)
             .lte(_time, filterEndDate)
             .gte(_time, filterStartDate)
-            .order(_time, ascending: ascending)
+            .order(_time, ascending: true)
             .limit(filterLimit);
       } else {
-        movementsDB = await _supabase
+        postgrestResponse = await _supabase
             .from(_table)
-            .select<List<Map<String, dynamic>>>()
+            .select<PostgrestResponse<List<Map<String, dynamic>>>>()
             .or('$_code.ilike.%$filter%,$_description.ilike.%$filter%,$_document.ilike.%$filter%')
             .match(filters)
             .lte(_time, filterEndDate)
             .gte(_time, filterStartDate)
-            .order(_time, ascending: ascending)
+            .order(_time, ascending: true)
             .limit(filterLimit);
       }
     }
+    movementsDB = postgrestResponse.data ?? [];
 
     if (movementsDB.isNotEmpty) {
       for (var element in movementsDB) {
@@ -114,11 +125,13 @@ class MovementRepo {
                 DateTime.fromMillisecondsSinceEpoch(int.parse(element[_time])),
             warehouse: element[_warehouse].toString(),
             user: element[_user].toString(),
-            stock: element[_stock]);
+            stock: element[_stock],
+            folio: element[_folio] ?? -1);
         movements.add(move);
       }
     }
-
-    return movements;
+    movementResponse = MovementResponseModel(
+        movementList: movements, count: postgrestResponse.count ?? 0);
+    return movementResponse;
   }
 }

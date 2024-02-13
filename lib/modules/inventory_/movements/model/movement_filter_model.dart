@@ -12,6 +12,7 @@ class MovementFilterModel {
   final UserModel user;
   final List<UserModel> usersList;
   final TextfieldModel currentLimit;
+
   static const WarehouseModel initWarehouse =
       WarehouseModel(id: -1, name: 'TODOS', retailManager: '');
   static final Map<int, DateTime> initDate = {
@@ -25,7 +26,7 @@ class MovementFilterModel {
   static const UserModel initUser =
       UserModel(name: 'TODOS', id: -1, rol: '//', password: '//');
   static const List<UserModel> initUsersList = [];
-  static TextfieldModel initLimit = TextfieldModel(text: '50', position: 0);
+  static TextfieldModel initLimit = const TextfieldModel(text: '50', position: 0);
 
   const MovementFilterModel({
     required this.date,

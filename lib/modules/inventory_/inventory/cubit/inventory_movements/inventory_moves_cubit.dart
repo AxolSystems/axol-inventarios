@@ -278,6 +278,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
     emit(LoadedState(form: newElement));
   }
 
+  // ignore: unused_element
   List<MovementModel> _moveDocToRegList(
     InventoryMoveModel moveDoc,
     WarehouseModel warehouse,
@@ -298,6 +299,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
         warehouse: warehouse.name,
         user: user.name,
         stock: row.quantity,
+        folio: -1, //Cambiar
       );
       regList.add(regMove);
     }
