@@ -132,7 +132,7 @@ class MovementTabBuild extends StatelessWidget {
         ListViewTable(
           isLoading: isLoading,
           rowList: rowList,
-          onPressed: () {},
+          dataList: movementList,
         ),
         NavigateBarTable(
           currentPage: form.currentPage,

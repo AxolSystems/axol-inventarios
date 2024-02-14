@@ -1,5 +1,7 @@
+import 'package:axol_inventarios/modules/inventory_/movements/view/movement_drawer_details.dart';
 import 'package:flutter/material.dart';
 
+import '../../../modules/inventory_/movements/model/movement_model.dart';
 import '../../theme/theme.dart';
 import '../button.dart';
 import '../loading_indicator/progress_indicator.dart';
@@ -54,13 +56,13 @@ class HeaderTable extends TableView {
 class ListViewTable extends TableView {
   final bool? isLoading;
   final List<List<DataTableAxol>> rowList;
-  final Function()? onPressed;
+  final List? dataList;
 
   const ListViewTable({
     super.key,
     this.isLoading,
     required this.rowList,
-    this.onPressed,
+    this.dataList
   });
 
   @override
@@ -105,7 +107,16 @@ class ListViewTable extends TableView {
                     children: [
                       Expanded(
                           child: ButtonRowTable(
-                        onPressed: onPressed,
+                        onPressed: () {
+                          if (dataList is List<MovementModel>) {
+                            final data = dataList![index];
+                            showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  MovementDrawerDetailsBuild(movement: data),
+                            );
+                          }
+                        },
                         child: Row(
                           children: contentList,
                         ),

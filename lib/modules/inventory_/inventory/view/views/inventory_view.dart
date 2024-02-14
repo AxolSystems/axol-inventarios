@@ -5,7 +5,7 @@ import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../movements/cubit/movements_view/movements_cubit.dart';
-import '../../../movements/view/movements_tab.dart';
+import '../../../movements/view/movement_tab.dart';
 import '../../../product/cubit/product_tab/product_tab_cubit.dart';
 import '../../../../sale/view/sale_view.dart';
 import '../../../../user/view/views/home_view.dart';

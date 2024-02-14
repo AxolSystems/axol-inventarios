@@ -7,7 +7,7 @@ import '../widgets/listview_movements.dart';
 import '../widgets/textfield_finder_movement.dart';
 import '../widgets/toolbar_movements.dart';
 
-class ListviewMovementsController extends StatelessWidget {
+/*class ListviewMovementsController extends StatelessWidget {
   const ListviewMovementsController({super.key});
 
   @override
@@ -50,4 +50,4 @@ class ListviewMovementsController extends StatelessWidget {
       },
     );
   }
-}
+}*/

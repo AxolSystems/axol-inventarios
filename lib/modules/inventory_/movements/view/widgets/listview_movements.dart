@@ -8,7 +8,7 @@ import '../../model/movement_model.dart';
 import 'drawer_details_movements.dart';
 import 'textfield_finder_movement.dart';
 
-class ListviewMovements extends StatelessWidget {
+/*class ListviewMovements extends StatelessWidget {
   final List<MovementModel> movementsList;
   final TextfieldModel finder;
   final MovementFilterModel filters;
@@ -420,4 +420,4 @@ class ListviewMovements extends StatelessWidget {
       ],
     );
   }
-}
+}*/

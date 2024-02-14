@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../model/movement_model.dart';
 
-class DrawerDetailsMovements extends StatelessWidget {
+/*class DrawerDetailsMovements extends StatelessWidget {
   final MovementModel movement;
 
   const DrawerDetailsMovements({super.key, required this.movement});
@@ -115,4 +115,4 @@ class DrawerDetailsMovements extends StatelessWidget {
       ],
     );
   }
-}
+}*/
