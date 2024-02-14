@@ -7,6 +7,49 @@ abstract class TableView extends StatelessWidget {
   const TableView({super.key});
 }
 
+class DataHeadTable {
+  final String text;
+  final int flex;
+
+  DataHeadTable({required this.text, required, required this.flex});
+
+  DataHeadTable.text(this.text) : flex = 1;
+}
+
+class HeaderTable extends TableView {
+  final List<DataHeadTable> dataList;
+  const HeaderTable({super.key, required this.dataList});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> contentList = [];
+    Widget content;
+    for (var data in dataList) {
+      content = Expanded(
+        flex: data.flex,
+        child: Center(
+          child: Text(
+            data.text,
+            style: Typo.subtitleLight,
+          ),
+        ),
+      );
+      contentList.add(content);
+    }
+
+    return Container(
+      decoration: BoxDecorationTheme.headerTable(),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: contentList,
+        ),
+      ),
+    );
+  }
+}
+
 class NavigateBar extends TableView {
   final int currentPage;
   final int limitPaga;

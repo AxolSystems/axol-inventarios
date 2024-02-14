@@ -16,6 +16,19 @@ class MovementModel {
   final String user;
   final double stock;
   final int folio;
+  
+  static String get lblId => 'Id';
+  static String get lblTime => 'Fecha';
+  static String get lblCode => 'Clave';
+  static String get lblDescription => 'Descripción';
+  static String get lblDocument => 'Documento';
+  static String get lblWarehouse => 'Almacén';
+  static String get lblConcept => 'Concepto';
+  static String get lblConceptType => 'Tipo de concepto';
+  static String get lblQuantity => 'Cantidad';
+  static String get lblUser => 'Usuario';
+  static String get lblStock => 'Existencias';
+  static String get lblFolio => 'Folio';
 
   MovementModel({
     required this.id,
