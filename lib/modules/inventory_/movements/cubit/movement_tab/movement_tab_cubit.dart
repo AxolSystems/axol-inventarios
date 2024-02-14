@@ -15,13 +15,13 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       final int limit = TableViewFormModel.rows50;
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
-      movementResponse = await MovementRepo().fetchMovements(form.finder.text,
-          rangeMax: limit - 1, rangeMin: 0);
+      movementResponse = await MovementRepo()
+          .fetchMovements(form.finder.text, rangeMax: limit - 1, rangeMin: 0);
       countReg = movementResponse.count;
       form.currentPage = 1;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
-      emit(LoadedMovementTabState());
+      emit(LoadedMovementTabState(movementList: movementResponse.movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));
     }
@@ -43,7 +43,7 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       countReg = movementResponse.count;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
-      emit(LoadedMovementTabState());
+      emit(LoadedMovementTabState(movementList: movementResponse.movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));
     }

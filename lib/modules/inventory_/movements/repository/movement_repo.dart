@@ -58,7 +58,8 @@ class MovementRepo {
     List<Map<String, dynamic>> movementsDB = [];
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
-    MovementFilterModel moveFilter_ = moveFilter ?? MovementFilterModel.initialValue();
+    MovementFilterModel moveFilter_ =
+        moveFilter ?? MovementFilterModel.initialValue();
 
     if (moveFilter_.warehouse.id > -1) {
       filters[_warehouse] = moveFilter_.warehouse.name;
@@ -80,7 +81,8 @@ class MovementRepo {
     if (filter == null || filter == '') {
       postgrestResponse = await _supabase
           .from(_table)
-          .select<PostgrestResponse<List<Map<String, dynamic>>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
           .match(filters)
           .lte(_time, filterEndDate)
           .gte(_time, filterStartDate)

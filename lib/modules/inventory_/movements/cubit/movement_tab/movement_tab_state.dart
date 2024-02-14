@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/movement_model.dart';
+
 abstract class MovementTabState extends Equatable {
   const MovementTabState();
 }
@@ -15,8 +17,10 @@ class LoadingMovementTabState extends MovementTabState {
 }
 
 class LoadedMovementTabState extends MovementTabState {
+  final List<MovementModel> movementList;
+  const LoadedMovementTabState({required this.movementList});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [movementList];
 }
 
 class ErrorMovementTabState extends MovementTabState {

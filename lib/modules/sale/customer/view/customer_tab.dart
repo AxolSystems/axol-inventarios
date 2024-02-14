@@ -197,7 +197,7 @@ class CustomerTabBuild extends StatelessWidget {
                   },
                 ),
         ),
-        NavigateBar(
+        NavigateBarTable(
           currentPage: form.currentPage,
           limitPaga: form.limitPage,
           totalReg: form.totalReg,

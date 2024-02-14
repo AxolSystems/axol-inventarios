@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
 import '../button.dart';
+import '../loading_indicator/progress_indicator.dart';
 
 abstract class TableView extends StatelessWidget {
   const TableView({super.key});
 }
 
-class DataHeadTable {
+class DataTableAxol {
   final String text;
   final int flex;
 
-  DataHeadTable({required this.text, required, required this.flex});
+  DataTableAxol({required this.text, required, required this.flex});
 
-  DataHeadTable.text(this.text) : flex = 1;
+  DataTableAxol.text(this.text) : flex = 1;
 }
 
 class HeaderTable extends TableView {
-  final List<DataHeadTable> dataList;
+  final List<DataTableAxol> dataList;
   const HeaderTable({super.key, required this.dataList});
 
   @override
@@ -50,13 +51,81 @@ class HeaderTable extends TableView {
   }
 }
 
-class NavigateBar extends TableView {
+class ListViewTable extends TableView {
+  final bool? isLoading;
+  final List<List<DataTableAxol>> rowList;
+  final Function()? onPressed;
+
+  const ListViewTable({
+    super.key,
+    this.isLoading,
+    required this.rowList,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: isLoading ?? false
+          ? const Column(
+              children: [
+                LinearProgressIndicatorAxol(),
+                Expanded(child: SizedBox())
+              ],
+            )
+          : ListView.builder(
+              shrinkWrap: true,
+              itemCount: rowList.length,
+              itemBuilder: (context, index) {
+                final List<DataTableAxol> row = rowList[index];
+                List<Widget> contentList = [];
+                Widget content;
+
+                for (var data in row) {
+                  content = Expanded(
+                    flex: data.flex,
+                    child: Center(
+                      child: Text(
+                        data.text,
+                        style: Typo.labelText1,
+                      ),
+                    ),
+                  );
+                  contentList.add(content);
+                }
+                return Container(
+                  height: 30,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorPalette.darkItems),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: ButtonRowTable(
+                        onPressed: onPressed,
+                        child: Row(
+                          children: contentList,
+                        ),
+                      )),
+                    ],
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
+
+class NavigateBarTable extends TableView {
   final int currentPage;
   final int limitPaga;
   final int totalReg;
   final Function()? onPressedLeft;
   final Function()? onPressedRight;
-  const NavigateBar({
+  const NavigateBarTable({
     super.key,
     required this.currentPage,
     required this.limitPaga,
