@@ -6,7 +6,7 @@ import '../../cubit/movement_filters/movement_filters_state.dart';
 import '../../model/movement_filter_model.dart';
 import '../widgets/drawer movements/drawer_movements.dart';
 
-class DrawerMovementsController extends StatelessWidget {
+/*class DrawerMovementsController extends StatelessWidget {
   final MovementFilterModel currentFilter;
 
   const DrawerMovementsController({super.key, required this.currentFilter});
@@ -47,4 +47,4 @@ class DrawerMovementsController extends StatelessWidget {
       ],
     );
   }
-}
+}*/

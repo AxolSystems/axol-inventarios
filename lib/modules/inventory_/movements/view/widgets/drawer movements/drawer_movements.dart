@@ -7,7 +7,7 @@ import 'dropdown_users.dart';
 import 'dropdown_warehouses.dart';
 import 'textfield_select_limit.dart';
 
-class DrawerMovements extends StatelessWidget {
+/*class DrawerMovements extends StatelessWidget {
   final MovementFilterModel filters;
   const DrawerMovements({super.key, required this.filters});
 
@@ -203,4 +203,4 @@ class DrawerMovements extends StatelessWidget {
       ),
     );
   }
-}
+}*/

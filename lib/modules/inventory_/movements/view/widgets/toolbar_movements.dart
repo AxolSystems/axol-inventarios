@@ -13,7 +13,7 @@ import '../controllers/drawer_movement_controller.dart';
 import 'pdf_movements_format.dart';
 import 'pdf_preview_page.dart';
 
-class ToolbarMovements extends StatelessWidget {
+/*class ToolbarMovements extends StatelessWidget {
   final List<MovementModel> movementsList;
   final bool isLoading;
   final MovementFilterModel currentFilter;
@@ -111,4 +111,4 @@ class ToolbarMovements extends StatelessWidget {
       ],
     );
   }
-}
+}*/

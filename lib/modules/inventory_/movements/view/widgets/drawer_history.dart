@@ -6,7 +6,7 @@ import '../../model/movement_filter_model.dart';
 import 'drawer movements/dropdown_warehouses.dart';
 import 'drawer movements/textfield_select_limit.dart';
 
-class DrawerHistory extends StatelessWidget {
+/*class DrawerHistory extends StatelessWidget {
   final MovementFilterModel filters;
   const DrawerHistory({super.key, required this.filters});
 
@@ -176,4 +176,4 @@ class DrawerHistory extends StatelessWidget {
       ),
     );
   }
-}
+}*/

@@ -5,7 +5,8 @@ import '../../inventory/model/warehouse_model.dart';
 
 class MovementFilterModel {
   final WarehouseModel warehouse;
-  final Map<int, DateTime> date;
+  final DateTime initDate;
+  final DateTime endDate;
   final List<WarehouseModel> warehousesList;
   final ConceptMoveModel concept;
   final List<ConceptMoveModel> conceptsList;
@@ -15,10 +16,6 @@ class MovementFilterModel {
 
   static const WarehouseModel initWarehouse =
       WarehouseModel(id: -1, name: 'TODOS', retailManager: '');
-  static final Map<int, DateTime> initDate = {
-    0: DateTime(0),
-    1: DateTime(3000)
-  };
   static const List<WarehouseModel> initWarehouseList = [];
   static const ConceptMoveModel initConcept =
       ConceptMoveModel(text: 'TODOS', id: -1, type: -1);
@@ -29,7 +26,8 @@ class MovementFilterModel {
   static TextfieldModel initLimit = const TextfieldModel(text: '50', position: 0);
 
   const MovementFilterModel({
-    required this.date,
+    required this.initDate,
+    required this.endDate,
     required this.warehouse,
     required this.warehousesList,
     required this.concept,
@@ -41,7 +39,8 @@ class MovementFilterModel {
 
   static MovementFilterModel initialValue() {
     return MovementFilterModel(
-        date: initDate,
+        initDate: DateTime(0),
+        endDate: DateTime(3000),
         warehouse: initWarehouse,
         warehousesList: initWarehouseList,
         concept: initConcept,

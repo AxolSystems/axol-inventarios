@@ -113,12 +113,22 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.lightText);
+  static const labeldark = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: ColorPalette.darkItems);
   static const labelLight = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.lightItems);
-      static const bodyCaution = TextStyle(
+  static const smallLabelLight = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+      color: ColorPalette.lightItems);
+  static const bodyCaution = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 16,

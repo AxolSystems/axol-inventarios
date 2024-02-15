@@ -65,10 +65,10 @@ class MovementRepo {
       filters[_warehouse] = moveFilter_.warehouse.name;
       //print(filters[_warehouse].warehouse as MovementFilterModel);
     }
-    if (moveFilter_.date[0]!.year != 0) {
+    /*if (moveFilter_.date[0]!.year != 0) {
       filterStartDate = moveFilter_.date[0]!.millisecondsSinceEpoch;
       filterEndDate = moveFilter_.date[1]!.millisecondsSinceEpoch;
-    }
+    }*/
     if (moveFilter_.concept.id != -1) {
       filters[_concept] = moveFilter_.concept.id;
     }

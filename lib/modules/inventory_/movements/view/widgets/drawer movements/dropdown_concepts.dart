@@ -5,7 +5,7 @@ import '../../../../inventory/model/inventory_move/concept_move_model.dart';
 import '../../../cubit/movement_filters/movement_filters_cubit.dart';
 import '../../../model/movement_filter_model.dart';
 
-class DropdownConcepts extends StatelessWidget {
+/*class DropdownConcepts extends StatelessWidget {
   final MovementFilterModel filters;
 
   const DropdownConcepts({super.key, required this.filters});
@@ -42,4 +42,4 @@ class DropdownConcepts extends StatelessWidget {
       ),
     );
   }
-}
+}*/

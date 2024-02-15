@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../inventory/model/warehouse_model.dart';
 import '../../../cubit/movement_filters/movement_filters_cubit.dart';
 
-class DropdownWarehouses extends StatelessWidget {
+/*class DropdownWarehouses extends StatelessWidget {
   final MovementFilterModel filters;
   final int mode;
 
@@ -56,4 +56,4 @@ class DropdownWarehouses extends StatelessWidget {
       ),
     );
   }
-}
+}*/

@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -19,6 +20,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Axol', home: AuthPage());
+    return MaterialApp(
+      title: 'Axol',
+      home: const AuthPage(),
+      theme: ThemeData(colorSchemeSeed: ColorPalette.primary),
+    );
   }
 }

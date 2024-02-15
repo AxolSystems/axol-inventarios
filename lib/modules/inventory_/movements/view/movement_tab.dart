@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/inventory_/movements/view/movement_drawer_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -107,7 +108,12 @@ class MovementTabBuild extends StatelessWidget {
             ),
             IconButton(
               padding: EdgeInsets.zero,
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => MovementDrawerFilterBuild(),
+                );
+              },
               icon: const Icon(
                 Icons.filter_alt,
                 color: ColorPalette.darkItems,

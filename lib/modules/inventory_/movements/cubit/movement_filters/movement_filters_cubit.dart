@@ -10,7 +10,7 @@ import '../../../../user/repository/user_repo.dart';
 import '../../model/movement_filter_model.dart';
 import 'movement_filters_state.dart';
 
-class MovementFiltersCubit extends Cubit<MovementFiltersState> {
+/*class MovementFiltersCubit extends Cubit<MovementFiltersState> {
   MovementFiltersCubit() : super(InitialState());
 
   void changeWarehouse(
@@ -146,4 +146,4 @@ class MovementFiltersCubit extends Cubit<MovementFiltersState> {
       emit(ErrorState(error: e.toString()));
     }
   }
-}
+}*/
