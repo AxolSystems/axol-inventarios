@@ -31,7 +31,7 @@ class BtnSelectInputForm extends StatelessWidget {
     final isLoading_ = isLoading ?? false;
     final icon_ = Icon(
       icon,
-      color: ColorPalette.lightItems,
+      color: ColorPalette.lightItems10,
     );
     return Row(
       children: [

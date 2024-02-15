@@ -128,7 +128,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
         DrawerBox.rowKeyValue('Almacén: ',
             '${saleNote.warehouse.id} - ${saleNote.warehouse.name}'),
         const Divider(
-          color: ColorPalette.lightItems,
+          color: ColorPalette.lightItems10,
           height: 16,
           thickness: 1,
         ),
@@ -156,7 +156,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
           const DrawerCellText('Clave', style: Typo.subtitleDark),
           const DrawerCellText('Canitdad', style: Typo.subtitleDark),
           const DrawerCellText('Importe', style: Typo.subtitleDark),
-        ], color: ColorPalette.lightItems),
+        ], color: ColorPalette.lightItems10),
         Column(
           children: isLoading
               ? [

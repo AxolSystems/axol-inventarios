@@ -116,7 +116,7 @@ class TextFieldCell extends InputCell {
                                   child: const Icon(
                                     Icons.search,
                                     size: 20,
-                                    color: ColorPalette.lightItems,
+                                    color: ColorPalette.lightItems10,
                                   ),
                                 ),
                               )
@@ -179,7 +179,7 @@ class LabelCell extends InputCell {
                       ),
                       child: Icon(
                         suffixIcon,
-                        color: ColorPalette.lightItems,
+                        color: ColorPalette.lightItems10,
                         size: 20,
                       ),
                     ),

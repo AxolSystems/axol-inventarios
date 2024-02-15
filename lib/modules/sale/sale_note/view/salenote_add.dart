@@ -368,7 +368,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                         splashRadius: 20,
                                         icon: const Icon(
                                           Icons.sticky_note_2_outlined,
-                                          color: ColorPalette.lightItems,
+                                          color: ColorPalette.lightItems10,
                                         ),
                                       ),
                                     )
@@ -618,7 +618,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     icon: const Icon(
                                       Icons.more_horiz,
                                       size: 20,
-                                      color: ColorPalette.lightItems,
+                                      color: ColorPalette.lightItems10,
                                     ),
                                     menuChildren: [
                                       MenuItemButton(
@@ -699,7 +699,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                             ),
                             child: const Icon(
                               Icons.add,
-                              color: ColorPalette.lightItems,
+                              color: ColorPalette.lightItems10,
                               size: 30,
                             ),
                           ),
@@ -720,7 +720,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                             ),
                             child: const Icon(
                               Icons.save,
-                              color: ColorPalette.lightItems,
+                              color: ColorPalette.lightItems10,
                               size: 30,
                             ),
                           ),

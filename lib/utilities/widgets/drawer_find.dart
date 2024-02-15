@@ -84,7 +84,7 @@ class DrawerFind extends StatelessWidget {
                 onPressed: onPressed,
                 icon: const Icon(
                   Icons.close,
-                  color: ColorPalette.lightItems,
+                  color: ColorPalette.lightItems10,
                 ),
               )
             ],

@@ -94,7 +94,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                 const VerticalDivider(
                   thickness: 1,
                   width: 1,
-                  color: ColorPalette.lightItems,
+                  color: ColorPalette.lightItems10,
                   indent: 4,
                   endIndent: 4,
                 ),

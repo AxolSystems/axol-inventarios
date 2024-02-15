@@ -159,7 +159,7 @@ class NavigateBarTable extends TableView {
             onPressed: onPressedLeft,
             child: const Icon(
               Icons.arrow_back,
-              color: ColorPalette.lightItems,
+              color: ColorPalette.lightItems10,
             ),
           ),
           const VerticalDivider(
@@ -185,7 +185,7 @@ class NavigateBarTable extends TableView {
             onPressed: onPressedRight,
             child: const Icon(
               Icons.arrow_forward,
-              color: ColorPalette.lightItems,
+              color: ColorPalette.lightItems10,
             ),
           ),
           const VerticalDivider(

@@ -115,7 +115,7 @@ class SaleNoteDrawerNoteBuild extends StatelessWidget {
               labelStyle: Typo.labelLight,
               border: OutlineInputBorder(
                   borderSide: BorderSide(
-                color: ColorPalette.lightItems,
+                color: ColorPalette.lightItems10,
               )),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(

@@ -63,9 +63,9 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
       onPressed: isLoading_ ? () {} : fOnPressed,
       style: OutlinedButton.styleFrom(
         backgroundColor: ColorPalette.lightBackground,
-        side: const BorderSide(color: ColorPalette.lightItems, width: 2),
+        side: const BorderSide(color: ColorPalette.lightItems10, width: 2),
         foregroundColor:
-            isLoading_ ? ColorPalette.lightBackground : ColorPalette.lightItems,
+            isLoading_ ? ColorPalette.lightBackground : ColorPalette.lightItems10,
       ),
       child: Text(fText, style: Typo.bodyDark),
     );

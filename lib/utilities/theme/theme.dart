@@ -13,7 +13,9 @@ class ColorPalette {
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
   static const caution = Color.fromARGB(255, 180, 32, 22);
   static const darkItems = Color.fromARGB(255, 78, 78, 78);
-  static const lightItems = Color.fromARGB(255, 167, 167, 167);
+  static const lightItems10 = Color.fromARGB(255, 167, 167, 167);
+  static const lightItems20 = Color.fromARGB(255, 226, 226, 226);
+  static const filled = Color.fromARGB(10, 0, 0, 0);
 }
 
 class Typo {
@@ -115,19 +117,24 @@ class Typo {
       color: ColorPalette.lightText);
   static const labeldark = TextStyle(
       fontFamily: 'Source Sans Pro',
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.normal,
+      fontSize: 14,
+      color: ColorPalette.darkItems);
+      static const boldLabelDark = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.bold,
       fontSize: 16,
       color: ColorPalette.darkItems);
   static const labelLight = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 16,
-      color: ColorPalette.lightItems);
+      color: ColorPalette.lightItems10);
   static const smallLabelLight = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 12,
-      color: ColorPalette.lightItems);
+      color: ColorPalette.lightItems10);
   static const bodyCaution = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
