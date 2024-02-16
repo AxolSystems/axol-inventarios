@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../cubit/movement_filters/movement_filters_cubit.dart';
+import '../../../cubit/movement_filter/movement_filter_cubit.dart';
 import '../../../model/movement_filter_model.dart';
 
 /*class TextfieldSelectLimit extends StatelessWidget {

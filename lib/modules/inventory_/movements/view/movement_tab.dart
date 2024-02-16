@@ -111,7 +111,7 @@ class MovementTabBuild extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => MovementDrawerFilterBuild(),
+                  builder: (context) => MovementDrawerFilter(filter: form.filter,),
                 );
               },
               icon: const Icon(

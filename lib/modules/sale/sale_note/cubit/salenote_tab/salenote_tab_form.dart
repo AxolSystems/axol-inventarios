@@ -12,6 +12,7 @@ class SaleNoteTabForm extends Cubit<TableViewFormModel> {
         finder: TextfieldModel(text: text, position: form.finder.position),
         currentPage: form.currentPage,
         limitPage: form.limitPage,
+        filter: form.filter,
         totalReg: form.totalReg);
     emit(TableViewFormModel.empty());
     emit(upForm);
@@ -22,6 +23,7 @@ class SaleNoteTabForm extends Cubit<TableViewFormModel> {
     final TableViewFormModel upForm = TableViewFormModel(
         finder: TextfieldModel(text: form.finder.text, position: position),
         currentPage: form.currentPage,
+        filter: form.filter,
         limitPage: form.limitPage,
         totalReg: form.totalReg);
     emit(TableViewFormModel.empty());

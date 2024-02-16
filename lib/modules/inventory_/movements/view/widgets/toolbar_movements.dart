@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../global_widgets/toolbar.dart';
 import '../../../../../models/elemnets_bar_model.dart';
-import '../../cubit/movement_filters/movement_filters_cubit.dart';
+import '../../cubit/movement_filter/movement_filter_cubit.dart';
 import '../../cubit/movements_view/movements_cubit.dart';
 import '../../model/movement_filter_model.dart';
 import '../../model/movement_model.dart';

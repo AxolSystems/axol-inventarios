@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../inventory/model/warehouse_model.dart';
-import '../../../cubit/movement_filters/movement_filters_cubit.dart';
+import '../../../cubit/movement_filter/movement_filter_cubit.dart';
 
 /*class DropdownWarehouses extends StatelessWidget {
   final MovementFilterModel filters;

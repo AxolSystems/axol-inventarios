@@ -3,38 +3,85 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
+import '../cubit/movement_filter/movement_filter_cubit.dart';
+import '../cubit/movement_filter/movement_filter_form.dart';
+import '../cubit/movement_filter/movement_filter_state.dart';
+import '../model/movement_filter_form_model.dart';
+import '../model/movement_filter_model.dart';
 
 class MovementDrawerFilter extends StatelessWidget {
-  const MovementDrawerFilter({super.key});
+  final Map filter;
+  const MovementDrawerFilter({super.key, required this.filter});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: const [],
-      child: const MovementDrawerFilterBuild(),
+      providers: [
+        BlocProvider(create: (_) => MovementFilterCubit()),
+        BlocProvider(create: (_) => MovementFilterForm()),
+      ],
+      child: MovementDrawerFilterBuild(filterMap: filter),
     );
   }
 }
 
 class MovementDrawerFilterBuild extends StatelessWidget {
-  const MovementDrawerFilterBuild({super.key});
+  final Map filterMap;
+  const MovementDrawerFilterBuild({super.key, required this.filterMap});
 
   @override
   Widget build(BuildContext context) {
-    return movementDrawerFilter(context, false);
+    MovementFilterFormModel form = context.read<MovementFilterForm>().state;
+    MovementFilterModel filter = MovementFilterModel.mapToFilter(filterMap);
+    return BlocConsumer<MovementFilterCubit, MovementFilterState>(
+      bloc: context.read<MovementFilterCubit>()..initLoad(form, filter),
+      builder: (context, state) {
+        if (state is LoadingMovementFilterState) {
+          return movementDrawerFilter(context, true, form);
+        } else if (state is LoadedMovementFilterState) {
+          return movementDrawerFilter(context, false, form);
+        } else {
+          return movementDrawerFilter(context, false, form);
+        }
+      },
+      listener: (context, state) {
+        if (state is ErrorMovementFilterState) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialogAxol(text: state.error),
+          );
+        }
+      },
+    );
   }
 
-  Widget movementDrawerFilter(BuildContext context, bool isLoading) {
+  Widget movementDrawerFilter(
+      BuildContext context, bool isLoading, MovementFilterFormModel form) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double elementWidth = ((screenWidth * 0.5) * (2 / 3)) - 16;
+    List<DropdownMenuEntry> entryList = [];
+    DropdownMenuEntry entry;
+
+    for (int i = 0; i < form.warehouseList.length; i++) {
+      entry = DropdownMenuEntry(value: i, label: form.warehouseList[i].name);
+      entryList.add(entry);
+    }
+
     return DrawerBox(
         header: const Text(
           'Filtros',
           style: Typo.titleDark,
         ),
         actions: [
+          PrimaryButtonDialog(
+            text: 'Aceptar',
+            onPressed: () {
+              
+            },
+          ),
           SecondaryButtonDialog(
             onPressed: () {
               Navigator.pop(context);
@@ -78,9 +125,10 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Nombre', style: Typo.labeldark),
+                        const Text('Nombre', style: Typo.labelDark),
                         DropdownMenu(
                           width: elementWidth,
+                          controller: form.tfWarehose.controller,
                           inputDecorationTheme: InputDecorationTheme(
                             filled: true,
                             isDense: true,
@@ -103,10 +151,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                             Icons.arrow_drop_down,
                             color: ColorPalette.primary,
                           ),
-                          dropdownMenuEntries: const [
-                            DropdownMenuEntry(value: 0, label: 'A'),
-                            DropdownMenuEntry(value: 1, label: 'B')
-                          ],
+                          dropdownMenuEntries: entryList,
                         ),
                       ],
                     ),
@@ -116,7 +161,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
             ),
           ),
           Container(
-            height: 155,
+            height: 230 ,
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: ColorPalette.lightItems20))),
@@ -143,9 +188,47 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Switch(
+                                  activeColor: ColorPalette.primary,
+                                  value: form.filterDate,
+                                  onChanged: (value) {
+                                    form.filterDate = value;
+                                    context.read<MovementFilterCubit>().load();
+                                  },
+                                ),
+                              ),
+                            ),
+                            const Expanded(
+                              flex: 3,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Filtrar fecha', style: Typo.labelDark),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Filtra las fechas que se encuentren dentro del rango indicado por Fecha Inicial y Fecha Final',
+                                    style: Typo.smallLabelDark,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 16),
                         const Text(
                           'Fecha inicial',
-                          style: Typo.labeldark,
+                          style: Typo.labelDark,
                         ),
                         Row(
                           children: [
@@ -180,7 +263,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                         const SizedBox(height: 16),
                         const Text(
                           'Fecha final',
-                          style: Typo.labeldark,
+                          style: Typo.labelDark,
                         ),
                         Row(
                           children: [

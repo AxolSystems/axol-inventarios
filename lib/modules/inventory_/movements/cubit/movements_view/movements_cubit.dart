@@ -12,7 +12,7 @@ class MovementsCuibit extends Cubit<MovementsState> {
 
   Future<void> loadList() async {
     try {
-      MovementFilterModel filters = MovementFilterModel.initialValue();
+      MovementFilterModel filters = MovementFilterModel.empty();
       MovementResponseModel movements;
       emit(InitialState());
       emit(LoadingState(
@@ -20,7 +20,7 @@ class MovementsCuibit extends Cubit<MovementsState> {
           finder: const TextfieldModel(text: '', position: 0),
           mode: 0));
       //Obtener lista de movimientos de base de datos
-      movements = await MovementRepo().fetchMovements('' , moveFilter: filters, mode: 0);
+      movements = await MovementRepo().fetchMovements(filter: filters);
       emit(LoadedState(
         movements: movements.movementList,
         finder: const TextfieldModel(text: '', position: 0),
@@ -39,7 +39,7 @@ class MovementsCuibit extends Cubit<MovementsState> {
       MovementResponseModel movements;
       emit(InitialState());
       emit(LoadingState(finder: finder, filters: filters, mode: 0));
-      movements = await MovementRepo().fetchMovements(finder.text , moveFilter: filters, mode: 0);
+      movements = await MovementRepo().fetchMovements(filter: filters);
       emit(LoadedState(
         movements: movements.movementList,
         finder: finder,
@@ -57,7 +57,7 @@ class MovementsCuibit extends Cubit<MovementsState> {
       MovementResponseModel movements;
       emit(InitialState());
       emit(LoadingState(finder: finder, filters: filters, mode: 1));
-      movements = await MovementRepo().fetchMovements(finder.text , moveFilter: filters, mode: 1);
+      movements = await MovementRepo().fetchMovements(filter: filters);
       emit(LoadedState(
         movements: movements.movementList,
         finder: finder,

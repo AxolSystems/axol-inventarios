@@ -1,52 +1,54 @@
-import '../../inventory/model/inventory_move/concept_move_model.dart';
-import '../../../../models/textfield_model.dart';
-import '../../../user/model/user_mdoel.dart';
 import '../../inventory/model/warehouse_model.dart';
+
+enum MovementFilterTag { warehouse, intDate, endDate, filterDate}
 
 class MovementFilterModel {
   final WarehouseModel warehouse;
   final DateTime initDate;
   final DateTime endDate;
-  final List<WarehouseModel> warehousesList;
-  final ConceptMoveModel concept;
-  final List<ConceptMoveModel> conceptsList;
-  final UserModel user;
-  final List<UserModel> usersList;
-  final TextfieldModel currentLimit;
-
-  static const WarehouseModel initWarehouse =
-      WarehouseModel(id: -1, name: 'TODOS', retailManager: '');
-  static const List<WarehouseModel> initWarehouseList = [];
-  static const ConceptMoveModel initConcept =
-      ConceptMoveModel(text: 'TODOS', id: -1, type: -1);
-  static const List<ConceptMoveModel> initConceptList = [];
-  static const UserModel initUser =
-      UserModel(name: 'TODOS', id: -1, rol: '//', password: '//');
-  static const List<UserModel> initUsersList = [];
-  static TextfieldModel initLimit = const TextfieldModel(text: '50', position: 0);
+  final bool filterDate;
 
   const MovementFilterModel({
     required this.initDate,
     required this.endDate,
     required this.warehouse,
-    required this.warehousesList,
-    required this.concept,
-    required this.conceptsList,
-    required this.user,
-    required this.usersList,
-    required this.currentLimit,
+    required this.filterDate,
   });
 
-  static MovementFilterModel initialValue() {
-    return MovementFilterModel(
-        initDate: DateTime(0),
-        endDate: DateTime(3000),
-        warehouse: initWarehouse,
-        warehousesList: initWarehouseList,
-        concept: initConcept,
-        conceptsList: initConceptList,
-        user: initUser,
-        usersList: initUsersList,
-        currentLimit: initLimit);
+  MovementFilterModel.empty()
+      : initDate = DateTime(0),
+        endDate = DateTime(3000),
+        warehouse = WarehouseModel.empty(),
+        filterDate = false;
+
+  static MovementFilterModel mapToFilter(Map map) {
+    final MovementFilterModel filter;
+    WarehouseModel warehouse = MovementFilterModel.empty().warehouse;
+    DateTime initDate = MovementFilterModel.empty().initDate;
+    DateTime endDate = MovementFilterModel.empty().endDate;
+    bool filterDate = MovementFilterModel.empty().filterDate;
+
+    for (var key in map.keys) {
+      if (key == MovementFilterTag.warehouse && map[key] is WarehouseModel) {
+        warehouse = map[key];
+      }
+      if (key == MovementFilterTag.endDate && map[key] is DateTime) {
+        endDate = map[key];
+      }
+      if (key == MovementFilterTag.intDate && map[key] is DateTime) {
+        initDate = map[key];
+      }
+      if (key == MovementFilterTag.filterDate && map[key] is bool) {
+        filterDate = map[key];
+      }
+    }
+
+    filter = MovementFilterModel(
+      initDate: initDate,
+      endDate: endDate,
+      warehouse: warehouse,
+      filterDate: filterDate,
+    );
+    return filter;
   }
 }

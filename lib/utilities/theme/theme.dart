@@ -115,12 +115,17 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.lightText);
-  static const labeldark = TextStyle(
+  static const smallLabelDark = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.normal,
+      fontSize: 12,
+      color: ColorPalette.darkItems);
+  static const labelDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
       fontSize: 14,
       color: ColorPalette.darkItems);
-      static const boldLabelDark = TextStyle(
+  static const boldLabelDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.bold,
       fontSize: 16,

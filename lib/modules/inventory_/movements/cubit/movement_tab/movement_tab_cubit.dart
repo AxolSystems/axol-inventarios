@@ -16,7 +16,7 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
       movementResponse = await MovementRepo()
-          .fetchMovements(form.finder.text, rangeMax: limit - 1, rangeMin: 0);
+          .fetchMovements(find: form.finder.text, rangeMax: limit - 1, rangeMin: 0);
       countReg = movementResponse.count;
       form.currentPage = 1;
       form.limitPage = (countReg / limit).ceil();
@@ -38,7 +38,7 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       emit(LoadingMovementTabState());
       rangeMin = (form.currentPage * limit) - limit;
       rangeMax = (form.currentPage * limit) - 1;
-      movementResponse = await MovementRepo().fetchMovements(form.finder.text,
+      movementResponse = await MovementRepo().fetchMovements(find: form.finder.text,
           rangeMax: rangeMax, rangeMin: rangeMin);
       countReg = movementResponse.count;
       form.limitPage = (countReg / limit).ceil();

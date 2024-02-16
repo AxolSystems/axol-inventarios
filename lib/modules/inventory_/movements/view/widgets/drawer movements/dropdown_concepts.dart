@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../inventory/model/inventory_move/concept_move_model.dart';
-import '../../../cubit/movement_filters/movement_filters_cubit.dart';
+import '../../../cubit/movement_filter/movement_filter_cubit.dart';
 import '../../../model/movement_filter_model.dart';
 
 /*class DropdownConcepts extends StatelessWidget {
