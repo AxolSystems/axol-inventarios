@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
+import 'package:axol_inventarios/utilities/widgets/loading_indicator/shimmer_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -62,11 +63,16 @@ class MovementDrawerFilterBuild extends StatelessWidget {
       BuildContext context, bool isLoading, MovementFilterFormModel form) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double elementWidth = ((screenWidth * 0.5) * (2 / 3)) - 16;
-    List<DropdownMenuEntry> entryList = [];
-    DropdownMenuEntry entry;
+    List<DropdownMenuEntry<int>> entryList = [];
+    DropdownMenuEntry<int> entry;
 
-    for (int i = 0; i < form.warehouseList.length; i++) {
+    /*for (int i = 0; i < form.warehouseList.length; i++) {
       entry = DropdownMenuEntry(value: i, label: form.warehouseList[i].name);
+      entryList.add(entry);
+    }*/
+
+    for (var warehouse in form.warehouseList) {
+      entry = DropdownMenuEntry(value: warehouse.id, label: warehouse.name);
       entryList.add(entry);
     }
 
@@ -78,9 +84,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
         actions: [
           PrimaryButtonDialog(
             text: 'Aceptar',
-            onPressed: () {
-              
-            },
+            onPressed: () {},
           ),
           SecondaryButtonDialog(
             onPressed: () {
@@ -89,10 +93,10 @@ class MovementDrawerFilterBuild extends StatelessWidget {
           )
         ],
         children: [
-          Visibility(
-            visible: isLoading,
-            replacement: const SizedBox(height: 4),
-            child: const LinearProgressIndicatorAxol(),
+          const Visibility(
+            visible: false,
+            replacement: SizedBox(height: 4),
+            child: LinearProgressIndicatorAxol(),
           ),
           Container(
             decoration: const BoxDecoration(
@@ -126,9 +130,11 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('Nombre', style: Typo.labelDark),
+                        isLoading ? ShimmerIndicator.horizontalExpanded(height: 30):
                         DropdownMenu(
                           width: elementWidth,
                           controller: form.tfWarehose.controller,
+                          enabled: !isLoading,
                           inputDecorationTheme: InputDecorationTheme(
                             filled: true,
                             isDense: true,
@@ -161,7 +167,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
             ),
           ),
           Container(
-            height: 230 ,
+            height: 230,
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: ColorPalette.lightItems20))),

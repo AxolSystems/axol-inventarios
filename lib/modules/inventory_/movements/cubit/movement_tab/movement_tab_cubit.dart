@@ -21,6 +21,9 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       form.currentPage = 1;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
+      form.filter = {
+        
+      };
       emit(LoadedMovementTabState(movementList: movementResponse.movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));

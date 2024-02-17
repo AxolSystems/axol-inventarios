@@ -1,12 +1,19 @@
 import '../../inventory/model/warehouse_model.dart';
 
-enum MovementFilterTag { warehouse, intDate, endDate, filterDate}
+enum MovementFilterTag { warehouse, intDate, endDate, filterDate }
 
 class MovementFilterModel {
   final WarehouseModel warehouse;
   final DateTime initDate;
   final DateTime endDate;
   final bool filterDate;
+
+  static Map get initMap => {
+        MovementFilterTag.endDate: MovementFilterModel.empty().endDate,
+        MovementFilterTag.filterDate: MovementFilterModel.empty().filterDate,
+        MovementFilterTag.intDate: MovementFilterModel.empty().initDate,
+        MovementFilterTag.warehouse: MovementFilterModel.empty().warehouse,
+      };
 
   const MovementFilterModel({
     required this.initDate,
@@ -16,8 +23,8 @@ class MovementFilterModel {
   });
 
   MovementFilterModel.empty()
-      : initDate = DateTime(0),
-        endDate = DateTime(3000),
+      : initDate = DateTime.now(),
+        endDate = DateTime.now(),
         warehouse = WarehouseModel.empty(),
         filterDate = false;
 
