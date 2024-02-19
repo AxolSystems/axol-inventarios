@@ -43,7 +43,28 @@ class MovementFilterCubit extends Cubit<MovementFilterState> {
     try {
       emit(InitialMovementFilterState());
       emit(LoadingMovementFilterState());
-      emit(LoadedMovementFilterState());
+      MovementFilterModel filter;
+      WarehouseModel? warehouse;
+      List<WarehouseModel> warehouseList = form.warehouseList
+            .where((x) => x.name == form.tfWarehose.controller.text).toList();
+
+      if (warehouseList.isNotEmpty) {
+        warehouse = warehouseList.first;
+      }
+      if (form.initDate.millisecondsSinceEpoch >
+          form.endDate.millisecondsSinceEpoch) {
+        emit(const ErrorMovementFilterState(
+            error: 'La fecha final no puede ser mayor a la inicial'));
+        return;
+      }
+
+      filter = MovementFilterModel(
+        initDate: form.initDate,
+        endDate: form.endDate,
+        warehouse: warehouse ?? WarehouseModel.empty(),
+        filterDate: form.filterDate,
+      );
+      emit(SavedMovementFilterState(filter: filter));
     } catch (e) {
       emit(ErrorMovementFilterState(error: e.toString()));
     }

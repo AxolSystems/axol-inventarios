@@ -11,6 +11,7 @@ import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/movement_tab/movement_tab_cubit.dart';
 import '../cubit/movement_tab/movement_tab_state.dart';
+import '../model/movement_filter_model.dart';
 import '../model/movement_model.dart';
 
 class MovementTab extends StatelessWidget {
@@ -112,7 +113,12 @@ class MovementTabBuild extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => MovementDrawerFilter(filter: form.filter,),
-                );
+                ).then((value) {
+                  if (value is MovementFilterModel) {
+                    form.filter = MovementFilterModel.filterToMap(value);
+                    context.read<MovementTabCubit>().load(form);
+                  }
+                });
               },
               icon: const Icon(
                 Icons.filter_alt,

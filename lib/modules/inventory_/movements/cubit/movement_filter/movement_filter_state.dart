@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/movement_filter_model.dart';
+
 abstract class MovementFilterState extends Equatable {
   const MovementFilterState();
 }
@@ -17,6 +19,13 @@ class LoadingMovementFilterState extends MovementFilterState {
 class LoadedMovementFilterState extends MovementFilterState {
   @override
   List<Object?> get props => [];
+}
+
+class SavedMovementFilterState extends MovementFilterState {
+  final MovementFilterModel filter;
+  const SavedMovementFilterState({required this.filter});
+  @override
+  List<Object?> get props => [filter];
 }
 
 class ErrorMovementFilterState extends MovementFilterState {

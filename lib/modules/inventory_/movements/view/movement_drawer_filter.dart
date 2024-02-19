@@ -55,6 +55,9 @@ class MovementDrawerFilterBuild extends StatelessWidget {
             builder: (context) => AlertDialogAxol(text: state.error),
           );
         }
+        if (state is SavedMovementFilterState) {
+          Navigator.pop(context, state.filter);
+        }
       },
     );
   }
@@ -63,7 +66,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
       BuildContext context, bool isLoading, MovementFilterFormModel form) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double elementWidth = ((screenWidth * 0.5) * (2 / 3)) - 16;
-    List<DropdownMenuEntry<int>> entryList = [];
+    List<DropdownMenuEntry<int>> entryList = [const DropdownMenuEntry(value: -1, label: 'TODOS')];
     DropdownMenuEntry<int> entry;
 
     for (var warehouse in form.warehouseList) {
@@ -79,7 +82,9 @@ class MovementDrawerFilterBuild extends StatelessWidget {
       actions: [
         PrimaryButtonDialog(
           text: 'Aceptar',
-          onPressed: () {},
+          onPressed: () {
+            context.read<MovementFilterCubit>().save(form);
+          },
         ),
         SecondaryButtonDialog(
           onPressed: () {
@@ -254,10 +259,18 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                                       IconButton(
                                         onPressed: () {
                                           showDatePicker(
-                                              context: context,
-                                              initialDate: form.initDate,
-                                              firstDate:DateTime(2000),
-                                              lastDate: DateTime.now());
+                                                  context: context,
+                                                  initialDate: form.initDate,
+                                                  firstDate: DateTime(2000),
+                                                  lastDate: DateTime.now())
+                                              .then((value) {
+                                            if (value != null) {
+                                              form.initDate = value;
+                                              context
+                                                  .read<MovementFilterCubit>()
+                                                  .load();
+                                            }
+                                          });
                                         },
                                         icon: const Icon(
                                           Icons.calendar_month,
@@ -294,7 +307,21 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                                             style: Typo.bodyDark),
                                       )),
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showDatePicker(
+                                                  context: context,
+                                                  initialDate: form.endDate,
+                                                  firstDate: DateTime(2000),
+                                                  lastDate: DateTime.now())
+                                              .then((value) {
+                                            if (value != null) {
+                                              form.endDate = value;
+                                              context
+                                                  .read<MovementFilterCubit>()
+                                                  .load();
+                                            }
+                                          });
+                                        },
                                         icon: const Icon(
                                           Icons.calendar_month,
                                           color: ColorPalette.lightItems10,

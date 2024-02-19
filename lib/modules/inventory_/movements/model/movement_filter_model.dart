@@ -58,4 +58,14 @@ class MovementFilterModel {
     );
     return filter;
   }
+
+  static Map filterToMap(MovementFilterModel filter) {
+    final Map map  = {
+      MovementFilterTag.intDate: filter.initDate,
+      MovementFilterTag.endDate: filter.endDate,
+      MovementFilterTag.filterDate: filter.filterDate,
+      MovementFilterTag.warehouse: filter.warehouse,
+    };
+    return map;
+  }
 }

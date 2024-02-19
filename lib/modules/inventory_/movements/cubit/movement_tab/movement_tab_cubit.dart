@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
+import '../../model/movement_filter_model.dart';
 import '../../model/movement_response_model.dart';
 import '../../repository/movement_repo.dart';
 import 'movement_tab_state.dart';
@@ -15,15 +16,13 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       final int limit = TableViewFormModel.rows50;
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
-      movementResponse = await MovementRepo()
-          .fetchMovements(find: form.finder.text, rangeMax: limit - 1, rangeMin: 0);
+      movementResponse = await MovementRepo().fetchMovements(
+          find: form.finder.text, rangeMax: limit - 1, rangeMin: 0);
       countReg = movementResponse.count;
       form.currentPage = 1;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
-      form.filter = {
-        
-      };
+      form.filter = {};
       emit(LoadedMovementTabState(movementList: movementResponse.movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));
@@ -37,12 +36,17 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       final int rangeMax;
       final int limit = TableViewFormModel.rows50;
       MovementResponseModel movementResponse;
+      MovementFilterModel filter;
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
       rangeMin = (form.currentPage * limit) - limit;
       rangeMax = (form.currentPage * limit) - 1;
-      movementResponse = await MovementRepo().fetchMovements(find: form.finder.text,
-          rangeMax: rangeMax, rangeMin: rangeMin);
+      filter = MovementFilterModel.mapToFilter(form.filter);
+      movementResponse = await MovementRepo().fetchMovements(
+          find: form.finder.text,
+          rangeMax: rangeMax,
+          rangeMin: rangeMin,
+          filter: filter);
       countReg = movementResponse.count;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
