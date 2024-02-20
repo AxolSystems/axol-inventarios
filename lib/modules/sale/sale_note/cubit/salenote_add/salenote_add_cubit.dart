@@ -398,7 +398,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               document: form.id.toString(),
               quantity: stockRow,
               time: form.dateTime,
-              warehouse: form.warehouse.name,
+              warehouseName: form.warehouse.name,
               user: user.name,
               stock: stock,
               folio: -1 //Cambiar

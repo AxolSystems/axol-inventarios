@@ -139,7 +139,7 @@ class InventoryRepo {
     List<String> inventories = [];
 
     for (var element in movements) {
-      inventoryModel = await fetchRowByCode(element.code, element.warehouse);
+      inventoryModel = await fetchRowByCode(element.code, element.warehouseName);
       if (inventoryModel != null) {
         currentStock = inventoryModel.stock;
         if (element.conceptType == 0) {
@@ -156,12 +156,12 @@ class InventoryRepo {
         }
       } else {
         inventories = await WarehousesRepo().fetchNames();
-        if (inventories.contains(element.warehouse) &&
+        if (inventories.contains(element.warehouseName) &&
             element.conceptType == 0) {
           newInventoryRow = InventoryModel(
               code: element.code,
               id: const Uuid().v4(),
-              name: element.warehouse,
+              name: element.warehouseName,
               retailManager: '',
               stock: element.quantity);
           await insertInventoryRow(newInventoryRow);

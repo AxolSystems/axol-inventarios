@@ -13,9 +13,11 @@ class MovementRepo {
   static const String _code = 'code';
   static const String _description = 'description';
   static const String _document = 'document';
-  static const String _warehouse = 'warehouse';
+  static const String _warehouseName = 'warehouse_name';
+  static const String _warehouseId = 'warehouse_id';
   static const String _concept = 'concept';
   static const String _conceptType = 'concept_type';
+  static const String _conceptName = 'concept_name';
   static const String _quantity = 'quantity';
   static const String _user = 'user';
   static const String _stock = 'stock';
@@ -31,9 +33,11 @@ class MovementRepo {
         _code: element.code,
         _description: element.description,
         _document: element.document,
-        _warehouse: element.warehouse,
+        _warehouseName: element.warehouseName,
+        _warehouseId: element.warehouseId,
         _concept: element.concept,
         _conceptType: element.conceptType,
+        _conceptName: element.conceptName,
         _quantity: element.quantity,
         _user: element.user,
         _stock: element.stock,
@@ -102,7 +106,7 @@ class MovementRepo {
     }*/
 
     if (filter_.warehouse.name != '') {
-      match[_warehouse] = filter_.warehouse.name;
+      match[_warehouseName] = filter_.warehouse.name;
     }
     if (filter_.filterDate == true ) {
       initDateInt = filter_.initDate.millisecondsSinceEpoch;
@@ -128,12 +132,14 @@ class MovementRepo {
             code: element[_code].toString(),
             concept: element[_concept],
             conceptType: element[_conceptType],
+            conceptName: element[_conceptName] ?? '',
             description: element[_description].toString(),
             document: element[_document].toString(),
             quantity: element[_quantity],
             time:
                 DateTime.fromMillisecondsSinceEpoch(int.parse(element[_time])),
-            warehouse: element[_warehouse].toString(),
+            warehouseName: element[_warehouseName].toString(),
+            warehouseId: element[_warehouseId] ?? -1,
             user: element[_user].toString(),
             stock: element[_stock],
             folio: element[_folio] ?? -1);

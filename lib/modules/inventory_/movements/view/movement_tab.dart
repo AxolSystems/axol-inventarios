@@ -61,7 +61,7 @@ class MovementTabBuild extends StatelessWidget {
     for (var movement in movementList) {
       row = [];
       row.add(DataTableAxol.text(movement.folio.toString()));
-      row.add(DataTableAxol.text(movement.warehouse));
+      row.add(DataTableAxol.text(movement.warehouseName));
       row.add(DataTableAxol.text(movement.document));
       row.add(DataTableAxol.text(movement.code));
       row.add(DataTableAxol.text(movement.description));
@@ -122,6 +122,17 @@ class MovementTabBuild extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.filter_alt,
+                color: ColorPalette.darkItems,
+                size: 30,
+              ),
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                context.read<MovementTabCubit>().downloadPdf(movementList);
+              },
+              icon: const Icon(
+                Icons.picture_as_pdf,
                 color: ColorPalette.darkItems,
                 size: 30,
               ),

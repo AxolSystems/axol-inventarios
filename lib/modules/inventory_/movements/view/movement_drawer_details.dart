@@ -56,7 +56,7 @@ class MovementDrawerDetailsBuild extends StatelessWidget {
           DrawerBox.rowKeyValue('${MovementModel.lblStock}: ', movement.stock.toString()),
           DrawerBox.rowKeyValue('${MovementModel.lblTime}: ', FormatDate.dmy(movement.time)),
           DrawerBox.rowKeyValue('${MovementModel.lblUser}: ', movement.user),
-          DrawerBox.rowKeyValue('${MovementModel.lblWarehouse}: ', movement.warehouse),
+          DrawerBox.rowKeyValue('${MovementModel.lblWarehouse}: ', movement.warehouseName),
         ]);
   }
 }
