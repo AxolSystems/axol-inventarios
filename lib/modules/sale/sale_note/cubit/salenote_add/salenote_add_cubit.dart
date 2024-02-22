@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../models/inventory_model.dart';
+import '../../../../inventory_/inventory/model/inventory_move/concept_move_model.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../../inventory_/inventory/repository/inventory_repo.dart';
 import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
@@ -401,7 +402,9 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               warehouseName: form.warehouse.name,
               user: user.name,
               stock: stock,
-              folio: -1 //Cambiar
+              folio: -1, //Cambiar
+              conceptName: ConceptMoveModel.sale,
+              warehouseId: form.warehouse.id,
             );
             movementList.add(movement);
           } else {

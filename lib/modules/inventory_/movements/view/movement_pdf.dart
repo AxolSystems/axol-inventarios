@@ -20,19 +20,21 @@ class MovementPdf {
         pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.normal);
     Map<String, Map<String, List<MovementModel>>> movementMap = {};
     String code;
+    String warehouseText;
     //movementMap: {code: {warehouse: List<movment>, ...}, ...}
 
     for (var movement in movementList) {
       code = '${movement.code}/~${movement.description}';
+      warehouseText = '${movement.warehouseId}/~${movement.warehouseName}';
       if (movementMap.containsKey(code)) {
-        if (movementMap[code]!.containsKey(movement.warehouseName)) {
-          movementMap[code]![movement.warehouseName]!.add(movement);
+        if (movementMap[code]!.containsKey(warehouseText)) {
+          movementMap[code]![warehouseText]!.add(movement);
         } else {
-          movementMap[code]![movement.warehouseName] = [movement];
+          movementMap[code]![warehouseText] = [movement];
         }
       } else {
         movementMap[code] = {
-          movement.warehouseName: [movement]
+          warehouseText: [movement]
         };
       }
     }
@@ -151,11 +153,11 @@ class MovementPdf {
             widgetList.add(pw.Row(children: [
               pw.Expanded(
                 flex: 1,
-                child: pw.Text('Almacén: num', style: bodyText),
+                child: pw.Text('Almacén: ${warehouseKey.split('/~').first}', style: bodyText),
               ),
               pw.Expanded(
                 flex: 4,
-                child: pw.Text(warehouseKey, style: bodyText),
+                child: pw.Text(warehouseKey.split('/~').last, style: bodyText),
               ),
             ]));
             for (var movement in movementMap[codeKey]![warehouseKey]!) {

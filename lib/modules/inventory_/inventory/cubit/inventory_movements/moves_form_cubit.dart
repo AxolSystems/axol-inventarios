@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/data_state.dart';
@@ -38,7 +39,7 @@ class MovesFormCubit extends Cubit<InventoryMoveModel>{
     emit(form);
   }
 
-  void setInvTransfer(String setInvTransfer) {
+  void setInvTransfer(WarehouseModel setInvTransfer) {
     InventoryMoveModel form = state;
     form.invTransfer = setInvTransfer;
     emit(form);

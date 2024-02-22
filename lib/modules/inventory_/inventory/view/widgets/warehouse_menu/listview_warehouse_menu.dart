@@ -60,6 +60,7 @@ class ListviewWarehouseMenu extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => WarehouseView(
                                   warehouse: elementList,
+                                  warehouseList: listData,
                                 )));
                   } else if (mode == 1) {
                     //Edit mode

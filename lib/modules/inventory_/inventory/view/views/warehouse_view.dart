@@ -17,8 +17,10 @@ import 'inventory_movement_view.dart';
 
 class WarehouseView extends StatelessWidget {
   final WarehouseModel warehouse;
+  final List<WarehouseModel> warehouseList;
   //final List<UserModel> users;
-  const WarehouseView({super.key, required this.warehouse});
+  const WarehouseView(
+      {super.key, required this.warehouse, required this.warehouseList});
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +96,7 @@ class WarehouseView extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => InventoryMovementView(
                                       warehouse: warehouse,
+                                      warehouseList: warehouseList,
                                     )));
                       },
                     )

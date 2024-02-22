@@ -13,10 +13,10 @@ import 'listview_inventory_movement.dart';
 
 class PageInvMov extends StatelessWidget {
   final WarehouseModel warehouse;
+  final List<WarehouseModel> warehouseList;
 
   const PageInvMov(
-      {super.key,
-      required this.warehouse});
+      {super.key, required this.warehouse, required this.warehouseList});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +40,7 @@ class PageInvMov extends StatelessWidget {
         Expanded(
           child: ListviewInventoryMovement(
             warehouse: warehouse,
+            warehouseList: warehouseList,
           ),
         ),
         Toolbar(

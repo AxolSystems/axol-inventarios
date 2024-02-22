@@ -3,6 +3,8 @@ class ConceptMoveModel {
   final int type;
   final String text;
 
+  static String get sale => 'Venta';
+
   const ConceptMoveModel({
     required this.text,
     required this.id,

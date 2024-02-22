@@ -19,7 +19,7 @@ class PdfMovementsFormats {
         pw.Expanded(
           flex: 1,
           child: pw.Center(
-            child: pw.Text(element.warehouse),
+            child: pw.Text(element.warehouseName),
           ),
         ),
         pw.Expanded(
@@ -139,7 +139,7 @@ class PdfMovementsFormats {
         pw.Expanded(
           flex: 1,
           child: pw.Center(
-            child: pw.Text(element.warehouse),
+            child: pw.Text(element.warehouseName),
           ),
         ),
         pw.Expanded(

@@ -20,8 +20,9 @@ import 'package:shimmer/shimmer.dart';
 
 class ListviewInventoryMovement extends StatelessWidget {
   final WarehouseModel warehouse;
+  final List<WarehouseModel> warehouseList;
 
-  const ListviewInventoryMovement({super.key, required this.warehouse});
+  const ListviewInventoryMovement({super.key, required this.warehouse, required this.warehouseList});
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +103,12 @@ class ListviewInventoryMovement extends StatelessWidget {
                                       value: e, child: Text(e));
                                 }).toList(),
                                 onChanged: (value) {
+                                  final warehouse2 = warehouseList.where((x) => x.name == value).first;
                                   context.read<TransferCubit>().change(true,
                                       state.inventory1, value!, state.concept);
                                   context
                                       .read<InventoryMovesCubit>()
-                                      .invTransfer(form, value);
+                                      .invTransfer(form, warehouse2);
                                 },
                               )),
                           const SizedBox(width: 8),

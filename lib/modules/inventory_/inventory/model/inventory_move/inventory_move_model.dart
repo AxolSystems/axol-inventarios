@@ -1,4 +1,5 @@
 import '../../../../../utilities/data_state.dart';
+import '../warehouse_model.dart';
 import 'concept_move_model.dart';
 import 'inventory_move_row_model.dart';
 
@@ -8,7 +9,7 @@ class InventoryMoveModel {
   ConceptMoveModel concept;
   String document;
   DateTime date;
-  String invTransfer;
+  WarehouseModel invTransfer;
   Map<String, DataState> states;
 
   InventoryMoveModel({
@@ -53,7 +54,7 @@ class InventoryMoveModel {
         date = DateTime.now(),
         document = '',
         concepts = [],
-        invTransfer = '',
+        invTransfer = WarehouseModel.empty(),
         states = {
           _moveList: DataState(state: DataState.initial),
           _concept: DataState(state: DataState.initial),

@@ -15,8 +15,10 @@ import 'warehouse_view.dart';
 
 class InventoryMovementView extends StatelessWidget {
   final WarehouseModel warehouse;
+  final List<WarehouseModel> warehouseList;
 
-  const InventoryMovementView({super.key, required this.warehouse});
+  const InventoryMovementView(
+      {super.key, required this.warehouse, required this.warehouseList});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class InventoryMovementView extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => WarehouseView(
                                 warehouse: warehouse,
+                                warehouseList: warehouseList,
                               )));
                 } else if (state is SaveErrorState) {
                   showDialog(
@@ -85,13 +88,22 @@ class InventoryMovementView extends StatelessWidget {
               builder: (context, state) {
                 if (state is LoadedState) {
                   context.read<MovesFormCubit>().setForm(state.form);
-                  return PageInvMov(warehouse: warehouse);
+                  return PageInvMov(
+                    warehouse: warehouse,
+                    warehouseList: warehouseList,
+                  );
                 } else if (state is SaveLoadingState) {
                   return const LinearProgressIndicator();
                 } else if (state is SaveErrorState) {
-                  return PageInvMov(warehouse: warehouse);
+                  return PageInvMov(
+                    warehouse: warehouse,
+                    warehouseList: warehouseList,
+                  );
                 } else {
-                  return PageInvMov(warehouse: warehouse);
+                  return PageInvMov(
+                    warehouse: warehouse,
+                    warehouseList: warehouseList,
+                  );
                 }
               },
             ),

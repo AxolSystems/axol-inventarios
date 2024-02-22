@@ -221,7 +221,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
           inventoryMap[row.code]!.stock = stock;
         }
         regMove = MovementModel.fromRowOfDoc(
-            upForm, row, warehouse.name, user.name, stock);
+            upForm, row, warehouse, user.name, stock);
         regMoveList.add(regMove);
         inventoryList = inventoryMap.values.toList();
       }
@@ -232,7 +232,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
         inventoryMap = {};
         for (var row in upForm.moveList) {
           inventoryRow = await InventoryRepo()
-              .fetchRowByCode(row.code, upForm.invTransfer);
+              .fetchRowByCode(row.code, upForm.invTransfer.name);
           if (inventoryRow != null) {
             inventoryMap[row.code] = inventoryRow;
           } else {
@@ -265,7 +265,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
   }
 
   Future<void> invTransfer(
-      InventoryMoveModel current, String inventory2) async {
+      InventoryMoveModel current, WarehouseModel inventory2) async {
     InventoryMoveModel newElement = InventoryMoveModel(
         moveList: current.moveList,
         concept: current.concept,
@@ -296,10 +296,12 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
         document: moveDoc.document,
         quantity: row.quantity,
         time: DateTime.now(),
-        warehouse: warehouse.name,
+        warehouseName: warehouse.name,
         user: user.name,
         stock: row.quantity,
         folio: -1, //Cambiar
+        conceptName: moveDoc.concept.text,
+        warehouseId: warehouse.id
       );
       regList.add(regMove);
     }
