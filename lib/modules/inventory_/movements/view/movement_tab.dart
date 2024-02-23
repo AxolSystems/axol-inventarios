@@ -13,6 +13,7 @@ import '../cubit/movement_tab/movement_tab_cubit.dart';
 import '../cubit/movement_tab/movement_tab_state.dart';
 import '../model/movement_filter_model.dart';
 import '../model/movement_model.dart';
+import '../repository/movement_files_repo.dart';
 
 class MovementTab extends StatelessWidget {
   const MovementTab({super.key});
@@ -133,6 +134,17 @@ class MovementTabBuild extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.picture_as_pdf,
+                color: ColorPalette.darkItems,
+                size: 30,
+              ),
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                context.read<MovementTabCubit>().downloadCsv(movementList);
+              },
+              icon: const Icon(
+                Icons.backup_table_rounded,
                 color: ColorPalette.darkItems,
                 size: 30,
               ),

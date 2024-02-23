@@ -4,7 +4,7 @@ import '../../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../model/movement_filter_model.dart';
 import '../../model/movement_model.dart';
 import '../../model/movement_response_model.dart';
-import '../../repository/movement_pdf_repo.dart';
+import '../../repository/movement_files_repo.dart';
 import '../../repository/movement_repo.dart';
 import '../../view/movement_pdf.dart';
 import 'movement_tab_state.dart';
@@ -64,6 +64,17 @@ class MovementTabCubit extends Cubit<MovementTabState> {
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
       await MovementPdfRepo.movementPdfSave(movementList);
+      emit(LoadedMovementTabState(movementList: movementList));
+    } catch (e) {
+      emit(ErrorMovementTabState(error: e.toString()));
+    }
+  }
+
+  Future<void> downloadCsv(List<MovementModel> movementList) async {
+    try {
+      emit(InitialMovementTabState());
+      emit(LoadingMovementTabState());
+      await MovementCsv.movementCsvSave(movementList);
       emit(LoadedMovementTabState(movementList: movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));
