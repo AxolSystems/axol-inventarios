@@ -56,7 +56,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
 
     //Sí el producto existe, lo agrega a la lista de movimientos que está por
     // emitir.
-    if (productDB != null){
+    if (productDB != null) {
       upMoveRow.description = productDB.description;
       upMoveRow.weightUnit = productDB.weight!;
       upMoveRow.weightTotal = moveRow.quantity * moveRow.weightUnit;
@@ -206,6 +206,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
       //Crea un registro de movimiento por cada fila de la lista actualizada.
       upForm.moveList = upMoveList;
       user = await LocalUser().getLocalUser();
+      final folio = await MovementRepo().fetchAvailableFolio();
       for (var row in upForm.moveList) {
         if (upForm.concept.type == 0) {
           stock = inventoryMap[row.code]!.stock + row.quantity;
@@ -221,7 +222,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
           inventoryMap[row.code]!.stock = stock;
         }
         regMove = MovementModel.fromRowOfDoc(
-            upForm, row, warehouse, user.name, stock);
+            upForm, row, warehouse, user.name, stock, folio);
         regMoveList.add(regMove);
         inventoryList = inventoryMap.values.toList();
       }
@@ -243,7 +244,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
         for (var row in upForm.moveList) {
           stock = inventoryMap[row.code]!.stock + row.quantity;
           regMove = MovementModel.transferDestiny(
-              upForm, row, upForm.invTransfer, user.name, stock);
+              upForm, row, upForm.invTransfer, user.name, stock, folio);
           regMoveList.add(regMove);
           inventoryListDestiny = inventoryMap.values.toList();
         }
@@ -288,21 +289,20 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
     MovementModel regMove;
     for (var row in moveDoc.moveList) {
       regMove = MovementModel(
-        id: const Uuid().v4(),
-        code: row.code,
-        concept: moveDoc.concept.id,
-        conceptType: moveDoc.concept.type,
-        description: row.description,
-        document: moveDoc.document,
-        quantity: row.quantity,
-        time: DateTime.now(),
-        warehouseName: warehouse.name,
-        user: user.name,
-        stock: row.quantity,
-        folio: -1, //Cambiar
-        conceptName: moveDoc.concept.text,
-        warehouseId: warehouse.id
-      );
+          id: const Uuid().v4(),
+          code: row.code,
+          concept: moveDoc.concept.id,
+          conceptType: moveDoc.concept.type,
+          description: row.description,
+          document: moveDoc.document,
+          quantity: row.quantity,
+          time: DateTime.now(),
+          warehouseName: warehouse.name,
+          user: user.name,
+          stock: row.quantity,
+          folio: -1, //Cambiar
+          conceptName: moveDoc.concept.text,
+          warehouseId: warehouse.id);
       regList.add(regMove);
     }
     return regList;

@@ -68,7 +68,7 @@ class MovementModel {
         folio = -1;
 
   MovementModel.fromRowOfDoc(InventoryMoveModel doc, InventoryMoveRowModel row,
-      WarehouseModel warehouse, String userName, double newStock)
+      WarehouseModel warehouse, String userName, double newStock, int folioAvailable)
       : id = const Uuid().v4(),
         code = row.code,
         concept = doc.concept.id,
@@ -82,14 +82,14 @@ class MovementModel {
         warehouseId = warehouse.id,
         user = userName,
         stock = newStock,
-        folio = 0; //Modificar
+        folio = folioAvailable; //Modificar
 
   MovementModel.transferDestiny(
       InventoryMoveModel doc,
       InventoryMoveRowModel row,
       WarehouseModel warehouseDestiny,
       String userName,
-      double newStock)
+      double newStock, int folioAvailable)
       : id = const Uuid().v4(),
         code = row.code,
         concept = 7,
@@ -103,5 +103,5 @@ class MovementModel {
         warehouseId = warehouseDestiny.id,
         user = userName,
         stock = newStock,
-        folio = 0; //Modificar
+        folio = folioAvailable; //Modificar
 }

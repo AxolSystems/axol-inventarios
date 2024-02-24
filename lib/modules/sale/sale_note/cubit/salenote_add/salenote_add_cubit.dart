@@ -390,6 +390,8 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
             inventoryList.add(inventory);
 
             final user = await LocalUser().getLocalUser();
+            final int folio = await MovementRepo().fetchAvailableFolio();
+
             movement = MovementModel(
               id: const Uuid().v4(),
               code: row.product.code,
@@ -402,7 +404,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               warehouseName: form.warehouse.name,
               user: user.name,
               stock: stock,
-              folio: -1, //Cambiar
+              folio: folio,
               conceptName: ConceptMoveModel.sale,
               warehouseId: form.warehouse.id,
             );

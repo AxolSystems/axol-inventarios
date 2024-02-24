@@ -54,7 +54,6 @@ class MovementRepo {
     final MovementResponseModel movementResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     MovementModel move;
-    //int filterLimit = 50;
     int initDateInt = 0;
     int endDateInt = 32503708800000;
     Map<String, dynamic> match = {};
@@ -62,48 +61,6 @@ class MovementRepo {
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
     MovementFilterModel filter_ = filter ?? MovementFilterModel.empty();
-
-    /*if (moveFilter_.warehouse.id > -1) {
-      filters[_warehouse] = moveFilter_.warehouse.name;
-      //print(filters[_warehouse].warehouse as MovementFilterModel);
-    }*/
-    /*if (moveFilter_.date[0]!.year != 0) {
-      filterStartDate = moveFilter_.date[0]!.millisecondsSinceEpoch;
-      filterEndDate = moveFilter_.date[1]!.millisecondsSinceEpoch;
-    }*/
-    /*if (moveFilter_.concept.id != -1) {
-      filters[_concept] = moveFilter_.concept.id;
-    }
-    if (moveFilter_.user.id != -1) {
-      filters[_user] = moveFilter_.user.name;
-    }
-    if (moveFilter_.currentLimit.text != '50') {
-      filterLimit = int.parse(moveFilter_.currentLimit.text);
-    }*/
-    /*if (filter == null || filter == '') {
-    } else {
-      if (mode == 1) {
-        postgrestResponse = await _supabase
-            .from(_table)
-            .select<PostgrestResponse<List<Map<String, dynamic>>>>()
-            .or('$_code.ilike.%$filter%,$_description.ilike.%$filter%,$_document.ilike.%$filter%')
-            .match(filters)
-            .lte(_time, filterEndDate)
-            .gte(_time, filterStartDate)
-            .order(_time, ascending: true)
-            .limit(filterLimit);
-      } else {
-        postgrestResponse = await _supabase
-            .from(_table)
-            .select<PostgrestResponse<List<Map<String, dynamic>>>>()
-            .or('$_code.ilike.%$filter%,$_description.ilike.%$filter%,$_document.ilike.%$filter%')
-            .match(filters)
-            .lte(_time, filterEndDate)
-            .gte(_time, filterStartDate)
-            .order(_time, ascending: true)
-            .limit(filterLimit);
-      }
-    }*/
 
     if (filter_.warehouse.name != '') {
       match[_warehouseName] = filter_.warehouse.name;
@@ -149,5 +106,26 @@ class MovementRepo {
     movementResponse = MovementResponseModel(
         movementList: movements, count: postgrestResponse.count ?? 0);
     return movementResponse;
+  }
+
+  Future<int> fetchAvailableFolio() async {
+    List<Map<String, dynamic>> movementDB = [];
+    List<int> folioList = [];
+    int newFolio = -1;
+    movementDB =
+        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_folio);
+    for (var element in movementDB) {
+      folioList.add(int.tryParse(element[_folio].toString()) ?? -1);
+    }
+    folioList.sort((a, b) => a.compareTo(b));
+    for (int i = 0; i <= folioList.length; i++) {
+      if (folioList.contains(i) == false) {
+        folioList.add(i);
+        newFolio = i;
+        i = folioList.length + 1;
+      }
+    }
+    print(newFolio);
+    return newFolio;
   }
 }
