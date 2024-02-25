@@ -14,6 +14,7 @@ import '../cubit/movement_tab/movement_tab_state.dart';
 import '../model/movement_filter_model.dart';
 import '../model/movement_model.dart';
 import '../repository/movement_files_repo.dart';
+import '../repository/movement_repo.dart';
 
 class MovementTab extends StatelessWidget {
   const MovementTab({super.key});
@@ -113,7 +114,9 @@ class MovementTabBuild extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => MovementDrawerFilter(filter: form.filter,),
+                  builder: (context) => MovementDrawerFilter(
+                    filter: form.filter,
+                  ),
                 ).then((value) {
                   if (value is MovementFilterModel) {
                     form.filter = MovementFilterModel.filterToMap(value);

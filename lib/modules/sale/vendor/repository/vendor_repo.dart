@@ -68,19 +68,13 @@ class VendorRepo {
 
   Future<int> fetchAvailableId() async {
     List<Map<String, dynamic>> vendorIdDB = [];
-    List<int> listId = [];
     int newId = -1;
     vendorIdDB =
-        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id);
-    for (var element in vendorIdDB) {
-      listId.add(int.parse(element[_id].toString()));
-    }
-    listId.sort((a, b) => a.compareTo(b));
-    for (int i = 0; i <= listId.length; i++) {
-      if (listId.contains(i) == false) {
-        listId.add(i);
-        newId = i;
-        i = listId.length + 1;
+        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id).order(_id).limit(1);
+        if (vendorIdDB.isNotEmpty) {
+      newId = int.tryParse(vendorIdDB.first[_id].toString()) ?? -1;
+      if (newId > -1) {
+        newId++;
       }
     }
     return newId;

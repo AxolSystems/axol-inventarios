@@ -102,19 +102,13 @@ class SaleReferralRepo {
 
   Future<int> fetchAvailableId() async {
     List<Map<String, dynamic>> saleNoteIdDB = [];
-    List<int> listId = [];
     int newId = -1;
     saleNoteIdDB =
-        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id);
-    for (var element in saleNoteIdDB) {
-      listId.add(int.parse(element[_id].toString()));
-    }
-    listId.sort((a, b) => a.compareTo(b));
-    for (int i = 0; i <= listId.length; i++) {
-      if (listId.contains(i) == false) {
-        listId.add(i);
-        newId = i;
-        i = listId.length + 1;
+        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id).order(_id).limit(1);
+    if (saleNoteIdDB.isNotEmpty) {
+      newId = int.tryParse(saleNoteIdDB.first[_id].toString()) ?? -1;
+      if (newId > -1) {
+        newId++;
       }
     }
     return newId;

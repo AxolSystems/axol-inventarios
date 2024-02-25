@@ -106,19 +106,18 @@ class CustomerRepo {
 
   Future<int> fetchAvailableId() async {
     List<Map<String, dynamic>> customerIdDB = [];
-    List<int> listId = [];
     int newId = -1;
-    customerIdDB =
-        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id);
-    for (var element in customerIdDB) {
-      listId.add(int.parse(element[_id].toString()));
-    }
-    listId.sort((a, b) => a.compareTo(b));
-    for (int i = 0; i <= listId.length; i++) {
-      if (listId.contains(i) == false) {
-        listId.add(i);
-        newId = i;
-        i = listId.length + 1;
+
+    customerIdDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>(_id)
+        .order(_id, ascending: false)
+        .limit(1);
+
+    if (customerIdDB.isNotEmpty) {
+      newId = int.tryParse(customerIdDB.first[_id].toString()) ?? -1;
+      if (newId > -1) {
+        newId++;
       }
     }
     return newId;

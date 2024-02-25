@@ -391,6 +391,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
 
             final user = await LocalUser().getLocalUser();
             final int folio = await MovementRepo().fetchAvailableFolio();
+            print(folio);
 
             movement = MovementModel(
               id: const Uuid().v4(),

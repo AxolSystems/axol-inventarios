@@ -41,6 +41,7 @@ class MovementRepo {
         _quantity: element.quantity,
         _user: element.user,
         _stock: element.stock,
+        _folio: element.folio,
       });
     }
   }
@@ -65,7 +66,7 @@ class MovementRepo {
     if (filter_.warehouse.name != '') {
       match[_warehouseName] = filter_.warehouse.name;
     }
-    if (filter_.filterDate == true ) {
+    if (filter_.filterDate == true) {
       initDateInt = filter_.initDate.millisecondsSinceEpoch;
       endDateInt = filter_.endDate.millisecondsSinceEpoch;
     }
@@ -110,22 +111,20 @@ class MovementRepo {
 
   Future<int> fetchAvailableFolio() async {
     List<Map<String, dynamic>> movementDB = [];
-    List<int> folioList = [];
+    //List<int> folioList = [];
     int newFolio = -1;
-    movementDB =
-        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_folio);
-    for (var element in movementDB) {
-      folioList.add(int.tryParse(element[_folio].toString()) ?? -1);
+    movementDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>(_folio)
+        .order(_folio, ascending: false)
+        .limit(1);
+
+    if (movementDB.isNotEmpty) {
+      newFolio = int.tryParse(movementDB.first[_folio].toString()) ?? -1;
+      if (newFolio > -1) {
+        newFolio++;
+      } 
     }
-    folioList.sort((a, b) => a.compareTo(b));
-    for (int i = 0; i <= folioList.length; i++) {
-      if (folioList.contains(i) == false) {
-        folioList.add(i);
-        newFolio = i;
-        i = folioList.length + 1;
-      }
-    }
-    print(newFolio);
     return newFolio;
   }
 }
