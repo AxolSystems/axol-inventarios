@@ -13,8 +13,6 @@ import '../cubit/movement_tab/movement_tab_cubit.dart';
 import '../cubit/movement_tab/movement_tab_state.dart';
 import '../model/movement_filter_model.dart';
 import '../model/movement_model.dart';
-import '../repository/movement_files_repo.dart';
-import '../repository/movement_repo.dart';
 
 class MovementTab extends StatelessWidget {
   const MovementTab({super.key});

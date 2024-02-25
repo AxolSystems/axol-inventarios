@@ -12,6 +12,7 @@ import '../../../../user/view/views/home_view.dart';
 import '../../../product/view/product_tab.dart';
 import '../../cubit/warehouses_load/warehouses_load_cubit.dart';
 import '../controllers/listview_whmenu_controller.dart';
+import '../warehouse_tab.dart';
 
 class InventoryView extends StatelessWidget {
   const InventoryView({super.key});
@@ -81,7 +82,7 @@ class InventoryView extends StatelessWidget {
                         ),
                         Expanded(
                             child: TabBarView(children: [
-                          ListviewWHMenuController(),
+                          WarehouseTab(),
                           MovementTab(),
                           ProductTab(),
                         ]))

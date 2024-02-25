@@ -6,7 +6,6 @@ import '../../model/movement_model.dart';
 import '../../model/movement_response_model.dart';
 import '../../repository/movement_files_repo.dart';
 import '../../repository/movement_repo.dart';
-import '../../view/movement_pdf.dart';
 import 'movement_tab_state.dart';
 
 class MovementTabCubit extends Cubit<MovementTabState> {
