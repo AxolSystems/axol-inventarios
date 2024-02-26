@@ -4,7 +4,7 @@ import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../../models/inventory_model.dart';
+import '../../../../inventory_/inventory/model/inventory_model.dart';
 import '../../../../inventory_/inventory/model/inventory_move/concept_move_model.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../../inventory_/inventory/repository/inventory_repo.dart';

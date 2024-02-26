@@ -1,7 +1,7 @@
 import 'package:axol_inventarios/modules/sale/sale_note/repository/sale_referral_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../models/inventory_model.dart';
+import '../../../../inventory_/inventory/model/inventory_model.dart';
 import '../../../../inventory_/inventory/repository/inventory_repo.dart';
 import '../../model/sale_note_model.dart';
 import '../../repository/sale_note_repo.dart';

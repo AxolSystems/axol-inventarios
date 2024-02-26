@@ -8,6 +8,7 @@ import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../cubit/warehouse_tab/warehouse_tab_cubit.dart';
 import '../model/warehouse_model.dart';
+import 'inventory_list.dart';
 
 class WarehouseTab extends StatelessWidget {
   const WarehouseTab({super.key});
@@ -74,6 +75,14 @@ class WarehouseTabBuild extends StatelessWidget {
                   ),
                 ),
                 child: ButtonRowTable(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const InventoryList(),
+                      ),
+                    );
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

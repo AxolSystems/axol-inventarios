@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import '../modules/inventory_/inventory/model/warehouse_model.dart';
+import 'warehouse_model.dart';
 
 class InventoryModel {
   String id;

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../models/inventory_model.dart';
+import '../../model/inventory_model.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../../product/model/product_model.dart';
 import '../../repository/inventory_repo.dart';

@@ -3,7 +3,7 @@ import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_mo
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../../models/inventory_model.dart';
+import '../../model/inventory_model.dart';
 import '../../../../../utilities/data_state.dart';
 import '../../../product/model/product_model.dart';
 import '../../model/inventory_move/inventory_move_model.dart';

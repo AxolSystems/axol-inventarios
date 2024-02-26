@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../models/inventory_model.dart';
+import '../model/inventory_model.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../movements/model/movement_model.dart';
 import '../../product/repository/product_repo.dart';
