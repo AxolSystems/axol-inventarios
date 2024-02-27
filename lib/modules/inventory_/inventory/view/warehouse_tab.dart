@@ -79,7 +79,7 @@ class WarehouseTabBuild extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) => const InventoryList(),
+                        builder: (BuildContext context) => InventoryList(warehouse: warehouse),
                       ),
                     );
                   },
