@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/inventory_row_model.dart';
+import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/table_view/tableview_form.dart';
+import '../../../../utilities/widgets/toolbar.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
 
@@ -45,11 +48,11 @@ class InventoryListBuild extends StatelessWidget {
       bloc: context.read<InventoryListCubit>()..initLoad(warehouse),
       builder: (context, state) {
         if (state is LoadingInventoryListState) {
-          return inventoryList(context, true, []);
+          return inventoryList(context, true, [], form);
         } else if (state is LoadedInventoryListState) {
-          return inventoryList(context, false, state.inventoryRowList);
+          return inventoryList(context, false, state.inventoryRowList, form);
         } else {
-          return inventoryList(context, false, []);
+          return inventoryList(context, false, [], form);
         }
       },
       listener: (context, state) {},
@@ -57,7 +60,12 @@ class InventoryListBuild extends StatelessWidget {
   }
 
   Widget inventoryList(BuildContext context, bool isLoading,
-      List<InventoryRowModel> inventoryRowList) {
+      List<InventoryRowModel> inventoryRowList, TableViewFormModel form) {
+    TextEditingController textController = TextEditingController.fromValue(
+        TextEditingValue(
+            text: form.finder.text,
+            selection: TextSelection.collapsed(offset: form.finder.position)));
+
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol(
@@ -75,6 +83,50 @@ class InventoryListBuild extends StatelessWidget {
             ),
             child: Column(
               children: [
+                VerticalToolBar(children: [
+                  Expanded(
+                      child: FinderBar(
+                    padding: const EdgeInsets.only(left: 12),
+                    textController: textController,
+                    txtForm: form.finder,
+                    enabled: !isLoading,
+                    autoFocus: true,
+                    isTxtExpand: true,
+                    onSubmitted: (value) {
+                      context.read<InventoryListCubit>().load(warehouse, value);
+                    },
+                    onChanged: (value) {
+                      form.finder = TextfieldModel(
+                        text: value,
+                        position: textController.selection.base.offset,
+                      );
+                    },
+                    onPressed: () {
+                      if (isLoading == false) {
+                        form.finder = TextfieldModel.empty();
+                        context
+                            .read<InventoryListCubit>()
+                            .load(warehouse, form.finder.text);
+                      }
+                    },
+                  )),
+                  const VerticalDivider(
+                    thickness: 1,
+                    width: 1,
+                    color: ColorPalette.lightItems10,
+                    indent: 4,
+                    endIndent: 4,
+                  ),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.add_outlined,
+                      color: ColorPalette.darkItems,
+                      size: 30,
+                    ),
+                  ),
+                ]),
                 HeaderTable(
                   dataList: [
                     DataTableAxol.text('Clave'),
@@ -91,7 +143,6 @@ class InventoryListBuild extends StatelessWidget {
                   itemCount: inventoryRowList.length,
                   itemBuilder: (context, index) {
                     final inventoryRow = inventoryRowList[index];
-
                     return Container(
                         decoration: const BoxDecoration(
                           border: Border(
