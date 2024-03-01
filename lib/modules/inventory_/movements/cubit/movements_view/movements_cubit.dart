@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/textfield_model.dart';
 import '../../model/movement_filter_model.dart';
-import '../../model/movement_model.dart';
 import '../../model/movement_response_model.dart';
 import 'movements_state.dart';
 

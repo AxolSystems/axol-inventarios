@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../models/data_response_model.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/inventory_repo.dart';
@@ -13,8 +14,11 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       emit(InitialInventoryListState());
       emit(LoadingInventoryListState());
     
+      DataResponseModel dataResponse;
       List<InventoryRowModel> inventoryRowList;
-      inventoryRowList = await InventoryRepo().getInventoryList(warehouse.name, '');
+
+      dataResponse = await InventoryRepo().fetchInventoryList(warehouse.name, '');
+      inventoryRowList = dataResponse as List<InventoryRowModel>;
 
       emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
     } catch (e) {
@@ -27,8 +31,11 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       emit(InitialInventoryListState());
       emit(LoadingInventoryListState());
 
+      DataResponseModel dataResponse;
       List<InventoryRowModel> inventoryRowList;
-      inventoryRowList = await InventoryRepo().getInventoryList(warehouse.name, find);
+
+      dataResponse = await InventoryRepo().fetchInventoryList(warehouse.name, find);
+      inventoryRowList = dataResponse as List<InventoryRowModel>;
 
       emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
     } catch (e) {

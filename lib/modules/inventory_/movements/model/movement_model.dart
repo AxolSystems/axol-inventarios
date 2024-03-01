@@ -2,7 +2,6 @@ import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_mo
 import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../inventory/model/inventory_move/concept_move_model.dart';
 import '../../inventory/model/inventory_move/inventory_move_model.dart';
 
 class MovementModel {

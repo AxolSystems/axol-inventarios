@@ -3,10 +3,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../models/data_response_model.dart';
 import '../model/inventory_model.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../movements/model/movement_model.dart';
 import '../../product/repository/product_repo.dart';
+import '../view/inventory_list.dart';
 import 'warehouses_repo.dart';
 
 class InventoryRepo {
@@ -81,6 +83,61 @@ class InventoryRepo {
     return finalInventoryList;
   }
 
+  Future<DataResponseModel> fetchInventoryList(
+    String find,
+    String inventoryName, {
+    int? rangeMin,
+    int? rangeMax,
+  }) async {
+    final int rangeMin_ = rangeMin ?? 0;
+    final int rangeMax_ = rangeMax ?? 0;
+    final DataResponseModel dataResponse;
+    String filters = '';
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    List<Map<String, dynamic>> inventoryListDB = [];
+    InventoryModel inventory;
+    InventoryRowModel inventoryRow;
+    List<InventoryRowModel> inventoryRowList = [];
+    ProductModel product;
+
+    if (find != '') {
+      filters =
+          '$_code.ilike.%$find%,$_description.ilike.%$find%,and($_name.eq.$inventoryName)';
+    }
+
+    postgrestResponse = await _supabase
+        .from(_table)
+        .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+            '*', const FetchOptions(count: CountOption.exact))
+        .or(filters)
+        .order(_code, ascending: true)
+        .range(rangeMin_, rangeMax_);
+
+    inventoryListDB = postgrestResponse.data ?? [];
+
+    if (inventoryListDB.isNotEmpty) {
+      for (var element in inventoryListDB) {
+        inventory = InventoryModel(
+          code: element[_code] ?? '',
+          id: element[_id].toString(),
+          name: element[_name] ?? '',
+          retailManager: element[_manager] ?? '',
+          stock: element[_stock] ?? 0,
+        );
+        product = await ProductRepo().fetchProduct(inventory.code) ?? ProductModel.empty();
+        inventoryRow = InventoryRowModel(product: product, stock: inventory.stock);
+        inventoryRowList.add(inventoryRow);
+      }
+    }
+
+    dataResponse = DataResponseModel(
+      dataList: inventoryRowList,
+      count: postgrestResponse.count ?? 0,
+    );
+
+    return dataResponse;
+  }
+
   Future<List<Map<String, dynamic>>> fetchInventory(
       String? inventoryName) async {
     final String name;
@@ -139,7 +196,8 @@ class InventoryRepo {
     List<String> inventories = [];
 
     for (var element in movements) {
-      inventoryModel = await fetchRowByCode(element.code, element.warehouseName);
+      inventoryModel =
+          await fetchRowByCode(element.code, element.warehouseName);
       if (inventoryModel != null) {
         currentStock = inventoryModel.stock;
         if (element.conceptType == 0) {

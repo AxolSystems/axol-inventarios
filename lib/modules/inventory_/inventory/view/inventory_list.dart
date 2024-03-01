@@ -12,6 +12,8 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../../product/cubit/product_details/product_details_cubit.dart';
+import '../../product/view/product_drawer_details.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
 
@@ -150,6 +152,9 @@ class InventoryListBuild extends StatelessWidget {
                                   BorderSide(color: ColorPalette.darkItems)),
                         ),
                         child: ButtonRowTable(
+                          onPressed: () {
+                            showDialog(context: context, builder: (context) => ProductDrawerDetails(product: inventoryRow.product,),);
+                          },
                             child: Row(
                           children: [
                             Expanded(
