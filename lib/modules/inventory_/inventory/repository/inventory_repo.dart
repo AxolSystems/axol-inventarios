@@ -99,22 +99,23 @@ class InventoryRepo {
     InventoryRowModel inventoryRow;
     List<InventoryRowModel> inventoryRowList = [];
     ProductModel product;
-
+    
     if (find != '') {
       filters =
           '$_code.ilike.%$find%,$_description.ilike.%$find%,and($_name.eq.$inventoryName)';
+    } else {
+      filters = '$_name.eq.$inventoryName';
     }
-
     postgrestResponse = await _supabase
         .from(_table)
         .select<PostgrestResponse<List<Map<String, dynamic>>>>(
             '*', const FetchOptions(count: CountOption.exact))
         .or(filters)
+        //.eq(_name, inventoryName)
         .order(_code, ascending: true)
         .range(rangeMin_, rangeMax_);
 
     inventoryListDB = postgrestResponse.data ?? [];
-
     if (inventoryListDB.isNotEmpty) {
       for (var element in inventoryListDB) {
         inventory = InventoryModel(

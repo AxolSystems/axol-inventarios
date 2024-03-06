@@ -12,7 +12,6 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../../../utilities/widgets/toolbar.dart';
-import '../../product/cubit/product_details/product_details_cubit.dart';
 import '../../product/view/product_drawer_details.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
@@ -47,7 +46,7 @@ class InventoryListBuild extends StatelessWidget {
   Widget build(BuildContext context) {
     TableViewFormModel form = context.read<TableViewFormCubit>().state;
     return BlocConsumer<InventoryListCubit, InventoryListState>(
-      bloc: context.read<InventoryListCubit>()..initLoad(warehouse),
+      bloc: context.read<InventoryListCubit>()..initLoad(warehouse, form),
       builder: (context, state) {
         if (state is LoadingInventoryListState) {
           return inventoryList(context, true, [], form);
