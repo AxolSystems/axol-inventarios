@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
+import 'package:axol_inventarios/modules/inventory_/inventory/view/inventory_move_add.dart';
 import 'package:axol_inventarios/utilities/navigation_utilities.dart';
 import 'package:axol_inventarios/utilities/widgets/appbar_axol.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
@@ -15,6 +16,7 @@ import '../../../../utilities/widgets/toolbar.dart';
 import '../../product/view/product_drawer_details.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
+import 'views/inventory_movement_view.dart';
 
 class InventoryList extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -122,12 +124,32 @@ class InventoryListBuild extends StatelessWidget {
                     visible: warehouse.id != -2,
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => InventoryMovementView(
+                              warehouse: warehouse, warehouseList: []),
+                        );
+                      },
                       icon: const Icon(
                         Icons.add_outlined,
                         color: ColorPalette.darkItems,
                         size: 30,
                       ),
+                    ),
+                  ),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => InventoryMoveAdd(),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.troubleshoot_sharp,
+                      color: ColorPalette.darkItems,
+                      size: 30,
                     ),
                   ),
                 ]),
