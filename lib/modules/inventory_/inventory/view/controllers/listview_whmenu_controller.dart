@@ -11,7 +11,7 @@ import '../../cubit/warehouses_load/wareshouses_load_state.dart';
 import '../widgets/warehouse_menu/listview_warehouse_menu.dart';
 import 'drawer_warehouse_controller.dart';
 
-class ListviewWHMenuController extends StatelessWidget {
+/*class ListviewWHMenuController extends StatelessWidget {
   const ListviewWHMenuController({super.key});
 
   @override
@@ -132,4 +132,4 @@ class ListviewWHMenuController extends StatelessWidget {
       },
     );
   }
-}
+}*/

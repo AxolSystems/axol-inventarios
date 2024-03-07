@@ -5,7 +5,7 @@ import '../../cubit/inventory_load/inventory_load_cubit.dart';
 import '../../cubit/inventory_load/inventory_load_state.dart';
 import '../widgets/warehouse/table_warehouse.dart';
 
-class TableWarehouseController extends StatelessWidget {
+/*class TableWarehouseController extends StatelessWidget {
   const TableWarehouseController({super.key});
 
   @override
@@ -31,4 +31,4 @@ class TableWarehouseController extends StatelessWidget {
       },
     );
   }
-}
+}*/

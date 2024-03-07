@@ -76,12 +76,23 @@ class WarehouseTabBuild extends StatelessWidget {
                 ),
                 child: ButtonRowTable(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => InventoryList(warehouse: warehouse),
-                      ),
-                    );
+                    if (index == 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              InventoryList(warehouse: WarehouseModel.multi()),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              InventoryList(warehouse: warehouse),
+                        ),
+                      );
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -21,12 +21,21 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       DataResponseModel dataResponse;
       List<InventoryRowModel> inventoryRowList = [];
 
-      dataResponse = await InventoryRepo().fetchInventoryList(
-        '',
-        warehouse.name,
-        rangeMin: 0,
-        rangeMax: limit - 1,
-      );
+      if (warehouse.id == -2) {
+        dataResponse = await InventoryRepo().fetchInventoryListMulti(
+          '',
+          warehouse.name,
+          rangeMin: 0,
+          rangeMax: limit - 1,
+        );
+      } else {
+        dataResponse = await InventoryRepo().fetchInventoryList(
+          '',
+          warehouse.name,
+          rangeMin: 0,
+          rangeMax: limit - 1,
+        );
+      }
 
       inventoryRowList = dataResponse.dataList as List<InventoryRowModel>;
       countReg = dataResponse.count;
@@ -53,18 +62,27 @@ class InventoryListCubit extends Cubit<InventoryListState> {
 
       rangeMin = (form.currentPage * limit) - limit;
       rangeMax = (form.currentPage * limit) - 1;
-      print(form.finder.text);
-      dataResponse = await InventoryRepo().fetchInventoryList(
-        form.finder.text,
-        warehouse.name,
-        rangeMin: rangeMin,
-        rangeMax: rangeMax,
-      );
+      if (warehouse.id == -2) {
+        dataResponse = await InventoryRepo().fetchInventoryListMulti(
+          form.finder.text,
+          warehouse.name,
+          rangeMin: rangeMin,
+          rangeMax: rangeMax,
+        );
+      } else {
+        dataResponse = await InventoryRepo().fetchInventoryList(
+          form.finder.text,
+          warehouse.name,
+          rangeMin: rangeMin,
+          rangeMax: rangeMax,
+        );
+      }
+
       inventoryRowList = dataResponse.dataList as List<InventoryRowModel>;
       countReg = dataResponse.count;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
-      
+
       emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
     } catch (e) {
       emit(ErrorInventoryListState(error: e.toString()));

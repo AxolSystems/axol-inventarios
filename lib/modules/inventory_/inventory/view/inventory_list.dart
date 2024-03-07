@@ -118,26 +118,42 @@ class InventoryListBuild extends StatelessWidget {
                     indent: 4,
                     endIndent: 4,
                   ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add_outlined,
-                      color: ColorPalette.darkItems,
-                      size: 30,
+                  Visibility(
+                    visible: warehouse.id != -2,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.add_outlined,
+                        color: ColorPalette.darkItems,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ]),
-                HeaderTable(
-                  dataList: [
-                    DataTableAxol.text('Clave'),
-                    DataTableAxol(
-                      text: 'Descripción',
-                      flex: 3,
+                Visibility(
+                    visible: warehouse.id == -2,
+                    replacement: HeaderTable(
+                      dataList: [
+                        DataTableAxol.text('Clave'),
+                        DataTableAxol(
+                          text: 'Descripción',
+                          flex: 3,
+                        ),
+                        DataTableAxol.text('Stock'),
+                      ],
                     ),
-                    DataTableAxol.text('Stock'),
-                  ],
-                ),
+                    child: HeaderTable(
+                      dataList: [
+                        DataTableAxol.text('Almacén'),
+                        DataTableAxol.text('Clave'),
+                        DataTableAxol(
+                          text: 'Descripción',
+                          flex: 3,
+                        ),
+                        DataTableAxol.text('Stock'),
+                      ],
+                    )),
                 Expanded(
                     child: ListView.builder(
                   shrinkWrap: true,
@@ -161,6 +177,16 @@ class InventoryListBuild extends StatelessWidget {
                             },
                             child: Row(
                               children: [
+                                Visibility(
+                                  visible: warehouse.id == -2,
+                                  child: Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        inventoryRow.warehouseName,
+                                        style: Typo.bodyLight,
+                                        textAlign: TextAlign.center,
+                                      )),
+                                ),
                                 Expanded(
                                     flex: 1,
                                     child: Text(

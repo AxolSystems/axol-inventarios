@@ -11,9 +11,10 @@ class WarehouseTabCubit extends Cubit<WarehouseTabState> {
     try {
       emit(InitialWarehouseTabState());
       emit(LoadingWarehouseTabState());
-      
+
       List<WarehouseModel> warehouseList;
       warehouseList = await WarehousesRepo().fetchAllWarehouses();
+      warehouseList.insert(0, WarehouseModel.multi());
 
       emit(LoadedWarehouseTabState(warehouseList: warehouseList));
     } catch (e) {

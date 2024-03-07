@@ -25,10 +25,14 @@ class ShowDetailsProductStockCubit extends Cubit<ShowDetailsProductStock> {
 
       if (productDB != null) {
         if (inventoryDB == null) {
-          inventoryRow = InventoryRowModel(product: productDB, stock: 0);
+          inventoryRow = InventoryRowModel(
+              product: productDB, stock: 0, warehouseName: '');
         } else {
-          inventoryRow =
-              InventoryRowModel(product: productDB, stock: inventoryDB.stock);
+          inventoryRow = InventoryRowModel(
+            product: productDB,
+            stock: inventoryDB.stock,
+            warehouseName: inventoryDB.name,
+          );
         }
       } else {
         inventoryRow = null;

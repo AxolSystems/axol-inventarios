@@ -55,14 +55,13 @@ class InventoryRepo {
           description: productModel.description,
           properties: productModel.properties);*/
       inventoryRow = InventoryRowModel(
-          product: productModel,
-          /*code: element,
-          properties:
-              productsDB.where((value) => value[_code] == element).first,*/
-          stock: double.parse(inventoryDB
-              .where((value) => value[_code] == element)
-              .first[_stock]
-              .toString()));
+        product: productModel,
+        stock: double.parse(inventoryDB
+            .where((value) => value[_code] == element)
+            .first[_stock]
+            .toString()),
+        warehouseName: inventoryName,
+      );
       inventoryList.add(inventoryRow);
     }
     //Filtra la lista
@@ -136,7 +135,6 @@ class InventoryRepo {
           .gt(_stock, 0)
           .order(_code, ascending: true)
           .range(rangeMin_, rangeMax_);
-      
     }
     inventoryListDB = postgrestResponse.data ?? [];
     codeList = [];
@@ -155,8 +153,100 @@ class InventoryRepo {
           stock: element[_stock] ?? 0,
         );
         product = productList.where((x) => x.code == inventory.code).first;
-        inventoryRow =
-            InventoryRowModel(product: product, stock: inventory.stock);
+        inventoryRow = InventoryRowModel(
+            product: product,
+            stock: inventory.stock,
+            warehouseName: inventory.name);
+        inventoryRowList.add(inventoryRow);
+      }
+    }
+
+    dataResponse = DataResponseModel(
+      dataList: inventoryRowList,
+      count: postgrestResponse.count ?? 0,
+    );
+
+    return dataResponse;
+  }
+
+  Future<DataResponseModel> fetchInventoryListMulti(
+    String find,
+    String inventoryName, {
+    int? rangeMin,
+    int? rangeMax,
+  }) async {
+    final int rangeMin_ = rangeMin ?? 0;
+    final int rangeMax_ = rangeMax ?? 0;
+    final DataResponseModel dataResponse;
+    String filters = '';
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    List<Map<String, dynamic>> inventoryListDB = [];
+    InventoryModel inventory;
+    InventoryRowModel inventoryRow;
+    List<InventoryRowModel> inventoryRowList = [];
+    ProductModel product;
+    List<String> codeList = [];
+    String code;
+    List<ProductModel> productList;
+
+    if (find != '') {
+      codeList = await ProductRepo().fetchCodeList(find);
+      for (var element in codeList) {
+        if (filters == '') {
+          filters = '$_code.ilike.%$element%';
+        } else {
+          filters = '$filters,$_code.ilike.%$element%';
+        }
+      }
+      if (filters == '') {
+        filters = '$_code.ilike.%$find%';
+      } else {
+        filters = '$filters,$_code.ilike.%$find%';
+      }
+
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
+          .or(filters)
+          //.eq(_name, inventoryName)
+          .gt(_stock, 0)
+          .order(_code, ascending: true)
+          .range(rangeMin_, rangeMax_);
+    } else {
+      filters = '$_name.eq.$inventoryName';
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
+          //.eq(_name, inventoryName)
+          .gt(_stock, 0)
+          .order(_code, ascending: true)
+          .range(rangeMin_, rangeMax_);
+    }
+
+    inventoryListDB = postgrestResponse.data ?? [];
+    codeList = [];
+    for (var element in inventoryListDB) {
+      code = element[_code];
+      codeList.add(code);
+    }
+    productList = await ProductRepo().fetchProductList(codeList);
+    if (inventoryListDB.isNotEmpty) {
+      for (var element in inventoryListDB) {
+        inventory = InventoryModel(
+          code: element[_code] ?? '',
+          id: element[_id].toString(),
+          name: element[_name] ?? '',
+          retailManager: element[_manager] ?? '',
+          stock: element[_stock] ?? 0,
+        );
+        product = productList.where((x) => x.code == inventory.code).first;
+        inventoryRow = InventoryRowModel(
+          product: product,
+          stock: inventory.stock,
+          warehouseName: inventory.name,
+        );
         inventoryRowList.add(inventoryRow);
       }
     }
