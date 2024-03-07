@@ -34,17 +34,43 @@ class ProductRepo {
     if (productsDB.isNotEmpty) {
       for (var element in productsDB) {
         product = ProductModel(
-          code: element[_code],
-          description: element[_description] ?? '',
-          properties: element[_properties],
-          class_: element[_class],
-        );
+        code: element[_code],
+        description: element[_description],
+        class_: element[_class],
+        capacity: element[_properties][_capacity],
+        gauge: double.parse(element[_properties][_gauge]),
+        measure: element[_properties][_measure],
+        packing: element[_properties][_packing],
+        pieces: element[_properties][_pieces],
+        type: element[_properties][_type],
+        weight: double.parse(element[_properties][_weight]),
+      );
         products.add(product);
       }
       //newList.add(properties[_product]);
       //element[PRODUCTO] --> {code: Map<String, dynamic>}
     }
     return products;
+  }
+
+  Future<List<String>> fetchCodeList(String find) async {
+    List<Map<String, dynamic>> productsDB = [];
+    List<String> codeList = [];
+    String code;
+
+    productsDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>()
+        .ilike(_description, '%$find%');
+
+    if (productsDB.isNotEmpty) {
+      for (var element in productsDB) {
+        code = element[_code];
+        codeList.add(code);
+      }
+    }
+
+    return codeList;
   }
 
   Future<ProductModel?> fetchProduct(String code) async {

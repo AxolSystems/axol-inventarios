@@ -27,7 +27,7 @@ class InventoryListCubit extends Cubit<InventoryListState> {
         rangeMin: 0,
         rangeMax: limit - 1,
       );
-      
+
       inventoryRowList = dataResponse.dataList as List<InventoryRowModel>;
       countReg = dataResponse.count;
       form.currentPage = 1;
@@ -40,7 +40,7 @@ class InventoryListCubit extends Cubit<InventoryListState> {
     }
   }
 
-  Future<void> load(WarehouseModel warehouse, String find) async {
+  Future<void> load(WarehouseModel warehouse, TableViewFormModel form) async {
     try {
       emit(InitialInventoryListState());
       emit(LoadingInventoryListState());
@@ -51,10 +51,20 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       DataResponseModel dataResponse;
       List<InventoryRowModel> inventoryRowList;
 
-      dataResponse =
-          await InventoryRepo().fetchInventoryList(warehouse.name, find);
-      inventoryRowList = dataResponse as List<InventoryRowModel>;
-
+      rangeMin = (form.currentPage * limit) - limit;
+      rangeMax = (form.currentPage * limit) - 1;
+      print(form.finder.text);
+      dataResponse = await InventoryRepo().fetchInventoryList(
+        form.finder.text,
+        warehouse.name,
+        rangeMin: rangeMin,
+        rangeMax: rangeMax,
+      );
+      inventoryRowList = dataResponse.dataList as List<InventoryRowModel>;
+      countReg = dataResponse.count;
+      form.limitPage = (countReg / limit).ceil();
+      form.totalReg = countReg;
+      
       emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
     } catch (e) {
       emit(ErrorInventoryListState(error: e.toString()));

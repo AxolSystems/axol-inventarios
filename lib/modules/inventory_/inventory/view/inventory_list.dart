@@ -94,7 +94,7 @@ class InventoryListBuild extends StatelessWidget {
                     autoFocus: true,
                     isTxtExpand: true,
                     onSubmitted: (value) {
-                      context.read<InventoryListCubit>().load(warehouse, value);
+                      context.read<InventoryListCubit>().load(warehouse, form);
                     },
                     onChanged: (value) {
                       form.finder = TextfieldModel(
@@ -107,7 +107,7 @@ class InventoryListBuild extends StatelessWidget {
                         form.finder = TextfieldModel.empty();
                         context
                             .read<InventoryListCubit>()
-                            .load(warehouse, form.finder.text);
+                            .load(warehouse, form);
                       }
                     },
                   )),

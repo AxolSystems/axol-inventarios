@@ -8,7 +8,6 @@ import '../model/inventory_model.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../movements/model/movement_model.dart';
 import '../../product/repository/product_repo.dart';
-import '../view/inventory_list.dart';
 import 'warehouses_repo.dart';
 
 class InventoryRepo {
@@ -99,23 +98,53 @@ class InventoryRepo {
     InventoryRowModel inventoryRow;
     List<InventoryRowModel> inventoryRowList = [];
     ProductModel product;
-    
+    List<String> codeList = [];
+    String code;
+    List<ProductModel> productList;
+
     if (find != '') {
-      filters =
-          '$_code.ilike.%$find%,$_description.ilike.%$find%,and($_name.eq.$inventoryName)';
+      codeList = await ProductRepo().fetchCodeList(find);
+      for (var element in codeList) {
+        if (filters == '') {
+          filters = '$_code.ilike.%$element%';
+        } else {
+          filters = '$filters,$_code.ilike.%$element%';
+        }
+      }
+      if (filters == '') {
+        filters = '$_code.ilike.%$find%';
+      } else {
+        filters = '$filters,$_code.ilike.%$find%';
+      }
+
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
+          .or(filters)
+          .eq(_name, inventoryName)
+          .gt(_stock, 0)
+          .order(_code, ascending: true)
+          .range(rangeMin_, rangeMax_);
     } else {
       filters = '$_name.eq.$inventoryName';
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
+          .eq(_name, inventoryName)
+          .gt(_stock, 0)
+          .order(_code, ascending: true)
+          .range(rangeMin_, rangeMax_);
+      
     }
-    postgrestResponse = await _supabase
-        .from(_table)
-        .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-            '*', const FetchOptions(count: CountOption.exact))
-        .or(filters)
-        //.eq(_name, inventoryName)
-        .order(_code, ascending: true)
-        .range(rangeMin_, rangeMax_);
-
     inventoryListDB = postgrestResponse.data ?? [];
+    codeList = [];
+    for (var element in inventoryListDB) {
+      code = element[_code];
+      codeList.add(code);
+    }
+    productList = await ProductRepo().fetchProductList(codeList);
     if (inventoryListDB.isNotEmpty) {
       for (var element in inventoryListDB) {
         inventory = InventoryModel(
@@ -125,8 +154,9 @@ class InventoryRepo {
           retailManager: element[_manager] ?? '',
           stock: element[_stock] ?? 0,
         );
-        product = await ProductRepo().fetchProduct(inventory.code) ?? ProductModel.empty();
-        inventoryRow = InventoryRowModel(product: product, stock: inventory.stock);
+        product = productList.where((x) => x.code == inventory.code).first;
+        inventoryRow =
+            InventoryRowModel(product: product, stock: inventory.stock);
         inventoryRowList.add(inventoryRow);
       }
     }
