@@ -151,37 +151,59 @@ class InventoryListBuild extends StatelessWidget {
                                   BorderSide(color: ColorPalette.darkItems)),
                         ),
                         child: ButtonRowTable(
-                          onPressed: () {
-                            showDialog(context: context, builder: (context) => ProductDrawerDetails(product: inventoryRow.product,),);
-                          },
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => ProductDrawerDetails(
+                                  product: inventoryRow.product,
+                                ),
+                              );
+                            },
                             child: Row(
-                          children: [
-                            Expanded(
-                                flex: 1,
-                                child: Text(
-                                  inventoryRow.product.code,
-                                  style: Typo.bodyLight,
-                                  textAlign: TextAlign.center,
-                                )),
-                            Expanded(
-                                flex: 3,
-                                child: Text(
-                                  inventoryRow.product.description,
-                                  style: Typo.bodyLight,
-                                  textAlign: TextAlign.center,
-                                )),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                inventoryRow.stock.toString(),
-                                style: Typo.bodyLight,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        )));
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      inventoryRow.product.code,
+                                      style: Typo.bodyLight,
+                                      textAlign: TextAlign.center,
+                                    )),
+                                Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      inventoryRow.product.description,
+                                      style: Typo.bodyLight,
+                                      textAlign: TextAlign.center,
+                                    )),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    inventoryRow.stock.toString(),
+                                    style: Typo.bodyLight,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            )));
                   },
                 )),
+                NavigateBarTable(
+                  currentPage: form.currentPage,
+                  limitPaga: form.limitPage,
+                  totalReg: form.totalReg,
+                  onPressedLeft: () {
+                    if (form.currentPage > 1) {
+                      form.currentPage = form.currentPage - 1;
+                      context.read<InventoryListCubit>().load(warehouse, form);
+                    }
+                  },
+                  onPressedRight: () {
+                    if (form.currentPage < form.limitPage) {
+                      form.currentPage = form.currentPage + 1;
+                      context.read<InventoryListCubit>().load(warehouse, form);
+                    }
+                  },
+                ),
               ],
             ),
           )),
