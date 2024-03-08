@@ -74,7 +74,8 @@ class InventoryMoveAddBuild extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Row(
                       children: [
                         DropdownMenu(
@@ -82,11 +83,15 @@ class InventoryMoveAddBuild extends StatelessWidget {
                           //controller: form.tfWarehose.controller,
                           enabled: !isLoading,
                           textStyle: Typo.labelLight,
+                          label: const Text(
+                            'Concepto',
+                            style: Typo.labelLight,
+                          ),
                           inputDecorationTheme: InputDecorationTheme(
                             filled: true,
                             isDense: true,
                             constraints:
-                                BoxConstraints.tight(const Size.fromHeight(40)),
+                                BoxConstraints.tight(const Size.fromHeight(34)),
                             enabledBorder: const OutlineInputBorder(
                               borderSide:
                                   BorderSide(color: ColorPalette.lightItems10),
@@ -103,23 +108,28 @@ class InventoryMoveAddBuild extends StatelessWidget {
                           trailingIcon: const Icon(
                             Icons.arrow_drop_down,
                             color: ColorPalette.lightItems10,
+                            size: 20,
                           ),
                           dropdownMenuEntries: [],
                         ),
                         const SizedBox(width: 8),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 16),
+                        SizedBox(
                           width: 200,
                           child: TextField(
+                            style: Typo.labelLight,
                             decoration: InputDecoration(
+                              filled: true,
+                              isDense: true,
+                              constraints: BoxConstraints.tight(
+                                  const Size.fromHeight(34)),
                               labelText: 'Documento',
                               labelStyle: Typo.labelLight,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: ColorPalette.lightItems10),
-                                borderRadius:
-                                      BorderRadius.all(Radius.circular(8))
-                              ),
-                              border: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorPalette.lightItems10),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              border: const OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8))),
                             ),

@@ -23,7 +23,9 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Axol',
       home: const AuthPage(),
-      theme: ThemeData(colorSchemeSeed: ColorPalette.primary),
+      theme: ThemeData(
+        colorSchemeSeed: ColorPalette.primary,
+      ),
     );
   }
 }
