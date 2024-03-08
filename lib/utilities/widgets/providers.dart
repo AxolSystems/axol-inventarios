@@ -67,7 +67,7 @@ class ProviderCustomerFind extends Providers {
 }
 
 //----Product
-class ProviderProductFind extends Providers {
+/*class ProviderProductFind extends Providers {
   final WarehouseModel warehouse;
   const ProviderProductFind({super.key, required this.warehouse});
 
@@ -77,10 +77,10 @@ class ProviderProductFind extends Providers {
             BlocProvider(create: (_) => ProductFindCubit()),
             BlocProvider(create: (_) => FinderForm()),
           ],
-          child: ProductDrawerFind(
+          child: ProductDrawerFindBuild(
             warehouse: warehouse,
           ));
-}
+}*/
 
 //----SaleNote
 

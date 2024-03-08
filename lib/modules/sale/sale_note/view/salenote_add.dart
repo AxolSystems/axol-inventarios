@@ -15,6 +15,7 @@ import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../inventory_/product/view/product_drawer_details.dart';
+import '../../../inventory_/product/view/product_drawer_find.dart';
 import '../../customer/model/customer_model.dart';
 import '../../vendor/model/vendor_model.dart';
 import '../cubit/salenote_add/salenote_add_cubit.dart';
@@ -542,7 +543,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                       showDialog(
                                           context: context,
                                           builder: (context) =>
-                                              ProviderProductFind(
+                                              ProductDrawerFind(
                                                 warehouse: upForm.warehouse,
                                               )).then((value) {
                                         if (value is DataFindValues &&
@@ -683,7 +684,28 @@ class SaleNoteAddBuild extends StatelessWidget {
                         top: BorderSide(color: ColorPalette.darkItems),
                       ),
                       children: [
-                        SizedBox(
+                        ButtonTool(
+                          icon: Icons.add,
+                          height: 50,
+                          iconColor: ColorPalette.lightItems10,
+                          iconSize: 30,
+                          onPressed: () {
+                            form.productList.add(SaleNoteRowFormModel.empty());
+                            context.read<SaleNoteAddCubit>().load();
+                          },
+                        ),
+                        ButtonTool(
+                          icon: Icons.save,
+                          height: 50,
+                          iconColor: ColorPalette.lightItems10,
+                          iconSize: 30,
+                          onPressed: () {
+                            context
+                                .read<SaleNoteAddCubit>()
+                                .save(form, saleType);
+                          },
+                        ),
+                        /*SizedBox(
                           height: 50,
                           child: OutlinedButton(
                             onPressed: () {
@@ -724,7 +746,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                               size: 30,
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ],

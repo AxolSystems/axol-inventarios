@@ -21,7 +21,7 @@ class VerticalToolBar extends StatelessWidget {
 class HorizontalToolBar extends StatelessWidget {
   final BoxBorder? border;
   final Color? color;
-  final List<Widget> children;
+  final List<ButtonTool> children;
   const HorizontalToolBar({
     super.key,
     required this.children,
@@ -40,6 +40,44 @@ class HorizontalToolBar extends StatelessWidget {
       ),
       child: ListView(
         children: children,
+      ),
+    );
+  }
+}
+
+class ButtonTool extends StatelessWidget {
+  final IconData icon;
+  final Function()? onPressed;
+  final Color? iconColor;
+  final double? iconSize;
+  final double? height;
+
+  const ButtonTool({
+    super.key,
+    required this.icon,
+    this.onPressed,
+    this.iconColor,
+    this.iconSize,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height ?? 50,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          side: BorderSide.none,
+          foregroundColor: ColorPalette.primary,
+          shape: const RoundedRectangleBorder(),
+          padding: EdgeInsets.zero,
+        ),
+        child: Icon(
+          icon,
+          color: iconColor ?? ColorPalette.lightItems10,
+          size: iconSize ?? 30,
+        ),
       ),
     );
   }

@@ -133,7 +133,7 @@ class Typo {
   static const labelLight = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
-      fontSize: 16,
+      fontSize: 14,
       color: ColorPalette.lightItems10);
   static const smallLabelLight = TextStyle(
       fontFamily: 'Source Sans Pro',

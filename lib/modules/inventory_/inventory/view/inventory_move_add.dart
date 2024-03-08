@@ -1,3 +1,5 @@
+import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/concept_move_model.dart';
+import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/inventory_move_row_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,13 +8,18 @@ import '../../../../utilities/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol.dart';
+import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
+import '../../../../utilities/widgets/toolbar.dart';
+import '../../product/view/product_drawer_find.dart';
 import '../cubit/inventory_move/inventory_move_cubit.dart';
 import '../cubit/inventory_move/inventory_move_state.dart';
 import '../model/inventory_move/inventory_move_model.dart';
+import '../model/warehouse_model.dart';
 
 class InventoryMoveAdd extends StatelessWidget {
-  const InventoryMoveAdd({super.key});
+  final WarehouseModel warehouse;
+  const InventoryMoveAdd({super.key, required this.warehouse});
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +28,16 @@ class InventoryMoveAdd extends StatelessWidget {
         BlocProvider(create: (_) => InventoryMoveCubit()),
         BlocProvider(create: (_) => InventoryMoveForm()),
       ],
-      child: InventoryMoveAddBuild(),
+      child: InventoryMoveAddBuild(
+        warehouse: warehouse,
+      ),
     );
   }
 }
 
 class InventoryMoveAddBuild extends StatelessWidget {
-  const InventoryMoveAddBuild({super.key});
+  final WarehouseModel warehouse;
+  const InventoryMoveAddBuild({super.key, required this.warehouse});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +66,13 @@ class InventoryMoveAddBuild extends StatelessWidget {
 
   Widget inventoryMoveAdd(
       BuildContext context, bool isLoading, InventoryMoveModel form) {
+    List<DropdownMenuEntry<int>> entryList = [];
+    DropdownMenuEntry<int> entry;
+    for (var element in form.concepts) {
+      entry = DropdownMenuEntry(
+          value: element.id, label: '${element.id} - ${element.text}');
+      entryList.add(entry);
+    }
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol(
@@ -79,7 +96,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                     child: Row(
                       children: [
                         DropdownMenu(
-                          width: 200,
+                          width: 250,
                           //controller: form.tfWarehose.controller,
                           enabled: !isLoading,
                           textStyle: Typo.labelLight,
@@ -110,11 +127,19 @@ class InventoryMoveAddBuild extends StatelessWidget {
                             color: ColorPalette.lightItems10,
                             size: 20,
                           ),
-                          dropdownMenuEntries: [],
+                          dropdownMenuEntries: entryList,
+                          onSelected: (value) {
+                            if (value != null) {
+                              final concept = form.concepts
+                                  .where((x) => x.id == value)
+                                  .first;
+                              form.concept = concept;
+                            }
+                          },
                         ),
                         const SizedBox(width: 8),
                         SizedBox(
-                          width: 200,
+                          width: 250,
                           child: TextField(
                             style: Typo.labelLight,
                             decoration: InputDecoration(
@@ -141,21 +166,95 @@ class InventoryMoveAddBuild extends StatelessWidget {
                           style: Typo.labelLight,
                         ),
                         const SizedBox(width: 16),
-                        const Text(
-                          'Almacén: ',
+                        Text(
+                          'Almacén: ${warehouse.name}',
                           style: Typo.labelLight,
                         ),
                       ],
                     ),
                   ),
-                  HeaderTable(dataList: [
-                    DataTableAxol.text('Clave'),
-                    DataTableAxol.text('Descripción'),
-                    DataTableAxol.text('Cantidad'),
-                    DataTableAxol.text('Peso unitario'),
-                    DataTableAxol.text('Peso total'),
-                    DataTableAxol.text('Opciones'),
-                  ]),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              HeaderTable(dataList: [
+                                DataTableAxol.text('Clave'),
+                                DataTableAxol.text('Descripción'),
+                                DataTableAxol.text('Cantidad'),
+                                DataTableAxol.text('Peso unitario'),
+                                DataTableAxol.text('Peso total'),
+                                DataTableAxol.text('Opciones'),
+                              ]),
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: form.moveList.length,
+                                  itemBuilder: (context, index) {
+                                    final row = form.moveList[index];
+                                    return InputRow(children: [
+                                      //Clave
+                                      TextFieldCell(
+                                        onFocusChange: (value) {},
+                                        borderColor: ColorPalette.darkItems,
+                                        suffixIcon: Icons.search,
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                ProductDrawerFind(
+                                                    warehouse: warehouse),
+                                          );
+                                        },
+                                      ),
+                                      LabelCell(row.description),
+                                      TextFieldCell(
+                                        onFocusChange: (value) {},
+                                        borderColor: ColorPalette.darkItems,
+                                      ),
+                                      TextFieldCell(
+                                        onFocusChange: (value) {},
+                                        borderColor: ColorPalette.darkItems,
+                                      ),
+                                      const LabelCell('00'),
+                                      const MenuCell(
+                                        menuChildren: [],
+                                        icon: Icon(
+                                          Icons.more_horiz,
+                                          color: ColorPalette.lightItems10,
+                                        ),
+                                      ),
+                                    ]);
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        HorizontalToolBar(
+                          border: const Border(
+                            top: BorderSide(color: ColorPalette.darkItems),
+                            left: BorderSide(color: ColorPalette.darkItems),
+                          ),
+                          children: [
+                            ButtonTool(
+                              icon: Icons.add,
+                              onPressed: () {
+                                form.moveList
+                                    .add(InventoryMoveRowModel.empty());
+                                context.read<InventoryMoveCubit>().load(form);
+                              },
+                            ),
+                            ButtonTool(
+                              icon: Icons.save,
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

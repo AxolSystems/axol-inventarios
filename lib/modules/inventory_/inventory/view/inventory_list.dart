@@ -143,7 +143,9 @@ class InventoryListBuild extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => InventoryMoveAdd(),
+                        builder: (context) => InventoryMoveAdd(
+                          warehouse: warehouse,
+                        ),
                       );
                     },
                     icon: const Icon(

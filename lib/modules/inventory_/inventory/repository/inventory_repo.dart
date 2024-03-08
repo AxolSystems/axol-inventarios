@@ -22,7 +22,7 @@ class InventoryRepo {
   //Memoria local
   static const String _user = 'user_name';
   //Otros
-  static const String _description = 'description';
+  //static const String _description = 'description';
   //Instancia a la base de datos
   final _supabase = Supabase.instance.client;
 
@@ -68,7 +68,7 @@ class InventoryRepo {
     if (filter != '') {
       for (var element in inventoryList) {
         if (element.product.code.contains(filter) ||
-            element.product.properties![_description]
+            element.product.description
                 .toString()
                 .contains(filter)) {
           finalInventoryList.add(element);
@@ -77,7 +77,6 @@ class InventoryRepo {
     } else {
       finalInventoryList = inventoryList;
     }
-
     return finalInventoryList;
   }
 

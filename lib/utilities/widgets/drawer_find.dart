@@ -18,6 +18,7 @@ class DrawerFind extends StatelessWidget {
   final Function(String value)? onSubmitted;
   final bool? isLoading;
   final List<DrawerColumn>? headerTable;
+  final List<Widget>? widgetsHead;
 
   const DrawerFind({
     super.key,
@@ -28,6 +29,7 @@ class DrawerFind extends StatelessWidget {
     this.onSubmitted,
     this.headerTable,
     this.listValues,
+    this.widgetsHead,
   });
 
   @override
@@ -63,6 +65,12 @@ class DrawerFind extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       header: Column(
         children: [
+          Visibility(
+            visible: widgetsHead != null,
+            child: Row(
+              children: widgetsHead ?? [],
+            ),
+          ),
           Row(
             children: [
               Expanded(
