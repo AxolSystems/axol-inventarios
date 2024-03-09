@@ -56,12 +56,12 @@ class InventoryMoveModel {
         concepts = [],
         invTransfer = WarehouseModel.empty(),
         states = {
-          _moveList: DataState(state: DataState.initial),
-          _concept: DataState(state: DataState.initial),
-          _date: DataState(state: DataState.initial),
-          _document: DataState(state: DataState.initial),
-          _concepts: DataState(state: DataState.initial),
-          _invTransfer: DataState(state: DataState.initial),
-          _save: DataState(state: DataState.initial),
+          _moveList: DataState.empty(),
+          _concept: DataState.empty(),
+          _date: DataState.empty(),
+          _document: DataState.empty(),
+          _concepts: DataState.empty(),
+          _invTransfer: DataState.empty(),
+          _save: DataState.empty(),
         };
 }

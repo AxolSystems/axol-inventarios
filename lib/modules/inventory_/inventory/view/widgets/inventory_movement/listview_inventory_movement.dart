@@ -43,7 +43,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                 child: BlocBuilder<TransferCubit, MovementTransferModel>(
                   builder: (context, state) {
                     if (form.states[form.tConcepts]!.state ==
-                        DataState.loaded) {
+                        ElementState.loaded) {
                       return ListView(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         scrollDirection: Axis.horizontal,
@@ -282,7 +282,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                                             .states[
                                                                 moveRow.tCode]!
                                                             .state ==
-                                                        DataState.error
+                                                        ElementState.error
                                                     ? ColorPalette.caution
                                                     : ColorPalette.primary)),
                                         enabledBorder: UnderlineInputBorder(
@@ -291,7 +291,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                                             .states[
                                                                 moveRow.tCode]!
                                                             .state ==
-                                                        DataState.error
+                                                        ElementState.error
                                                     ? ColorPalette.caution
                                                     : ColorPalette.secondary)),
                                         isDense: true,
@@ -382,7 +382,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                           child: Center(child: Builder(
                             builder: (context) {
                               if (moveRow.states[moveRow.tCode]!.state ==
-                                  DataState.loading) {
+                                  ElementState.loading) {
                                 return Shimmer.fromColors(
                                   baseColor: Colors.white12,
                                   highlightColor: Colors.white24,
@@ -397,7 +397,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                   ),
                                 );
                               } else if (moveRow.states[moveRow.tCode]!.state ==
-                                  DataState.loaded) {
+                                  ElementState.loaded) {
                                 return TextButton(
                                   onPressed: () => showDialog(
                                       context: context,
@@ -415,7 +415,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                       style: Typo.labelText1),
                                 );
                               } else if (moveRow.states[moveRow.tCode]!.state ==
-                                      DataState.error &&
+                                      ElementState.error &&
                                   moveRow.states[moveRow.tCode]!.message ==
                                       moveRow.emNotProduct) {
                                 return const Text('Producto no existente',
@@ -482,7 +482,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                           color:
                                               moveRow.states[moveRow.tQuantity]!
                                                           .state ==
-                                                      DataState.error
+                                                      ElementState.error
                                                   ? ColorPalette.caution
                                                   : ColorPalette.primary)),
                                   enabledBorder: UnderlineInputBorder(
@@ -490,7 +490,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                           color:
                                               moveRow.states[moveRow.tQuantity]!
                                                           .state ==
-                                                      DataState.error
+                                                      ElementState.error
                                                   ? ColorPalette.caution
                                                   : ColorPalette.secondary)),
                                   isDense: true,
@@ -560,7 +560,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                           flex: 1,
                           child: Center(
                             child: moveRow.states[moveRow.tQuantity]!.state ==
-                                    DataState.error
+                                    ElementState.error
                                 ? Text(
                                     moveRow.states[moveRow.tQuantity]!.message!,
                                     style: Typo.labelError,
@@ -577,9 +577,9 @@ class ListviewInventoryMovement extends StatelessWidget {
                           child: Center(child: Builder(
                             builder: (context) {
                               if (moveRow.states[moveRow.tCode]!.state ==
-                                      DataState.loading ||
+                                      ElementState.loading ||
                                   moveRow.states[moveRow.tQuantity]!.state ==
-                                      DataState.loading) {
+                                      ElementState.loading) {
                                 return const SizedBox(
                                   height: 8,
                                   width: 8,

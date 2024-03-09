@@ -1,11 +1,12 @@
+enum ElementState {initial, loading, loaded, error}
+
 class DataState {
-  String state;
-  String? message;
+  ElementState state;
+  String message;
 
-  static const initial = 'stateInitial';
-  static const error = 'stateError';
-  static const loading = 'stateLoading';
-  static const loaded = 'stateLoaded';
+  DataState({required this.state, required this.message});
 
-  DataState({required this.state, this.message});
+  DataState.empty() :
+  state = ElementState.initial,
+  message = '';
 }

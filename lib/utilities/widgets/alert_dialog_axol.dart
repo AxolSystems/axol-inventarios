@@ -7,16 +7,24 @@ class AlertDialogAxol extends StatelessWidget {
   final List<Widget>? actions;
   final IconData? icon;
   final Color? iconColor;
-  const AlertDialogAxol({super.key, required this.text, this.actions, this.icon, this.iconColor});
+  final Function()? onPressed;
+  const AlertDialogAxol({
+    super.key,
+    required this.text,
+    this.actions,
+    this.icon,
+    this.iconColor,
+    this.onPressed
+  });
 
   @override
   Widget build(BuildContext context) {
     final icon_ = icon ?? Icons.warning;
-    final iconColor_ = iconColor ?? ColorPalette.caution; 
+    final iconColor_ = iconColor ?? ColorPalette.caution;
     final List<Widget> actions_ = actions ??
         [
           OutlinedButton(
-            onPressed: () {
+            onPressed: onPressed ?? () {
               Navigator.pop(context);
             },
             style: OutlinedButton.styleFrom(

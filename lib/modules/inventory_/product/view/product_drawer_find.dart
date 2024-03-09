@@ -184,7 +184,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
                       ? (value) {
                           context
                               .read<ProductFindCubit>()
-                              .load(form, warehouse);
+                              .load(form, warehouse, currentPage: 1);
                         }
                       : null,
                   onChanged: (value) {
@@ -198,7 +198,8 @@ class ProductDrawerFindBuild extends StatelessWidget {
               IconButton(
                 onPressed: isLoading == false
                     ? () {
-                        context.read<ProductFindCubit>().load(form, warehouse);
+                      form.textfield.controller.value = TextEditingValue.empty;
+                        context.read<ProductFindCubit>().load(form, warehouse, currentPage: 1);
                       }
                     : null,
                 icon: const Icon(

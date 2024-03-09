@@ -19,6 +19,11 @@ class LoadedInventoryMoveState extends InventoryMoveState {
   List<Object?> get props => [];
 }
 
+class SavedInventoryMoveState extends InventoryMoveState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorInventoryMoveState extends InventoryMoveState {
   final String error;
   const ErrorInventoryMoveState({required this.error});

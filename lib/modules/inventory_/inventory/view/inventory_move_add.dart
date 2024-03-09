@@ -1,8 +1,13 @@
-import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/concept_move_model.dart';
+import 'package:axol_inventarios/models/validation_form_model.dart';
+import 'package:axol_inventarios/modules/inventory_/inventory/cubit/inventory_movements/inventory_moves_state.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/inventory_move_row_model.dart';
+import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../models/data_find.dart';
+import '../../../../models/inventory_row_model.dart';
+import '../../../../utilities/data_state.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
@@ -11,6 +16,7 @@ import '../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../../product/model/product_model.dart';
 import '../../product/view/product_drawer_find.dart';
 import '../cubit/inventory_move/inventory_move_cubit.dart';
 import '../cubit/inventory_move/inventory_move_state.dart';
@@ -59,6 +65,19 @@ class InventoryMoveAddBuild extends StatelessWidget {
             context: context,
             builder: (context) => AlertDialogAxol(text: state.error),
           );
+        }
+        if (state is SaveLoadedState) {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialogAxol(
+                    text: 'Guardado',
+                    icon: Icons.check_circle,
+                    iconColor: ColorPalette.correct,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  ));
         }
       },
     );
@@ -185,7 +204,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                 DataTableAxol.text('Cantidad'),
                                 DataTableAxol.text('Peso unitario'),
                                 DataTableAxol.text('Peso total'),
-                                DataTableAxol.text('Opciones'),
+                                DataTableAxol.text('Eliminar'),
                               ]),
                               Expanded(
                                 child: ListView.builder(
@@ -194,37 +213,122 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     final row = form.moveList[index];
                                     return InputRow(children: [
-                                      //Clave
+                                      //---Clave
                                       TextFieldCell(
+                                        controller: form.moveList[index].codeTf,
+                                        isLoading: form.moveList[index]
+                                                .codeState.state ==
+                                            ElementState.loading,
+                                        valid: ValidationFormModel(
+                                            isValid: form.moveList[index]
+                                                    .codeState.state !=
+                                                ElementState.error,
+                                            errorMessage: form.moveList[index]
+                                                .codeState.message),
                                         onFocusChange: (value) {},
                                         borderColor: ColorPalette.darkItems,
                                         suffixIcon: Icons.search,
+                                        onChanged: (value) {
+                                          form.moveList[index].codeTf.value =
+                                              TextEditingValue(
+                                            text: value,
+                                            selection: TextSelection.collapsed(
+                                                offset: value.length),
+                                          );
+                                        },
+                                        onSubmitted: (value) {
+                                          context
+                                              .read<InventoryMoveCubit>()
+                                              .enterCode(
+                                                  index, form, warehouse);
+                                        },
                                         onPressed: () {
                                           showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 ProductDrawerFind(
                                                     warehouse: warehouse),
-                                          );
+                                          ).then((value) {
+                                            if (value is DataFindValues &&
+                                                value.data
+                                                    is InventoryRowModel) {
+                                              final InventoryRowModel
+                                                  inventoryRow = value.data;
+                                              form.moveList[index].codeTf
+                                                      .value =
+                                                  TextEditingValue(
+                                                      text: inventoryRow
+                                                          .product.code);
+                                              context
+                                                  .read<InventoryMoveCubit>()
+                                                  .enterCode(
+                                                      index, form, warehouse);
+                                            } else if (value
+                                                    is DataFindValues &&
+                                                value.data is ProductModel) {
+                                              final ProductModel product =
+                                                  value.data;
+                                              form.moveList[index].codeTf
+                                                      .value =
+                                                  TextEditingValue(
+                                                      text: product.code);
+                                              context
+                                                  .read<InventoryMoveCubit>()
+                                                  .load(form);
+                                            }
+                                          });
                                         },
                                       ),
+                                      //---Descripción
                                       LabelCell(row.description),
+                                      //---Cantidad
                                       TextFieldCell(
-                                        onFocusChange: (value) {},
-                                        borderColor: ColorPalette.darkItems,
-                                      ),
-                                      TextFieldCell(
-                                        onFocusChange: (value) {},
-                                        borderColor: ColorPalette.darkItems,
-                                      ),
-                                      const LabelCell('00'),
-                                      const MenuCell(
-                                        menuChildren: [],
-                                        icon: Icon(
-                                          Icons.more_horiz,
-                                          color: ColorPalette.lightItems10,
+                                        controller:
+                                            form.moveList[index].quantityTf,
+                                        isLoading: form.moveList[index]
+                                                .quantityState.state ==
+                                            ElementState.loading,
+                                        valid: ValidationFormModel(
+                                          isValid: form.moveList[index]
+                                                  .quantityState.state !=
+                                              ElementState.error,
+                                          errorMessage: form.moveList[index]
+                                              .quantityState.message,
                                         ),
+                                        onFocusChange: (value) {},
+                                        borderColor: ColorPalette.darkItems,
+                                        onChanged: (value) {
+                                          form.moveList[index].quantityTf
+                                              .value = TextEditingValue(
+                                            text: value,
+                                            selection: TextSelection.collapsed(
+                                                offset: value.length),
+                                          );
+                                        },
+                                        onSubmitted: (value) {
+                                          context
+                                              .read<InventoryMoveCubit>()
+                                              .enterQuantity(
+                                                  index, warehouse, form);
+                                        },
                                       ),
+                                      //---Peso unitario
+                                      LabelCell(form.moveList[index].weightUnit
+                                          .toString()),
+                                      //---Peso total
+                                      LabelCell(form.moveList[index].weightTotal
+                                          .toString()),
+                                      ButtonCell(
+                                          onPressed: () {
+                                            form.moveList.removeAt(index);
+                                            context
+                                                .read<InventoryMoveCubit>()
+                                                .load(form);
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: ColorPalette.lightItems10,
+                                          ))
                                     ]);
                                   },
                                 ),
@@ -248,7 +352,11 @@ class InventoryMoveAddBuild extends StatelessWidget {
                             ),
                             ButtonTool(
                               icon: Icons.save,
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                                    .read<InventoryMoveCubit>()
+                                    .saveMovements(form, warehouse);
+                              },
                             ),
                           ],
                         ),

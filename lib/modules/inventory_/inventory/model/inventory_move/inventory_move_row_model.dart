@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../../../../../utilities/data_state.dart';
 
 class InventoryMoveRowModel {
@@ -9,6 +11,10 @@ class InventoryMoveRowModel {
   String concept;
   bool stockExist;
   Map<String, DataState> states;
+  TextEditingController codeTf;
+  TextEditingController quantityTf;
+  DataState codeState;
+  DataState quantityState;
 
   static const String _description = 'description';
   static const String _code = 'code';
@@ -31,6 +37,10 @@ class InventoryMoveRowModel {
     required this.concept,
     required this.states,
     required this.stockExist,
+    required this.codeTf,
+    required this.quantityTf,
+    required this.codeState,
+    required this.quantityState,
   });
 
   InventoryMoveRowModel.empty()
@@ -42,7 +52,11 @@ class InventoryMoveRowModel {
         concept = '',
         stockExist = false,
         states = {
-          _code: DataState(state: DataState.initial),
-          _quantity: DataState(state: DataState.initial),
-        };
+          _code: DataState(state: ElementState.initial, message: ''),
+          _quantity: DataState(state: ElementState.initial, message: ''),
+        },
+        codeTf = TextEditingController.fromValue(TextEditingValue.empty),
+        quantityTf = TextEditingController.fromValue(TextEditingValue.empty),
+        codeState = DataState.empty(),
+        quantityState = DataState.empty();
 }

@@ -12,6 +12,7 @@ class ColorPalette {
   static final secondaryText2 = const Color(0xFF282828).withOpacity(0.5);
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
   static const caution = Color.fromARGB(255, 180, 32, 22);
+  static const correct = Color.fromARGB(255, 68, 228, 108);
   static const darkItems = Color.fromARGB(255, 78, 78, 78);
   static const lightItems10 = Color.fromARGB(255, 167, 167, 167);
   static const lightItems20 = Color.fromARGB(255, 226, 226, 226);

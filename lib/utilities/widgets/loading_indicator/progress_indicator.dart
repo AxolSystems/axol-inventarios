@@ -11,5 +11,16 @@ class LinearProgressIndicatorAxol extends StatelessWidget {
       backgroundColor: ColorPalette.primary,
     );
   }
+}
 
+class CircularProgressIndicatorAxol extends StatelessWidget {
+  const CircularProgressIndicatorAxol({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CircularProgressIndicator(
+      color: ColorPalette.lightItems10,
+      backgroundColor: ColorPalette.darkBackground,
+    );
+  }
 }

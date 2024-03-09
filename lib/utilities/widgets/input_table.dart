@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../../models/validation_form_model.dart';
 import '../theme/theme.dart';
+import 'loading_indicator/progress_indicator.dart';
 
 class InputRow extends StatelessWidget {
   final List<InputCell> children;
@@ -33,6 +34,7 @@ class TextFieldCell extends InputCell {
   final List<TextInputFormatter>? inputFormatters;
   final ValidationFormModel? valid;
   final IconData? suffixIcon;
+  final bool? isLoading;
   const TextFieldCell({
     super.key,
     super.flex,
@@ -46,6 +48,7 @@ class TextFieldCell extends InputCell {
     this.inputFormatters,
     this.valid,
     this.suffixIcon,
+    this.isLoading,
   });
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,7 @@ class TextFieldCell extends InputCell {
               height: 30,
               child: Row(
                 children: [
+                  const SizedBox(width: 4),
                   Expanded(
                     child: TextField(
                       inputFormatters: inputFormatters,
@@ -101,26 +105,34 @@ class TextFieldCell extends InputCell {
                                       size: 20,
                                     )),
                               ),
-                        suffixIcon: suffixIcon != null
-                            ? SizedBox.square(
+                        suffixIcon: isLoading == true
+                            ? const SizedBox.square(
                                 dimension: 30,
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    side: BorderSide.none,
-                                    foregroundColor: ColorPalette.primary,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero),
-                                  ),
-                                  onPressed: onPressed,
-                                  child: const Icon(
-                                    Icons.search,
-                                    size: 20,
-                                    color: ColorPalette.lightItems10,
-                                  ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                                  child: CircularProgressIndicatorAxol(),
                                 ),
                               )
-                            : null,
+                            : suffixIcon != null
+                                ? SizedBox.square(
+                                    dimension: 30,
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        side: BorderSide.none,
+                                        foregroundColor: ColorPalette.primary,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.zero),
+                                      ),
+                                      onPressed: onPressed,
+                                      child: const Icon(
+                                        Icons.search,
+                                        size: 20,
+                                        color: ColorPalette.lightItems10,
+                                      ),
+                                    ),
+                                  )
+                                : null,
                       ),
                     ),
                   ),
@@ -155,6 +167,7 @@ class LabelCell extends InputCell {
               BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
           child: Row(
             children: [
+              const SizedBox(width: 4),
               Expanded(
                   child: Align(
                 alignment: alignment ?? Alignment.centerLeft,

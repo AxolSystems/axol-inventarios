@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,12 +25,12 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
     InventoryMoveModel form = InventoryMoveModel.empty();
     List<InventoryMoveRowModel> list = [];
 
-    form.states[form.tConcepts]!.state = DataState.loading;
+    form.states[form.tConcepts]!.state = ElementState.loading;
     list.add(InventoryMoveRowModel.empty());
     form.moveList = list;
     emit(LoadedState(form: form));
     form.concepts = await InventoryConceptsRepo().fetchAllConcepts();
-    form.states[form.tConcepts]!.state = DataState.loaded;
+    form.states[form.tConcepts]!.state = ElementState.loaded;
     emit(InitialState());
     emit(LoadedState(form: form));
   }
@@ -48,7 +49,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
     InventoryMoveRowModel upMoveRow = moveRow;
 
     upForm.moveList[index].states[moveRow.tCode] =
-        DataState(state: DataState.loading);
+        DataState(state: ElementState.loading, message: '');
     emit(LoadedState(form: upForm));
 
     //Buscar currentCode en la base de datos y obtiene los datos necesarios.
@@ -60,10 +61,10 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
       upMoveRow.description = productDB.description;
       upMoveRow.weightUnit = productDB.weight!;
       upMoveRow.weightTotal = moveRow.quantity * moveRow.weightUnit;
-      upMoveRow.states[moveRow.tCode] = DataState(state: DataState.loaded);
+      upMoveRow.states[moveRow.tCode] = DataState(state: ElementState.loaded, message: '');
     } else {
       upMoveRow.states[moveRow.tCode] =
-          DataState(state: DataState.error, message: moveRow.emNotProduct);
+          DataState(state: ElementState.error, message: moveRow.emNotProduct);
     }
     upForm.moveList[index] = upMoveRow;
     emit(InitialState());
@@ -79,7 +80,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
     final ProductModel? productDB;
 
     emit(InitialState());
-    upMoveRow.states[moveRow.tQuantity] = DataState(state: DataState.loading);
+    upMoveRow.states[moveRow.tQuantity] = DataState(state: ElementState.loading, message: '');
     upForm.moveList[index] = upMoveRow;
     emit(LoadedState(form: upForm));
     inventoryRow =
@@ -90,18 +91,18 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
           form.concepts.where((x) => x.text == form.concept.text).first.type ==
               1) {
         upMoveRow.states[moveRow.tQuantity] =
-            DataState(state: DataState.error, message: moveRow.emNotStock);
+            DataState(state: ElementState.error, message: moveRow.emNotStock);
       } else {
         upMoveRow.weightTotal = moveRow.quantity * moveRow.weightUnit;
         upMoveRow.states[moveRow.tQuantity] =
-            DataState(state: DataState.loaded);
+            DataState(state: ElementState.loaded, message: '');
       }
     } else if (form.concept.type == 0 && productDB != null) {
       upMoveRow.weightTotal = moveRow.quantity * moveRow.weightUnit;
-      upMoveRow.states[moveRow.tQuantity] = DataState(state: DataState.loaded);
+      upMoveRow.states[moveRow.tQuantity] = DataState(state: ElementState.loaded, message: '');
     } else {
       upMoveRow.states[moveRow.tQuantity] =
-          DataState(state: DataState.error, message: moveRow.emNotStock);
+          DataState(state: ElementState.error, message: moveRow.emNotStock);
     }
     upForm.moveList[index] = upMoveRow;
 
@@ -114,7 +115,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
     InventoryMoveRowModel moveRow;
     for (int i = 0; i < form.moveList.length; i++) {
       moveRow = form.moveList[i];
-      if (moveRow.states[moveRow.tQuantity]!.state != DataState.initial) {
+      if (moveRow.states[moveRow.tQuantity]!.state != ElementState.initial) {
         enterQuantity(i, warehouse, form);
       }
     }
@@ -139,7 +140,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
       emit(SaveLoadingState());
       //Valida si se seleccionó un concepto.
       if (form.concept.text == '') {
-        form.states[form.tSave]!.state = DataState.error;
+        form.states[form.tSave]!.state = ElementState.error;
         form.states[form.tSave]!.message = form.emSelectConcept;
         emit(ErrorState(error: form.emSelectConcept));
         return;
@@ -147,14 +148,14 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
 
       //Valida si se hay al menos una fila en la lista de movimientos.
       if (form.moveList.isEmpty) {
-        form.states[form.tSave]!.state = DataState.error;
+        form.states[form.tSave]!.state = ElementState.error;
         form.states[form.tSave]!.message = form.emNotRow;
         emit(ErrorState(error: form.emNotRow));
         return;
       } else {
         for (var element in form.moveList) {
           if (element.code == '' || element.quantity <= 1) {
-            form.states[form.tSave]!.state = DataState.error;
+            form.states[form.tSave]!.state = ElementState.error;
             form.states[form.tSave]!.message = form.emRowMissing;
             emit(ErrorState(error: form.emRowMissing));
             return;
@@ -164,14 +165,14 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
 
       //Valida si hay algún error en las filas de la lista.
       for (var moveRow in form.moveList) {
-        if (moveRow.states[moveRow.tCode]!.state == DataState.error) {
-          form.states[form.tSave]!.state = DataState.error;
+        if (moveRow.states[moveRow.tCode]!.state == ElementState.error) {
+          form.states[form.tSave]!.state = ElementState.error;
           form.states[form.tSave]!.message = form.emNotProduct;
           emit(ErrorState(error: form.emNotProduct));
           return;
         }
-        if (moveRow.states[moveRow.tQuantity]!.state == DataState.error) {
-          form.states[form.tSave]!.state = DataState.error;
+        if (moveRow.states[moveRow.tQuantity]!.state == ElementState.error) {
+          form.states[form.tSave]!.state = ElementState.error;
           form.states[form.tSave]!.message = form.emNotStock;
           emit(ErrorState(error: form.emNotStock));
           return;
@@ -214,7 +215,7 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
           stock = inventoryMap[row.code]!.stock - row.quantity;
         }
         if (stock < 0) {
-          form.states[form.tSave]!.state = DataState.error;
+          form.states[form.tSave]!.state = ElementState.error;
           form.states[form.tSave]!.message = form.emNotStock;
           emit(ErrorState(error: form.emNotStock));
           return;
@@ -268,13 +269,14 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
   Future<void> invTransfer(
       InventoryMoveModel current, WarehouseModel inventory2) async {
     InventoryMoveModel newElement = InventoryMoveModel(
-        moveList: current.moveList,
-        concept: current.concept,
-        date: current.date,
-        document: current.document,
-        concepts: current.concepts,
-        invTransfer: inventory2,
-        states: {});
+      moveList: current.moveList,
+      concept: current.concept,
+      date: current.date,
+      document: current.document,
+      concepts: current.concepts,
+      invTransfer: inventory2,
+      states: {},
+    );
     emit(InitialState());
     emit(LoadedState(form: newElement));
   }
