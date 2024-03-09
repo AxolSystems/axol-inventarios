@@ -20,4 +20,6 @@ class DataFindValues {
   DataFindValues.empty()
       : values = [],
         data = null;
+
+  get id => null;
 }

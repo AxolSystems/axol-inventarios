@@ -41,12 +41,14 @@ class SecondaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final bool? isLoading;
+  final Icon? icon;
 
   const SecondaryButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
     this.isLoading,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -56,6 +58,7 @@ class SecondaryButtonDialog extends StatefulWidget {
 class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
   @override
   Widget build(BuildContext context) {
+    final icon_ = widget.icon;
     final String fText = widget.text ?? 'Regresar';
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
@@ -67,7 +70,7 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
         foregroundColor:
             isLoading_ ? ColorPalette.lightBackground : ColorPalette.lightItems10,
       ),
-      child: Text(fText, style: Typo.bodyDark),
+      child: icon_ ?? Text(fText, style: Typo.bodyDark),
     );
   }
 }

@@ -50,10 +50,14 @@ class DrawerBox extends StatelessWidget {
     }
     if (actions != null && actions!.isNotEmpty) {
       for (var element in actions!) {
-        drawerActions.add(Padding(
-          padding: const EdgeInsets.all(4),
-          child: element,
-        ));
+        if (element is Expanded) {
+          drawerActions.add(element);
+        } else {
+          drawerActions.add(Padding(
+            padding: const EdgeInsets.all(4),
+            child: element,
+          ));
+        }
       }
     }
     if (child == null) {
