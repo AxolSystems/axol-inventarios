@@ -53,16 +53,16 @@ class PageInvMov extends StatelessWidget {
                 products.add(InventoryMoveRowModel.empty());
                 form.moveList = products;
                 context.read<MovesFormCubit>().setProducts(products);
-                context.read<InventoryMovesCubit>().load(form);
+                //context.read<InventoryMovesCubit>().load(form);
               },
             ),
             ElementsBarModel(
               text: null,
               icon: const Icon(Icons.save),
               action: () {
-                context
+                /*context
                     .read<InventoryMovesCubit>()
-                    .saveMovements(form, warehouse);
+                    .saveMovements(form, warehouse);*/
               },
             )
           ],

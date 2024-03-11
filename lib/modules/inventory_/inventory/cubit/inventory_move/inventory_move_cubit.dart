@@ -71,8 +71,12 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     if (productDB != null) {
       upMoveRow.description = productDB.description;
       upMoveRow.weightUnit = productDB.weight!;
-      upMoveRow.weightTotal = (double.tryParse(moveRow.quantityTf.text) ?? 0) * moveRow.weightUnit;
+      upMoveRow.weightTotal =
+          (double.tryParse(moveRow.quantityTf.text) ?? 0) * moveRow.weightUnit;
       upMoveRow.codeState = DataState(state: ElementState.loaded, message: '');
+      if (moveRow.quantityState.state == ElementState.error) {
+        enterQuantity(index, warehouse, form);
+      }
     } else {
       upMoveRow.codeState =
           DataState(state: ElementState.error, message: moveRow.emNotProduct);
@@ -89,6 +93,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     final InventoryMoveRowModel moveRow = form.moveList[index];
     InventoryModel? inventoryRow;
     final ProductModel? productDB;
+    final quantity = double.tryParse(form.moveList[index].quantityTf.text) ?? 0;
 
     emit(InitialInventoryMoveState());
     form.moveList[index].quantityState =
@@ -97,40 +102,99 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
 
     inventoryRow = await InventoryRepo()
         .fetchRowByCode(form.moveList[index].codeTf.text, warehouse.name);
-    productDB =
-        await ProductRepo().fetchProduct(form.moveList[index].codeTf.text);
 
     if (form.concept.type == 1 && inventoryRow != null) {
-      if (double.parse(form.moveList[index].quantityTf.text) >
-              inventoryRow.stock &&
+      if (quantity > inventoryRow.stock &&
           form.concepts.where((x) => x.text == form.concept.text).first.type ==
               1) {
         form.moveList[index].quantityState =
             DataState(state: ElementState.error, message: moveRow.emNotStock);
       } else {
         form.moveList[index].weightTotal =
-            (double.tryParse(form.moveList[index].quantityTf.text) ??
-                0) * form.moveList[index].weightUnit;
+            quantity * form.moveList[index].weightUnit;
         form.moveList[index].quantityState =
             DataState(state: ElementState.loaded, message: '');
       }
-    } else if (form.concept.type == 0 && productDB != null) {
-      form.moveList[index].weightTotal =
-          (double.tryParse(form.moveList[index].quantityTf.text) ??
-              0) * form.moveList[index].weightUnit;
-      form.moveList[index].quantityState =
-          DataState(state: ElementState.loaded, message: '');
     } else {
-      form.moveList[index].quantityState =
-          DataState(state: ElementState.error, message: moveRow.emNotStock);
+      productDB =
+          await ProductRepo().fetchProduct(form.moveList[index].codeTf.text);
+      if (form.concept.type == 0 && productDB != null) {
+        form.moveList[index].weightTotal =
+            quantity * form.moveList[index].weightUnit;
+        form.moveList[index].quantityState =
+            DataState(state: ElementState.loaded, message: '');
+      } else {
+        form.moveList[index].quantityState =
+            DataState(state: ElementState.error, message: moveRow.emNotStock);
+      }
+    }
+
+    if (form.moveList[index].description == '' &&
+        form.moveList[index].codeState.state != ElementState.error) {
+      enterCode(index, form, warehouse);
     }
 
     emit(InitialInventoryMoveState());
     emit(LoadedInventoryMoveState());
   }
 
-  Future<void> saveMovements(
-      final InventoryMoveModel form, final WarehouseModel warehouse) async {
+  Future<void> allValidate(
+      InventoryMoveModel form, WarehouseModel warehouse) async {
+    emit(InitialInventoryMoveState());
+    emit(LoadingInventoryMoveState());
+
+    ProductModel? productDB;
+    InventoryModel? inventoryRow;
+    InventoryMoveRowModel moveRow;
+
+    for (int i = 0; i < form.moveList.length; i++) {
+      final quantity = double.tryParse(form.moveList[i].quantityTf.text) ?? 0;
+      moveRow = form.moveList[i];
+      productDB =
+          await ProductRepo().fetchProduct(form.moveList[i].codeTf.text);
+      if (productDB != null) {
+        form.moveList[i].description = productDB.description;
+        form.moveList[i].weightUnit = productDB.weight!;
+        form.moveList[i].weightTotal = quantity * form.moveList[i].weightUnit;
+        form.moveList[i].codeState =
+            DataState(state: ElementState.loaded, message: '');
+      } else {
+        form.moveList[i].codeState = DataState(
+            state: ElementState.error, message: form.moveList[i].emNotProduct);
+        form.moveList[i].description = '';
+        form.moveList[i].weightUnit = 0;
+      }
+
+      inventoryRow = await InventoryRepo()
+          .fetchRowByCode(form.moveList[i].codeTf.text, warehouse.name);
+      if (form.concept.type == 1 && inventoryRow != null) {
+        if (quantity > inventoryRow.stock &&
+            form.concepts
+                    .where((x) => x.text == form.concept.text)
+                    .first
+                    .type ==
+                1) {
+          form.moveList[i].quantityState =
+              DataState(state: ElementState.error, message: moveRow.emNotStock);
+        } else {
+          form.moveList[i].weightTotal = quantity * form.moveList[i].weightUnit;
+          form.moveList[i].quantityState =
+              DataState(state: ElementState.loaded, message: '');
+        }
+      } else if (form.concept.type == 0 && productDB != null) {
+        form.moveList[i].weightTotal = quantity * form.moveList[i].weightUnit;
+        form.moveList[i].quantityState =
+            DataState(state: ElementState.loaded, message: '');
+      } else {
+        form.moveList[i].quantityState =
+            DataState(state: ElementState.error, message: moveRow.emNotStock);
+      }
+    }
+    emit(InitialInventoryMoveState());
+    emit(LoadedInventoryMoveState());
+  }
+
+  Future<void> save(InventoryMoveModel form, WarehouseModel warehouse) async {
     InventoryMoveModel upForm = form;
     MovementModel regMove;
     List<MovementModel> regMoveList = [];
@@ -144,6 +208,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     List<InventoryModel> inventoryListDestiny = [];
 
     try {
+      await allValidate(form, warehouse);
       emit(InitialInventoryMoveState());
       emit(LoadedInventoryMoveState());
       //Valida si se seleccionó un concepto.
@@ -161,9 +226,17 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
         emit(ErrorInventoryMoveState(error: form.emNotRow));
         return;
       } else {
+        for (int i = 0; i < form.moveList.length; i++) {
+          final element = form.moveList[i];
+          final quantity = double.tryParse(element.quantityTf.text) ?? 0;
+          if (element.codeTf.text == '' && quantity < 1) {
+            form.moveList.removeAt(i);
+            i--;
+          }
+        }
         for (var element in form.moveList) {
           final quantity = double.tryParse(element.quantityTf.text) ?? 0;
-          if (element.code == '' ||  quantity <= 1) {
+          if (element.codeTf.text == '' || quantity < 1) {
             form.states[form.tSave]!.state = ElementState.error;
             form.states[form.tSave]!.message = form.emRowMissing;
             emit(ErrorInventoryMoveState(error: form.emRowMissing));
@@ -190,26 +263,29 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
 
       //Reduce las filas sumando los que tienene la misma clave.
       for (var moveRow in form.moveList) {
-        if (mapMoveList.keys.contains(moveRow.code)) {
-          var row = mapMoveList[moveRow.code]!;
-          row.quantity = row.quantity + moveRow.quantity;
-          row.weightTotal = row.quantity * row.weightUnit;
-          mapMoveList[moveRow.code] = row;
+        if (mapMoveList.keys.contains(moveRow.codeTf.text)) {
+          var row = mapMoveList[moveRow.codeTf.text]!;
+          final rowQuantity = double.tryParse(row.quantityTf.text) ?? 0;
+          final moveRowQuantity = double.tryParse(moveRow.quantityTf.text) ?? 0;
+          row.quantityTf.text = '${rowQuantity + moveRowQuantity}';
+          row.weightTotal = rowQuantity * row.weightUnit;
+          mapMoveList[moveRow.codeTf.text] = row;
         } else {
-          mapMoveList[moveRow.code] = moveRow;
+          mapMoveList[moveRow.codeTf.text] = moveRow;
         }
       }
       upMoveList = mapMoveList.values.toList();
 
       //Obtiene los registros de inventario actuales de la lista reducida
+      emit(LoadingInventoryMoveState());
       for (var row in upForm.moveList) {
-        inventoryRow =
-            await InventoryRepo().fetchRowByCode(row.code, warehouse.name);
+        inventoryRow = await InventoryRepo()
+            .fetchRowByCode(row.codeTf.text, warehouse.name);
         if (inventoryRow != null) {
-          inventoryMap[row.code] = inventoryRow;
+          inventoryMap[row.codeTf.text] = inventoryRow;
         } else {
-          inventoryMap[row.code] =
-              InventoryModel.stockZero(row.code, warehouse);
+          inventoryMap[row.codeTf.text] =
+              InventoryModel.stockZero(row.codeTf.text, warehouse);
         }
       }
 
@@ -218,10 +294,11 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       user = await LocalUser().getLocalUser();
       final folio = await MovementRepo().fetchAvailableFolio();
       for (var row in upForm.moveList) {
+        final rowQuantity = double.tryParse(row.quantityTf.text) ?? 0;
         if (upForm.concept.type == 0) {
-          stock = inventoryMap[row.code]!.stock + row.quantity;
+          stock = inventoryMap[row.codeTf.text]!.stock + rowQuantity;
         } else {
-          stock = inventoryMap[row.code]!.stock - row.quantity;
+          stock = inventoryMap[row.codeTf.text]!.stock - rowQuantity;
         }
         if (stock < 0) {
           form.states[form.tSave]!.state = ElementState.error;
@@ -229,7 +306,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
           emit(ErrorInventoryMoveState(error: form.emNotStock));
           return;
         } else {
-          inventoryMap[row.code]!.stock = stock;
+          inventoryMap[row.codeTf.text]!.stock = stock;
         }
         regMove = MovementModel.fromRowOfDoc(
             upForm, row, warehouse, user.name, stock, folio);
@@ -243,16 +320,17 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
         inventoryMap = {};
         for (var row in upForm.moveList) {
           inventoryRow = await InventoryRepo()
-              .fetchRowByCode(row.code, upForm.invTransfer.name);
+              .fetchRowByCode(row.codeTf.text, upForm.invTransfer.name);
           if (inventoryRow != null) {
-            inventoryMap[row.code] = inventoryRow;
+            inventoryMap[row.codeTf.text] = inventoryRow;
           } else {
-            inventoryMap[row.code] =
-                InventoryModel.stockZero(row.code, warehouse);
+            inventoryMap[row.codeTf.text] =
+                InventoryModel.stockZero(row.codeTf.text, warehouse);
           }
         }
         for (var row in upForm.moveList) {
-          stock = inventoryMap[row.code]!.stock + row.quantity;
+          final rowQuantity = double.tryParse(row.quantityTf.text) ?? 0;
+          stock = inventoryMap[row.codeTf.text]!.stock + rowQuantity;
           regMove = MovementModel.transferDestiny(
               upForm, row, upForm.invTransfer, user.name, stock, folio);
           regMoveList.add(regMove);
@@ -262,7 +340,8 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     } catch (e) {
       emit(ErrorInventoryMoveState(error: e.toString()));
     } finally {
-      if (state is LoadedInventoryMoveState) {
+      if (state is LoadedInventoryMoveState ||
+          state is LoadingInventoryMoveState) {
         //Guarda los registros en caso de no existir errores.
         //Lista con movimientos a registrar: regMoveList
         await MovementRepo().insertMovemets(regMoveList);

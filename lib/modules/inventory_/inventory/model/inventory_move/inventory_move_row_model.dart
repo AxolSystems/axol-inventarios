@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../../../utilities/data_state.dart';
 
 class InventoryMoveRowModel {
-  String code;
+  //String code;
   String description;
-  double quantity;
+  //double quantity;
   double weightUnit;
   double weightTotal;
   String concept;
@@ -29,9 +29,9 @@ class InventoryMoveRowModel {
   String get emNotStock => _emNotStock;
 
   InventoryMoveRowModel({
-    required this.code,
+    //required this.code,
     required this.description,
-    required this.quantity,
+    //required this.quantity,
     required this.weightUnit,
     required this.weightTotal,
     required this.concept,
@@ -44,9 +44,9 @@ class InventoryMoveRowModel {
   });
 
   InventoryMoveRowModel.empty()
-      : code = '',
+      : //code = '',
         description = '',
-        quantity = 0,
+        //quantity = 0,
         weightUnit = 0,
         weightTotal = 0,
         concept = '',

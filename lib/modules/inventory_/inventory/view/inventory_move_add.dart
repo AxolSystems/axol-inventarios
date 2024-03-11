@@ -1,8 +1,7 @@
 import 'package:axol_inventarios/models/validation_form_model.dart';
-import 'package:axol_inventarios/modules/inventory_/inventory/cubit/inventory_movements/inventory_moves_state.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/inventory_move_row_model.dart';
-import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/data_find.dart';
@@ -66,7 +65,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
             builder: (context) => AlertDialogAxol(text: state.error),
           );
         }
-        if (state is SaveLoadedState) {
+        if (state is SavedInventoryMoveState) {
           showDialog(
               context: context,
               builder: (context) => AlertDialogAxol(
@@ -153,6 +152,9 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                   .where((x) => x.id == value)
                                   .first;
                               form.concept = concept;
+                              if (concept.type == 1) {
+                                context.read<InventoryMoveCubit>().allValidate(form, warehouse);
+                              }
                             }
                           },
                         ),
@@ -283,6 +285,10 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       LabelCell(row.description),
                                       //---Cantidad
                                       TextFieldCell(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'^\d*\.?\d*$'))
+                                        ],
                                         controller:
                                             form.moveList[index].quantityTf,
                                         isLoading: form.moveList[index]
@@ -355,7 +361,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                               onPressed: () {
                                 context
                                     .read<InventoryMoveCubit>()
-                                    .saveMovements(form, warehouse);
+                                    .save(form, warehouse);
                               },
                             ),
                           ],

@@ -59,13 +59,13 @@ class MovesFormCubit extends Cubit<InventoryMoveModel>{
 
   void setQuantityMovRow(double quantity, int index) {
     InventoryMoveModel form = state;
-    form.moveList[index].quantity = quantity;
+    form.moveList[index].quantityTf.text = quantity.toString();
     emit(form);
   }
 
   void setCodeMoveRow(String code, int index) {
     InventoryMoveModel form = state;
-    form.moveList[index].code = code;
+    form.moveList[index].codeTf.text = code;
     emit(form);
   }
 }

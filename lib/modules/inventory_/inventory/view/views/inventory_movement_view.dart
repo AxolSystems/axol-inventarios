@@ -37,7 +37,7 @@ class InventoryMovementView extends StatelessWidget {
             backgroundColor: ColorPalette.darkBackground,
             appBar: AppBarAxol(title: title).appBarAxol(),
             body: BlocConsumer<InventoryMovesCubit, InventoryMovesState>(
-              bloc: context.read<InventoryMovesCubit>()..initLoad(),
+              //bloc: context.read<InventoryMovesCubit>()..initLoad(),
               listener: (context, state) {
                 if (state is SaveLoadedState) {
                   Navigator.pop(context);

@@ -63,15 +63,15 @@ class ListviewInventoryMovement extends StatelessWidget {
                                   child: Text(element.text));
                             }).toList(),
                             onChanged: (value) {
-                              context
+                              /*context
                                   .read<InventoryMovesCubit>()
-                                  .checkErrorsMoveList(form, warehouse);
+                                  .checkErrorsMoveList(form, warehouse);*/
                               context.read<MovesFormCubit>().setConcept(form
                                   .concepts
                                   .where((x) => x.text == value)
                                   .first);
                               form = context.read<MovesFormCubit>().state;
-                              context.read<InventoryMovesCubit>().load(form);
+                              //context.read<InventoryMovesCubit>().load(form);
                               if (value == 'Salida por traspaso') {
                                 context.read<TransferCubit>().change(
                                     true, warehouse.name, state.inventory2, 1);
@@ -106,9 +106,9 @@ class ListviewInventoryMovement extends StatelessWidget {
                                   final warehouse2 = warehouseList.where((x) => x.name == value).first;
                                   context.read<TransferCubit>().change(true,
                                       state.inventory1, value!, state.concept);
-                                  context
+                                  /*context
                                       .read<InventoryMovesCubit>()
-                                      .invTransfer(form, warehouse2);
+                                      .invTransfer(form, warehouse2);*/
                                 },
                               )),
                           const SizedBox(width: 8),
@@ -124,7 +124,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                 context
                                     .read<MovesFormCubit>()
                                     .setDocument(value);
-                                context.read<InventoryMovesCubit>().load(form);
+                                //context.read<InventoryMovesCubit>().load(form);
                               },
                             ),
                           ),
@@ -260,18 +260,18 @@ class ListviewInventoryMovement extends StatelessWidget {
                                   child: Focus(
                                     onFocusChange: (value) {
                                       if (value == false) {
-                                        context
+                                        /*context
                                             .read<InventoryMovesCubit>()
                                             .enterCode(index, form,
-                                                txtCode.text, warehouse);
+                                                txtCode.text, warehouse);*/
                                       }
                                     },
                                     child: TextField(
-                                      controller: txtCode
+                                      /*controller: txtCode
                                         ..text = moveRow.code.toString()
                                         ..selection = TextSelection.collapsed(
                                             offset:
-                                                moveRow.code.toString().length),
+                                                moveRow.code.toString().length),*/
                                       textAlign: TextAlign.center,
                                       textAlignVertical:
                                           TextAlignVertical.center,
@@ -297,17 +297,17 @@ class ListviewInventoryMovement extends StatelessWidget {
                                         isDense: true,
                                       ),
                                       onSubmitted: (value) {
-                                        context
+                                        /*context
                                             .read<InventoryMovesCubit>()
                                             .enterCode(
-                                                index, form, value, warehouse);
+                                                index, form, value, warehouse);*/
                                       },
-                                      onChanged: (value) {
+                                      /*onChanged: (value) {
                                         form.moveList[index].code = value;
                                         context
                                             .read<MovesFormCubit>()
                                             .setForm(form);
-                                      },
+                                      },*/
                                       style: Typo.labelText1,
                                     ),
                                   ),
@@ -340,10 +340,10 @@ class ListviewInventoryMovement extends StatelessWidget {
                                             context
                                                 .read<MovesFormCubit>()
                                                 .setCodeMoveRow(value, index);
-                                            context
+                                            /*context
                                                 .read<InventoryMovesCubit>()
                                                 .enterCode(index, form, value,
-                                                    warehouse);
+                                                    warehouse);*/
                                           }
                                           //txtCode.text = value.toString();
                                         });
@@ -407,7 +407,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                                 ShowDetailsProductStockCubit(),
                                             child:
                                                 OpenDetailsProductStockController(
-                                              code: moveRow.code,
+                                              code: moveRow.codeTf.text,
                                               inventoryName: warehouse.name,
                                             ),
                                           )),
@@ -434,9 +434,9 @@ class ListviewInventoryMovement extends StatelessWidget {
                                 if (value == false) {
                                   if (form.concept.text != '') {
                                     form = context.read<MovesFormCubit>().state;
-                                    context
+                                    /*context
                                         .read<InventoryMovesCubit>()
-                                        .enterQuantity(index, warehouse, form);
+                                        .enterQuantity(index, warehouse, form);*/
                                   } else {
                                     showDialog(
                                       context: context,
@@ -461,9 +461,9 @@ class ListviewInventoryMovement extends StatelessWidget {
                                         form = context
                                             .read<MovesFormCubit>()
                                             .state;
-                                        context
+                                        /*context
                                             .read<InventoryMovesCubit>()
-                                            .load(form);
+                                            .load(form);*/
                                       },
                                     );
                                   }
@@ -495,18 +495,18 @@ class ListviewInventoryMovement extends StatelessWidget {
                                                   : ColorPalette.secondary)),
                                   isDense: true,
                                 ),
-                                controller: TextEditingController()
+                                /*controller: TextEditingController()
                                   ..text = moveRow.quantity.toString()
                                   ..selection = TextSelection.collapsed(
                                       offset:
-                                          moveRow.quantity.toString().length),
+                                          moveRow.quantity.toString().length),*/
                                 style: Typo.labelText1,
                                 onSubmitted: (value) {
                                   if (form.concept.text != '') {
                                     form = context.read<MovesFormCubit>().state;
-                                    context
+                                    /*context
                                         .read<InventoryMovesCubit>()
-                                        .enterQuantity(index, warehouse, form);
+                                        .enterQuantity(index, warehouse, form);*/
                                   } else {
                                     showDialog(
                                       context: context,
@@ -531,9 +531,9 @@ class ListviewInventoryMovement extends StatelessWidget {
                                         form = context
                                             .read<MovesFormCubit>()
                                             .state;
-                                        context
+                                        /*context
                                             .read<InventoryMovesCubit>()
-                                            .load(form);
+                                            .load(form);*/
                                       },
                                     );
                                   }
@@ -598,9 +598,9 @@ class ListviewInventoryMovement extends StatelessWidget {
                                     context
                                         .read<MovesFormCubit>()
                                         .setProducts(products);
-                                    context
+                                    /*context
                                         .read<InventoryMovesCubit>()
-                                        .load(form);
+                                        .load(form);*/
                                   },
                                   icon: const Icon(
                                     Icons.delete,
