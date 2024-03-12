@@ -14,6 +14,7 @@ import '../../model/inventory_move/inventory_move_model.dart';
 import '../../model/inventory_move/inventory_move_row_model.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/inventory_concepts_repo.dart';
+import '../../repository/warehouses_repo.dart';
 import 'inventory_move_state.dart';
 
 class InventoryMoveCubit extends Cubit<InventoryMoveState> {
@@ -24,6 +25,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       emit(InitialInventoryMoveState());
       emit(LoadingInventoryMoveState());
       List<ConceptMoveModel> conceptList;
+      List<WarehouseModel> warehouseList;
 
       conceptList = await InventoryConceptsRepo().fetchAllConcepts();
       conceptList.sort(
@@ -31,6 +33,10 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       );
       form.concepts = conceptList;
       form.moveList.add(InventoryMoveRowModel.empty());
+
+      warehouseList = await WarehousesRepo().fetchAllWarehouses();
+      warehouseList.sort((a, b) => a.id.compareTo(b.id));
+      form.warehouseList = warehouseList;
 
       emit(LoadedInventoryMoveState());
     } catch (e) {
@@ -69,7 +75,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     //Sí el producto existe, lo agrega a la lista de movimientos que está por
     // emitir.
     if (productDB != null) {
-      upMoveRow.description = productDB.description;
+      upMoveRow.product = productDB;
       upMoveRow.weightUnit = productDB.weight!;
       upMoveRow.weightTotal =
           (double.tryParse(moveRow.quantityTf.text) ?? 0) * moveRow.weightUnit;
@@ -80,7 +86,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     } else {
       upMoveRow.codeState =
           DataState(state: ElementState.error, message: moveRow.emNotProduct);
-      upMoveRow.description = '';
+      upMoveRow.product = ProductModel.empty();
       upMoveRow.weightUnit = 0;
     }
     form.moveList[index] = upMoveRow;
@@ -129,7 +135,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       }
     }
 
-    if (form.moveList[index].description == '' &&
+    if (form.moveList[index].product.description == '' &&
         form.moveList[index].codeState.state != ElementState.error) {
       enterCode(index, form, warehouse);
     }
@@ -153,7 +159,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       productDB =
           await ProductRepo().fetchProduct(form.moveList[i].codeTf.text);
       if (productDB != null) {
-        form.moveList[i].description = productDB.description;
+        form.moveList[i].product = productDB;
         form.moveList[i].weightUnit = productDB.weight!;
         form.moveList[i].weightTotal = quantity * form.moveList[i].weightUnit;
         form.moveList[i].codeState =
@@ -161,7 +167,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       } else {
         form.moveList[i].codeState = DataState(
             state: ElementState.error, message: form.moveList[i].emNotProduct);
-        form.moveList[i].description = '';
+        form.moveList[i].product = ProductModel.empty();
         form.moveList[i].weightUnit = 0;
       }
 

@@ -6,6 +6,7 @@ import 'inventory_move_row_model.dart';
 class InventoryMoveModel {
   List<InventoryMoveRowModel> moveList;
   List<ConceptMoveModel> concepts;
+  List<WarehouseModel> warehouseList;
   ConceptMoveModel concept;
   String document;
   DateTime date;
@@ -20,6 +21,7 @@ class InventoryMoveModel {
     required this.concepts,
     required this.invTransfer,
     required this.states,
+    required this.warehouseList,
   });
 
   static const String _moveList = 'moveList';
@@ -50,6 +52,7 @@ class InventoryMoveModel {
 
   InventoryMoveModel.empty()
       : moveList = [],
+        warehouseList = [],
         concept = ConceptMoveModel.empty(),
         date = DateTime.now(),
         document = '',

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../utilities/data_state.dart';
+import '../../../product/model/product_model.dart';
 
 class InventoryMoveRowModel {
   //String code;
-  String description;
+  //String description;
   //double quantity;
+  ProductModel product;
   double weightUnit;
   double weightTotal;
   String concept;
@@ -30,8 +32,9 @@ class InventoryMoveRowModel {
 
   InventoryMoveRowModel({
     //required this.code,
-    required this.description,
+    //required this.description,
     //required this.quantity,
+    required this.product,
     required this.weightUnit,
     required this.weightTotal,
     required this.concept,
@@ -45,8 +48,9 @@ class InventoryMoveRowModel {
 
   InventoryMoveRowModel.empty()
       : //code = '',
-        description = '',
+        //description = '',
         //quantity = 0,
+        product = ProductModel.empty(),
         weightUnit = 0,
         weightTotal = 0,
         concept = '',

@@ -411,7 +411,7 @@ class ListviewInventoryMovement extends StatelessWidget {
                                               inventoryName: warehouse.name,
                                             ),
                                           )),
-                                  child: Text(moveRow.description,
+                                  child: Text(moveRow.product.description,
                                       style: Typo.labelText1),
                                 );
                               } else if (moveRow.states[moveRow.tCode]!.state ==

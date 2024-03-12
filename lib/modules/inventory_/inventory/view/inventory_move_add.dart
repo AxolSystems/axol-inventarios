@@ -16,6 +16,7 @@ import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
 import '../../product/model/product_model.dart';
+import '../../product/view/product_drawer_details.dart';
 import '../../product/view/product_drawer_find.dart';
 import '../cubit/inventory_move/inventory_move_cubit.dart';
 import '../cubit/inventory_move/inventory_move_state.dart';
@@ -84,12 +85,18 @@ class InventoryMoveAddBuild extends StatelessWidget {
 
   Widget inventoryMoveAdd(
       BuildContext context, bool isLoading, InventoryMoveModel form) {
-    List<DropdownMenuEntry<int>> entryList = [];
+    List<DropdownMenuEntry<int>> entryConceptList = [];
+    List<DropdownMenuEntry<int>> entryWarehouseList = [];
     DropdownMenuEntry<int> entry;
     for (var element in form.concepts) {
       entry = DropdownMenuEntry(
           value: element.id, label: '${element.id} - ${element.text}');
-      entryList.add(entry);
+      entryConceptList.add(entry);
+    }
+    for (var element in form.warehouseList) {
+      entry = DropdownMenuEntry(
+          value: element.id, label: '${element.id} - ${element.name}');
+      entryWarehouseList.add(entry);
     }
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
@@ -145,7 +152,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                             color: ColorPalette.lightItems10,
                             size: 20,
                           ),
-                          dropdownMenuEntries: entryList,
+                          dropdownMenuEntries: entryConceptList,
                           onSelected: (value) {
                             if (value != null) {
                               final concept = form.concepts
@@ -153,12 +160,62 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                   .first;
                               form.concept = concept;
                               if (concept.type == 1) {
-                                context.read<InventoryMoveCubit>().allValidate(form, warehouse);
+                                context
+                                    .read<InventoryMoveCubit>()
+                                    .allValidate(form, warehouse);
+                              } else {
+                                context.read<InventoryMoveCubit>().load(form);
                               }
                             }
                           },
                         ),
-                        const SizedBox(width: 8),
+                        Visibility(
+                            visible: form.concept.id == 58,
+                            replacement: const SizedBox(width: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: DropdownMenu(
+                                width: 250,
+                                enabled: !isLoading,
+                                textStyle: Typo.labelLight,
+                                label: const Text(
+                                  'Destino',
+                                  style: Typo.labelLight,
+                                ),
+                                inputDecorationTheme: InputDecorationTheme(
+                                  filled: true,
+                                  isDense: true,
+                                  constraints: BoxConstraints.tight(
+                                      const Size.fromHeight(34)),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ColorPalette.lightItems10),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: ColorPalette.primary),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                  ),
+                                ),
+                                trailingIcon: const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: ColorPalette.lightItems10,
+                                  size: 20,
+                                ),
+                                dropdownMenuEntries: entryWarehouseList,
+                                onSelected: (value) {
+                                  if (value != null) {
+                                    final warehouse = form.warehouseList
+                                        .where((x) => x.id == value)
+                                        .first;
+                                    form.invTransfer = warehouse;
+                                  }
+                                },
+                              ),
+                            )),
                         SizedBox(
                           width: 250,
                           child: TextField(
@@ -282,7 +339,18 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                         },
                                       ),
                                       //---Descripción
-                                      LabelCell(row.description),
+                                      LabelCell(
+                                        row.product.description,
+                                        suffixIcon: Icons.arrow_outward,
+                                        onPressedSuffix: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                ProductDrawerDetails(
+                                                    product: row.product),
+                                          );
+                                        },
+                                      ),
                                       //---Cantidad
                                       TextFieldCell(
                                         inputFormatters: [

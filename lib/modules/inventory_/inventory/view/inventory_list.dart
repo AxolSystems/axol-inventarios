@@ -128,7 +128,7 @@ class InventoryListBuild extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) => InventoryMovementView(
-                              warehouse: warehouse, warehouseList: []),
+                              warehouse: warehouse, warehouseList: const []),
                         );
                       },
                       icon: const Icon(
@@ -146,7 +146,9 @@ class InventoryListBuild extends StatelessWidget {
                         builder: (context) => InventoryMoveAdd(
                           warehouse: warehouse,
                         ),
-                      );
+                      ).then((value) {
+                        context.read<InventoryListCubit>().load(warehouse, form);
+                      });
                     },
                     icon: const Icon(
                       Icons.troubleshoot_sharp,
