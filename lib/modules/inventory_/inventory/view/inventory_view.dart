@@ -10,7 +10,6 @@ import '../../movements/cubit/movements_view/movements_cubit.dart';
 import '../../movements/view/movement_tab.dart';
 import '../../product/cubit/product_tab/product_tab_cubit.dart';
 import '../../product/view/product_tab.dart';
-import '../cubit/warehouses_load/warehouses_load_cubit.dart';
 import 'warehouse_tab.dart';
 
 class InventoryView extends StatelessWidget {
@@ -22,7 +21,6 @@ class InventoryView extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => MovementsCuibit()),
-          BlocProvider(create: (_) => WarehousesLoadCubit()),
           BlocProvider(create: (_) => ProductTabCubit()),
         ],
         child: DefaultTabController(
