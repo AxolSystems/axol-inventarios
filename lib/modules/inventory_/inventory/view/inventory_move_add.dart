@@ -88,14 +88,14 @@ class InventoryMoveAddBuild extends StatelessWidget {
     List<DropdownMenuEntry<int>> entryConceptList = [];
     List<DropdownMenuEntry<int>> entryWarehouseList = [];
     DropdownMenuEntry<int> entry;
-    for (var element in form.concepts) {
+    for (var concept in form.concepts) {
       entry = DropdownMenuEntry(
-          value: element.id, label: '${element.id} - ${element.text}');
+          value: concept.id, label: '${concept.id} - ${concept.text}');
       entryConceptList.add(entry);
     }
-    for (var element in form.warehouseList) {
+    for (var warehouse in form.warehouseList) {
       entry = DropdownMenuEntry(
-          value: element.id, label: '${element.id} - ${element.name}');
+          value: warehouse.id, label: '${warehouse.id} - ${warehouse.name}');
       entryWarehouseList.add(entry);
     }
     return Scaffold(
@@ -120,60 +120,95 @@ class InventoryMoveAddBuild extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Row(
                       children: [
-                        DropdownMenu(
-                          width: 250,
-                          //controller: form.tfWarehose.controller,
-                          enabled: !isLoading,
-                          textStyle: Typo.labelLight,
-                          label: const Text(
-                            'Concepto',
-                            style: Typo.labelLight,
-                          ),
-                          inputDecorationTheme: InputDecorationTheme(
-                            filled: true,
-                            isDense: true,
-                            constraints:
-                                BoxConstraints.tight(const Size.fromHeight(34)),
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: ColorPalette.lightItems10),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
+                        //Se uso el Visibility porque en mac no alcanzaba a cargar a tiempo
+                        // la lista inicial de conceptos una vez pasaba a loaded.
+                        Visibility(
+                          visible: isLoading == false,
+                          replacement: DropdownMenu(
+                            width: 250,
+                            enabled: !isLoading,
+                            label: const Text(
+                              'Concepto',
+                              style: Typo.labelLight,
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: ColorPalette.primary),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
+                            inputDecorationTheme: InputDecorationTheme(
+                              constraints: BoxConstraints.tight(
+                                  const Size.fromHeight(34)),
+                              disabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: ColorPalette.lightItems10),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
                             ),
+                            trailingIcon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: ColorPalette.lightItems10,
+                              size: 20,
+                            ),
+                            dropdownMenuEntries: const [],
                           ),
-                          trailingIcon: const Icon(
-                            Icons.arrow_drop_down,
-                            color: ColorPalette.lightItems10,
-                            size: 20,
-                          ),
-                          dropdownMenuEntries: entryConceptList,
-                          onSelected: (value) {
-                            if (value != null) {
-                              final concept = form.concepts
-                                  .where((x) => x.id == value)
-                                  .first;
-                              form.concept = concept;
-                              if (concept.type == 1) {
-                                context
-                                    .read<InventoryMoveCubit>()
-                                    .allValidate(form, warehouse);
-                              } else {
-                                context.read<InventoryMoveCubit>().load(form);
+                          child: DropdownMenu(
+                            controller: form.concept.id > -1
+                                ? TextEditingController(
+                                    text:
+                                        '${form.concept.id} - ${form.concept.text}')
+                                : null,
+                            width: 250,
+                            enabled: !isLoading,
+                            textStyle: Typo.labelLight,
+                            label: const Text(
+                              'Concepto',
+                              style: Typo.labelLight,
+                            ),
+                            inputDecorationTheme: InputDecorationTheme(
+                              filled: true,
+                              isDense: true,
+                              constraints: BoxConstraints.tight(
+                                  const Size.fromHeight(34)),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: ColorPalette.lightItems10),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: ColorPalette.primary),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                            ),
+                            trailingIcon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: ColorPalette.lightItems10,
+                              size: 20,
+                            ),
+                            dropdownMenuEntries: entryConceptList,
+                            onSelected: (value) {
+                              if (value != null) {
+                                final concept = form.concepts
+                                    .where((x) => x.id == value)
+                                    .first;
+                                form.concept = concept;
+                                if (concept.type == 1) {
+                                  context
+                                      .read<InventoryMoveCubit>()
+                                      .allValidate(form, warehouse);
+                                  //context.read<InventoryMoveCubit>().load(form);
+                                } else {
+                                  context.read<InventoryMoveCubit>().load(form);
+                                }
                               }
-                            }
-                          },
+                            },
+                          ),
                         ),
                         Visibility(
                             visible: form.concept.id == 58,
                             replacement: const SizedBox(width: 8),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               child: DropdownMenu(
                                 width: 250,
                                 enabled: !isLoading,
@@ -208,10 +243,13 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                 dropdownMenuEntries: entryWarehouseList,
                                 onSelected: (value) {
                                   if (value != null) {
-                                    final warehouse = form.warehouseList
+                                    final warehouseDestiny = form.warehouseList
                                         .where((x) => x.id == value)
                                         .first;
-                                    form.invTransfer = warehouse;
+                                    form.invTransfer = warehouseDestiny;
+                                    context
+                                        .read<InventoryMoveCubit>()
+                                        .load(form);
                                   }
                                 },
                               ),
@@ -219,6 +257,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                         SizedBox(
                           width: 250,
                           child: TextField(
+                            enabled: !isLoading,
                             style: Typo.labelLight,
                             decoration: InputDecoration(
                               filled: true,
@@ -228,6 +267,11 @@ class InventoryMoveAddBuild extends StatelessWidget {
                               labelText: 'Documento',
                               labelStyle: Typo.labelLight,
                               enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorPalette.lightItems10),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              disabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: ColorPalette.lightItems10),
                                   borderRadius:
@@ -274,6 +318,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                     return InputRow(children: [
                                       //---Clave
                                       TextFieldCell(
+                                        enabled: !isLoading,
                                         controller: form.moveList[index].codeTf,
                                         isLoading: form.moveList[index]
                                                 .codeState.state ==
@@ -342,6 +387,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       LabelCell(
                                         row.product.description,
                                         suffixIcon: Icons.arrow_outward,
+                                        enabled: !isLoading,
                                         onPressedSuffix: () {
                                           showDialog(
                                             context: context,
@@ -353,6 +399,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       ),
                                       //---Cantidad
                                       TextFieldCell(
+                                        enabled: !isLoading,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(
                                               RegExp(r'^\d*\.?\d*$'))
@@ -392,7 +439,9 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       //---Peso total
                                       LabelCell(form.moveList[index].weightTotal
                                           .toString()),
+                                      //---Eliminar
                                       ButtonCell(
+                                          enabled: !isLoading,
                                           onPressed: () {
                                             form.moveList.removeAt(index);
                                             context
@@ -418,19 +467,25 @@ class InventoryMoveAddBuild extends StatelessWidget {
                           children: [
                             ButtonTool(
                               icon: Icons.add,
-                              onPressed: () {
-                                form.moveList
-                                    .add(InventoryMoveRowModel.empty());
-                                context.read<InventoryMoveCubit>().load(form);
-                              },
+                              onPressed: isLoading
+                                  ? null
+                                  : () {
+                                      form.moveList
+                                          .add(InventoryMoveRowModel.empty());
+                                      context
+                                          .read<InventoryMoveCubit>()
+                                          .load(form);
+                                    },
                             ),
                             ButtonTool(
                               icon: Icons.save,
-                              onPressed: () {
-                                context
-                                    .read<InventoryMoveCubit>()
-                                    .save(form, warehouse);
-                              },
+                              onPressed: isLoading
+                                  ? null
+                                  : () {
+                                      context
+                                          .read<InventoryMoveCubit>()
+                                          .save(form, warehouse);
+                                    },
                             ),
                           ],
                         ),

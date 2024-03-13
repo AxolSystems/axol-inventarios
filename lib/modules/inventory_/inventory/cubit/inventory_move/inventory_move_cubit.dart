@@ -32,6 +32,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
         (a, b) => a.id.compareTo(b.id),
       );
       form.concepts = conceptList;
+
       form.moveList.add(InventoryMoveRowModel.empty());
 
       warehouseList = await WarehousesRepo().fetchAllWarehouses();
@@ -196,12 +197,12 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
             DataState(state: ElementState.error, message: moveRow.emNotStock);
       }
     }
-    emit(InitialInventoryMoveState());
+    //emit(InitialInventoryMoveState());
     emit(LoadedInventoryMoveState());
   }
 
   Future<void> save(InventoryMoveModel form, WarehouseModel warehouse) async {
-    InventoryMoveModel upForm = form;
+    //InventoryMoveModel upForm = form;
     MovementModel regMove;
     List<MovementModel> regMoveList = [];
     double stock = 0;
@@ -284,7 +285,8 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
 
       //Obtiene los registros de inventario actuales de la lista reducida
       emit(LoadingInventoryMoveState());
-      for (var row in upForm.moveList) {
+      inventoryMap = {};
+      for (var row in form.moveList) {
         inventoryRow = await InventoryRepo()
             .fetchRowByCode(row.codeTf.text, warehouse.name);
         if (inventoryRow != null) {
@@ -296,12 +298,12 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
       }
 
       //Crea un registro de movimiento por cada fila de la lista actualizada.
-      upForm.moveList = upMoveList;
+      form.moveList = upMoveList;
       user = await LocalUser().getLocalUser();
       final folio = await MovementRepo().fetchAvailableFolio();
-      for (var row in upForm.moveList) {
+      for (var row in form.moveList) {
         final rowQuantity = double.tryParse(row.quantityTf.text) ?? 0;
-        if (upForm.concept.type == 0) {
+        if (form.concept.type == 0) {
           stock = inventoryMap[row.codeTf.text]!.stock + rowQuantity;
         } else {
           stock = inventoryMap[row.codeTf.text]!.stock - rowQuantity;
@@ -315,30 +317,31 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
           inventoryMap[row.codeTf.text]!.stock = stock;
         }
         regMove = MovementModel.fromRowOfDoc(
-            upForm, row, warehouse, user.name, stock, folio);
+            form, row, warehouse, user.name, stock, folio);
         regMoveList.add(regMove);
         inventoryList = inventoryMap.values.toList();
       }
 
       //Si el concepto es una salida de traspaso, obtiene los registors de
       //inventario y crea los registros extra de entrada para el inventario destino.
-      if (upForm.concept.id == 58) {
+      if (form.concept.id == 58) {
         inventoryMap = {};
-        for (var row in upForm.moveList) {
+        for (var row in form.moveList) {
           inventoryRow = await InventoryRepo()
-              .fetchRowByCode(row.codeTf.text, upForm.invTransfer.name);
+              .fetchRowByCode(row.codeTf.text, form.invTransfer.name);
           if (inventoryRow != null) {
             inventoryMap[row.codeTf.text] = inventoryRow;
           } else {
             inventoryMap[row.codeTf.text] =
-                InventoryModel.stockZero(row.codeTf.text, warehouse);
+                InventoryModel.stockZero(row.codeTf.text, form.invTransfer);
           }
         }
-        for (var row in upForm.moveList) {
+        for (var row in form.moveList) {
           final rowQuantity = double.tryParse(row.quantityTf.text) ?? 0;
           stock = inventoryMap[row.codeTf.text]!.stock + rowQuantity;
+          inventoryMap[row.codeTf.text]!.stock = stock;
           regMove = MovementModel.transferDestiny(
-              upForm, row, upForm.invTransfer, user.name, stock, folio);
+              form, row, form.invTransfer, user.name, stock, folio);
           regMoveList.add(regMove);
           inventoryListDestiny = inventoryMap.values.toList();
         }

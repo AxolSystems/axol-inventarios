@@ -35,10 +35,10 @@ class TextFieldCell extends InputCell {
   final ValidationFormModel? valid;
   final IconData? suffixIcon;
   final bool? isLoading;
+  final bool? enabled;
   const TextFieldCell({
     super.key,
     super.flex,
-    //this.isActionVisible,
     required this.onFocusChange,
     required this.borderColor,
     this.controller,
@@ -49,12 +49,14 @@ class TextFieldCell extends InputCell {
     this.valid,
     this.suffixIcon,
     this.isLoading,
+    this.enabled,
   });
   @override
   Widget build(BuildContext context) {
     final bool isValid = valid?.isValid ?? true;
     final String errorText = valid?.errorMessage ?? '';
     final flex_ = flex ?? 1;
+    final enableld_ = enabled ?? false ? true : isLoading ?? false;
     return Expanded(
         flex: flex_,
         child: Focus(
@@ -70,6 +72,7 @@ class TextFieldCell extends InputCell {
                   const SizedBox(width: 4),
                   Expanded(
                     child: TextField(
+                      enabled: enableld_,
                       inputFormatters: inputFormatters,
                       onChanged: onChanged,
                       onSubmitted: onSubmitted,
@@ -109,7 +112,8 @@ class TextFieldCell extends InputCell {
                             ? const SizedBox.square(
                                 dimension: 30,
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 14),
                                   child: CircularProgressIndicatorAxol(),
                                 ),
                               )
@@ -146,6 +150,7 @@ class LabelCell extends InputCell {
   final String text;
   final AlignmentGeometry? alignment;
   final IconData? suffixIcon;
+  final bool? enabled;
   final Function()? onPressedSuffix;
   const LabelCell(
     this.text, {
@@ -154,6 +159,7 @@ class LabelCell extends InputCell {
     this.alignment,
     this.suffixIcon,
     this.onPressedSuffix,
+    this.enabled,
   });
   @override
   Widget build(BuildContext context) {
@@ -182,7 +188,7 @@ class LabelCell extends InputCell {
                   child: SizedBox.square(
                     dimension: 30,
                     child: OutlinedButton(
-                      onPressed: onPressedSuffix,
+                      onPressed: enabled == true ? onPressedSuffix : null,
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.zero,
                         side: BorderSide.none,
@@ -206,8 +212,14 @@ class LabelCell extends InputCell {
 class ButtonCell extends InputCell {
   final Function()? onPressed;
   final Widget child;
-  const ButtonCell(
-      {super.key, this.onPressed, required this.child, super.flex});
+  final bool? enabled;
+  const ButtonCell({
+    super.key,
+    this.onPressed,
+    required this.child,
+    super.flex,
+    this.enabled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +235,7 @@ class ButtonCell extends InputCell {
               shape: const RoundedRectangleBorder(),
               foregroundColor: ColorPalette.primary,
             ),
-            onPressed: onPressed,
+            onPressed: enabled == true ? onPressed : null,
             child: child,
           ),
         ));
