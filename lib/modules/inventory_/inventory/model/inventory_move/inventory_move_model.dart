@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../../../../../utilities/data_state.dart';
 import '../warehouse_model.dart';
 import 'concept_move_model.dart';
@@ -8,7 +10,7 @@ class InventoryMoveModel {
   List<ConceptMoveModel> concepts;
   List<WarehouseModel> warehouseList;
   ConceptMoveModel concept;
-  String document;
+  TextEditingController document;
   DateTime date;
   WarehouseModel invTransfer;
   Map<String, DataState> states;
@@ -55,7 +57,7 @@ class InventoryMoveModel {
         warehouseList = [],
         concept = ConceptMoveModel.empty(),
         date = DateTime.now(),
-        document = '',
+        document = TextEditingController(),
         concepts = [],
         invTransfer = WarehouseModel.empty(),
         states = {

@@ -3,6 +3,8 @@ import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_mo
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 import '../../../../models/data_find.dart';
 import '../../../../models/inventory_row_model.dart';
@@ -22,6 +24,7 @@ import '../cubit/inventory_move/inventory_move_cubit.dart';
 import '../cubit/inventory_move/inventory_move_state.dart';
 import '../model/inventory_move/inventory_move_model.dart';
 import '../model/warehouse_model.dart';
+import 'inventory_move_pdf.dart';
 
 class InventoryMoveAdd extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -262,6 +265,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                         SizedBox(
                           width: 250,
                           child: TextField(
+                            controller: form.document,
                             enabled: !isLoading,
                             style: Typo.labelLight,
                             decoration: InputDecoration(
@@ -285,6 +289,12 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8))),
                             ),
+                            onChanged: (value) {
+                              form.document = TextEditingController.fromValue(
+                                  TextEditingValue(
+                                text: value,
+                              ));
+                            },
                           ),
                         ),
                         const Expanded(child: SizedBox()),
@@ -490,6 +500,30 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       context
                                           .read<InventoryMoveCubit>()
                                           .save(form, warehouse);
+                                    },
+                            ),
+                            ButtonTool(
+                              icon: Icons.picture_as_pdf,
+                              onPressed: isLoading
+                                  ? null
+                                  : () async {
+                                      Uint8List pdfInBytes =
+                                          await InventoryMovePdf()
+                                              .inventoryMovePdf(
+                                                  form, warehouse);
+                                      final blob = html.Blob(
+                                          [pdfInBytes], 'application/pdf');
+                                      final url =
+                                          html.Url.createObjectUrlFromBlob(
+                                              blob);
+                                      final anchor = html.document
+                                              .createElement('a')
+                                          as html.AnchorElement
+                                        ..href = url
+                                        ..style.display = 'none'
+                                        ..download = 'traspaso_prueba.pdf';
+                                      html.document.body!.children.add(anchor);
+                                      anchor.click();
                                     },
                             ),
                           ],

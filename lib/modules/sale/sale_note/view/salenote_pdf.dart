@@ -58,7 +58,7 @@ class SaleNotePDF {
               ),
               pw.Expanded(
                   child: pw.Column(children: [
-                pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE'),
+                pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV'),
                 pw.Text('JAJ100906LL9', style: bodyText),
                 pw.Text('21500', style: bodyText),
                 pw.Text('Tel: 665-521-7218 Cel: 665-799-3117', style: bodyText),
