@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../utilities/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../../../inventory_/inventory/view/views/inventory_view.dart';
+import '../../../inventory_/inventory/view/inventory_view.dart';
 import '../../../sale/view/sale_view.dart';
 
 class HomeView extends StatelessWidget {

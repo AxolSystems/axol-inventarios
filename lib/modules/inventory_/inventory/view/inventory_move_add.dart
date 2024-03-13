@@ -195,7 +195,6 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                   context
                                       .read<InventoryMoveCubit>()
                                       .allValidate(form, warehouse);
-                                  //context.read<InventoryMoveCubit>().load(form);
                                 } else {
                                   context.read<InventoryMoveCubit>().load(form);
                                 }
@@ -223,6 +222,12 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                   constraints: BoxConstraints.tight(
                                       const Size.fromHeight(34)),
                                   enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ColorPalette.lightItems10),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                  ),
+                                  disabledBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
                                         color: ColorPalette.lightItems10),
                                     borderRadius:

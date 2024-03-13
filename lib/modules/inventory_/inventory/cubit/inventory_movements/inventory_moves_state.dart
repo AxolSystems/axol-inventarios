@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../../model/inventory_move/inventory_move_model.dart';
 import '../../../../user/model/user_mdoel.dart';
 
-abstract class InventoryMovesState extends Equatable {
+/*abstract class InventoryMovesState extends Equatable {
   const InventoryMovesState();
 }
 
@@ -54,4 +54,4 @@ class ErrorState extends InventoryMovesState {
   String toString() => 'Error en InventoryMoveState: $error';
   @override
   List<Object?> get props => [error];
-}
+}*/

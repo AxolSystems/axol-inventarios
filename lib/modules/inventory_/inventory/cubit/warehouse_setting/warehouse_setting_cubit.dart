@@ -9,7 +9,7 @@ import '../../../../../models/validation_form_model.dart';
 import '../../repository/warehouses_repo.dart';
 import 'warehouse_setting_state.dart';
 
-class WarehouseSettingCubit extends Cubit<WarehouseSettingState> {
+/*class WarehouseSettingCubit extends Cubit<WarehouseSettingState> {
   WarehouseSettingCubit() : super(InitialState());
 
   /*List<ValidationFormModel> validationChange(
@@ -165,4 +165,4 @@ class WarehouseSettingCubit extends Cubit<WarehouseSettingState> {
       emit(ErrorState(error: e.toString()));
     }
   }
-}
+}*/

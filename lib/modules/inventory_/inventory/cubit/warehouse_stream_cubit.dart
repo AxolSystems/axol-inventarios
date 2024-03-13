@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../models/textfield_model.dart';
 import '../model/warehouse_stream_model.dart';
 
-class WarehouseStreamCubit extends Cubit<WarehouseStreamModel> {
+/*class WarehouseStreamCubit extends Cubit<WarehouseStreamModel> {
   WarehouseStreamModel? warehouseStream;
   WarehouseStreamCubit({this.warehouseStream})
       : super(warehouseStream ?? WarehouseStreamModel.initial());
@@ -93,4 +93,4 @@ class WarehouseStreamCubit extends Cubit<WarehouseStreamModel> {
     emit(WarehouseStreamModel.initial());
     emit(newWarehouseStream);
   }
-}
+}*/

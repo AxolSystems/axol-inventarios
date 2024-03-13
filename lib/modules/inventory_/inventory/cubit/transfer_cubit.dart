@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../models/movement_transfer_model.dart';
 import '../repository/warehouses_repo.dart';
 
-class TransferCubit extends Cubit<MovementTransferModel> {
+/*class TransferCubit extends Cubit<MovementTransferModel> {
   TransferCubit()
       : super(MovementTransferModel(
             inventories: [], inventory1: '', inventory2: '', concept: 0));
@@ -28,4 +28,4 @@ class TransferCubit extends Cubit<MovementTransferModel> {
       ));
     }
   }
-}
+}*/

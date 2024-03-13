@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utilities/widgets/appbar_axol.dart';
 import '../../../utilities/navigation_utilities.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../inventory_/inventory/view/views/inventory_view.dart';
+import '../../inventory_/inventory/view/inventory_view.dart';
 import '../../user/view/views/home_view.dart';
 import '../customer/view/customer_tab.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_form.dart';

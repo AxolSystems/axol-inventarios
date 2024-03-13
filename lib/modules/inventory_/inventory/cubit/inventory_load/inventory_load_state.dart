@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../../product/model/product_model.dart';
 
-abstract class InventoryLoadState extends Equatable {
+/*abstract class InventoryLoadState extends Equatable {
   const InventoryLoadState();
 }
 
@@ -45,4 +45,4 @@ class ErrorState extends InventoryLoadState {
 
   @override
   List<Object?> get props => [error];
-}
+}*/

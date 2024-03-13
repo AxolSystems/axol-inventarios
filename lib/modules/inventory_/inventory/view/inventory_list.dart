@@ -16,7 +16,6 @@ import '../../../../utilities/widgets/toolbar.dart';
 import '../../product/view/product_drawer_details.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
-import 'views/inventory_movement_view.dart';
 
 class InventoryList extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -127,33 +126,20 @@ class InventoryListBuild extends StatelessWidget {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => InventoryMovementView(
-                              warehouse: warehouse, warehouseList: const []),
-                        );
+                          builder: (context) => InventoryMoveAdd(
+                            warehouse: warehouse,
+                          ),
+                        ).then((value) {
+                          context
+                              .read<InventoryListCubit>()
+                              .load(warehouse, form);
+                        });
                       },
                       icon: const Icon(
                         Icons.add_outlined,
                         color: ColorPalette.darkItems,
                         size: 30,
                       ),
-                    ),
-                  ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => InventoryMoveAdd(
-                          warehouse: warehouse,
-                        ),
-                      ).then((value) {
-                        context.read<InventoryListCubit>().load(warehouse, form);
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.troubleshoot_sharp,
-                      color: ColorPalette.darkItems,
-                      size: 30,
                     ),
                   ),
                 ]),

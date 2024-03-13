@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../modules/inventory_/inventory/cubit/warehouse_find/warehouse_find_cubit.dart';
-import '../../modules/inventory_/inventory/model/warehouse_model.dart';
-import '../../modules/inventory_/inventory/view/views/warehouse_drawer_find.dart';
-import '../../modules/inventory_/product/cubit/product_find/product_find_cubit.dart';
-import '../../modules/inventory_/product/view/product_drawer_find.dart';
+import '../../modules/inventory_/inventory/view/warehouse_drawer_find.dart';
 import '../../modules/sale/customer/cubit/customer_add/customer_add_cubit.dart';
 import '../../modules/sale/customer/cubit/customer_add/customer_add_form.dart';
 import '../../modules/sale/customer/cubit/customer_delete/customer_delete_cubit.dart';

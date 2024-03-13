@@ -7,7 +7,7 @@ import '../../repository/inventory_repo.dart';
 import '../../../product/repository/product_repo.dart';
 import 'showdetails_productstock_state.dart';
 
-class ShowDetailsProductStockCubit extends Cubit<ShowDetailsProductStock> {
+/*class ShowDetailsProductStockCubit extends Cubit<ShowDetailsProductStock> {
   ShowDetailsProductStockCubit() : super(InitialState());
 
   Future<void> openDetails(String code, String inventoryName) async {
@@ -42,4 +42,4 @@ class ShowDetailsProductStockCubit extends Cubit<ShowDetailsProductStock> {
       emit(ErrorState(error: e.toString()));
     }
   }
-}
+}*/

@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../models/textfield_model.dart';
 
-abstract class WarehouseSettingState extends Equatable {
+/*abstract class WarehouseSettingState extends Equatable {
   const WarehouseSettingState();
 }
 
@@ -57,4 +57,4 @@ class ErrorState extends WarehouseSettingState {
 
   @override
   List<Object?> get props => [error];
-}
+}*/

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../models/inventory_row_model.dart';
 
-abstract class ShowDetailsProductStock extends Equatable {
+/*abstract class ShowDetailsProductStock extends Equatable {
   const ShowDetailsProductStock();
 }
 
@@ -30,4 +30,4 @@ class ErrorState extends ShowDetailsProductStock {
   String toString() => 'Error en ShowDetailsProductStock: $error';
   @override
   List<Object?> get props => [error];
-}
+}*/

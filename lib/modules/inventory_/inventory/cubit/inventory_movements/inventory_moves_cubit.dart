@@ -17,10 +17,10 @@ import '../../repository/inventory_repo.dart';
 import '../../../product/repository/product_repo.dart';
 import 'inventory_moves_state.dart';
 
-class InventoryMovesCubit extends Cubit<InventoryMovesState> {
+/*class InventoryMovesCubit extends Cubit<InventoryMovesState> {
   InventoryMovesCubit() : super(SaveInitialState());
 
-  /*Future<void> initLoad() async {
+  Future<void> initLoad() async {
     emit(InitialState());
     InventoryMoveModel form = InventoryMoveModel.empty();
     List<InventoryMoveRowModel> list = [];
@@ -308,5 +308,5 @@ class InventoryMovesCubit extends Cubit<InventoryMovesState> {
       regList.add(regMove);
     }
     return regList;
-  }*/
-}
+  }
+}*/

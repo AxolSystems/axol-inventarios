@@ -4,15 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../utilities/widgets/appbar_axol.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
-import '../../../movements/cubit/movements_view/movements_cubit.dart';
-import '../../../movements/view/movement_tab.dart';
-import '../../../product/cubit/product_tab/product_tab_cubit.dart';
-import '../../../../sale/view/sale_view.dart';
-import '../../../../user/view/views/home_view.dart';
-import '../../../product/view/product_tab.dart';
-import '../../cubit/warehouses_load/warehouses_load_cubit.dart';
-import '../controllers/listview_whmenu_controller.dart';
-import '../warehouse_tab.dart';
+import '../../../sale/view/sale_view.dart';
+import '../../../user/view/views/home_view.dart';
+import '../../movements/cubit/movements_view/movements_cubit.dart';
+import '../../movements/view/movement_tab.dart';
+import '../../product/cubit/product_tab/product_tab_cubit.dart';
+import '../../product/view/product_tab.dart';
+import '../cubit/warehouses_load/warehouses_load_cubit.dart';
+import 'warehouse_tab.dart';
 
 class InventoryView extends StatelessWidget {
   const InventoryView({super.key});

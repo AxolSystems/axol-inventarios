@@ -7,7 +7,7 @@ import '../../../product/repository/product_repo.dart';
 import '../../repository/inventory_repo.dart';
 import 'inventory_load_state.dart';
 
-class InventoryLoadCubit extends Cubit<InventoryLoadState> {
+/*class InventoryLoadCubit extends Cubit<InventoryLoadState> {
   InventoryLoadCubit() : super(InitialState());
 
   Future<void> loadInventory(String inventoryName, String filter) async {
@@ -43,4 +43,4 @@ class InventoryLoadCubit extends Cubit<InventoryLoadState> {
       emit(ErrorState(error: e.toString()));
     }
   }
-}
+}*/

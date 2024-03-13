@@ -6,7 +6,7 @@ import '../../model/inventory_move/concept_move_model.dart';
 import '../../model/inventory_move/inventory_move_model.dart';
 import '../../model/inventory_move/inventory_move_row_model.dart';
 
-class MovesFormCubit extends Cubit<InventoryMoveModel>{
+/*class MovesFormCubit extends Cubit<InventoryMoveModel>{
   MovesFormCubit() : super(InventoryMoveModel.empty());
 
   void setProducts(List<InventoryMoveRowModel> products) {
@@ -68,4 +68,4 @@ class MovesFormCubit extends Cubit<InventoryMoveModel>{
     form.moveList[index].codeTf.text = code;
     emit(form);
   }
-}
+}*/
