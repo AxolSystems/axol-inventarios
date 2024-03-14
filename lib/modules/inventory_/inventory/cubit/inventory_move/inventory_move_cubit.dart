@@ -12,6 +12,7 @@ import '../../../movements/repository/movement_repo.dart';
 import '../../model/inventory_move/concept_move_model.dart';
 import '../../model/inventory_move/inventory_move_model.dart';
 import '../../model/inventory_move/inventory_move_row_model.dart';
+import '../../model/report_inventory_move_model.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/inventory_concepts_repo.dart';
 import '../../repository/warehouses_repo.dart';
@@ -203,6 +204,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
 
   Future<void> save(InventoryMoveModel form, WarehouseModel warehouse) async {
     //InventoryMoveModel upForm = form;
+    final ReportInventoryMoveModel reportData;
     MovementModel regMove;
     List<MovementModel> regMoveList = [];
     double stock = 0;
@@ -213,6 +215,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
     InventoryModel? inventoryRow;
     List<InventoryModel> inventoryList = [];
     List<InventoryModel> inventoryListDestiny = [];
+
 
     try {
       await allValidate(form, warehouse);
@@ -358,7 +361,27 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
         await InventoryRepo().updateInventory(inventoryList);
         //Lista con registros de inventario destino: inventoryListDestiny
         await InventoryRepo().updateInventory(inventoryListDestiny);
-        emit(SavedInventoryMoveState());
+
+        if (form.concept.id == 58) {
+            reportData = ReportInventoryMoveModel.transfer(
+              dateTime: form.date,
+              document: form.document.text,
+              warehouse: warehouse,
+              warehouseDestiny: form.invTransfer,
+              productList:
+                  ReportInventoryMoveModel.movesToReportRows(form.moveList),
+            );
+          } else {
+            reportData = ReportInventoryMoveModel.singleMove(
+              warehouse: warehouse,
+              dateTime: form.date,
+              document: form.document.text,
+              productList:
+                  ReportInventoryMoveModel.movesToReportRows(form.moveList),
+              concept: form.concept,
+            );
+          }
+        emit(SavedInventoryMoveState(reportData: reportData));
       }
     }
   }

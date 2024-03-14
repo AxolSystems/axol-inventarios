@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/models/validation_form_model.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/inventory_move_row_model.dart';
+import 'package:axol_inventarios/modules/inventory_/inventory/model/report_inventory_row_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,8 +24,9 @@ import '../../product/view/product_drawer_find.dart';
 import '../cubit/inventory_move/inventory_move_cubit.dart';
 import '../cubit/inventory_move/inventory_move_state.dart';
 import '../model/inventory_move/inventory_move_model.dart';
+import '../model/report_inventory_move_model.dart';
 import '../model/warehouse_model.dart';
-import 'inventory_move_pdf.dart';
+import 'inventory_move_dialog_save.dart';
 
 class InventoryMoveAdd extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -51,6 +53,8 @@ class InventoryMoveAddBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryMoveModel form = context.read<InventoryMoveForm>().state;
+    ReportInventoryMoveModel reportData;
+
     return BlocConsumer<InventoryMoveCubit, InventoryMoveState>(
       bloc: context.read<InventoryMoveCubit>()..initLoad(form),
       builder: (context, state) {
@@ -70,17 +74,11 @@ class InventoryMoveAddBuild extends StatelessWidget {
           );
         }
         if (state is SavedInventoryMoveState) {
+          
           showDialog(
               context: context,
-              builder: (context) => AlertDialogAxol(
-                    text: 'Guardado',
-                    icon: Icons.check_circle,
-                    iconColor: ColorPalette.correct,
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                  ));
+              builder: (context) =>
+                  InventoryMoveDialogSave(reportData: state.reportData));
         }
       },
     );
@@ -293,6 +291,8 @@ class InventoryMoveAddBuild extends StatelessWidget {
                               form.document = TextEditingController.fromValue(
                                   TextEditingValue(
                                 text: value,
+                                selection: TextSelection.collapsed(
+                                    offset: value.length),
                               ));
                             },
                           ),
@@ -502,15 +502,22 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                           .save(form, warehouse);
                                     },
                             ),
-                            ButtonTool(
+                            /*ButtonTool(
                               icon: Icons.picture_as_pdf,
                               onPressed: isLoading
                                   ? null
                                   : () async {
                                       Uint8List pdfInBytes =
-                                          await InventoryMovePdf()
-                                              .inventoryMovePdf(
-                                                  form, warehouse);
+                                          await InventoryMovePdf().singleMove(
+                                              ReportInventoryMoveModel
+                                                  .singleMove(
+                                        warehouse: warehouse,
+                                        dateTime: form.date,
+                                        document: form.document.text,
+                                        concept: form.concept,
+                                        productList: ReportInventoryMoveModel
+                                            .movesToReportRows(form.moveList),
+                                      ));
                                       final blob = html.Blob(
                                           [pdfInBytes], 'application/pdf');
                                       final url =
@@ -521,11 +528,11 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                           as html.AnchorElement
                                         ..href = url
                                         ..style.display = 'none'
-                                        ..download = 'traspaso_prueba.pdf';
+                                        ..download = 'movimiento_prueba.pdf';
                                       html.document.body!.children.add(anchor);
                                       anchor.click();
                                     },
-                            ),
+                            ),*/
                           ],
                         ),
                       ],

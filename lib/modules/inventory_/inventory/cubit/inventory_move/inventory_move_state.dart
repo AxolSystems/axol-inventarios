@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/report_inventory_move_model.dart';
+
 abstract class InventoryMoveState extends Equatable {
   const InventoryMoveState();
 }
@@ -20,8 +22,10 @@ class LoadedInventoryMoveState extends InventoryMoveState {
 }
 
 class SavedInventoryMoveState extends InventoryMoveState {
+  final ReportInventoryMoveModel reportData;
+  const SavedInventoryMoveState({required this.reportData});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [reportData];
 }
 
 class ErrorInventoryMoveState extends InventoryMoveState {
