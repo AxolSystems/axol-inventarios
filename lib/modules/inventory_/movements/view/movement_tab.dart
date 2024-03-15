@@ -13,6 +13,7 @@ import '../cubit/movement_tab/movement_tab_cubit.dart';
 import '../cubit/movement_tab/movement_tab_state.dart';
 import '../model/movement_filter_model.dart';
 import '../model/movement_model.dart';
+import 'movement_drawer_pdf.dart';
 
 class MovementTab extends StatelessWidget {
   const MovementTab({super.key});
@@ -131,7 +132,11 @@ class MovementTabBuild extends StatelessWidget {
             IconButton(
               padding: EdgeInsets.zero,
               onPressed: () {
-                context.read<MovementTabCubit>().downloadPdf(movementList);
+                showDialog(
+                  context: context,
+                  builder: (context) => MovementDrawerPdf(),
+                );
+                //context.read<MovementTabCubit>().downloadPdf(movementList);
               },
               icon: const Icon(
                 Icons.picture_as_pdf,

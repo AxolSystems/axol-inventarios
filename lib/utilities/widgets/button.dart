@@ -40,8 +40,10 @@ class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
 class SecondaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
+  final TextStyle? textStyle;
   final bool? isLoading;
   final Icon? icon;
+  final BorderSide? border;
 
   const SecondaryButtonDialog({
     Key? key,
@@ -49,6 +51,8 @@ class SecondaryButtonDialog extends StatefulWidget {
     this.text,
     this.isLoading,
     this.icon,
+    this.border,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -58,19 +62,27 @@ class SecondaryButtonDialog extends StatefulWidget {
 class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
   @override
   Widget build(BuildContext context) {
-    final icon_ = widget.icon;
-    final String fText = widget.text ?? 'Regresar';
+    final icon = widget.icon;
+    final String text = widget.text ?? 'Regresar';
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
+    final BorderSide? border = widget.border;
+    final TextStyle? textStyle = widget.textStyle;
     return OutlinedButton(
       onPressed: isLoading_ ? () {} : fOnPressed,
       style: OutlinedButton.styleFrom(
         backgroundColor: ColorPalette.lightBackground,
-        side: const BorderSide(color: ColorPalette.lightItems10, width: 2),
-        foregroundColor:
-            isLoading_ ? ColorPalette.lightBackground : ColorPalette.lightItems10,
+        side: border ??
+            const BorderSide(color: ColorPalette.lightItems10, width: 2),
+        foregroundColor: isLoading_
+            ? ColorPalette.lightBackground
+            : ColorPalette.lightItems10,
       ),
-      child: icon_ ?? Text(fText, style: Typo.bodyDark),
+      child: icon != null
+          ? Row(
+              children: [icon, Text(text, style: textStyle ?? Typo.bodyDark)],
+            )
+          : Text(text, style: textStyle ?? Typo.bodyDark),
     );
   }
 }
@@ -203,23 +215,23 @@ class _SystemButton extends State<SystemButton> {
     final Widget child = widget.child;
     final double? height = widget.height;
     final double? width = widget.width;
-    final BorderSide side = widget.side ?? const BorderSide(color: ColorPalette.darkItems, width: 1);
+    final BorderSide side = widget.side ??
+        const BorderSide(color: ColorPalette.darkItems, width: 1);
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
     return SizedBox(
       height: height,
       width: width,
       child: OutlinedButton(
-      onPressed: isLoading_ ? () {} : fOnPressed,
-      style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.zero,
-        backgroundColor: ColorPalette.darkBackground,
-        side: side,
-        foregroundColor: ColorPalette.primary,
-        shape: const ContinuousRectangleBorder()
+        onPressed: isLoading_ ? () {} : fOnPressed,
+        style: OutlinedButton.styleFrom(
+            padding: EdgeInsets.zero,
+            backgroundColor: ColorPalette.darkBackground,
+            side: side,
+            foregroundColor: ColorPalette.primary,
+            shape: const ContinuousRectangleBorder()),
+        child: child,
       ),
-      child: child,
-    ),
     );
   }
 }
