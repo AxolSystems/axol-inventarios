@@ -28,6 +28,7 @@ class InventoryMoveDialogSaveBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<InventoryDialogSaveCubit, InventoryDialogSaveState>(
+      bloc: context.read<InventoryDialogSaveCubit>()..load(),
       builder: (context, state) {
         if (state is LoadingInventoryDialogSaveState) {
           return inventoryMoveDialogSave(context, true, reportData);
@@ -65,7 +66,7 @@ class InventoryMoveDialogSaveBuild extends StatelessWidget {
         SecondaryButtonDialog(
           isLoading: isLoading,
           text: 'Descargar PDF',
-          onPressed: () async {
+          onPressed: () {
             if (reportData.concept.id == 58) {
               context
                   .read<InventoryDialogSaveCubit>()

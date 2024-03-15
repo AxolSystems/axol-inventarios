@@ -53,7 +53,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryMoveModel form = context.read<InventoryMoveForm>().state;
-    ReportInventoryMoveModel reportData;
+    //ReportInventoryMoveModel reportData;
 
     return BlocConsumer<InventoryMoveCubit, InventoryMoveState>(
       bloc: context.read<InventoryMoveCubit>()..initLoad(form),
@@ -74,7 +74,6 @@ class InventoryMoveAddBuild extends StatelessWidget {
           );
         }
         if (state is SavedInventoryMoveState) {
-          
           showDialog(
               context: context,
               builder: (context) =>

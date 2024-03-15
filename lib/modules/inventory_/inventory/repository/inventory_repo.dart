@@ -355,8 +355,6 @@ class InventoryRepo {
   Future<void> updateInventory(List<InventoryModel> inventoryList) async {
     InventoryModel? invRowDB;
     for (var row in inventoryList) {
-      print('${row.code}: ${row.stock}');
-      print(row.name);
       invRowDB = await fetchRowByCode(row.code, row.name);
       if (invRowDB != null) {
         if (row.stock > 0) {

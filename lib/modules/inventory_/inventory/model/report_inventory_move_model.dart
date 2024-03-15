@@ -37,8 +37,8 @@ class ReportInventoryMoveModel {
     required this.dateTime,
     required this.document,
     required this.productList,
-  })  : warehouseList = [],
-        concept = ConceptMoveModel.empty();
+    required this.concept,
+  })  : warehouseList = [];
 
   ReportInventoryMoveModel.singleMove({
     required this.warehouse,

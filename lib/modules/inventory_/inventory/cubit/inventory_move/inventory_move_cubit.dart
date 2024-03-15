@@ -364,6 +364,7 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
 
         if (form.concept.id == 58) {
             reportData = ReportInventoryMoveModel.transfer(
+              concept: form.concept,
               dateTime: form.date,
               document: form.document.text,
               warehouse: warehouse,
