@@ -19,7 +19,7 @@ class ProductRepo {
 
   final _supabase = Supabase.instance.client;
 
-  Future<List<ProductModel>> fetchProductList(List<String> codeList) async {
+  Future<List<ProductModel>> fetchProductListCode(List<String> codeList) async {
     //Map<String, dynamic> properties;
     List<ProductModel> products = [];
     ProductModel product;

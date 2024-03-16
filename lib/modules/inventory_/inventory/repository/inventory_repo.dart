@@ -44,7 +44,7 @@ class InventoryRepo {
     }
     //Obtiene la lista de productos: {code: Map<String,dynamic>}
     final List<ProductModel> productsDB =
-        await ProductRepo().fetchProductList(codes);
+        await ProductRepo().fetchProductListCode(codes);
     //Llena inventoryList con iteraciones de codes y utilizando los elementos
     // de productDB e inventoryDB.
     for (String element in codes) {
@@ -141,7 +141,7 @@ class InventoryRepo {
       code = element[_code];
       codeList.add(code);
     }
-    productList = await ProductRepo().fetchProductList(codeList);
+    productList = await ProductRepo().fetchProductListCode(codeList);
     if (inventoryListDB.isNotEmpty) {
       for (var element in inventoryListDB) {
         inventory = InventoryModel(
@@ -230,7 +230,7 @@ class InventoryRepo {
       code = element[_code];
       codeList.add(code);
     }
-    productList = await ProductRepo().fetchProductList(codeList);
+    productList = await ProductRepo().fetchProductListCode(codeList);
     if (inventoryListDB.isNotEmpty) {
       for (var element in inventoryListDB) {
         inventory = InventoryModel(

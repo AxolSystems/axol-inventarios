@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../model/movement_filter_model.dart';
@@ -61,6 +63,8 @@ class MovementRepo {
     List<Map<String, dynamic>> movementsDB = [];
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
+    final List<String> documentList = filter?.document ?? [];
+    final List<int> folioList = filter?.folio ?? [];
     MovementFilterModel filter_ = filter ?? MovementFilterModel.empty();
 
     if (filter_.warehouse.name != '') {
@@ -76,6 +80,8 @@ class MovementRepo {
         .select<PostgrestResponse<List<Map<String, dynamic>>>>(
             '*', const FetchOptions(count: CountOption.exact))
         .match(match)
+        .in_(_document, documentList)
+        .in_(_folio, folioList)
         .lte(_time, endDateInt)
         .gte(_time, initDateInt)
         .order(_time, ascending: true)

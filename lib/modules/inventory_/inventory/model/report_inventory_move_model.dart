@@ -5,9 +5,9 @@ import 'warehouse_model.dart';
 
 class ReportInventoryMoveModel {
   final WarehouseModel warehouse;
-  final List<WarehouseModel> warehouseList;
   final WarehouseModel warehouseDestiny;
   final String document;
+  final int folio;
   final DateTime dateTime;
   final List<ReportInventoryRowModel> productList;
   final ConceptMoveModel concept;
@@ -18,8 +18,8 @@ class ReportInventoryMoveModel {
     required this.document,
     required this.productList,
     required this.warehouseDestiny,
-    required this.warehouseList,
     required this.concept,
+    required this.folio,
   });
 
   ReportInventoryMoveModel.empty()
@@ -29,7 +29,7 @@ class ReportInventoryMoveModel {
         productList = [],
         warehouse = WarehouseModel.empty(),
         warehouseDestiny = WarehouseModel.empty(),
-        warehouseList = [];
+        folio = -1;
 
   ReportInventoryMoveModel.transfer({
     required this.warehouse,
@@ -38,7 +38,7 @@ class ReportInventoryMoveModel {
     required this.document,
     required this.productList,
     required this.concept,
-  })  : warehouseList = [];
+  }) : folio = -1;
 
   ReportInventoryMoveModel.singleMove({
     required this.warehouse,
@@ -47,7 +47,7 @@ class ReportInventoryMoveModel {
     required this.productList,
     required this.concept,
   })  : warehouseDestiny = WarehouseModel.empty(),
-        warehouseList = [];
+        folio = -1;
 
   static List<ReportInventoryRowModel> movesToReportRows(
       List<InventoryMoveRowModel> moveList) {

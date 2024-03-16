@@ -120,6 +120,26 @@ class WarehousesRepo {
     return warehouses;
   }
 
+  Future<List<WarehouseModel>> fetchWarehouseListId(List<int> idList) async {
+    List<WarehouseModel> warehouses = [];
+    WarehouseModel warehouse;
+    List<Map<String, dynamic>> warehousesDB = [];
+    warehousesDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>()
+        .in_(_id, idList);
+    if (warehousesDB.isNotEmpty) {
+      for (var element in warehousesDB) {
+        warehouse = WarehouseModel(
+            id: element[_id],
+            name: element[_name].toString(),
+            retailManager: element[_retailManager].toString());
+        warehouses.add(warehouse);
+      }
+    }
+    return warehouses;
+  }
+
   Future<void> insertWarehouse(WarehouseModel warehouse) async {
     await _supabase.from(_table).insert({
       _id: warehouse.id,

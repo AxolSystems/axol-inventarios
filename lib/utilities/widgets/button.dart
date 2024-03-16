@@ -64,12 +64,12 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
   Widget build(BuildContext context) {
     final icon = widget.icon;
     final String text = widget.text ?? 'Regresar';
-    final Function() fOnPressed = widget.onPressed ?? () {};
+    final Function()? fOnPressed = widget.onPressed;
     final bool isLoading_ = widget.isLoading ?? false;
     final BorderSide? border = widget.border;
     final TextStyle? textStyle = widget.textStyle;
     return OutlinedButton(
-      onPressed: isLoading_ ? () {} : fOnPressed,
+      onPressed: isLoading_ ? null : fOnPressed,
       style: OutlinedButton.styleFrom(
         backgroundColor: ColorPalette.lightBackground,
         side: border ??

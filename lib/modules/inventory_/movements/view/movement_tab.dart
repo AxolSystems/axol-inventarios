@@ -134,9 +134,8 @@ class MovementTabBuild extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => MovementDrawerPdf(),
+                  builder: (context) => MovementDrawerPdf(movementList: movementList),
                 );
-                //context.read<MovementTabCubit>().downloadPdf(movementList);
               },
               icon: const Icon(
                 Icons.picture_as_pdf,
