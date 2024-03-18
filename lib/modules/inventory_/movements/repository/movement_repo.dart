@@ -66,6 +66,7 @@ class MovementRepo {
     final List<String> documentList = filter?.document ?? [];
     final List<int> folioList = filter?.folio ?? [];
     MovementFilterModel filter_ = filter ?? MovementFilterModel.empty();
+    String orFilter = '';
 
     if (filter_.warehouse.name != '') {
       match[_warehouseName] = filter_.warehouse.name;
@@ -74,18 +75,45 @@ class MovementRepo {
       initDateInt = filter_.initDate.millisecondsSinceEpoch;
       endDateInt = filter_.endDate.millisecondsSinceEpoch;
     }
+    
+    for (var doc in documentList) {
+      if (orFilter == '') {
+        orFilter = '$_document.eq.$doc';
+      } else {
+        orFilter = '$orFilter,$_document.eq.$doc';
+      }
+    }
+    for (var folio in folioList) {
+      if (orFilter == '') {
+        orFilter = '$_folio.eq.$folio';
+      } else {
+        orFilter = '$orFilter,$_folio.eq.$folio';
+      }
+    }
+    print(orFilter);
 
-    postgrestResponse = await _supabase
-        .from(_table)
-        .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-            '*', const FetchOptions(count: CountOption.exact))
-        .match(match)
-        .in_(_document, documentList)
-        .in_(_folio, folioList)
-        .lte(_time, endDateInt)
-        .gte(_time, initDateInt)
-        .order(_time, ascending: true)
-        .range(rangeMin_, rangeMax_);
+    if (orFilter == '') {
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
+          .match(match)
+          .lte(_time, endDateInt)
+          .gte(_time, initDateInt)
+          .order(_time, ascending: true)
+          .range(rangeMin_, rangeMax_);
+    } else {
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
+          .match(match)
+          .or(orFilter)
+          .lte(_time, endDateInt)
+          .gte(_time, initDateInt)
+          .order(_time, ascending: true)
+          .range(rangeMin_, rangeMax_);
+    }
 
     movementsDB = postgrestResponse.data ?? [];
 
@@ -129,7 +157,7 @@ class MovementRepo {
       newFolio = int.tryParse(movementDB.first[_folio].toString()) ?? -1;
       if (newFolio > -1) {
         newFolio++;
-      } 
+      }
     }
     return newFolio;
   }

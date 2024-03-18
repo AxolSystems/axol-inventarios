@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:axol_inventarios/modules/inventory_/movements/cubit/movement_pdf/movement_pdf_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -174,9 +176,16 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                           Icons.download,
                           color: ColorPalette.lightItems10,
                         ),
-                        onPressed: isLoading ? null : () {
-                          
-                        },
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                context
+                                    .read<MovementPdfCubit>()
+                                    .downloadPdfFilter(
+                                      form.document.text,
+                                      form.folio.text,
+                                    );
+                              },
                       ),
                     ),
                   ],

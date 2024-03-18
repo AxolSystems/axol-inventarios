@@ -54,7 +54,8 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
       List<int> folioList = [];
       Map<String, WarehouseModel> warehouseMap = {};
       Map<String, WarehouseModel> warehouseDestinyMap = {};
-      Map<String, Map<String,ReportInventoryRowModel>> productMap = {};
+      Map<String, Map<String, ReportInventoryRowModel>> productMap = {};
+      Map<String, ReportInventoryMoveModel> dataReportMap = {};
       List<WarehouseModel> warehouseList;
       List<WarehouseModel> warehouseDestinyList;
       List<ProductModel> productList;
@@ -62,8 +63,13 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
       List<int> warehouseDestinyIdList = [];
       List<String> productCodeList = [];
       List<ReportInventoryRowModel> productRowList = [];
+      WarehouseModel warehouse;
+      ProductModel product;
 
       documentList = document.split(',');
+      if (documentList.length == 1 && documentList.single == '') {
+        documentList = [];
+      }
       for (String element in folio.split(',')) {
         final numFolio = int.tryParse(element);
         if (numFolio != null) {
@@ -71,6 +77,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
         }
       }
 
+      //Obtiene los movimientos filtrados.
       movementResponse = await MovementRepo().fetchMovements(
         filter: MovementFilterModel(
           initDate: DateTime(0),
@@ -84,77 +91,102 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
         rangeMax: 1000,
       );
 
+      //Enlista los almacenes y productos para despues muscarlos en sus bases de datos.
       for (var move in movementResponse.movementList) {
-        if (warehouseIdList.contains(move.warehouseId) == false &&
-            move.concept != 7) {
+        if (warehouseIdList.contains(move.warehouseId) == false) {
           warehouseIdList.add(move.warehouseId);
-        }
-        if (warehouseDestinyIdList.contains(move.warehouseId) == false &&
-            move.concept == 7) {
-          warehouseDestinyIdList.add(move.warehouseId);
         }
         if (productCodeList.contains(move.code) == false) {
           productCodeList.add(move.code);
         }
       }
 
+      //Busca en la base de datos los almacenes y productos enlistados.
       warehouseList =
           await WarehousesRepo().fetchWarehouseListId(warehouseIdList);
-      warehouseDestinyList =
-          await WarehousesRepo().fetchWarehouseListId(warehouseDestinyIdList);
       productList = await ProductRepo().fetchProductListCode(productCodeList);
 
+      //Pasa cada movimiento a un map de RerportInventoryMoveModel, donde
+      // los keys son los distintos documentos que se filtraron.
       for (var move in movementResponse.movementList) {
-        if (warehouseList.where((x) => x.id == move.warehouseId).isNotEmpty &&
-            move.concept != 7) {
-          warehouseMap[move.id] =
+        if (warehouseList.where((x) => x.id == move.warehouseId).isNotEmpty) {
+          warehouse =
               warehouseList.where((x) => x.id == move.warehouseId).first;
-        }
-        if (warehouseDestinyList
-                .where((x) => x.id == move.warehouseId)
-                .isNotEmpty &&
-            move.concept == 7) {
-          warehouseDestinyMap[move.id] =
-              warehouseDestinyList.where((x) => x.id == move.warehouseId).first;
-        }
-        if (productMap.keys.contains(move.document)) {
-          if (productMap[move.document].keys.contains(element)) {
-            productMap[move.document].elementAt(index) = ReportInventoryRowModel.addProduct(
-            reportInventoryRow: productMap[move.document]!,
-            quantity: move.quantity,
-          );
-          }
-          
         } else {
-          productMap[move.document] = ReportInventoryRowModel(
-            product: productList.where((x) => x.code == move.code).first,
-            quantity: move.quantity,
-          );
+          warehouse = WarehouseModel.empty();
+        }
+        if (productList.where((x) => x.code == move.code).isNotEmpty) {
+          product = productList.where((x) => x.code == move.code).first;
+        } else {
+          product = ProductModel.empty();
+        }
+
+        if (move.concept != 7) {
+          if (dataReportMap.keys.contains(move.document)) {
+            dataReportMap[move.document] = ReportInventoryMoveModel.addProduct(
+              reportMove: dataReportMap[move.document]!,
+              product: product,
+              quantity: move.quantity,
+            );
+          } else {
+            dataReportMap[move.document] = ReportInventoryMoveModel(
+              warehouse: warehouse,
+              dateTime: move.time,
+              document: move.document,
+              productList: [
+                ReportInventoryRowModel(
+                  product: product,
+                  quantity: move.quantity,
+                )
+              ],
+              warehouseDestiny: WarehouseModel.empty(),
+              concept: ConceptMoveModel(
+                id: move.concept,
+                text: move.conceptName,
+                type: move.conceptType,
+              ),
+              folio: move.folio,
+            );
+          }
+        } else {
+          if (dataReportMap.keys.contains(move.document)) {
+            dataReportMap[move.document] =
+                ReportInventoryMoveModel.warehouseDestiny(
+              reportMove: dataReportMap[move.code]!,
+              warehouseDestiny: warehouse,
+            );
+          } else {
+            dataReportMap[move.document] = ReportInventoryMoveModel(
+              warehouse: WarehouseModel.empty(),
+              dateTime: move.time,
+              document: move.document,
+              productList: [
+                ReportInventoryRowModel(
+                  product: product,
+                  quantity: move.quantity,
+                )
+              ],
+              warehouseDestiny: warehouse,
+              concept: ConceptMoveModel(
+                id: move.concept,
+                text: move.conceptName,
+                type: move.conceptType,
+              ),
+              folio: move.folio,
+            );
+          }
         }
       }
 
-      productRowList 
-
-      for (var move in movementResponse.movementList) {
-        if (dataReportList.isEmpty) {
-          dataReport = ReportInventoryMoveModel(
-            warehouse: warehouseMap[move.id] ?? WarehouseModel.empty(),
-            dateTime: move.time,
-            document: move.document,
-            productList: productMap[move.document] ?? [],
-            warehouseDestiny:
-                warehouseDestinyMap[move.id] ?? WarehouseModel.empty(),
-            concept: ConceptMoveModel(
-              id: move.concept,
-              text: move.code,
-              type: move.conceptType,
-            ),
-            folio: move.folio,
-          );
+      if (dataReportMap.keys.length == 1) {
+        dataReport = dataReportMap.values.single;
+        if (dataReport.concept.id == 58) {
+          InventoryPdfRepo.transferPdf(dataReport);
+        } else {
+          await InventoryPdfRepo.singleMove(dataReport);
         }
       }
 
-      await InventoryPdfRepo.singleMove(dataReport);
       emit(LoadedMovePdfState());
     } catch (e) {
       emit(ErrorMovePdfState(error: e.toString()));

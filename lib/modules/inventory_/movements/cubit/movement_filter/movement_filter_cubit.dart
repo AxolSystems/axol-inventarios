@@ -63,6 +63,8 @@ class MovementFilterCubit extends Cubit<MovementFilterState> {
         endDate: form.endDate,
         warehouse: warehouse ?? WarehouseModel.empty(),
         filterDate: form.filterDate,
+        document: [],
+        folio: [],
       );
       emit(SavedMovementFilterState(filter: filter));
     } catch (e) {
