@@ -1,7 +1,6 @@
-import 'dart:html';
-
 import 'package:axol_inventarios/modules/inventory_/movements/cubit/movement_pdf/movement_pdf_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
@@ -160,8 +159,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Descarga por filtro',
-                        style: Typo.boldLabelDark),
+                    const Text('Descarga por folio', style: Typo.boldLabelDark),
                     const SizedBox(
                       height: 8,
                     ),
@@ -186,6 +184,90 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                       form.folio.text,
                                     );
                               },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Folio',
+                        style: Typo.labelDark,
+                      ),
+                      TextField(
+                        controller: form.folio,
+                        enabled: !isLoading,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*$')),
+                        ],
+                        style: Typo.bodyDark,
+                        decoration: InputDecoration(
+                          filled: true,
+                          isDense: true,
+                          fillColor: ColorPalette.filled,
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorPalette.lightItems10),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          constraints:
+                              BoxConstraints.tight(const Size.fromHeight(40)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: ColorPalette.primary),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Filtra movimientos al inventario por número de folio.',
+                        style: Typo.smallLabelDark,
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+        ),
+        const Divider(
+          color: ColorPalette.lightItems20,
+          height: 1,
+          thickness: 1,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Descarga por documento',
+                        style: Typo.boldLabelDark),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: SecondaryButtonDialog(
+                        text: 'Descargar',
+                        textStyle: Typo.labelDark,
+                        border:
+                            const BorderSide(color: ColorPalette.lightItems10),
+                        icon: const Icon(
+                          Icons.download,
+                          color: ColorPalette.lightItems10,
+                        ),
+                        onPressed: isLoading ? null : () {},
                       ),
                     ),
                   ],
@@ -225,51 +307,13 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Filtra movimientos al inventario por documento. Separe por comas si quiere agregar más de un documento.',
-                        style: Typo.smallLabelDark,
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Folio',
-                        style: Typo.labelDark,
-                      ),
-                      TextField(
-                        controller: form.folio,
-                        enabled: !isLoading,
-                        style: Typo.bodyDark,
-                        decoration: InputDecoration(
-                          filled: true,
-                          isDense: true,
-                          fillColor: ColorPalette.filled,
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: ColorPalette.lightItems10),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          constraints:
-                              BoxConstraints.tight(const Size.fromHeight(40)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: ColorPalette.primary),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Filtra movimientos al inventario por número de folio. Separe por comas si quiere agregar más de un número de folio.',
+                        'Filtra movimientos al inventario por documento.',
                         style: Typo.smallLabelDark,
                       ),
                     ],
                   )),
             ],
           ),
-        ),
-        const Divider(
-          color: ColorPalette.lightItems20,
-          height: 1,
-          thickness: 1,
         ),
       ],
     );
