@@ -1,9 +1,12 @@
 import 'package:axol_inventarios/modules/inventory_/inventory/model/report_inventory_row_model.dart';
+import 'package:axol_inventarios/modules/inventory_/inventory/model/report_multimove/report_multimove_subrow_model.dart';
 import 'package:axol_inventarios/modules/inventory_/movements/model/movement_filter_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../inventory/model/inventory_move/concept_move_model.dart';
 import '../../../inventory/model/report_inventory_move_model.dart';
+import '../../../inventory/model/report_multimove/report_multimove_model.dart';
+import '../../../inventory/model/report_multimove/report_mutlimove_row_model.dart';
 import '../../../inventory/model/warehouse_model.dart';
 import '../../../inventory/repository/inventory_pdf_repo.dart';
 import '../../../inventory/repository/warehouses_repo.dart';
@@ -43,6 +46,9 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
   }
 
   Future<void> downloadPdfFolio(int folio) async {
+    bool isError = false;
+    String messangeError = '';
+
     try {
       emit(InitialMovePdfState());
       emit(LoadingMovePdfState());
@@ -70,6 +76,12 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
         rangeMin: 0,
         rangeMax: 1000,
       );
+
+      if (movementResponse.count <= 0) {
+        isError = true;
+        messangeError = 'Agrege folio existente';
+        return;
+      }
 
       //Enlista los almacenes y productos para despues muscarlos en sus bases de datos.
       for (var move in movementResponse.movementList) {
@@ -145,10 +157,142 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
       emit(LoadedMovePdfState());
     } catch (e) {
       emit(ErrorMovePdfState(error: e.toString()));
+    } finally {
+      if (isError == true) {
+        emit(ErrorMovePdfState(error: messangeError));
+      }
     }
   }
 
-  Future<void> downloadPdfFilter(String document, String folio) async {
+  Future<void> downloadPdfDocument(String document) async {
+    bool isError = false;
+    String messangeError = '';
+
+    try {
+      emit(InitialMovePdfState());
+      emit(LoadingMovePdfState());
+
+      MovementResponseModel movementResponse;
+      List<int> warehouseIdList = [];
+      List<String> productCodeList = [];
+      List<WarehouseModel> warehouseList;
+      List<ProductModel> productList;
+      ReportMultimoveModel dataReport = ReportMultimoveModel.empty();
+      ReportMultimoveSubrowModel subRow;
+
+      //Obtiene los movimientos filtrados.
+      movementResponse = await MovementRepo().fetchMovements(
+        filter: MovementFilterModel(
+          initDate: DateTime(0),
+          endDate: DateTime(0),
+          warehouse: WarehouseModel.empty(),
+          filterDate: false,
+          document: [document],
+          folio: [],
+        ),
+        rangeMin: 0,
+        rangeMax: 1000,
+      );
+
+      if (movementResponse.count <= 0) {
+        isError = true;
+        messangeError = 'Agrege un documento existente';
+        return;
+      }
+
+      //Enlista los almacenes y productos para despues muscarlos en sus bases de datos.
+      for (var move in movementResponse.movementList) {
+        if (warehouseIdList.contains(move.warehouseId) == false) {
+          warehouseIdList.add(move.warehouseId);
+        }
+        if (productCodeList.contains(move.code) == false) {
+          productCodeList.add(move.code);
+        }
+      }
+
+      //Busca en la base de datos los almacenes y productos enlistados.
+      warehouseList =
+          await WarehousesRepo().fetchWarehouseListId(warehouseIdList);
+      productList = await ProductRepo().fetchProductListCode(productCodeList);
+
+      //Llena los datos del documento
+      for (var move in movementResponse.movementList) {
+        //Agrega datos del encaezado
+        if (dataReport.startTime.year == 0) {
+          dataReport = ReportMultimoveModel.changeDoc(
+            reportMultimove: dataReport,
+            document: document,
+          );
+          dataReport = ReportMultimoveModel.changeStartTime(
+            reportMultimove: dataReport,
+            startTime: move.time,
+          );
+        } else if (dataReport.startTime.millisecondsSinceEpoch >
+            move.time.millisecondsSinceEpoch) {
+          dataReport = ReportMultimoveModel.changeStartTime(
+            reportMultimove: dataReport,
+            startTime: move.time,
+          );
+        } else if (dataReport.endTime.millisecondsSinceEpoch >
+            move.time.millisecondsSinceEpoch) {
+          dataReport = ReportMultimoveModel.changeEndTime(
+            reportMultimove: dataReport,
+            endTime: move.time,
+          );
+        }
+
+        //Declara subrow de indice
+        subRow = ReportMultimoveSubrowModel(
+          concept: ConceptMoveModel(
+            id: move.concept,
+            text: move.conceptName,
+            type: move.conceptType,
+          ),
+          dateTime: move.time,
+          document: move.document,
+          folio: move.folio,
+          quantity: move.quantity,
+        );
+
+        //Captura subrow de indicie
+        if (dataReport.rowList
+            .where((x) => x.product.code == move.code)
+            .isNotEmpty) {
+          dataReport = ReportMultimoveModel.addRow(
+            reportMultimove: dataReport,
+            row: ReportMultimoveRowModel(
+              product: productList.where((x) => x.code == move.code).first,
+              warehouse:
+                  warehouseList.where((x) => x.id == move.warehouseId).first,
+              subrowList: [subRow],
+            ),
+          );
+        } else {
+          for (int i = 0; dataReport.rowList.length > i; i++) {
+            if (dataReport.rowList[i].product.code == move.code) {
+              dataReport.rowList[i] = ReportMultimoveRowModel.addSubrow(
+                row: dataReport.rowList[i],
+                subrow: subRow,
+              );
+            }
+          }
+        }
+      }
+
+      //Descarga pdf
+      InventoryPdfRepo.multiMove(dataReport);
+
+      emit(LoadedMovePdfState());
+    } catch (e) {
+      emit(ErrorMovePdfState(error: e.toString()));
+    } finally {
+      if (isError == true) {
+        emit(ErrorMovePdfState(error: messangeError));
+      }
+    }
+  }
+
+  /*Future<void> downloadPdfFilter(String document, String folio) async {
     try {
       emit(InitialMovePdfState());
       emit(LoadingMovePdfState());
@@ -297,7 +441,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
     } catch (e) {
       emit(ErrorMovePdfState(error: e.toString()));
     }
-  }
+  }*/
 }
 
 class MovementPdfForm extends Cubit<MovementPdfFormModel> {

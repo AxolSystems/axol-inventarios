@@ -2,7 +2,10 @@
 import 'dart:html' as html;
 import 'package:flutter/services.dart';
 
+import '../../../user/model/user_mdoel.dart';
+import '../../../user/repository/user_repo.dart';
 import '../model/report_inventory_move_model.dart';
+import '../model/report_multimove/report_multimove_model.dart';
 import '../view/inventory_move_pdf.dart';
 
 class InventoryPdfRepo {
@@ -24,6 +27,21 @@ class InventoryPdfRepo {
     final String titleFile = 'movimiento_${dataReport.document}.pdf';
     Uint8List pdfInBytes =
         await InventoryMovePdf().singleMove(dataReport);
+    final blob = html.Blob([pdfInBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = titleFile;
+    html.document.body!.children.add(anchor);
+    anchor.click();
+  }
+
+  static Future<void> multiMove(ReportMultimoveModel dataReport) async {
+    final String titleFile = 'reporte_de_movimientos_${dataReport.document}.pdf';
+    final UserModel user = await LocalUser().getLocalUser();
+    Uint8List pdfInBytes =
+        await InventoryMovePdf().multiMove(dataReport, user, DateTime.now());
     final blob = html.Blob([pdfInBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     final anchor = html.document.createElement('a') as html.AnchorElement

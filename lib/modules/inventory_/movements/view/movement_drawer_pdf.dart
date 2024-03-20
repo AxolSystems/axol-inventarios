@@ -177,12 +177,19 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                         onPressed: isLoading
                             ? null
                             : () {
-                                context
-                                    .read<MovementPdfCubit>()
-                                    .downloadPdfFilter(
-                                      form.document.text,
-                                      form.folio.text,
-                                    );
+                                final int folio =
+                                    int.tryParse(form.folio.text) ?? -1;
+                                if (folio < 0) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const AlertDialogAxol(
+                                              text: 'Agrege folio existente'));
+                                } else {
+                                  context
+                                      .read<MovementPdfCubit>()
+                                      .downloadPdfFolio(folio);
+                                }
                               },
                       ),
                     ),
@@ -267,7 +274,13 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                           Icons.download,
                           color: ColorPalette.lightItems10,
                         ),
-                        onPressed: isLoading ? null : () {},
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                context
+                                    .read<MovementPdfCubit>()
+                                    .downloadPdfDocument(form.document.text);
+                              },
                       ),
                     ),
                   ],

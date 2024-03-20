@@ -8,12 +8,9 @@ import '../model/movement_model.dart';
 class MovementPdf {
   Future<Uint8List> movementPdf(List<MovementModel> movementList) {
     final pdf = pw.Document();
-    const primaryColor = PdfColors.grey300;
     const pw.TextStyle bodyText = pw.TextStyle(fontSize: 8);
     final pw.TextStyle subtitleText10 =
         pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold);
-    final pw.TextStyle subtitleText12 =
-        pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold);
     final pw.TextStyle titleTextBold =
         pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold);
     final pw.TextStyle titleText =

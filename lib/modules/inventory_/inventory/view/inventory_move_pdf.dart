@@ -3,8 +3,10 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../../../utilities/format.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../model/inventory_move/concept_move_model.dart';
 import '../model/report_inventory_move_model.dart';
+import '../model/report_multimove/report_multimove_model.dart';
 
 class InventoryMovePdf {
   Future<Uint8List> transfer(ReportInventoryMoveModel data) async {
@@ -213,8 +215,7 @@ class InventoryMovePdf {
               child: pw.Row(children: [
                 pw.Expanded(
                     flex: 1,
-                    child:
-                        pw.Text('     Concepto: ', style: subtitleText10)),
+                    child: pw.Text('     Concepto: ', style: subtitleText10)),
                 pw.Expanded(
                     flex: 4,
                     child: pw.Text('${data.concept.id} - ${data.concept.text}',
@@ -360,6 +361,303 @@ class InventoryMovePdf {
             )));
 
         return rowList;
+      },
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(24),
+    ));
+
+    return pdf.save();
+  }
+
+  Future<Uint8List> multiMove(
+    ReportMultimoveModel data,
+    UserModel user,
+    DateTime reportTime,
+  ) async {
+    final pdf = pw.Document();
+    const pw.TextStyle title = pw.TextStyle(fontSize: 14);
+    const pw.TextStyle bodyText = pw.TextStyle(fontSize: 8);
+    final pw.TextStyle bodyTextBold =
+        pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold);
+
+    pdf.addPage(pw.MultiPage(
+      header: (context) => pw.Column(
+        children: [
+          pw.Row(children: [
+            pw.Container(
+              height: 60,
+              width: 60,
+              decoration: pw.BoxDecoration(border: pw.Border.all()),
+              child: pw.Text('Logo'),
+            ),
+            pw.Expanded(
+              child: pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV',
+                  style: title),
+            ),
+          ]),
+          pw.Text('Resumen de movimientos', style: title),
+          pw.Container(
+            decoration: const pw.BoxDecoration(
+                border:
+                    pw.Border.symmetric(horizontal: pw.BorderSide(width: 2))),
+            child: pw.Padding(
+                padding: const pw.EdgeInsets.only(left: 16),
+                child: pw.Row(children: [
+                  pw.Expanded(
+                      flex: 1, child: pw.Text('Fecha: ', style: bodyTextBold)),
+                  pw.Expanded(
+                      flex: 2,
+                      child: pw.Text(
+                          '${FormatDate.dmy(data.startTime)} - ${FormatDate.dmy(data.endTime)}',
+                          style: bodyText)),
+                  pw.Expanded(
+                      flex: 1,
+                      child: pw.Text('Documento: ', style: bodyTextBold)),
+                  pw.Expanded(
+                      flex: 2, child: pw.Text(data.document, style: bodyText)),
+                ])),
+          ),
+        ],
+      ),
+      footer: (context) => pw.Container(
+          decoration: const pw.BoxDecoration(
+              border: pw.Border(top: pw.BorderSide(width: 2))),
+          child: pw.Row(children: [
+            pw.Expanded(
+              flex: 1,
+              child: pw.Text('Usuario: ', style: bodyTextBold),
+            ),
+            pw.Expanded(
+              flex: 3,
+              child: pw.Text(
+                user.name,
+                style: bodyText,
+                textAlign: pw.TextAlign.left,
+              ),
+            ),
+            pw.Expanded(
+              flex: 1,
+              child: pw.Text('Fecha y hora: ', style: bodyTextBold),
+            ),
+            pw.Expanded(
+              flex: 3,
+              child: pw.Text(
+                FormatDate.dmyHm(reportTime),
+                style: bodyText,
+                textAlign: pw.TextAlign.left,
+              ),
+            ),
+            pw.Expanded(
+              flex: 1,
+              child: pw.Text('Pág. ${context.pageNumber} ', style: bodyText),
+            ),
+          ])),
+      build: (context) {
+        List<pw.Widget> widgetList = [];
+        pw.Widget widgetRow;
+        pw.Column widgetColumn;
+        double totalColQuantity = 0;
+        double totalColWeight = 0;
+        widgetList.add(pw.SizedBox(height: 4));
+        for (var row in data.rowList) {
+          double totalQuantity = 0;
+          double totalWeight = 0;
+
+          widgetColumn = pw.Column(children: [
+            pw.Row(children: [
+              pw.Expanded(
+                flex: 1,
+                child: pw.Text('Producto: ', style: bodyTextBold),
+              ),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(row.product.code, style: bodyText),
+              ),
+              pw.Expanded(
+                flex: 1,
+                child: pw.Text('Descripción: ', style: bodyTextBold),
+              ),
+              pw.Expanded(
+                flex: 4,
+                child: pw.Text(row.product.description, style: bodyText),
+              ),
+              pw.Expanded(
+                flex: 1,
+                child: pw.Text('Peso: ', style: bodyTextBold),
+              ),
+              pw.Expanded(
+                flex: 1,
+                child: pw.Text(
+                    '${FormatNumber.format2dec(row.product.weight ?? 0)} KG',
+                    style: bodyText),
+              ),
+            ]),
+            pw.Row(children: [
+              pw.Expanded(
+                flex: 1,
+                child: pw.Text('Almacén: ', style: bodyTextBold),
+              ),
+              pw.Expanded(
+                flex: 9,
+                child: pw.Text('${row.warehouse.id} - ${row.warehouse.name}',
+                    style: bodyText),
+              ),
+            ]),
+            pw.Row(children: [
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text('Fecha', style: bodyTextBold)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text('Documento', style: bodyTextBold)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text('Folio', style: bodyTextBold)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text('Movimiento', style: bodyTextBold)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text('Cantidad', style: bodyTextBold)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text('Peso total', style: bodyTextBold)),
+              ),
+            ])
+          ]);
+          for (var subrow in row.subrowList) {
+            final subTotalWeight = subrow.quantity * (row.product.weight ?? 0);
+            totalQuantity = totalQuantity + subrow.quantity;
+            totalWeight = totalWeight + subTotalWeight;
+            widgetRow = pw.Row(children: [
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.centerLeft,
+                    child: pw.Text(FormatDate.dmy(subrow.dateTime),
+                        style: bodyText)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.centerLeft,
+                    child: pw.Text(subrow.document, style: bodyText)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.centerLeft,
+                    child: pw.Text(subrow.folio.toString(), style: bodyText)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.centerLeft,
+                    child: pw.Text(subrow.concept.text, style: bodyText)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.centerRight,
+                    child: pw.Text(FormatNumber.format2dec(subrow.quantity),
+                        style: bodyText)),
+              ),
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                child: pw.Align(
+                    alignment: pw.Alignment.centerRight,
+                    child: pw.Text(FormatNumber.format2dec(subTotalWeight),
+                        style: bodyText)),
+              ),
+            ]);
+            widgetColumn.children.add(widgetRow);
+          }
+          widgetColumn.children.add(pw.Row(children: [
+            pw.SizedBox(width: 12),
+            pw.Expanded(
+              flex: 4,
+              child: pw.Text(
+                'Subtotal: ',
+                style: bodyTextBold,
+                textAlign: pw.TextAlign.right,
+              ),
+            ),
+            pw.SizedBox(width: 4),
+            pw.Expanded(
+                flex: 1,
+                child: pw.Container(
+                  decoration: const pw.BoxDecoration(
+                    border: pw.Border(top: pw.BorderSide()),
+                  ),
+                  child: pw.Text(
+                    FormatNumber.format2dec(totalQuantity),
+                    style: bodyText,
+                    textAlign: pw.TextAlign.right,
+                  ),
+                )),
+            pw.SizedBox(width: 4),
+            pw.Expanded(
+                flex: 1,
+                child: pw.Container(
+                  decoration: const pw.BoxDecoration(
+                    border: pw.Border(top: pw.BorderSide()),
+                  ),
+                  child: pw.Text(
+                    FormatNumber.format2dec(totalWeight),
+                    style: bodyText,
+                    textAlign: pw.TextAlign.right,
+                  ),
+                )),
+          ]));
+          widgetList.add(widgetColumn);
+          totalColQuantity = totalColQuantity + totalQuantity;
+          totalColWeight = totalColWeight + totalWeight;
+        }
+        widgetList.add(pw.Row(children: [
+          pw.SizedBox(width: 12),
+          pw.Expanded(
+            flex: 4,
+            child: pw.Text(
+              'Total: ',
+              style: bodyTextBold,
+              textAlign: pw.TextAlign.right,
+            ),
+          ),
+          pw.SizedBox(width: 4),
+          pw.Expanded(
+            flex: 1,
+            child: pw.Text(
+              FormatNumber.format2dec(totalColQuantity),
+              style: bodyText,
+              textAlign: pw.TextAlign.right,
+            ),
+          ),
+          pw.SizedBox(width: 4),
+          pw.Expanded(
+            flex: 1,
+            child: pw.Text(
+              FormatNumber.format2dec(totalColWeight),
+              style: bodyText,
+              textAlign: pw.TextAlign.right,
+            ),
+          ),
+        ]));
+        return widgetList;
       },
       pageFormat: PdfPageFormat.a4,
       margin: const pw.EdgeInsets.all(24),

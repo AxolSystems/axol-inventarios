@@ -3,8 +3,14 @@ import 'package:intl/intl.dart';
 class FormatDate {
   static String dmy(DateTime dateTime) {
     String dateText;
+    dateText = '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    return dateText;
+  }
+
+  static String dmyHm(DateTime dateTime) {
+    String dateText;
     dateText =
-        '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+        '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
     return dateText;
   }
 
@@ -22,11 +28,10 @@ class FormatDate {
       8: 'agosto',
       9: 'septiembre',
       10: 'octubre',
-      11: 'noviembre', 
+      11: 'noviembre',
       12: 'diciembre',
     };
-    dateText =
-        '${dateTime.day} de ${month[dateTime.month]}, ${dateTime.year}';
+    dateText = '${dateTime.day} de ${month[dateTime.month]}, ${dateTime.year}';
     return dateText;
   }
 }
@@ -55,7 +60,7 @@ class FormatNumber {
   static String format2dig(int number) {
     final String textNum;
     if (number < 10) {
-      textNum = number.toString().padLeft(2,'0');
+      textNum = number.toString().padLeft(2, '0');
     } else {
       textNum = number.toString();
     }
