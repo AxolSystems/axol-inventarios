@@ -34,6 +34,12 @@ class FormatDate {
     dateText = '${dateTime.day} de ${month[dateTime.month]}, ${dateTime.year}';
     return dateText;
   }
+
+  static DateTime startDay(DateTime dateTime) =>
+      DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  static DateTime endDay(DateTime dateTime) =>
+      DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59, 999);
 }
 
 class FormatNumber {

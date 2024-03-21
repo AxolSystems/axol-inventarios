@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/modules/inventory_/inventory/model/report_inventory_row_model.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/model/report_multimove/report_multimove_subrow_model.dart';
 import 'package:axol_inventarios/modules/inventory_/movements/model/movement_filter_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -227,13 +226,17 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
             reportMultimove: dataReport,
             startTime: move.time,
           );
+          dataReport = ReportMultimoveModel.changeEndTime(
+            reportMultimove: dataReport,
+            endTime: move.time,
+          );
         } else if (dataReport.startTime.millisecondsSinceEpoch >
             move.time.millisecondsSinceEpoch) {
           dataReport = ReportMultimoveModel.changeStartTime(
             reportMultimove: dataReport,
             startTime: move.time,
           );
-        } else if (dataReport.endTime.millisecondsSinceEpoch >
+        } else if (dataReport.endTime.millisecondsSinceEpoch <
             move.time.millisecondsSinceEpoch) {
           dataReport = ReportMultimoveModel.changeEndTime(
             reportMultimove: dataReport,
@@ -257,7 +260,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
         //Captura subrow de indicie
         if (dataReport.rowList
             .where((x) => x.product.code == move.code)
-            .isNotEmpty) {
+            .isEmpty) {
           dataReport = ReportMultimoveModel.addRow(
             reportMultimove: dataReport,
             row: ReportMultimoveRowModel(
@@ -291,157 +294,6 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
       }
     }
   }
-
-  /*Future<void> downloadPdfFilter(String document, String folio) async {
-    try {
-      emit(InitialMovePdfState());
-      emit(LoadingMovePdfState());
-      ReportInventoryMoveModel dataReport;
-      List<ReportInventoryMoveModel> dataReportList = [];
-      MovementResponseModel movementResponse;
-      List<MovementModel> movementList;
-      List<String> documentList = [];
-      List<int> folioList = [];
-      Map<String, WarehouseModel> warehouseMap = {};
-      Map<String, WarehouseModel> warehouseDestinyMap = {};
-      Map<String, Map<String, ReportInventoryRowModel>> productMap = {};
-      Map<String, ReportInventoryMoveModel> dataReportMap = {};
-      List<WarehouseModel> warehouseList;
-      List<WarehouseModel> warehouseDestinyList;
-      List<ProductModel> productList;
-      List<int> warehouseIdList = [];
-      List<int> warehouseDestinyIdList = [];
-      List<String> productCodeList = [];
-      List<ReportInventoryRowModel> productRowList = [];
-      WarehouseModel warehouse;
-      ProductModel product;
-
-      documentList = document.split(',');
-      if (documentList.length == 1 && documentList.single == '') {
-        documentList = [];
-      }
-      for (String element in folio.split(',')) {
-        final numFolio = int.tryParse(element);
-        if (numFolio != null) {
-          folioList.add(numFolio);
-        }
-      }
-
-      //Obtiene los movimientos filtrados.
-      movementResponse = await MovementRepo().fetchMovements(
-        filter: MovementFilterModel(
-          initDate: DateTime(0),
-          endDate: DateTime(0),
-          warehouse: WarehouseModel.empty(),
-          filterDate: false,
-          document: documentList,
-          folio: folioList,
-        ),
-        rangeMin: 0,
-        rangeMax: 1000,
-      );
-
-      //Enlista los almacenes y productos para despues muscarlos en sus bases de datos.
-      for (var move in movementResponse.movementList) {
-        if (warehouseIdList.contains(move.warehouseId) == false) {
-          warehouseIdList.add(move.warehouseId);
-        }
-        if (productCodeList.contains(move.code) == false) {
-          productCodeList.add(move.code);
-        }
-      }
-
-      //Busca en la base de datos los almacenes y productos enlistados.
-      warehouseList =
-          await WarehousesRepo().fetchWarehouseListId(warehouseIdList);
-      productList = await ProductRepo().fetchProductListCode(productCodeList);
-
-      //Pasa cada movimiento a un map de RerportInventoryMoveModel, donde
-      // los keys son los distintos documentos que se filtraron.
-      for (var move in movementResponse.movementList) {
-        if (warehouseList.where((x) => x.id == move.warehouseId).isNotEmpty) {
-          warehouse =
-              warehouseList.where((x) => x.id == move.warehouseId).first;
-        } else {
-          warehouse = WarehouseModel.empty();
-        }
-        if (productList.where((x) => x.code == move.code).isNotEmpty) {
-          product = productList.where((x) => x.code == move.code).first;
-        } else {
-          product = ProductModel.empty();
-        }
-
-        if (move.concept != 7) {
-          if (dataReportMap.keys.contains(move.document)) {
-            dataReportMap[move.document] = ReportInventoryMoveModel.addProduct(
-              reportMove: dataReportMap[move.document]!,
-              product: product,
-              quantity: move.quantity,
-            );
-          } else {
-            dataReportMap[move.document] = ReportInventoryMoveModel(
-              warehouse: warehouse,
-              dateTime: move.time,
-              document: move.document,
-              productList: [
-                ReportInventoryRowModel(
-                  product: product,
-                  quantity: move.quantity,
-                )
-              ],
-              warehouseDestiny: WarehouseModel.empty(),
-              concept: ConceptMoveModel(
-                id: move.concept,
-                text: move.conceptName,
-                type: move.conceptType,
-              ),
-              folio: move.folio,
-            );
-          }
-        } else {
-          if (dataReportMap.keys.contains(move.document)) {
-            dataReportMap[move.document] =
-                ReportInventoryMoveModel.warehouseDestiny(
-              reportMove: dataReportMap[move.code]!,
-              warehouseDestiny: warehouse,
-            );
-          } else {
-            dataReportMap[move.document] = ReportInventoryMoveModel(
-              warehouse: WarehouseModel.empty(),
-              dateTime: move.time,
-              document: move.document,
-              productList: [
-                ReportInventoryRowModel(
-                  product: product,
-                  quantity: move.quantity,
-                )
-              ],
-              warehouseDestiny: warehouse,
-              concept: ConceptMoveModel(
-                id: move.concept,
-                text: move.conceptName,
-                type: move.conceptType,
-              ),
-              folio: move.folio,
-            );
-          }
-        }
-      }
-
-      if (dataReportMap.keys.length == 1) {
-        dataReport = dataReportMap.values.single;
-        if (dataReport.concept.id == 58) {
-          InventoryPdfRepo.transferPdf(dataReport);
-        } else {
-          await InventoryPdfRepo.singleMove(dataReport);
-        }
-      }
-
-      emit(LoadedMovePdfState());
-    } catch (e) {
-      emit(ErrorMovePdfState(error: e.toString()));
-    }
-  }*/
 }
 
 class MovementPdfForm extends Cubit<MovementPdfFormModel> {

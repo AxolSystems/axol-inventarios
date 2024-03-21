@@ -392,43 +392,43 @@ class InventoryMovePdf {
             ),
             pw.Expanded(
               child: pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV',
-                  style: title),
+                  style: title, textAlign: pw.TextAlign.center),
             ),
           ]),
           pw.Text('Resumen de movimientos', style: title),
           pw.Container(
             decoration: const pw.BoxDecoration(
                 border:
-                    pw.Border.symmetric(horizontal: pw.BorderSide(width: 2))),
+                    pw.Border.symmetric(horizontal: pw.BorderSide(width: 1))),
             child: pw.Padding(
-                padding: const pw.EdgeInsets.only(left: 16),
+                padding: const pw.EdgeInsets.only(left: 16, top: 4, bottom: 4),
                 child: pw.Row(children: [
                   pw.Expanded(
                       flex: 1, child: pw.Text('Fecha: ', style: bodyTextBold)),
                   pw.Expanded(
-                      flex: 2,
+                      flex: 6,
                       child: pw.Text(
                           '${FormatDate.dmy(data.startTime)} - ${FormatDate.dmy(data.endTime)}',
                           style: bodyText)),
                   pw.Expanded(
-                      flex: 1,
-                      child: pw.Text('Documento: ', style: bodyTextBold)),
+                      flex: 2,
+                      child: pw.Text('    Documento: ', style: bodyTextBold)),
                   pw.Expanded(
-                      flex: 2, child: pw.Text(data.document, style: bodyText)),
+                      flex: 8, child: pw.Text(data.document, style: bodyText)),
                 ])),
           ),
         ],
       ),
       footer: (context) => pw.Container(
           decoration: const pw.BoxDecoration(
-              border: pw.Border(top: pw.BorderSide(width: 2))),
+              border: pw.Border(top: pw.BorderSide(width: 1))),
           child: pw.Row(children: [
             pw.Expanded(
               flex: 1,
               child: pw.Text('Usuario: ', style: bodyTextBold),
             ),
             pw.Expanded(
-              flex: 3,
+              flex: 4,
               child: pw.Text(
                 user.name,
                 style: bodyText,
@@ -436,11 +436,11 @@ class InventoryMovePdf {
               ),
             ),
             pw.Expanded(
-              flex: 1,
-              child: pw.Text('Fecha y hora: ', style: bodyTextBold),
+              flex: 2,
+              child: pw.Text('      Fecha y hora: ', style: bodyTextBold),
             ),
             pw.Expanded(
-              flex: 3,
+              flex: 6,
               child: pw.Text(
                 FormatDate.dmyHm(reportTime),
                 style: bodyText,
@@ -458,27 +458,28 @@ class InventoryMovePdf {
         pw.Column widgetColumn;
         double totalColQuantity = 0;
         double totalColWeight = 0;
-        widgetList.add(pw.SizedBox(height: 4));
+
         for (var row in data.rowList) {
           double totalQuantity = 0;
           double totalWeight = 0;
 
+          widgetList.add(pw.SizedBox(height: 4));
           widgetColumn = pw.Column(children: [
             pw.Row(children: [
               pw.Expanded(
-                flex: 1,
-                child: pw.Text('Producto: ', style: bodyTextBold),
+                flex: 2,
+                child: pw.Text('     Producto: ', style: bodyTextBold),
               ),
               pw.Expanded(
-                flex: 2,
+                flex: 3,
                 child: pw.Text(row.product.code, style: bodyText),
               ),
               pw.Expanded(
-                flex: 1,
+                flex: 2,
                 child: pw.Text('Descripción: ', style: bodyTextBold),
               ),
               pw.Expanded(
-                flex: 4,
+                flex: 9,
                 child: pw.Text(row.product.description, style: bodyText),
               ),
               pw.Expanded(
@@ -486,7 +487,7 @@ class InventoryMovePdf {
                 child: pw.Text('Peso: ', style: bodyTextBold),
               ),
               pw.Expanded(
-                flex: 1,
+                flex: 3,
                 child: pw.Text(
                     '${FormatNumber.format2dec(row.product.weight ?? 0)} KG',
                     style: bodyText),
@@ -505,38 +506,44 @@ class InventoryMovePdf {
             ]),
             pw.Row(children: [
               pw.Expanded(
+                flex: 1,
                 child: pw.Align(
-                    alignment: pw.Alignment.center,
+                    alignment: pw.Alignment.centerLeft,
                     child: pw.Text('Fecha', style: bodyTextBold)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 3,
                 child: pw.Align(
-                    alignment: pw.Alignment.center,
+                    alignment: pw.Alignment.centerLeft,
                     child: pw.Text('Documento', style: bodyTextBold)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
-                    alignment: pw.Alignment.center,
+                    alignment: pw.Alignment.centerLeft,
                     child: pw.Text('Folio', style: bodyTextBold)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
-                    alignment: pw.Alignment.center,
+                    alignment: pw.Alignment.centerLeft,
                     child: pw.Text('Movimiento', style: bodyTextBold)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
-                    alignment: pw.Alignment.center,
+                    alignment: pw.Alignment.centerRight,
                     child: pw.Text('Cantidad', style: bodyTextBold)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
-                    alignment: pw.Alignment.center,
+                    alignment: pw.Alignment.centerRight,
                     child: pw.Text('Peso total', style: bodyTextBold)),
               ),
             ])
@@ -547,6 +554,7 @@ class InventoryMovePdf {
             totalWeight = totalWeight + subTotalWeight;
             widgetRow = pw.Row(children: [
               pw.Expanded(
+                flex: 1,
                 child: pw.Align(
                     alignment: pw.Alignment.centerLeft,
                     child: pw.Text(FormatDate.dmy(subrow.dateTime),
@@ -554,24 +562,28 @@ class InventoryMovePdf {
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 3,
                 child: pw.Align(
                     alignment: pw.Alignment.centerLeft,
                     child: pw.Text(subrow.document, style: bodyText)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
                     alignment: pw.Alignment.centerLeft,
                     child: pw.Text(subrow.folio.toString(), style: bodyText)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
                     alignment: pw.Alignment.centerLeft,
                     child: pw.Text(subrow.concept.text, style: bodyText)),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
                     alignment: pw.Alignment.centerRight,
                     child: pw.Text(FormatNumber.format2dec(subrow.quantity),
@@ -579,6 +591,7 @@ class InventoryMovePdf {
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
+                flex: 2,
                 child: pw.Align(
                     alignment: pw.Alignment.centerRight,
                     child: pw.Text(FormatNumber.format2dec(subTotalWeight),
@@ -590,7 +603,7 @@ class InventoryMovePdf {
           widgetColumn.children.add(pw.Row(children: [
             pw.SizedBox(width: 12),
             pw.Expanded(
-              flex: 4,
+              flex: 8,
               child: pw.Text(
                 'Subtotal: ',
                 style: bodyTextBold,
@@ -599,10 +612,10 @@ class InventoryMovePdf {
             ),
             pw.SizedBox(width: 4),
             pw.Expanded(
-                flex: 1,
+                flex: 2,
                 child: pw.Container(
                   decoration: const pw.BoxDecoration(
-                    border: pw.Border(top: pw.BorderSide()),
+                    border: pw.Border(top: pw.BorderSide(width: 0.5)),
                   ),
                   child: pw.Text(
                     FormatNumber.format2dec(totalQuantity),
@@ -612,10 +625,10 @@ class InventoryMovePdf {
                 )),
             pw.SizedBox(width: 4),
             pw.Expanded(
-                flex: 1,
+                flex: 2,
                 child: pw.Container(
                   decoration: const pw.BoxDecoration(
-                    border: pw.Border(top: pw.BorderSide()),
+                    border: pw.Border(top: pw.BorderSide(width: 0.5)),
                   ),
                   child: pw.Text(
                     FormatNumber.format2dec(totalWeight),
@@ -624,39 +637,48 @@ class InventoryMovePdf {
                   ),
                 )),
           ]));
-          widgetList.add(widgetColumn);
+          widgetColumn.children.add(
+            pw.SizedBox(height: 4),
+          );
+          widgetList.add(pw.Container(
+              decoration: const pw.BoxDecoration(
+                  border: pw.Border(bottom: pw.BorderSide())),
+              child: widgetColumn));
           totalColQuantity = totalColQuantity + totalQuantity;
           totalColWeight = totalColWeight + totalWeight;
         }
-        widgetList.add(pw.Row(children: [
-          pw.SizedBox(width: 12),
-          pw.Expanded(
-            flex: 4,
-            child: pw.Text(
-              'Total: ',
-              style: bodyTextBold,
-              textAlign: pw.TextAlign.right,
+        widgetList.add(pw.Padding(
+          padding: const pw.EdgeInsets.only(top: 4),
+          child: pw.Row(children: [
+            pw.SizedBox(width: 12),
+            pw.Expanded(
+              flex: 4,
+              child: pw.Text(
+                'Total: ',
+                style: bodyTextBold,
+                textAlign: pw.TextAlign.right,
+              ),
             ),
-          ),
-          pw.SizedBox(width: 4),
-          pw.Expanded(
-            flex: 1,
-            child: pw.Text(
-              FormatNumber.format2dec(totalColQuantity),
-              style: bodyText,
-              textAlign: pw.TextAlign.right,
+            pw.SizedBox(width: 4),
+            pw.Expanded(
+              flex: 1,
+              child: pw.Text(
+                FormatNumber.format2dec(totalColQuantity),
+                style: bodyText,
+                textAlign: pw.TextAlign.right,
+              ),
             ),
-          ),
-          pw.SizedBox(width: 4),
-          pw.Expanded(
-            flex: 1,
-            child: pw.Text(
-              FormatNumber.format2dec(totalColWeight),
-              style: bodyText,
-              textAlign: pw.TextAlign.right,
+            pw.SizedBox(width: 4),
+            pw.Expanded(
+              flex: 1,
+              child: pw.Text(
+                FormatNumber.format2dec(totalColWeight),
+                style: bodyText,
+                textAlign: pw.TextAlign.right,
+              ),
             ),
-          ),
-        ]));
+          ]),
+        ));
         return widgetList;
       },
       pageFormat: PdfPageFormat.a4,

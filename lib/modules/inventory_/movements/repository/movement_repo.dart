@@ -90,7 +90,6 @@ class MovementRepo {
         orFilter = '$orFilter,$_folio.eq.$folio';
       }
     }
-    print(orFilter);
 
     if (orFilter == '') {
       postgrestResponse = await _supabase

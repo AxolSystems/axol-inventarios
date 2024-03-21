@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
@@ -231,7 +232,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       const Text(
                         'Filtra movimientos al inventario por número de folio.',
                         style: Typo.smallLabelDark,
@@ -318,10 +319,179 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       const Text(
                         'Filtra movimientos al inventario por documento.',
                         style: Typo.smallLabelDark,
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Concepto',
+                        style: Typo.labelDark,
+                      ),
+                      TextField(
+                        controller: form.concept,
+                        enabled: !isLoading,
+                        style: Typo.bodyDark,
+                        decoration: InputDecoration(
+                          filled: true,
+                          isDense: true,
+                          fillColor: ColorPalette.filled,
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorPalette.lightItems10),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          constraints:
+                              BoxConstraints.tight(const Size.fromHeight(40)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: ColorPalette.primary),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Filtra movimientos al inventario por número de concepto. Separe por comas si quiere agregar más de un concepto.',
+                        style: Typo.smallLabelDark,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Switch(
+                                activeColor: ColorPalette.primary,
+                                value: form.filterDate,
+                                onChanged: (value) {
+                                  form.filterDate = value;
+                                  context.read<MovementPdfCubit>().load();
+                                },
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Filtrar fecha', style: Typo.labelDark),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Filtra las fechas que se encuentren dentro del rango indicado por Fecha Inicial y Fecha Final',
+                                  style: Typo.smallLabelDark,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Fecha inicial',
+                        style: Typo.labelDark,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              color: ColorPalette.filled,
+                              border:
+                                  Border.all(color: ColorPalette.lightItems10),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Center(
+                                  child: Text(FormatDate.dmy(form.startTime),
+                                      style: Typo.bodyDark),
+                                )),
+                                IconButton(
+                                  onPressed: () {
+                                    showDatePicker(
+                                            context: context,
+                                            initialDate: form.startTime,
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime.now())
+                                        .then((value) {
+                                      if (value != null) {
+                                        form.startTime = FormatDate.startDay(value);
+                                        context
+                                            .read<MovementPdfCubit>()
+                                            .load();
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.calendar_month,
+                                    color: ColorPalette.lightItems10,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Fecha final',
+                        style: Typo.labelDark,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              color: ColorPalette.filled,
+                              border:
+                                  Border.all(color: ColorPalette.lightItems10),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Center(
+                                  child: Text(FormatDate.dmy(form.endTime),
+                                      style: Typo.bodyDark),
+                                )),
+                                IconButton(
+                                  onPressed: () {
+                                    showDatePicker(
+                                            context: context,
+                                            initialDate: form.endTime,
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime.now())
+                                        .then((value) {
+                                      if (value != null) {
+                                        form.endTime = FormatDate.endDay(value);
+                                        context
+                                            .read<MovementPdfCubit>()
+                                            .load();
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.calendar_month,
+                                    color: ColorPalette.lightItems10,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                        ],
                       ),
                     ],
                   )),
