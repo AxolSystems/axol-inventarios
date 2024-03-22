@@ -488,6 +488,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                 children: [
                                   // --- Quantity
                                   TextFieldCell(
+                                    enabled: !isLoading,
                                     valid: row.quantity.validation,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.allow(
@@ -520,6 +521,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                   ),
                                   // --- Product code
                                   TextFieldCell(
+                                    enabled: !isLoading,
                                     controller: productCtrl,
                                     suffixIcon: Icons.search,
                                     valid: row.productCode.validation,
@@ -567,6 +569,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                   ),
                                   // --- Descriprtion
                                   LabelCell(
+                                    enabled: !isLoading,
                                     row.product.description,
                                     flex: 2,
                                     alignment: Alignment.center,
@@ -583,6 +586,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                   ),
                                   // --- Unit price
                                   TextFieldCell(
+                                    enabled: !isLoading,
                                     valid: row.unitPrice.validation,
                                     controller: priceCtrl,
                                     inputFormatters: [

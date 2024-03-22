@@ -87,7 +87,7 @@ class MovementRepo {
           .in_(_concept, filter_.concept)
           .lte(_time, endDateInt)
           .gte(_time, initDateInt)
-          .order(_time, ascending: true)
+          .order(_time, ascending: false)
           .range(rangeMin_, rangeMax_);
     } else {
       postgrestResponse = await _supabase
@@ -97,7 +97,7 @@ class MovementRepo {
           .match(match)
           .lte(_time, endDateInt)
           .gte(_time, initDateInt)
-          .order(_time, ascending: true)
+          .order(_time, ascending: false)
           .range(rangeMin_, rangeMax_);
     }
 

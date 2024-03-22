@@ -54,7 +54,7 @@ class SaleNoteRepo {
       saleNoteDB = await _supabase
           .from(_table)
           .select<List<Map<String, dynamic>>>()
-          .order(_time, ascending: true)
+          .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     } else {
       textOr =
@@ -68,7 +68,7 @@ class SaleNoteRepo {
           .from(_table)
           .select<List<Map<String, dynamic>>>()
           .or(textOr)
-          .order(_time, ascending: true)
+          .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     }
     for (var element in saleNoteDB) {
