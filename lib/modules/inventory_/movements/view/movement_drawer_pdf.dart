@@ -280,7 +280,13 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                             : () {
                                 context
                                     .read<MovementPdfCubit>()
-                                    .downloadPdfDocument(form.document.text);
+                                    .downloadPdfDocument(
+                                      document: form.document.text,
+                                      concept: form.concept.text,
+                                      isFilterTime: form.filterDate,
+                                      startTime: form.startTime,
+                                      endTime: form.endTime,
+                                    );
                               },
                       ),
                     ),
@@ -427,10 +433,9 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                             lastDate: DateTime.now())
                                         .then((value) {
                                       if (value != null) {
-                                        form.startTime = FormatDate.startDay(value);
-                                        context
-                                            .read<MovementPdfCubit>()
-                                            .load();
+                                        form.startTime =
+                                            FormatDate.startDay(value);
+                                        context.read<MovementPdfCubit>().load();
                                       }
                                     });
                                   },
@@ -477,9 +482,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                         .then((value) {
                                       if (value != null) {
                                         form.endTime = FormatDate.endDay(value);
-                                        context
-                                            .read<MovementPdfCubit>()
-                                            .load();
+                                        context.read<MovementPdfCubit>().load();
                                       }
                                     });
                                   },

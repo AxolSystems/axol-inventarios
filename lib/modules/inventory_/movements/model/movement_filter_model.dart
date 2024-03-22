@@ -7,6 +7,7 @@ enum MovementFilterTag {
   filterDate,
   document,
   folio,
+  concept,
 }
 
 class MovementFilterModel {
@@ -16,6 +17,7 @@ class MovementFilterModel {
   final bool filterDate;
   final List<String> document;
   final List<int> folio;
+  final List<int> concept;
 
   static Map get initMap => {
         MovementFilterTag.endDate: MovementFilterModel.empty().endDate,
@@ -31,6 +33,7 @@ class MovementFilterModel {
     required this.filterDate,
     required this.document,
     required this.folio,
+    required this.concept,
   });
 
   MovementFilterModel.empty()
@@ -39,7 +42,8 @@ class MovementFilterModel {
         warehouse = WarehouseModel.empty(),
         filterDate = false,
         document = [],
-        folio = [];
+        folio = [],
+        concept = [];
 
   static MovementFilterModel mapToFilter(Map map) {
     final MovementFilterModel filter;
@@ -49,6 +53,7 @@ class MovementFilterModel {
     bool filterDate = MovementFilterModel.empty().filterDate;
     List<String> document = MovementFilterModel.empty().document;
     List<int> folio = MovementFilterModel.empty().folio;
+    List<int> concept = MovementFilterModel.empty().concept;
 
     for (var key in map.keys) {
       if (key == MovementFilterTag.warehouse && map[key] is WarehouseModel) {
@@ -69,6 +74,9 @@ class MovementFilterModel {
       if (key == MovementFilterTag.folio && map[key] is List<int>) {
         folio = map[key];
       }
+      if (key == MovementFilterTag.concept && map[key] is List<int>) {
+        concept = map[key];
+      }
     }
 
     filter = MovementFilterModel(
@@ -78,6 +86,7 @@ class MovementFilterModel {
       filterDate: filterDate,
       document: document,
       folio: folio,
+      concept: concept,
     );
     return filter;
   }
@@ -90,6 +99,7 @@ class MovementFilterModel {
       MovementFilterTag.warehouse: filter.warehouse,
       MovementFilterTag.document: filter.document,
       MovementFilterTag.folio: filter.folio,
+      MovementFilterTag.concept: filter.concept,
     };
     return map;
   }

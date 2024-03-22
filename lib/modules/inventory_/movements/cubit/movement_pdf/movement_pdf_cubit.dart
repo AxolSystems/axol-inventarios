@@ -70,6 +70,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
           warehouse: WarehouseModel.empty(),
           filterDate: false,
           document: [],
+          concept: [],
           folio: [folio],
         ),
         rangeMin: 0,
@@ -163,7 +164,13 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
     }
   }
 
-  Future<void> downloadPdfDocument(String document) async {
+  Future<void> downloadPdfDocument({
+    required String document,
+    required String concept,
+    bool? isFilterTime,
+    DateTime? startTime,
+    DateTime? endTime,
+  }) async {
     bool isError = false;
     String messangeError = '';
 
@@ -178,24 +185,36 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
       List<ProductModel> productList;
       ReportMultimoveModel dataReport = ReportMultimoveModel.empty();
       ReportMultimoveSubrowModel subRow;
+      List<int> conceptList = [];
+      bool isFilterConcept = false;
+
+      for (var element in concept.split(',')) {
+        final conceptInt = int.tryParse(element);
+        if (conceptInt != null) {
+          conceptList.add(conceptInt);
+          isFilterConcept = true;
+        }
+      }
 
       //Obtiene los movimientos filtrados.
       movementResponse = await MovementRepo().fetchMovements(
         filter: MovementFilterModel(
-          initDate: DateTime(0),
-          endDate: DateTime(0),
+          initDate: startTime ?? DateTime(0),
+          endDate: endTime ?? DateTime(0),
           warehouse: WarehouseModel.empty(),
-          filterDate: false,
+          filterDate: isFilterTime ?? false,
           document: [document],
+          concept: conceptList,
           folio: [],
         ),
         rangeMin: 0,
         rangeMax: 1000,
+        isFilterConcept: isFilterConcept, 
       );
 
       if (movementResponse.count <= 0) {
         isError = true;
-        messangeError = 'Agrege un documento existente';
+        messangeError = 'No hay datos';
         return;
       }
 

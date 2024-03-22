@@ -65,6 +65,7 @@ class MovementFilterCubit extends Cubit<MovementFilterState> {
         filterDate: form.filterDate,
         document: [],
         folio: [],
+        concept: [],
       );
       emit(SavedMovementFilterState(filter: filter));
     } catch (e) {

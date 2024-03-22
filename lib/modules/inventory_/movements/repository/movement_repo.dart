@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../model/movement_filter_model.dart';
@@ -52,7 +50,8 @@ class MovementRepo {
       {String? find,
       int? rangeMin,
       int? rangeMax,
-      MovementFilterModel? filter}) async {
+      MovementFilterModel? filter,
+      bool? isFilterConcept}) async {
     List<MovementModel> movements = [];
     final MovementResponseModel movementResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
@@ -63,10 +62,7 @@ class MovementRepo {
     List<Map<String, dynamic>> movementsDB = [];
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
-    final List<String> documentList = filter?.document ?? [];
-    final List<int> folioList = filter?.folio ?? [];
     MovementFilterModel filter_ = filter ?? MovementFilterModel.empty();
-    String orFilter = '';
 
     if (filter_.warehouse.name != '') {
       match[_warehouseName] = filter_.warehouse.name;
@@ -75,28 +71,20 @@ class MovementRepo {
       initDateInt = filter_.initDate.millisecondsSinceEpoch;
       endDateInt = filter_.endDate.millisecondsSinceEpoch;
     }
-    
-    for (var doc in documentList) {
-      if (orFilter == '') {
-        orFilter = '$_document.eq.$doc';
-      } else {
-        orFilter = '$orFilter,$_document.eq.$doc';
-      }
+    if (filter_.folio.isNotEmpty) {
+      match[_folio] = filter_.folio.first;
     }
-    for (var folio in folioList) {
-      if (orFilter == '') {
-        orFilter = '$_folio.eq.$folio';
-      } else {
-        orFilter = '$orFilter,$_folio.eq.$folio';
-      }
+    if (filter_.document.isNotEmpty) {
+      match[_document] = filter_.document.first;
     }
 
-    if (orFilter == '') {
+    if (isFilterConcept == true) {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.exact))
           .match(match)
+          .in_(_concept, filter_.concept)
           .lte(_time, endDateInt)
           .gte(_time, initDateInt)
           .order(_time, ascending: true)
@@ -107,7 +95,6 @@ class MovementRepo {
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.exact))
           .match(match)
-          .or(orFilter)
           .lte(_time, endDateInt)
           .gte(_time, initDateInt)
           .order(_time, ascending: true)
