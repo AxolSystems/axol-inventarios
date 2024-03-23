@@ -63,7 +63,7 @@ class SaleReferralRepo {
       if (double.tryParse(finder) != null) {
         textOr = '$textOr,$_id.eq.$finder';
       }
-      saleNoteDB = await _supabase 
+      saleNoteDB = await _supabase
           .from(_table)
           .select<List<Map<String, dynamic>>>()
           .or(textOr)
