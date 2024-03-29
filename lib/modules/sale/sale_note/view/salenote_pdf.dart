@@ -9,7 +9,8 @@ import '../model/sale_product_model.dart';
 
 class SaleNotePDF {
   Future<Uint8List> saleNotePDF(SaleNoteModel saleNote,
-      List<SaleProductModel> productList, int saleType) {
+      List<SaleProductModel> productList, int saleType) async {
+    Uint8List image = (await rootBundle.load('assets/images/logo_jj.png')).buffer.asUint8List();
     final pdf = pw.Document();
     const primaryColor = PdfColors.grey300;
     const pw.TextStyle bodyText = pw.TextStyle(fontSize: 10);
@@ -51,10 +52,10 @@ class SaleNotePDF {
                 border: pw.Border(bottom: pw.BorderSide(color: primaryColor))),
             child: pw.Row(children: [
               pw.Container(
-                decoration: pw.BoxDecoration(border: pw.Border.all()),
-                width: 100,
-                height: 70,
-                child: pw.Center(child: pw.Text('Logo')),
+                width: 120,
+                //height: 70,
+                child: pw.Image(pw.MemoryImage(image)),
+                //pw.Center(child: pw.Text('Logo')),
               ),
               pw.Expanded(
                   child: pw.Column(children: [
