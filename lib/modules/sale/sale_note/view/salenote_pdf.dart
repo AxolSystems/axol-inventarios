@@ -59,7 +59,7 @@ class SaleNotePDF {
               ),
               pw.Expanded(
                   child: pw.Column(children: [
-                pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV'),
+                pw.Text('J&J PLASTICOS RECYCLING S DE RL DE CV'),
                 pw.Text('JAJ100906LL9', style: bodyText),
                 pw.Text('21500', style: bodyText),
                 pw.Text('Tel: 665-521-7218 Cel: 665-799-3117', style: bodyText),
@@ -300,7 +300,7 @@ class SaleNotePDF {
           textAlign: pw.TextAlign.justify,
           style: const pw.TextStyle(fontSize: 8),
         ),
-        pw.SizedBox(height: 16),
+        pw.SizedBox(height: 32),
         pw.Container(
           width: double.infinity,
           child: pw.Row(
@@ -401,7 +401,7 @@ class SaleNotePDF {
         return rowList;
       },
       pageFormat: PdfPageFormat.a4,
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.symmetric(horizontal: 24, vertical: 12),
     ));
     return pdf.save();
   }
