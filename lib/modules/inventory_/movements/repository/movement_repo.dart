@@ -108,22 +108,24 @@ class MovementRepo {
         move = MovementModel(
             id: element[_id].toString(),
             code: element[_code].toString(),
-            concept: element[_concept],
-            conceptType: element[_conceptType],
+            concept: element[_concept] ?? -1,
+            conceptType: element[_conceptType] ?? -1,
             conceptName: element[_conceptName] ?? '',
-            description: element[_description].toString(),
-            document: element[_document].toString(),
-            quantity: element[_quantity],
+            description: element[_description] ?? '',
+            document: element[_document] ?? '',
+            quantity: element[_quantity] ?? -1,
             time:
-                DateTime.fromMillisecondsSinceEpoch(int.parse(element[_time])),
-            warehouseName: element[_warehouseName].toString(),
+                DateTime.fromMillisecondsSinceEpoch(element[_time]),
+            warehouseName: element[_warehouseName] ?? '',
             warehouseId: element[_warehouseId] ?? -1,
-            user: element[_user].toString(),
-            stock: element[_stock],
+            user: element[_user] ?? '',
+            stock: element[_stock] ?? -1,
             folio: element[_folio] ?? -1);
+
         movements.add(move);
       }
     }
+
     movementResponse = MovementResponseModel(
         movementList: movements, count: postgrestResponse.count ?? 0);
     return movementResponse;
