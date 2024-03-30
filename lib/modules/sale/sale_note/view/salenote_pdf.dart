@@ -315,6 +315,7 @@ class SaleNotePDF {
             ],
           ),
         ),
+        pw.SizedBox(height: 30),
       ]),
       build: (context) {
         List<pw.Widget> rowList = [];
