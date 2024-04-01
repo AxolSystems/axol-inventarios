@@ -282,7 +282,7 @@ class InventoryRepo {
     final String name;
     InventoryModel? inventoryRow;
     List<Map<String, dynamic>> inventoryList = [];
-
+    
     if (inventoryName != null) {
       name = inventoryName;
     } else {
