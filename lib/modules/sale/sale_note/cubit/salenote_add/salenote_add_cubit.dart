@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/models/inventory_row_model.dart';
 import 'package:axol_inventarios/models/validation_form_model.dart';
 import 'package:axol_inventarios/modules/inventory_/product/repository/product_repo.dart';
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
@@ -173,17 +172,11 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emInvalidData);
         } else if (code != '') {
-          print('flag1');
           inventoryRow =
               await InventoryRepo().fetchRowByCode(code, inventoryName) ??
                   InventoryModel.empty();
 
-          if (inventoryRow == null || quantity > inventoryRow.stock) {
-            print(inventoryRow.code);
-            print(inventoryRow.id);
-            print(inventoryRow.name);
-            print(inventoryRow.retailManager);
-            print(inventoryRow.stock);
+          if (inventoryRow.code == '' || quantity > inventoryRow.stock) {
             row.quantity.validation =
                 ValidationFormModel.falseValid(row.emNotStock);
           } else {
@@ -200,12 +193,10 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       }
       if (key == row.keyProduct) {
         quantity ??= 0;
-        print('flag2');
         inventoryRow =
             await InventoryRepo().fetchRowByCode(code, inventoryName) ??
                 InventoryModel.empty();
-        print('flag2.5');
-        if (inventoryRow == null || quantity > inventoryRow.stock) {
+        if (inventoryRow.code == '' || quantity > inventoryRow.stock) {
           row.productCode.validation =
               ValidationFormModel.falseValid(row.emNotStock);
           row.product = ProductModel.empty();
@@ -304,16 +295,12 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
       await fetchCustomer(form.customerTf.value, form);
-      print('Cargando Cliente');
       emit(LoadingSaleNoteAddState());
       await fetchVendor(form.vendorTf.value, form);
-      print('Cargando vendedor');
       emit(LoadingSaleNoteAddState());
       await fetchWarehouse(form.warehouseTf.value, form);
-      print('Cargando almacén');
       emit(LoadingSaleNoteAddState());
       validationForm = await validateAllList(form);
-      print('Validando');
       emit(LoadingSaleNoteAddState());
       form.productList.removeWhere((x) => x.quantity.value == '0');
       if (form.customerTf.validation.isValid == false) {

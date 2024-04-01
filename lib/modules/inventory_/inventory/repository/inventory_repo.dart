@@ -282,7 +282,6 @@ class InventoryRepo {
     final String name;
     InventoryModel? inventoryRow;
     List<Map<String, dynamic>> inventoryList = [];
-    
     if (inventoryName != null) {
       name = inventoryName;
     } else {
@@ -299,7 +298,7 @@ class InventoryRepo {
           code: inventoryList.first[_code].toString(),
           id: inventoryList.first[_id].toString(),
           name: inventoryList.first[_name].toString(),
-          retailManager: int.tryParse(inventoryList.first[_manager]) ?? -1,
+          retailManager: int.tryParse(inventoryList.first[_manager].toString()) ?? -1,
           stock: inventoryList.first[_stock]);
     } else {
       inventoryRow = null;
