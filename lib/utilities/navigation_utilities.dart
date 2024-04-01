@@ -26,6 +26,13 @@ class NavigationUtilities {
         ),
         label: Text('Notas'),
         indicatorColor: ColorPalette.primary),
+    NavigationRailDestination(
+        icon: Icon(
+          Icons.list_alt,
+          color: ColorPalette.lightBackground,
+        ),
+        label: Text('Carta porte'),
+        indicatorColor: ColorPalette.primary),
   ];
   //static const List<NavigationRailDestination> navRailReturn = [];
 

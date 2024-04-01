@@ -60,17 +60,19 @@ class LocalUser extends UserRepo {
     final pref = await SharedPreferences.getInstance();
     final String? localUser = pref.getString(UserRepo._user);
     final String? localRol = pref.getString(UserRepo._rol);
+    final int localId = pref.getInt(UserRepo._id) ?? -1;
     if (localUser != null && localRol != null) {
-      user = UserModel(name: localUser, id: -1, rol: localRol, password: '');
+      user = UserModel(name: localUser, id: localId, rol: localRol, password: '');
     } else {
       user = const UserModel(name: '', id: -1, rol: '', password: '');
     }
     return user;
   }
 
-  Future<void> setLocalUser(String newLocalUser, String newLocalRol) async {
+  Future<void> setLocalUser(String newLocalUser, String newLocalRol, int id) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setString(UserRepo._user, newLocalUser);
     await pref.setString(UserRepo._rol, newLocalRol);
+    await pref.setInt(UserRepo._id, id);
   }
 }

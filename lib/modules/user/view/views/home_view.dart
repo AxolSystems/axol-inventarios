@@ -5,6 +5,7 @@ import '../../../../utilities/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../inventory_/inventory/view/inventory_view.dart';
 import '../../../sale/view/sale_view.dart';
+import '../../../waybill/view/waybill_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -22,6 +23,7 @@ class HomeView extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             NavigationRail(
               destinations: NavigationUtilities.navRail,
@@ -42,10 +44,20 @@ class HomeView extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => const SaleView()));
                 }
+                if (value == 3) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WaybillView()));
+                }
               },
             ),
             const VerticalDivider(
                 thickness: 1, width: 1, color: ColorPalette.darkItems),
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Version: 1.0.0', style: Typo.titleLight),
+            )
           ],
         ),
       ),

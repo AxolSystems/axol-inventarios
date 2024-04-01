@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../utilities/widgets/appbar_axol.dart';
-import '../../../../../utilities/navigation_utilities.dart';
-import '../../../../../utilities/theme/theme.dart';
-import '../../../sale/view/sale_view.dart';
-import '../../../user/view/views/home_view.dart';
-import '../../../waybill/view/waybill_view.dart';
-import '../../movements/cubit/movements_view/movements_cubit.dart';
-import '../../movements/view/movement_tab.dart';
-import '../../product/cubit/product_tab/product_tab_cubit.dart';
-import '../../product/view/product_tab.dart';
-import 'warehouse_tab.dart';
+import '../../../utilities/navigation_utilities.dart';
+import '../../../utilities/theme/theme.dart';
+import '../../../utilities/widgets/appbar_axol.dart';
+import '../../inventory_/inventory/view/inventory_view.dart';
+import '../../inventory_/movements/cubit/movements_view/movements_cubit.dart';
+import '../../inventory_/product/cubit/product_tab/product_tab_cubit.dart';
+import '../../sale/view/sale_view.dart';
+import '../../user/view/views/home_view.dart';
+import 'wb_list_tab.dart';
+import 'wb_warehouse_tab.dart';
 
-class InventoryView extends StatelessWidget {
-  const InventoryView({super.key});
+class WaybillView extends StatelessWidget {
+  const WaybillView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const String title = 'Menú de almacenes';
+    const String title = 'Listas para carta porte';
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => MovementsCuibit()),
           BlocProvider(create: (_) => ProductTabCubit()),
         ],
         child: DefaultTabController(
-            length: 3,
+            length: 2,
             child: Scaffold(
               backgroundColor: ColorPalette.darkBackground,
               appBar: const AppBarAxol(title: title).appBarAxol(),
@@ -39,7 +38,7 @@ class InventoryView extends StatelessWidget {
                   children: [
                     NavigationRail(
                       destinations: NavigationUtilities.navRail,
-                      selectedIndex: 1,
+                      selectedIndex: 3,
                       backgroundColor: ColorPalette.darkBackground,
                       indicatorColor: ColorPalette.primary,
                       useIndicator: true,
@@ -50,19 +49,17 @@ class InventoryView extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) => const HomeView()));
                         }
+                        if (value == 1) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const InventoryView()));
+                        }
                         if (value == 2) {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SaleView()));
-                        }
-                        if (value == 3) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const WaybillView()));
+                                  builder: (context) => const SaleView()));
                         }
                       },
                     ),
@@ -75,21 +72,17 @@ class InventoryView extends StatelessWidget {
                           indicatorColor: ColorPalette.primary,
                           tabs: [
                             Tab(
-                              text: 'Multialmacen',
+                              text: 'Almacén',
                             ),
                             Tab(
-                              text: 'Movimientos',
-                            ),
-                            Tab(
-                              text: 'Productos',
+                              text: 'Listas para carta porte',
                             ),
                           ],
                         ),
                         Expanded(
                             child: TabBarView(children: [
-                          WarehouseTab(),
-                          MovementTab(),
-                          ProductTab(),
+                          WbWarehouseTab(),
+                          WbListTab(),
                         ]))
                       ],
                     )),

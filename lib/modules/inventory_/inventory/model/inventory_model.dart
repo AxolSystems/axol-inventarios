@@ -5,7 +5,7 @@ import 'warehouse_model.dart';
 class InventoryModel {
   String id;
   double stock;
-  String retailManager;
+  int retailManager;
   String name;
   String code;
 

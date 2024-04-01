@@ -67,7 +67,7 @@ class ProductEditCubit extends Cubit<ProductEditState> {
     }
   }
 
-  Future<void> save(ProductEditFormModel form, String code) async {
+  Future<void> save(ProductEditFormModel form, String code, double price) async {
     try {
       emit(InitialProductEditState());
       emit(LoadingProductEditState());
@@ -75,6 +75,7 @@ class ProductEditCubit extends Cubit<ProductEditState> {
           class_: form.class_,
           code: code,
           description: form.tfDescription.controller.text,
+          price: price,
           properties: {
             ProductModel.tCode: code,
             ProductModel.tType: form.tfType.controller.text,

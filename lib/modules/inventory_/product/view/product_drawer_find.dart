@@ -219,6 +219,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
       ),
       actions: [
         SecondaryButtonDialog(
+          text: '',
           icon: const Icon(Icons.arrow_back, color: ColorPalette.lightItems10),
           onPressed: () {
             if (form.currentPage > 1) {
@@ -229,6 +230,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
         ),
         Text('${form.currentPage} de ${form.limitPage}', style: Typo.bodyDark),
         SecondaryButtonDialog(
+          text: '',
           icon: const Icon(Icons.arrow_forward, color: ColorPalette.lightItems10),
           onPressed: () {
             if (form.currentPage < form.limitPage) {

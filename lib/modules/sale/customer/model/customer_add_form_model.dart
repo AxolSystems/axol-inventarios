@@ -90,7 +90,7 @@ class CustomerAddFormModel {
         ),
         phoneNumber = TextfieldFormModel.initKey(
           key: CustomerModel.empty().tPhoneNumber,
-          tags: [tagInteger],
+          tags: [tagSimple],
         ),
         rfc = TextfieldFormModel.initKey(
           key: CustomerModel.empty().tRfc,
@@ -102,11 +102,11 @@ class CustomerAddFormModel {
         ),
         intNumber = TextfieldFormModel.initKey(
           key: CustomerModel.empty().tIntNumber,
-          tags: [tagInteger],
+          tags: [tagSimple],
         ),
         outNumber = TextfieldFormModel.initKey(
           key: CustomerModel.empty().tOutNumbre,
-          tags: [tagInteger],
+          tags: [tagSimple],
         ),
         street = TextfieldFormModel.initKey(
           key: CustomerModel.empty().tStreet,
@@ -178,9 +178,9 @@ class CustomerAddFormModel {
         name: form.name.value,
         country: form.country.value,
         hood: form.hood.value,
-        intNumber: int.tryParse(form.intNumber.value),
-        outNumber: int.tryParse(form.outNumber.value),
-        phoneNumber: int.tryParse(form.phoneNumber.value),
+        intNumber: form.intNumber.value,
+        outNumber: form.outNumber.value,
+        phoneNumber: form.phoneNumber.value,
         postalCode: form.postalCode.value,
         rfc: form.rfc.value,
         street: form.street.value,

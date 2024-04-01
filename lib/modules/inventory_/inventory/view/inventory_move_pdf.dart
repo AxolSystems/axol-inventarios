@@ -108,6 +108,13 @@ class InventoryMovePdf {
                         style: subtitleText10,
                         textAlign: pw.TextAlign.center,
                       )),
+                  pw.Expanded(
+                      flex: 1,
+                      child: pw.Text(
+                        'Precio',
+                        style: subtitleText10,
+                        textAlign: pw.TextAlign.center,
+                      )),
                 ],
               )),
         ],
@@ -117,10 +124,14 @@ class InventoryMovePdf {
         pw.Widget row;
         double total = 0;
         double totalRow = 0;
+        double price = 0;
+        double totalPrice = 0;
         rowList.add(pw.SizedBox(height: 4));
         for (var element in data.productList) {
           totalRow = (element.product.weight ?? 0) * element.quantity;
           total = total + totalRow;
+          price = element.product.price * element.quantity * (element.product.weight ?? 0);
+          totalPrice = totalPrice + price;
           row = pw.Padding(
             padding: const pw.EdgeInsets.symmetric(horizontal: 8),
             child: pw.Row(children: [
@@ -152,6 +163,14 @@ class InventoryMovePdf {
                   textAlign: pw.TextAlign.right,
                 ),
               ),
+              pw.Expanded(
+                flex: 1,
+                child: pw.Text(
+                  '\$${FormatNumber.format2dec(price)}',
+                  style: bodyText,
+                  textAlign: pw.TextAlign.right,
+                ),
+              ),
             ]),
           );
           rowList.add(row);
@@ -165,7 +184,7 @@ class InventoryMovePdf {
                 pw.Expanded(
                     flex: 1,
                     child: pw.Text(
-                      'Peso total: ',
+                      'Total: ',
                       style: subtitleText10,
                       textAlign: pw.TextAlign.right,
                     )),
@@ -181,13 +200,25 @@ class InventoryMovePdf {
                     ),
                   ),
                 ),
+                pw.Expanded(
+                  flex: 1,
+                  child: pw.Container(
+                    decoration: const pw.BoxDecoration(
+                        border: pw.Border(top: pw.BorderSide())),
+                    child: pw.Text(
+                      '\$${FormatNumber.format2dec(totalPrice)}',
+                      style: bodyText,
+                      textAlign: pw.TextAlign.right,
+                    ),
+                  ),
+                ),
               ],
             )));
 
         return rowList;
       },
       pageFormat: PdfPageFormat.a4,
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.symmetric(vertical: 24, horizontal: 12),
     ));
 
     return pdf.save();

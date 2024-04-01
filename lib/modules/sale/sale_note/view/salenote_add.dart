@@ -17,6 +17,7 @@ import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../inventory_/product/view/product_drawer_details.dart';
 import '../../../inventory_/product/view/product_drawer_find.dart';
 import '../../customer/model/customer_model.dart';
+import '../../customer/view/customer_drawer_find.dart';
 import '../../vendor/model/vendor_model.dart';
 import '../cubit/salenote_add/salenote_add_cubit.dart';
 import '../cubit/salenote_add/salenote_add_form.dart';
@@ -182,7 +183,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     showDialog(
                                       context: context,
                                       builder: (context) =>
-                                          const ProviderCustomerFind(),
+                                           const CustomerDrawerFind(),
                                     ).then((value) {
                                       if (value is DataFind &&
                                           value.data is CustomerModel) {
@@ -201,31 +202,31 @@ class SaleNoteAddBuild extends StatelessWidget {
                                   },
                                 ),
                                 Text(
-                                    '${CustomerModel.lblPhoneNumber} ${_toEmptyString(form.customer.phoneNumber ?? -1)}',
+                                    '${CustomerModel.lblPhoneNumber} ${form.customer.phoneNumber ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblRfc} ${form.customer.rfc}',
+                                    '${CustomerModel.lblRfc} ${form.customer.rfc ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblStreet} ${form.customer.street}',
+                                    '${CustomerModel.lblStreet} ${form.customer.street ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblOutNumber} ${_toEmptyString(form.customer.outNumber ?? -1)}',
+                                    '${CustomerModel.lblOutNumber} ${form.customer.outNumber ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblIntNumber} ${_toEmptyString(form.customer.intNumber ?? -1)}',
+                                    '${CustomerModel.lblIntNumber} ${form.customer.intNumber ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblHood} ${form.customer.hood}',
+                                    '${CustomerModel.lblHood} ${form.customer.hood ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblPostalCode} ${form.customer.postalCode}',
+                                    '${CustomerModel.lblPostalCode} ${form.customer.postalCode ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblTown} ${form.customer.town}',
+                                    '${CustomerModel.lblTown} ${form.customer.town ?? ''}',
                                     style: Typo.labelLight),
                                 Text(
-                                    '${CustomerModel.lblCountry} ${form.customer.country}',
+                                    '${CustomerModel.lblCountry} ${form.customer.country ?? ''}',
                                     style: Typo.labelLight),
                               ],
                             ),

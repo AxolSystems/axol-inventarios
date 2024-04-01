@@ -17,7 +17,7 @@ class LoginCubit extends Cubit<LoginState> {
         if (loginDatabaseUser.name == user &&
             loginDatabaseUser.password == password) {
           emit(LoginSuccessState(user: loginDatabaseUser));
-          localUser.setLocalUser(loginDatabaseUser.name, loginDatabaseUser.rol);
+          localUser.setLocalUser(loginDatabaseUser.name, loginDatabaseUser.rol, loginDatabaseUser.id);
         } else {
           emit(LoginFailureState());
         }

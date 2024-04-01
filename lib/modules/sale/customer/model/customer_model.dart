@@ -3,13 +3,13 @@ class CustomerModel {
   final String name;
   final String? rfc;
   final String? street;
-  final int? outNumber;
-  final int? intNumber;
+  final String? outNumber;
+  final String? intNumber;
   final String? hood;
   final String? postalCode;
   final String? town;
   final String? country;
-  final int? phoneNumber;
+  final String? phoneNumber;
 
   static const String _id = 'id';
   static const String _name = 'name';
@@ -66,9 +66,9 @@ class CustomerModel {
       name = '',
       country = '',
       hood = '',
-      intNumber = -1,
-      outNumber = -1,
-      phoneNumber = -1,
+      intNumber = '',
+      outNumber = '',
+      phoneNumber = '',
       postalCode = '',
       rfc = '',
       street = '',
@@ -90,14 +90,14 @@ class CustomerModel {
 
   CustomerModel.fill(Map<String, dynamic> map)
     : id = map[_id],
-      name = map[_name],
-      country = map[_country],
-      hood = map[_hood],
-      intNumber = map[_intNumber],
-      outNumber = map[_outNumber],
-      phoneNumber = map[_phoneNumber],
-      postalCode = map[_postalCode],
-      rfc = map[_rfc],
-      street = map[_street],
-      town = map[_town];
+      name = map[_name].toString(),
+      country = '${map[_country] ?? ''}',
+      hood = '${map[_hood] ?? ''}',
+      intNumber = '${map[_intNumber] ?? ''}',
+      outNumber = '${map[_outNumber] ?? ''}',
+      phoneNumber = '${map[_phoneNumber] ?? ''}',
+      postalCode = '${map[_postalCode] ?? ''}',
+      rfc = '${map[_rfc] ?? ''}',
+      street = '${map[_street] ?? ''}',
+      town = '${map[_town] ?? ''}';
 }

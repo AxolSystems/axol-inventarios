@@ -7,6 +7,7 @@ import '../../../utilities/navigation_utilities.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../inventory_/inventory/view/inventory_view.dart';
 import '../../user/view/views/home_view.dart';
+import '../../waybill/view/waybill_view.dart';
 import '../customer/view/customer_tab.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
@@ -54,6 +55,13 @@ class SaleView extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const InventoryView()));
                       }
+                      if (value == 3) {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const WaybillView()));
+                        }
                     },
                   ),
                   const VerticalDivider(

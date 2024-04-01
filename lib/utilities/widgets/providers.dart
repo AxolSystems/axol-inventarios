@@ -53,7 +53,7 @@ class ProviderCustomerDelete extends Providers {
 
 
 
-class ProviderCustomerFind extends Providers {
+/*class ProviderCustomerFind extends Providers {
   const ProviderCustomerFind({super.key});
 
   @override
@@ -61,7 +61,7 @@ class ProviderCustomerFind extends Providers {
         BlocProvider(create: (_) => CustomerFindCubit()),
         BlocProvider(create: (_) => FinderForm()),
       ], child: const CustomerDrawerFind());
-}
+}*/
 
 //----Product
 /*class ProviderProductFind extends Providers {

@@ -78,7 +78,7 @@ class ProductDrawerEditBuild extends StatelessWidget {
           PrimaryButtonDialog(
             text: 'Guardar',
             onPressed: () async {
-              context.read<ProductEditCubit>().save(form, product.code);
+              context.read<ProductEditCubit>().save(form, product.code, product.price);
             },
           ),
           SecondaryButtonDialog(

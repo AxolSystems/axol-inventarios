@@ -37,7 +37,7 @@ class WarehousesRepo {
       warehouse = WarehouseModel(
         id: warehouses.single[_id],
         name: warehouses.single[_name].toString(),
-        retailManager: warehouses.single[_retailManager].toString(),
+        retailManager: warehouses.single[_retailManager],
       );
     } else {
       warehouse = null;
@@ -56,7 +56,7 @@ class WarehousesRepo {
         warehouse = WarehouseModel(
             id: element[_id],
             name: element[_name].toString(),
-            retailManager: element[_retailManager].toString());
+            retailManager: element[_retailManager]);
         warehouses.add(warehouse);
       }
     }
@@ -133,11 +133,32 @@ class WarehousesRepo {
         warehouse = WarehouseModel(
             id: element[_id],
             name: element[_name].toString(),
-            retailManager: element[_retailManager].toString());
+            retailManager: element[_retailManager]);
         warehouses.add(warehouse);
       }
     }
     return warehouses;
+  }
+
+  Future<List<WarehouseModel>> fetchWarehouseManager(int retailManager) async {
+    List<WarehouseModel> warehouseList = [];
+    List<Map<String, dynamic>> warehouseListDb = [];
+    WarehouseModel warehouse;
+    warehouseListDb = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>()
+        .eq(_retailManager, retailManager);
+    if (warehouseListDb.isNotEmpty) {
+      for (var element in warehouseListDb) {
+        warehouse = WarehouseModel(
+          id: element[_id],
+          name: element[_name].toString(),
+          retailManager: element[_retailManager],
+        );
+        warehouseList.add(warehouse);
+      }
+    }
+    return warehouseList;
   }
 
   Future<void> insertWarehouse(WarehouseModel warehouse) async {

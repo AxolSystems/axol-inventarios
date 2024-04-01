@@ -23,12 +23,14 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
       rangeMin = (form.currentPage * limit) - limit;
       rangeMax = (form.currentPage * limit) - 1;
       if (saleType == 0) {
-        salenoteListDB = await SaleNoteRepo()
-            .fetchNotes(SaleFilterModel.range(rangeMin: rangeMin, rangeMax: rangeMax), find);
+        salenoteListDB = await SaleNoteRepo().fetchNotes(
+            SaleFilterModel.range(rangeMin: rangeMin, rangeMax: rangeMax),
+            find);
         countReg = await SaleNoteRepo().countRecords();
       } else if (saleType == 1) {
         salenoteListDB = await SaleReferralRepo().fetchReferral(
-            SaleFilterModel.range(rangeMin: rangeMin, rangeMax: rangeMax), find);
+            SaleFilterModel.range(rangeMin: rangeMin, rangeMax: rangeMax),
+            find);
         countReg = await SaleReferralRepo().countRecords();
       } else {
         countReg = 0;
@@ -53,15 +55,11 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
       //Nota de venta
       if (saleType == 0) {
         notesDB = await SaleNoteRepo().fetchNotes(
-            SaleFilterModel.range(
-                rangeMin: 0, rangeMax: limit - 1),
-            '');
+            SaleFilterModel.range(rangeMin: 0, rangeMax: limit - 1), '');
         countReg = await SaleNoteRepo().countRecords();
       } else if (saleType == 1) {
         notesDB = await SaleReferralRepo().fetchReferral(
-            SaleFilterModel.range(
-                rangeMin: 0, rangeMax: limit - 1),
-            '');
+            SaleFilterModel.range(rangeMin: 0, rangeMax: limit - 1), '');
         countReg = await SaleReferralRepo().countRecords();
       } else {
         countReg = 0;

@@ -1,7 +1,7 @@
 class WarehouseModel {
   final int id;
   final String name;
-  final String retailManager;
+  final int retailManager;
 
   static const String id_ = 'id';
   static const String name_ = 'name';
@@ -20,10 +20,10 @@ class WarehouseModel {
   WarehouseModel.multi()
       : id = -2,
         name = 'Multialmacén',
-        retailManager = '';
+        retailManager = -2;
 
   static WarehouseModel empty() =>
-      const WarehouseModel(id: -1, name: '', retailManager: '');
+      const WarehouseModel(id: -1, name: '', retailManager: -1);
 
   static WarehouseModel fillMap(Map<String, dynamic> map) {
     WarehouseModel warehouseModel;
@@ -31,7 +31,7 @@ class WarehouseModel {
         map.containsKey(name_) &&
         map.containsKey(manager_)) {
       warehouseModel = WarehouseModel(
-          id: map[id_], name: map[name_], retailManager: map[manager_]);
+          id: map[id_], name: map[name_], retailManager: int.tryParse(map[manager_]) ?? -1);
     } else {
       warehouseModel = WarehouseModel.empty();
     }

@@ -96,6 +96,11 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: ColorPalette.darkText);
+  static const titleLight = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      color: ColorPalette.lightText);
   static const subtitleDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w600,

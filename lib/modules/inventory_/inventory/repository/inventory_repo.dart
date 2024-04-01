@@ -87,7 +87,7 @@ class InventoryRepo {
     int? rangeMax,
   }) async {
     final int rangeMin_ = rangeMin ?? 0;
-    final int rangeMax_ = rangeMax ?? 0;
+    final int rangeMax_ = rangeMax ?? 999;
     final DataResponseModel dataResponse;
     String filters = '';
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
@@ -148,7 +148,7 @@ class InventoryRepo {
           code: element[_code] ?? '',
           id: element[_id].toString(),
           name: element[_name] ?? '',
-          retailManager: element[_manager] ?? '',
+          retailManager: element[_manager] ?? -1,
           stock: element[_stock] ?? 0,
         );
         product = productList.where((x) => x.code == inventory.code).first;
@@ -237,7 +237,7 @@ class InventoryRepo {
           code: element[_code] ?? '',
           id: element[_id].toString(),
           name: element[_name] ?? '',
-          retailManager: element[_manager] ?? '',
+          retailManager: element[_manager] ?? -1,
           stock: element[_stock] ?? 0,
         );
         product = productList.where((x) => x.code == inventory.code).first;
@@ -299,7 +299,7 @@ class InventoryRepo {
           code: inventoryList.first[_code].toString(),
           id: inventoryList.first[_id].toString(),
           name: inventoryList.first[_name].toString(),
-          retailManager: inventoryList.first[_manager].toString(),
+          retailManager: int.tryParse(inventoryList.first[_manager]) ?? -1,
           stock: inventoryList.first[_stock]);
     } else {
       inventoryRow = null;
@@ -340,7 +340,7 @@ class InventoryRepo {
               code: element.code,
               id: const Uuid().v4(),
               name: element.warehouseName,
-              retailManager: '',
+              retailManager: -1,
               stock: element.quantity);
           await insertInventoryRow(newInventoryRow);
         }

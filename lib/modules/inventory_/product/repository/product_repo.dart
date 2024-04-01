@@ -16,6 +16,7 @@ class ProductRepo {
   static const String _measure = 'measure';
   static const String _packing = 'packing';
   static const String _capacity = 'capacity';
+  static const String _price = 'price';
 
   final _supabase = Supabase.instance.client;
 
@@ -44,6 +45,7 @@ class ProductRepo {
         pieces: element[_properties][_pieces],
         type: element[_properties][_type],
         weight: double.parse(element[_properties][_weight]),
+        price: element[_price],
       );
         products.add(product);
       }
@@ -95,6 +97,7 @@ class ProductRepo {
         pieces: productDB[_properties][_pieces],
         type: productDB[_properties][_type],
         weight: double.parse(productDB[_properties][_weight]),
+        price: productDB[_price],
       );
     } else {
       productDB = {};
@@ -119,6 +122,7 @@ class ProductRepo {
         description: productsDB.single[_description] ?? '',
         properties: productsDB.single[_properties],
         class_: productsDB.single[_class],
+        price: productsDB.single[_price],
       );
     } else {
       product = null;
@@ -140,6 +144,7 @@ class ProductRepo {
           description: element[_description] ?? '',
           properties: element[_properties] ?? ProductModel.empty().properties,
           class_: element[_class],
+          price: element[_price],
         );
         products.add(product);
       }
@@ -180,6 +185,7 @@ class ProductRepo {
         pieces: element[_properties]?[_pieces] ?? '',
         type: element[_properties]?[_type] ?? '',
         weight: double.tryParse(element[_properties]?[_weight] ?? '') ?? 0,
+        price: element[_price] ?? 0
       );
         productResponse.productList.add(product);
       }

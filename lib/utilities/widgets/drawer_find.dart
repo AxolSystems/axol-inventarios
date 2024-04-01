@@ -19,6 +19,12 @@ class DrawerFind extends StatelessWidget {
   final bool? isLoading;
   final List<DrawerColumn>? headerTable;
   final List<Widget>? widgetsHead;
+  final Function()? onPressedNext;
+  final Function()? onPressedPrev;
+  final int? currentPage;
+  final int? totalPages;
+  final int? totalReg;
+  final TextEditingController? textController;
 
   const DrawerFind({
     super.key,
@@ -30,6 +36,12 @@ class DrawerFind extends StatelessWidget {
     this.headerTable,
     this.listValues,
     this.widgetsHead,
+    this.onPressedNext,
+    this.onPressedPrev,
+    this.currentPage,
+    this.totalPages,
+    this.totalReg,
+    this.textController,
   });
 
   @override
@@ -75,7 +87,7 @@ class DrawerFind extends StatelessWidget {
             children: [
               Expanded(
                 child: TextField(
-                  controller: controller,
+                  controller: textController ?? controller,
                   autofocus: true,
                   decoration: TextFieldDecoration.inputForm(lblText: lblText),
                   cursorColor: ColorPalette.primary,
@@ -105,6 +117,31 @@ class DrawerFind extends StatelessWidget {
         ],
       ),
       actions: [
+        Visibility(
+          visible: totalReg != null && totalReg! > 0,
+            child: Row(
+          children: [
+            SecondaryButtonDialog(
+              text: '',
+              icon: const Icon(Icons.arrow_back),
+              onPressed: onPressedPrev,
+            ),
+            Text(
+              '${currentPage ?? 0} de ${totalPages ?? 0}',
+              style: Typo.bodyDark,
+            ),
+            SecondaryButtonDialog(
+              text: '',
+              icon: const Icon(Icons.arrow_forward),
+              onPressed: onPressedNext,
+            ),
+            Text(
+              '${totalReg ?? 0} registros',
+              style: Typo.bodyDark,
+            ),
+          ],
+        )),
+        const Expanded(child: SizedBox()),
         SecondaryButtonDialog(
           isLoading: false,
           onPressed: () {

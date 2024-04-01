@@ -60,12 +60,12 @@ class CustomerRepo {
     List<Map<String, dynamic>> customersDB = [];
     List<CustomerModel> customers = [];
     CustomerModel customer = CustomerModel.empty();
-    final int rangeMax_ = rangeMax ?? 0;
+    final int rangeMax_ = rangeMax ?? 999;
     final int rangeMin_ = rangeMin ?? 0;
 
     String textOr;
     if (int.tryParse(inText) == null) {
-      textOr = '$_name.ilike.$inText';
+      textOr = '$_name.ilike.%$inText%';
     } else {
       textOr = '$_id.eq.$inText';
     }
