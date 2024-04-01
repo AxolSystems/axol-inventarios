@@ -103,7 +103,7 @@ class SaleNoteAddBuild extends StatelessWidget {
     int linesNote = 3;
     String dateText =
         '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
-    SaleNoteAddFormModel upForm = form;
+    //SaleNoteAddFormModel upForm = form;
     TextEditingController customerCtrl = TextEditingController();
     TextEditingController vendorCtrl = TextEditingController();
     TextEditingController warehouseCtrl = TextEditingController();
@@ -165,19 +165,19 @@ class SaleNoteAddBuild extends StatelessWidget {
                                       ? null
                                       : form.customerTf.validation.errorMessage,
                                   onChanged: (value) {
-                                    upForm.customerTf.value = value;
-                                    upForm.customerTf.position =
+                                    form.customerTf.value = value;
+                                    form.customerTf.position =
                                         customerCtrl.selection.base.offset;
                                     context
                                         .read<SaleNoteAddForm>()
-                                        .setForm(upForm);
+                                        .setForm(form);
                                   },
                                   onSubmitted: (value) {
-                                    upForm =
+                                    form =
                                         context.read<SaleNoteAddForm>().state;
                                     context
                                         .read<SaleNoteAddCubit>()
-                                        .fetchCustomer(value, upForm);
+                                        .fetchCustomer(value, form);
                                   },
                                   onPressed: () {
                                     showDialog(
@@ -187,16 +187,16 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     ).then((value) {
                                       if (value is DataFind &&
                                           value.data is CustomerModel) {
-                                        upForm.customerTf.value =
+                                        form.customerTf.value =
                                             '${value.id} - ${value.data.name}';
-                                        upForm.customer = value.data;
+                                        form.customer = value.data;
                                         context
                                             .read<SaleNoteAddForm>()
-                                            .setForm(upForm);
+                                            .setForm(form);
                                         context
                                             .read<SaleNoteAddCubit>()
                                             .fetchCustomer(
-                                                value.id.toString(), upForm);
+                                                value.id.toString(), form);
                                       }
                                     });
                                   },
@@ -256,19 +256,19 @@ class SaleNoteAddBuild extends StatelessWidget {
                                       ? null
                                       : form.vendorTf.validation.errorMessage,
                                   onChanged: (value) {
-                                    upForm.vendorTf.value = value;
-                                    upForm.vendorTf.position =
+                                    form.vendorTf.value = value;
+                                    form.vendorTf.position =
                                         vendorCtrl.selection.base.offset;
                                     context
                                         .read<SaleNoteAddForm>()
-                                        .setForm(upForm);
+                                        .setForm(form);
                                   },
                                   onSubmitted: (value) {
-                                    upForm =
+                                    form =
                                         context.read<SaleNoteAddForm>().state;
                                     context
                                         .read<SaleNoteAddCubit>()
-                                        .fetchVendor(value, upForm);
+                                        .fetchVendor(value, form);
                                   },
                                   onPressed: () {
                                     showDialog(
@@ -278,15 +278,15 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     ).then((value) {
                                       if (value is DataFind &&
                                           value.data is VendorModel) {
-                                        upForm.vendorTf.value =
+                                        form.vendorTf.value =
                                             '${value.id} - ${value.data.name}';
                                         context
                                             .read<SaleNoteAddForm>()
-                                            .setForm(upForm);
+                                            .setForm(form);
                                         context
                                             .read<SaleNoteAddCubit>()
                                             .fetchVendor(
-                                                value.id.toString(), upForm);
+                                                value.id.toString(), form);
                                       }
                                     });
                                   },
@@ -301,19 +301,19 @@ class SaleNoteAddBuild extends StatelessWidget {
                                       : form
                                           .warehouseTf.validation.errorMessage,
                                   onChanged: (value) {
-                                    upForm.warehouseTf.value = value;
-                                    upForm.warehouseTf.position =
+                                    form.warehouseTf.value = value;
+                                    form.warehouseTf.position =
                                         warehouseCtrl.selection.base.offset;
                                     context
                                         .read<SaleNoteAddForm>()
-                                        .setForm(upForm);
+                                        .setForm(form);
                                   },
                                   onSubmitted: (value) {
-                                    upForm =
+                                    form =
                                         context.read<SaleNoteAddForm>().state;
                                     context
                                         .read<SaleNoteAddCubit>()
-                                        .fetchWarehouse(value, upForm);
+                                        .fetchWarehouse(value, form);
                                   },
                                   onPressed: () {
                                     showDialog(
@@ -323,16 +323,16 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     ).then((value) {
                                       if (value is DataFind &&
                                           value.data is WarehouseModel) {
-                                        upForm.warehouseTf.value =
+                                        form.warehouseTf.value =
                                             '${value.id} - ${value.data.name}';
-                                        upForm.warehouse = value.data;
+                                        form.warehouse = value.data;
                                         context
                                             .read<SaleNoteAddForm>()
-                                            .setForm(upForm);
+                                            .setForm(form);
                                         context
                                             .read<SaleNoteAddCubit>()
                                             .fetchWarehouse(
-                                                value.id.toString(), upForm);
+                                                value.id.toString(), form);
                                       }
                                     });
                                   },
@@ -477,13 +477,13 @@ class SaleNoteAddBuild extends StatelessWidget {
                                           selection: TextSelection.collapsed(
                                               offset: row.unitPrice.position)));
                               final bool isQuantityFocus =
-                                  upForm.productList[index].quantity.isFocus ??
+                                  form.productList[index].quantity.isFocus ??
                                       false;
-                              final bool isProductFocus = upForm
+                              final bool isProductFocus = form
                                       .productList[index].productCode.isFocus ??
                                   false;
                               final bool isPriceFocus =
-                                  upForm.productList[index].unitPrice.isFocus ??
+                                  form.productList[index].unitPrice.isFocus ??
                                       false;
                               return InputRow(
                                 children: [
@@ -497,12 +497,12 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     ],
                                     controller: quantityCtrl,
                                     onSubmitted: (value) {
-                                      upForm =
+                                      form =
                                           context.read<SaleNoteAddForm>().state;
                                       context
                                           .read<SaleNoteAddCubit>()
                                           .validateCell(
-                                              upForm, row.keyQuantity, index);
+                                              form, row.keyQuantity, index);
                                     },
                                     onChanged: (value) {
                                       form.productList[index].quantity.value =
@@ -527,27 +527,24 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     suffixIcon: Icons.search,
                                     valid: row.productCode.validation,
                                     onChanged: (value) {
-                                      upForm.productList[index].productCode
+                                      form.productList[index].productCode
                                           .value = value;
-                                      upForm.productList[index].productCode
+                                      form.productList[index].productCode
                                               .position =
                                           quantityCtrl.selection.base.offset;
-                                      context
-                                          .read<SaleNoteAddForm>()
-                                          .setForm(upForm);
                                     },
                                     onSubmitted: (value) {
                                       context
                                           .read<SaleNoteAddCubit>()
                                           .validateCell(
-                                              upForm, row.keyProduct, index);
+                                              form, row.keyProduct, index);
                                     },
                                     onPressed: () {
                                       showDialog(
                                           context: context,
                                           builder: (context) =>
                                               ProductDrawerFind(
-                                                warehouse: upForm.warehouse,
+                                                warehouse: form.warehouse,
                                               )).then((value) {
                                         if (value is DataFindValues &&
                                             value.data is InventoryRowModel) {
@@ -609,7 +606,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                       context
                                           .read<SaleNoteAddCubit>()
                                           .validateCell(
-                                              upForm, row.keyPrice, index);
+                                              form, row.keyPrice, index);
                                     },
                                     borderColor: isPriceFocus
                                         ? ColorPalette.primary

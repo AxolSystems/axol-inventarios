@@ -71,6 +71,7 @@ class SaleNoteRepo {
           .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     }
+    
     for (var element in saleNoteDB) {
       productList = [];
       jsonbProducts = element[_products];
@@ -96,6 +97,7 @@ class SaleNoteRepo {
         status: element[_status],
         saleProduct: productList,
       );
+      
       salesNotes.add(saleNote);
     }
     return salesNotes;

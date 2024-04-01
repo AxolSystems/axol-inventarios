@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/models/inventory_row_model.dart';
 import 'package:axol_inventarios/models/validation_form_model.dart';
 import 'package:axol_inventarios/modules/inventory_/product/repository/product_repo.dart';
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
@@ -153,7 +154,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   Future<void> validateCell(
       SaleNoteAddFormModel form, String key, int index) async {
     SaleNoteRowFormModel row = form.productList[index];
-    InventoryModel? inventoryRow;
+    InventoryModel inventoryRow;
     ProductModel? productDB;
     final String inventoryName = form.warehouseTf.validation.isValid
         ? form.warehouseTf.value.split(' - ').last
@@ -172,10 +173,17 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
           row.quantity.validation =
               ValidationFormModel.falseValid(row.emInvalidData);
         } else if (code != '') {
+          print('flag1');
           inventoryRow =
-              await InventoryRepo().fetchRowByCode(code, inventoryName);
+              await InventoryRepo().fetchRowByCode(code, inventoryName) ??
+                  InventoryModel.empty();
 
           if (inventoryRow == null || quantity > inventoryRow.stock) {
+            print(inventoryRow.code);
+            print(inventoryRow.id);
+            print(inventoryRow.name);
+            print(inventoryRow.retailManager);
+            print(inventoryRow.stock);
             row.quantity.validation =
                 ValidationFormModel.falseValid(row.emNotStock);
           } else {
@@ -192,8 +200,11 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       }
       if (key == row.keyProduct) {
         quantity ??= 0;
+        print('flag2');
         inventoryRow =
-            await InventoryRepo().fetchRowByCode(code, inventoryName);
+            await InventoryRepo().fetchRowByCode(code, inventoryName) ??
+                InventoryModel.empty();
+        print('flag2.5');
         if (inventoryRow == null || quantity > inventoryRow.stock) {
           row.productCode.validation =
               ValidationFormModel.falseValid(row.emNotStock);
@@ -239,6 +250,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       var row = form.productList[i];
       code = row.productCode.value;
       quantity = double.tryParse(row.quantity.value);
+
       if (quantity != null && row.productCode.value != '') {
         inventoryRow =
             await InventoryRepo().fetchRowByCode(code, inventoryName);
@@ -262,6 +274,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         row.quantity.validation =
             ValidationFormModel.falseValid(row.emInvalidData);
       }
+
       if (double.tryParse(row.unitPrice.value) == null) {
         row.unitPrice.validation =
             ValidationFormModel.falseValid(row.emInvalidData);
@@ -279,6 +292,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         validationForm = ValidationFormModel.falseValid('Stock insuficiente');
       }
     }
+
     return validationForm;
   }
 
@@ -290,12 +304,16 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
       await fetchCustomer(form.customerTf.value, form);
+      print('Cargando Cliente');
       emit(LoadingSaleNoteAddState());
       await fetchVendor(form.vendorTf.value, form);
+      print('Cargando vendedor');
       emit(LoadingSaleNoteAddState());
       await fetchWarehouse(form.warehouseTf.value, form);
+      print('Cargando almacén');
       emit(LoadingSaleNoteAddState());
       validationForm = await validateAllList(form);
+      print('Validando');
       emit(LoadingSaleNoteAddState());
       form.productList.removeWhere((x) => x.quantity.value == '0');
       if (form.customerTf.validation.isValid == false) {
@@ -421,8 +439,8 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         if (saleType == 1) {
           await SaleReferralRepo().insert(saleNote);
         }
-      
-        emit(SavedNoteAddState(saleNote, saleNote.saleProduct, saleType ));
+
+        emit(SavedNoteAddState(saleNote, saleNote.saleProduct, saleType));
       } else {
         emit(ErrorSaleNoteAddState(error: errorMessage));
       }

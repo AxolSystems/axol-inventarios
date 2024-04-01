@@ -31,7 +31,7 @@ class WarehouseModel {
         map.containsKey(name_) &&
         map.containsKey(manager_)) {
       warehouseModel = WarehouseModel(
-          id: map[id_], name: map[name_], retailManager: int.tryParse(map[manager_]) ?? -1);
+          id: map[id_], name: map[name_], retailManager: int.tryParse(map[manager_].toString()) ?? -1);
     } else {
       warehouseModel = WarehouseModel.empty();
     }

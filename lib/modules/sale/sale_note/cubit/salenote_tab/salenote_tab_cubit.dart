@@ -50,7 +50,6 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
       final int limit = TableViewFormModel.rows50;
       emit(InitialSaleNoteState());
       emit(LoadingSaleNoteState());
-
       List<SaleNoteModel> notesDB = [];
       //Nota de venta
       if (saleType == 0) {
@@ -67,6 +66,7 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
       form.currentPage = 1;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
+    
       emit(LoadedSaleNoteState(salenoteList: notesDB));
     } catch (e) {
       emit(ErrorSalenoteState(error: e.toString()));
