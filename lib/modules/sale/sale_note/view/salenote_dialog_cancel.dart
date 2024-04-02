@@ -45,7 +45,7 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is LoadedSaleNoteDeleteState) {
-          return customerDialogDelete(context, saleNote);
+          return saleNoteDialogDelete(context, saleNote);
         } else if (state is LoadingSaleNoteCancelState) {
           return const Center(
             child: LinearProgressIndicatorAxol(),
@@ -63,8 +63,8 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
     );
   }
 
-  AlertDialogAxol customerDialogDelete(
-      BuildContext context, SaleNoteModel customer) {
+  AlertDialogAxol saleNoteDialogDelete(
+      BuildContext context, SaleNoteModel saleNote) {
     String saleTypeText = '-';
     String message;
     if (saleType == 0) {
@@ -86,7 +86,7 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
         onPressed: () {
           context
               .read<SaleNoteCancelCubit>()
-              .cancelSaleNote(customer, saleType);
+              .cancelSaleNote(saleNote, saleType);
         },
       ),
     ];

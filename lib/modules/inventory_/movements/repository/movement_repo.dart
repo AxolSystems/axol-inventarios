@@ -114,8 +114,7 @@ class MovementRepo {
             description: element[_description] ?? '',
             document: element[_document] ?? '',
             quantity: element[_quantity] ?? -1,
-            time:
-                DateTime.fromMillisecondsSinceEpoch(element[_time]),
+            time: DateTime.fromMillisecondsSinceEpoch(element[_time]),
             warehouseName: element[_warehouseName] ?? '',
             warehouseId: element[_warehouseId] ?? -1,
             user: element[_user] ?? '',
@@ -133,8 +132,8 @@ class MovementRepo {
 
   Future<int> fetchAvailableFolio() async {
     List<Map<String, dynamic>> movementDB = [];
-    //List<int> folioList = [];
     int newFolio = -1;
+
     movementDB = await _supabase
         .from(_table)
         .select<List<Map<String, dynamic>>>(_folio)
@@ -148,5 +147,28 @@ class MovementRepo {
       }
     }
     return newFolio;
+  }
+
+  Future<List<int>> fetchAvailableFolioList(int qty) async {
+    List<Map<String, dynamic>> movementDB = [];
+    List<int> folioList = [];
+    int folio = -1;
+
+    movementDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>(_folio)
+        .order(_folio, ascending: false)
+        .limit(qty);
+
+    if (movementDB.isNotEmpty) {
+      for (var element in movementDB) {
+        folio = int.tryParse(element[_folio].toString()) ?? -1;
+        if (folio > -1) {
+          folio++;
+          folioList.add(folio);
+        }
+      }
+    }
+    return folioList;
   }
 }

@@ -56,7 +56,7 @@ class HomeView extends StatelessWidget {
                 thickness: 1, width: 1, color: ColorPalette.darkItems),
             const Padding(
               padding: EdgeInsets.all(8),
-              child: Text('Version: 1.0.0', style: Typo.titleLight),
+              child: Text('Version: 1.0.1', style: Typo.titleLight),
             )
           ],
         ),

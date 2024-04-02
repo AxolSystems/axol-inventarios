@@ -6,6 +6,7 @@ class ConceptMoveModel {
   static String get sale => 'Venta';
   static String get conceptName58 => 'Salida por traspaso';
   static String get conceptName7 => 'Entrada por traspaso';
+  static String get conceptName4 => 'Cancelación de nota';
 
   const ConceptMoveModel({
     required this.text,

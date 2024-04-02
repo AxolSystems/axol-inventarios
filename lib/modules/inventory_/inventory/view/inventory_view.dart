@@ -18,7 +18,7 @@ class InventoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String title = 'Menú de almacenes';
+    const String title = 'Inventario';
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => MovementsCuibit()),
