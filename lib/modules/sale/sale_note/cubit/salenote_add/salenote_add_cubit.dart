@@ -121,7 +121,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   }
 
   Future<void> fetchWarehouse(String find, SaleNoteAddFormModel form) async {
-    SaleNoteAddFormModel upForm = form;
+    //SaleNoteAddFormModel upForm = form;
     List<WarehouseModel> warehouseList;
     List<String> findSplit;
     String upFind = find;
@@ -135,13 +135,19 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       }
       warehouseList = await WarehousesRepo().fetchWarehouseIlike(upFind);
       if (warehouseList.length == 1) {
-        upForm.warehouseTf.validation = ValidationFormModel.trueValid();
-        upForm.warehouseTf.value =
+        form.warehouseTf.validation = ValidationFormModel.trueValid();
+        form.warehouseTf.value =
             '${warehouseList.first.id} - ${warehouseList.first.name}';
-        await validateAllList(upForm);
+        print(warehouseList.first.id);
+        print(warehouseList.first.name);
+        print(warehouseList.first.retailManager);
+        form.warehouse = warehouseList.first;
+        await validateAllList(form);
       } else {
-        upForm.warehouseTf.validation = ValidationFormModel(
+        form.warehouseTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
+        /*upForm.warehouseTf.validation = ValidationFormModel(
+            isValid: false, errorMessage: form.emInvalidData);*/
       }
       emit(LoadedSaleNoteAddState());
     } catch (e) {
@@ -245,7 +251,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       if (quantity != null && row.productCode.value != '') {
         inventoryRow =
             await InventoryRepo().fetchRowByCode(code, inventoryName);
-        if (inventoryRow != null && quantity < inventoryRow.stock) {
+        if (inventoryRow != null && quantity <= inventoryRow.stock) {
           productDB = await ProductRepo().fetchProduct(inventoryRow.code);
           row.quantity.validation = ValidationFormModel.trueValid();
           row.productCode.validation = ValidationFormModel.trueValid();
