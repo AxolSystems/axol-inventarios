@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/waybill/view/wb_add_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,41 +73,110 @@ class WbAddListBuild extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Visibility(
-            visible: isLoading,
-            replacement: Expanded(
-                child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: form.waybillList.length,
-              itemBuilder: (context, index) {
-                final waybill = form.waybillList[index];
-
-                return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: ColorPalette.darkItems),
+            visible: !isLoading,
+            replacement: const Expanded(child: SizedBox()),
+            child: Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: form.waybillList.length,
+                itemBuilder: (context, index) {
+                  final waybill = form.waybillList[index];
+                  return Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: ColorPalette.darkItems),
+                      ),
+                    ),
+                    child: ButtonRowTable(
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            waybill.product.code,
+                            style: Typo.subtitleLight,
+                          ),
+                          const Icon(
+                            Icons.navigate_next,
+                            color: ColorPalette.lightBackground,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    height: 50,
+                    child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              color: ColorPalette.lightItems10),
+                        ),
+                        onPressed: () {},
+                        child: const Icon(
+                          Icons.save,
+                          color: ColorPalette.lightItems10,
+                          size: 26,
+                        )),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 3,
+                  child: SizedBox(
+                    height: 50,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: ColorPalette.primary,
+                        side: const BorderSide(
+                          color: ColorPalette.primary,
+                          width: 1,
+                        ),
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(12))
+                          ),
+                          context: context,
+                          builder: (context) => const WbAddBottomSheet(),
+                        );
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Icon(
+                              Icons.add,
+                              color: ColorPalette.lightBackground,
+                              size: 30,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              'Agregar',
+                              style: Typo.mobileLigth20,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  child: ButtonRowTable(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          waybill.product.code,
-                          style: Typo.subtitleLight,
-                        ),
-                        const Icon(
-                          Icons.navigate_next,
-                          color: ColorPalette.lightBackground,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            )),
-            child: const LinearProgressIndicatorAxol(),
-          )
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

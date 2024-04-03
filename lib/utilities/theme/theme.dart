@@ -136,6 +136,11 @@ class Typo {
       fontWeight: FontWeight.bold,
       fontSize: 16,
       color: ColorPalette.darkItems);
+  static const bigLabelLight = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+      color: ColorPalette.lightItems10);
   static const labelLight = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
@@ -151,6 +156,13 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.caution);
+
+  //Button mobile    
+  static const mobileLigth20 = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      color: ColorPalette.lightText);
 }
 
 class BoxDecorationTheme {
