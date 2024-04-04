@@ -19,11 +19,13 @@ class WbAddCubit extends Cubit<WbAddState> {
       DataResponseModel dataResponse;
       List<dynamic> dynamicList;
 
-      dataResponse = await InventoryRepo().fetchInventoryList('', warehouse.name);
+      dataResponse =
+          await InventoryRepo().fetchInventoryList('', warehouse.name);
 
       dynamicList = dataResponse.dataList;
       if (dynamicList is List<InventoryRowModel>) {
         inventoryRowList = dynamicList;
+        inventoryRowList.sort((a, b) => a.product.code.compareTo(b.product.code));
       }
 
       form.inventoryList = inventoryRowList;

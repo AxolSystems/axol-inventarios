@@ -7,7 +7,6 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/appbar_axol.dart';
 import '../../../utilities/widgets/button.dart';
-import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
@@ -65,7 +64,7 @@ class WbAddListBuild extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol(
-        title: 'Nueva lista para carta parte',
+        title: 'Nueva lista',
         isLoading: isLoading,
         iconButton: const IconButtonReturn(iconName: 'return'),
       ).appBarAxol(),
@@ -148,7 +147,7 @@ class WbAddListBuild extends StatelessWidget {
                             borderRadius: BorderRadius.vertical(top: Radius.circular(12))
                           ),
                           context: context,
-                          builder: (context) => const WbAddBottomSheet(),
+                          builder: (context) => WbAddBottomSheet(inventoryList: form.inventoryList),
                         );
                       },
                       child: const Row(
