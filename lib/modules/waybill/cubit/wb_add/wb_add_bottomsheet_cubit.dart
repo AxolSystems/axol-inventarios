@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/wb_bottomsheet_form_model.dart';
 
-enum WbAddBottomSheetState {intital, loading, load, error}
+enum WbAddBottomSheetState {intital, loading, load, error, save}
 
 class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
   WbAddBottomSheetCubit() : super(WbAddBottomSheetState.intital);
@@ -11,7 +11,7 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
     try {
       emit(WbAddBottomSheetState.intital);
       emit(WbAddBottomSheetState.loading);
-      form.itemValue = initValue;
+      //form.itemValue = initValue;
       emit(WbAddBottomSheetState.load);
     } catch (e) {
       form.errorMessage = e.toString();
@@ -23,6 +23,20 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
     try {
       emit(WbAddBottomSheetState.intital);
       emit(WbAddBottomSheetState.loading);
+      emit(WbAddBottomSheetState.load);
+    } catch (e) {
+      form.errorMessage = e.toString();
+      emit(WbAddBottomSheetState.error);
+    }
+  }
+
+  Future<void> save(WbBottomSheetFormModel form) async {
+    try {
+      emit(WbAddBottomSheetState.intital);
+      emit(WbAddBottomSheetState.loading);
+      if (double.tryParse(form.controller.text) != null) {
+        emit(WbAddBottomSheetState.save);
+      }
       emit(WbAddBottomSheetState.load);
     } catch (e) {
       form.errorMessage = e.toString();

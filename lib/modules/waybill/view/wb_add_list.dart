@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../global_widgets/appbar/iconbutton_return.dart';
+import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/appbar_axol.dart';
@@ -81,28 +82,23 @@ class WbAddListBuild extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final waybill = form.waybillList[index];
                   return Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: ColorPalette.darkItems),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: ColorPalette.darkItems),
+                        ),
                       ),
-                    ),
-                    child: ButtonRowTable(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child:
+                      Column(
                         children: [
-                          Text(
-                            waybill.product.code,
-                            style: Typo.subtitleLight,
-                          ),
-                          const Icon(
-                            Icons.navigate_next,
-                            color: ColorPalette.lightBackground,
-                          ),
+                          Row(
+                            children: [
+                              Text(waybill.product.code, style: Typo.bodyLight),
+                              Text(waybill.stock.toString(), style: Typo.bodyLight),
+                            ],
+                          )
                         ],
-                      ),
-                    ),
-                  );
+                      )
+                      );
                 },
               ),
             ),
@@ -144,11 +140,17 @@ class WbAddListBuild extends StatelessWidget {
                       onPressed: () {
                         showModalBottomSheet(
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(12))
-                          ),
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(12))),
                           context: context,
-                          builder: (context) => WbAddBottomSheet(inventoryList: form.inventoryList),
-                        );
+                          builder: (context) => WbAddBottomSheet(
+                              inventoryList: form.inventoryList),
+                        ).then((value) {
+                          if (value is InventoryRowModel) {
+                            form.waybillList.add(value);
+                            context.read<WbAddCubit>().load();
+                          }
+                        });
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,

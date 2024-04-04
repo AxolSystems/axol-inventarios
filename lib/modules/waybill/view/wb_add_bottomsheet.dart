@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +31,9 @@ class WbAddBottomSheetBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WbBottomSheetFormModel form = context.read<WbBottomSheetForm>().state;
-    print(form.itemValue);
+    if (form.itemValue == '') {
+      form.itemValue = inventoryList.first.product.code;
+    }
     return BlocConsumer<WbAddBottomSheetCubit, WbAddBottomSheetState>(
       bloc: context.read<WbAddBottomSheetCubit>()
         ..initLoad(form, inventoryList.first.product.code),
@@ -53,6 +53,17 @@ class WbAddBottomSheetBuild extends StatelessWidget {
               builder: (context) => AlertDialogAxol(
                     text: form.errorMessage,
                   ));
+        }
+        if (state == WbAddBottomSheetState.save) {
+          final InventoryRowModel inventoryRow = InventoryRowModel(
+            product: form.product,
+            stock: double.parse(form.controller.text),
+            warehouseName: inventoryList.first.warehouseName,
+          );
+          Navigator.pop(
+            context,
+            inventoryRow,
+          );
         }
       },
     );
@@ -114,6 +125,45 @@ class WbAddBottomSheetBuild extends StatelessWidget {
                 border: OutlineInputBorder(),
                 hintText: 'Cantidad',
                 contentPadding: EdgeInsets.symmetric(horizontal: 8),
+              ),
+            ),
+          ),
+          const Expanded(child: SizedBox()),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              height: 50,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: ColorPalette.primary,
+                  side: const BorderSide(
+                    color: ColorPalette.primary,
+                    width: 1,
+                  ),
+                ),
+                onPressed: () {
+                  context.read<WbAddBottomSheetCubit>().save(form);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.save,
+                        color: ColorPalette.lightBackground,
+                        size: 30,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Guardar',
+                        style: Typo.mobileLigth20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

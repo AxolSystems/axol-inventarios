@@ -26,7 +26,6 @@ class ProductFindCubit extends Cubit<DrawerFindState> {
     try {
       emit(InitialDrawerFindState());
       emit(LoadingDrawerFindState());
-      print('flag1');
       if (currentPage != null) {
         form.currentPage = 1;
       }
@@ -34,14 +33,12 @@ class ProductFindCubit extends Cubit<DrawerFindState> {
       rangeMin = (form.currentPage * limit) - limit;
       rangeMax = (form.currentPage * limit) - 1;
       if (form.productListFind == ProductListFind.inventory) {
-        print('flag2');
         dataResponse = await InventoryRepo().fetchInventoryList(
           find,
           warehouse.name,
           rangeMin: rangeMin,
           rangeMax: rangeMax,
         );
-        print('flag3');
         for (var inventory in dataResponse.dataList) {
           data = DataFindValues(values: [
             inventory.product.code,
