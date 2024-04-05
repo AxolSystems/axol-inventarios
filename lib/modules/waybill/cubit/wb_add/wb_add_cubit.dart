@@ -4,7 +4,9 @@ import '../../../../models/data_response_model.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../inventory_/inventory/repository/inventory_repo.dart';
+import '../../model/waybill_list_model.dart';
 import '../../model/wb_add_form_model.dart';
+import '../../repository/waybill_repo.dart';
 import 'wb_add_state.dart';
 
 class WbAddCubit extends Cubit<WbAddState> {
@@ -25,7 +27,8 @@ class WbAddCubit extends Cubit<WbAddState> {
       dynamicList = dataResponse.dataList;
       if (dynamicList is List<InventoryRowModel>) {
         inventoryRowList = dynamicList;
-        inventoryRowList.sort((a, b) => a.product.code.compareTo(b.product.code));
+        inventoryRowList
+            .sort((a, b) => a.product.code.compareTo(b.product.code));
       }
 
       form.inventoryList = inventoryRowList;
@@ -42,6 +45,34 @@ class WbAddCubit extends Cubit<WbAddState> {
       emit(InitialWbAddState());
       emit(LoadingWbAddState());
 
+      emit(LoadedWbAddState());
+    } catch (e) {
+      emit(ErrorWbAddState(error: e.toString()));
+    }
+  }
+
+  Future<void> save(WbAddFormModel form) async {
+    try {
+      emit(InitialWbAddState());
+      emit(LoadingWbAddState());
+      WaybillListModel waybillList;
+      int id;
+
+      if (form.waybillList.isEmpty) {
+        emit(const ErrorWbAddState(error: 'Agregue al menos un producto.'));
+        return;
+      }
+
+      id = await WaybillRepo.fetchAvailableId();
+      waybillList = WaybillListModel(
+        id: id,
+        date: DateTime.now(),
+        list: form.waybillList,
+        warehouse: form.warehouse,
+      );
+      await WaybillRepo.insert(waybillList);
+
+      emit(SavedWbAddState());
       emit(LoadedWbAddState());
     } catch (e) {
       emit(ErrorWbAddState(error: e.toString()));

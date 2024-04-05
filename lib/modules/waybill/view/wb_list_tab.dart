@@ -1,11 +1,134 @@
+import 'package:axol_inventarios/modules/waybill/cubit/wb_list/wb_list_state.dart';
+import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../utilities/format.dart';
+import '../../../utilities/theme/theme.dart';
+import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../cubit/wb_list/wb_list_cubit.dart';
+import '../model/waybill_list_model.dart';
+import '../model/wb_list_form_model.dart';
 
 class WbListTab extends StatelessWidget {
   const WbListTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => WbListCubit()),
+        BlocProvider(create: (_) => WbListForm()),
+      ],
+      child: const WbWarehouseTabBuild(),
+    );
+  }
+}
+
+class WbWarehouseTabBuild extends StatelessWidget {
+  const WbWarehouseTabBuild({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    WbListFormModel form = context.read<WbListForm>().state;
+    return BlocConsumer<WbListCubit, WbListState>(
+      bloc: context.read<WbListCubit>()..initLoad(form),
+      builder: (context, state) {
+        if (state is LoadingWbListState) {
+          return wbListTab(context, true, []);
+        } else if (state is LoadedWbListState) {
+          return wbListTab(context, false, form.waybillList);
+        } else {
+          return wbListTab(context, false, []);
+        }
+      },
+      listener: (context, state) {
+        if (state is ErrorWbListState) {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialogAxol(
+                    text: state.error,
+                  ));
+        }
+      },
+    );
   }
 
+  Widget wbListTab(BuildContext context, bool isLoading,
+      List<WaybillListModel> waybillList) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Visibility(
+          visible: isLoading,
+          replacement: Expanded(
+              child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: waybillList.length,
+            itemBuilder: (context, index) {
+              final waybill = waybillList[index];
+
+              return Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorPalette.darkItems),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          waybill.id.toString(),
+                          style: Typo.bodyLight,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          FormatDate.dmy(waybill.date),
+                          style: Typo.bodyLight,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          waybill.warehouse.name,
+                          style: Typo.bodyLight,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.download,
+                          color: ColorPalette.lightItems10,
+                        ),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_outward,
+                          color: ColorPalette.lightItems10,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ));
+            },
+          )),
+          child: const LinearProgressIndicatorAxol(),
+        )
+      ],
+    );
+  }
 }

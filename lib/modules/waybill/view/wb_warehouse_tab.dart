@@ -6,7 +6,6 @@ import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
-import '../../inventory_/inventory/view/inventory_list.dart';
 import '../cubit/wb_warehouse/wb_warehouse_cubit.dart';
 import '../cubit/wb_warehouse/wb_warehouse_state.dart';
 import 'wb_add_list.dart';

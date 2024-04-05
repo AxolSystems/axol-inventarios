@@ -4,6 +4,10 @@ class UserModel {
   final String rol;
   final String password;
 
+  static String get rolAdmin => 'admin';
+  static String get rolVendor => 'vendor';
+  static String get rolSup => 'sup';
+
   const UserModel(
       {required this.name,
       required this.id,

@@ -19,6 +19,11 @@ class LoadedWbAddState extends WbAddState {
   List<Object?> get props => [];
 }
 
+class SavedWbAddState extends WbAddState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorWbAddState extends WbAddState {
   final String error;
   const ErrorWbAddState({required this.error});

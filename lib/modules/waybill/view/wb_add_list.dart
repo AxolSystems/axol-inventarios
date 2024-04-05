@@ -7,7 +7,6 @@ import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/appbar_axol.dart';
-import '../../../utilities/widgets/button.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
@@ -57,6 +56,9 @@ class WbAddListBuild extends StatelessWidget {
               builder: (context) => AlertDialogAxol(
                     text: state.error,
                   ));
+        }
+        if (state is SavedWbAddState) {
+          Navigator.pop(context);
         }
       },
     );
@@ -197,7 +199,9 @@ class WbAddListBuild extends StatelessWidget {
                           side: const BorderSide(
                               color: ColorPalette.lightItems10),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<WbAddCubit>().save(form);
+                        },
                         child: const Icon(
                           Icons.save,
                           color: ColorPalette.lightItems10,
