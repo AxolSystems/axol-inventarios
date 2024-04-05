@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../../inventory_/product/model/product_model.dart';
 
-class WbBottomSheetFormModel {
+class WbBottomSheetAddFormModel {
   String itemValue;
   TextEditingController controller;
   ProductModel product;
-  String errorMessage;
+  String? errorMessage;
+  double stock;
 
-  WbBottomSheetFormModel({
+  WbBottomSheetAddFormModel({
     required this.controller,
     required this.itemValue,
     required this.product,
     required this.errorMessage,
+    required this.stock
   });
 
-  WbBottomSheetFormModel.empty()
+  WbBottomSheetAddFormModel.empty()
       : controller = TextEditingController(),
         itemValue = '',
         product = ProductModel.empty(),
-        errorMessage = '';
+        errorMessage = null,
+        stock = 0;
 }

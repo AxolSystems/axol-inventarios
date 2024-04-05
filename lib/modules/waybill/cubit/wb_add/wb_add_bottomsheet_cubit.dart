@@ -2,12 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/wb_bottomsheet_form_model.dart';
 
-enum WbAddBottomSheetState {intital, loading, load, error, save}
+enum WbAddBottomSheetState { intital, loading, load, error, save }
 
 class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
   WbAddBottomSheetCubit() : super(WbAddBottomSheetState.intital);
 
-   Future<void> initLoad(WbBottomSheetFormModel form, String initValue) async {
+  Future<void> initLoad(
+      WbBottomSheetAddFormModel form, String initValue) async {
     try {
       emit(WbAddBottomSheetState.intital);
       emit(WbAddBottomSheetState.loading);
@@ -17,9 +18,9 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
       form.errorMessage = e.toString();
       emit(WbAddBottomSheetState.error);
     }
-  } 
+  }
 
-  Future<void> load(WbBottomSheetFormModel form) async {
+  Future<void> load(WbBottomSheetAddFormModel form) async {
     try {
       emit(WbAddBottomSheetState.intital);
       emit(WbAddBottomSheetState.loading);
@@ -30,13 +31,27 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
     }
   }
 
-  Future<void> save(WbBottomSheetFormModel form) async {
+  Future<void> save(WbBottomSheetAddFormModel form) async {
     try {
       emit(WbAddBottomSheetState.intital);
       emit(WbAddBottomSheetState.loading);
-      if (double.tryParse(form.controller.text) != null) {
-        emit(WbAddBottomSheetState.save);
+      final qty = double.tryParse(form.controller.text);
+
+      if (qty == null) {
+        form.errorMessage = 'Seleccione una cantidad.';
+        return;
       }
+      if (qty > form.stock) {
+        form.errorMessage = 'La cantidad no puede ser mayor al stock.';
+        return;
+      }
+      if (qty <= 0) {
+        form.errorMessage = 'La cantidad debe ser mayor a cero.';
+        return;
+      }
+      form.errorMessage = null;
+
+      emit(WbAddBottomSheetState.save);
       emit(WbAddBottomSheetState.load);
     } catch (e) {
       form.errorMessage = e.toString();
@@ -45,6 +60,6 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
   }
 }
 
-class WbBottomSheetForm extends Cubit<WbBottomSheetFormModel> {
-  WbBottomSheetForm() : super(WbBottomSheetFormModel.empty());
+class WbBottomSheetAddForm extends Cubit<WbBottomSheetAddFormModel> {
+  WbBottomSheetAddForm() : super(WbBottomSheetAddFormModel.empty());
 }

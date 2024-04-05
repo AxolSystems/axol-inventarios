@@ -17,7 +17,7 @@ class WbAddBottomSheet extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => WbAddBottomSheetCubit()),
-        BlocProvider(create: (_) => WbBottomSheetForm()),
+        BlocProvider(create: (_) => WbBottomSheetAddForm()),
       ],
       child: WbAddBottomSheetBuild(inventoryList: inventoryList),
     );
@@ -30,9 +30,17 @@ class WbAddBottomSheetBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WbBottomSheetFormModel form = context.read<WbBottomSheetForm>().state;
+    WbBottomSheetAddFormModel form = context.read<WbBottomSheetAddForm>().state;
     if (form.itemValue == '') {
       form.itemValue = inventoryList.first.product.code;
+      form.stock = inventoryList
+          .where((x) => x.product.code == form.itemValue)
+          .first
+          .stock;
+      form.product = inventoryList
+          .where((x) => x.product.code == form.itemValue)
+          .first
+          .product;
     }
     return BlocConsumer<WbAddBottomSheetCubit, WbAddBottomSheetState>(
       bloc: context.read<WbAddBottomSheetCubit>()
@@ -51,7 +59,7 @@ class WbAddBottomSheetBuild extends StatelessWidget {
           showDialog(
               context: context,
               builder: (context) => AlertDialogAxol(
-                    text: form.errorMessage,
+                    text: form.errorMessage ?? 'null',
                   ));
         }
         if (state == WbAddBottomSheetState.save) {
@@ -72,7 +80,7 @@ class WbAddBottomSheetBuild extends StatelessWidget {
   Widget wbAddBottomSheet(
     BuildContext context,
     List<InventoryRowModel> inventoryList,
-    WbBottomSheetFormModel form,
+    WbBottomSheetAddFormModel form,
   ) {
     List<DropdownMenuItem<String>> itemList = [];
     DropdownMenuItem<String> item;
@@ -104,6 +112,10 @@ class WbAddBottomSheetBuild extends StatelessWidget {
             onChanged: (value) {
               if (value != null) {
                 form.itemValue = value;
+                form.stock = inventoryList
+                    .where((x) => x.product.code == value)
+                    .first
+                    .stock;
                 form.product = inventoryList
                     .where((x) => x.product.code == value)
                     .first
@@ -121,10 +133,11 @@ class WbAddBottomSheetBuild extends StatelessWidget {
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
               ],
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
                 hintText: 'Cantidad',
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                errorText: form.errorMessage,
               ),
             ),
           ),

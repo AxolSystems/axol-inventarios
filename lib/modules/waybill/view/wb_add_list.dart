@@ -12,6 +12,7 @@ import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
 import '../model/wb_add_form_model.dart';
+import 'wb_details_bottomsheet.dart';
 
 class WbAddList extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -72,6 +73,44 @@ class WbAddListBuild extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Center(
+            child: Text(
+              'Almacén: ${warehouse.id} - ${warehouse.name}',
+              style: Typo.subtitleLight,
+              overflow: TextOverflow.fade,
+            ),
+          ),
+          Container(
+            color: ColorPalette.darkItems,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Calve',
+                        style: Typo.subtitleLight,
+                        textAlign: TextAlign.left,
+                      )),
+                  Expanded(
+                      flex: 3,
+                      child: Text(
+                        'Descripción',
+                        style: Typo.subtitleLight,
+                        textAlign: TextAlign.center,
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Cantidad',
+                        style: Typo.subtitleLight,
+                        textAlign: TextAlign.right,
+                      )),
+                ],
+              ),
+            ),
+          ),
           Visibility(
             visible: !isLoading,
             replacement: const Expanded(child: SizedBox()),
@@ -82,23 +121,65 @@ class WbAddListBuild extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final waybill = form.waybillList[index];
                   return Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: ColorPalette.darkItems),
-                        ),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: ColorPalette.darkItems),
                       ),
-                      child:
-                      Column(
-                        children: [
-                          Row(
+                    ),
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(side: BorderSide.none),
+                      onPressed: () {},
+                      onLongPress: () {
+                        showModalBottomSheet(
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(12))),
+                          context: context,
+                          builder: (context) => WbDetailsBottomsheet(
+                            waybillRow: waybill,
+                            inventoryRow: form.inventoryList
+                                .where((x) =>
+                                    x.product.code == waybill.product.code)
+                                .first,
+                          ),
+                        );
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          child: Row(
                             children: [
-                              Text(waybill.product.code, style: Typo.bodyLight),
-                              Text(waybill.stock.toString(), style: Typo.bodyLight),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  waybill.product.code,
+                                  style: Typo.bodyLight,
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  waybill.product.description,
+                                  style: Typo.bodyLight,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  waybill.stock.toString(),
+                                  style: Typo.bodyLight,
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
                             ],
-                          )
-                        ],
-                      )
-                      );
+                          )),
+                    ),
+                  );
                 },
               ),
             ),
