@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../model/waybill_list_model.dart';
+
 abstract class WbListState extends Equatable {
   const WbListState();
 }
@@ -17,6 +19,13 @@ class LoadingWbListState extends WbListState {
 class LoadedWbListState extends WbListState {
   @override
   List<Object?> get props => [];
+}
+
+class OpenDetailsWbListState extends WbListState {
+  final WaybillListModel waybillList;
+  const OpenDetailsWbListState({required this.waybillList});
+  @override
+  List<Object?> get props => [waybillList];
 }
 
 class ErrorWbListState extends WbListState {

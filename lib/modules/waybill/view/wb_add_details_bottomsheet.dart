@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
 
-class WbDetailsBottomsheet extends StatelessWidget {
+class WbAddDetailsBottomsheet extends StatelessWidget {
   final InventoryRowModel inventoryRow;
   final InventoryRowModel waybillRow;
-  const WbDetailsBottomsheet({
+  const WbAddDetailsBottomsheet({
     super.key,
     required this.inventoryRow, required this.waybillRow,
   });

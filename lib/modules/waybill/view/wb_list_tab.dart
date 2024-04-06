@@ -10,6 +10,7 @@ import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../cubit/wb_list/wb_list_cubit.dart';
 import '../model/waybill_list_model.dart';
 import '../model/wb_list_form_model.dart';
+import 'wb_list_details_bottomsheet.dart';
 
 class WbListTab extends StatelessWidget {
   const WbListTab({super.key});
@@ -51,6 +52,13 @@ class WbWarehouseTabBuild extends StatelessWidget {
                     text: state.error,
                   ));
         }
+        if (state is OpenDetailsWbListState) {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) =>
+                WbListDetailsBottomsheet(waybill: state.waybillList),
+          );
+        }
       },
     );
   }
@@ -75,54 +83,61 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       bottom: BorderSide(color: ColorPalette.darkItems),
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          waybill.id.toString(),
-                          style: Typo.bodyLight,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.fade,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            waybill.id.toString(),
+                            style: Typo.bodyLight,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          FormatDate.dmy(waybill.date),
-                          style: Typo.bodyLight,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.fade,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            FormatDate.dmy(waybill.date),
+                            style: Typo.bodyLight,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          waybill.warehouse.name,
-                          style: Typo.bodyLight,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.fade,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            waybill.warehouse.name,
+                            style: Typo.bodyLight,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.download,
-                          color: ColorPalette.lightItems10,
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.download,
+                            color: ColorPalette.lightItems10,
+                          ),
+                          onPressed: () {
+                            context.read<WbListCubit>().saveCsv(waybill.id);
+                          },
                         ),
-                        onPressed: () {},
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_outward,
-                          color: ColorPalette.lightItems10,
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_outward,
+                            color: ColorPalette.lightItems10,
+                          ),
+                          onPressed: () {
+                            context.read<WbListCubit>().openDetails(waybill);
+                          },
                         ),
-                        onPressed: () {},
-                      ),
-                    ],
+                      ],
+                    ),
                   ));
             },
           )),

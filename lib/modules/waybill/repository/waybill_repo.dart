@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
 import '../../../models/inventory_row_model.dart';
+import '../../inventory_/product/model/product_model.dart';
+import '../../inventory_/product/repository/product_repo.dart';
 import '../model/waybill_list_model.dart';
 
 class WaybillRepo {
@@ -30,12 +32,12 @@ class WaybillRepo {
 
     if (manager == -2) {
       postgrestResponse = await _supabase
-        .from(_table)
-        .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-            '$_id, $_warehouseId, $_warehouseName, $_date',
-            const FetchOptions(count: CountOption.exact))
-        .order(_date, ascending: false)
-        .range(rangeMin_, rangeMax_);
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '$_id, $_warehouseId, $_warehouseName, $_date',
+              const FetchOptions(count: CountOption.exact))
+          .order(_date, ascending: false)
+          .range(rangeMin_, rangeMax_);
     } else {
       postgrestResponse = await _supabase
           .from(_table)
@@ -70,15 +72,41 @@ class WaybillRepo {
     return dataResponse;
   }
 
-  static Future<void> insert(WaybillListModel waybillList) async {
-    await _supabase.from(_table).insert({
-      _id: waybillList.id,
-      _list: InventoryRowModel.rowToMapWaybill(waybillList.list),
-      _warehouseId: waybillList.warehouse.id,
-      _warehouseName: waybillList.warehouse.name,
-      _date: waybillList.date.millisecondsSinceEpoch,
-      _manager: waybillList.warehouse.retailManager,
-    });
+  static Future<List<InventoryRowModel>> fetchWaybill(int id) async {
+    List<InventoryRowModel> waybillList = [];
+    InventoryRowModel waybill;
+    List<Map<String, dynamic>> waybillListDB;
+    Map<String, dynamic> waybillDB;
+    List<ProductModel> productList;
+    List<String> codeList = [];
+    ProductModel product;
+
+    waybillListDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>(_list)
+        .eq(_id, id);
+
+    if (waybillListDB.isNotEmpty) {
+      waybillDB = waybillListDB.first[_list];
+      if (waybillDB.isNotEmpty) {
+        for (String value in waybillDB.values) {
+          codeList.add(value.split('~').first);
+        }
+        productList = await ProductRepo().fetchProductListCode(codeList);
+        for (String element in waybillDB.values) {
+          product =
+              productList.where((x) => x.code == element.split('~')[0]).first;
+          waybill = InventoryRowModel(
+            product: product,
+            stock: double.tryParse(element.split('~')[1]) ?? 0,
+            warehouseName: element.split('~')[2],
+          );
+          waybillList.add(waybill);
+        }
+      }
+    }
+
+    return waybillList;
   }
 
   static Future<int> fetchAvailableId() async {
@@ -105,5 +133,16 @@ class WaybillRepo {
     }
 
     return id;
+  }
+
+  static Future<void> insert(WaybillListModel waybillList) async {
+    await _supabase.from(_table).insert({
+      _id: waybillList.id,
+      _list: InventoryRowModel.rowToMapWaybill(waybillList.list),
+      _warehouseId: waybillList.warehouse.id,
+      _warehouseName: waybillList.warehouse.name,
+      _date: waybillList.date.millisecondsSinceEpoch,
+      _manager: waybillList.warehouse.retailManager,
+    });
   }
 }

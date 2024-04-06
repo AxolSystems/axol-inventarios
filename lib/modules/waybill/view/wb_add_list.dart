@@ -11,7 +11,7 @@ import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
 import '../model/wb_add_form_model.dart';
-import 'wb_details_bottomsheet.dart';
+import 'wb_add_details_bottomsheet.dart';
 
 class WbAddList extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -137,7 +137,7 @@ class WbAddListBuild extends StatelessWidget {
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(12))),
                           context: context,
-                          builder: (context) => WbDetailsBottomsheet(
+                          builder: (context) => WbAddDetailsBottomsheet(
                             waybillRow: waybill,
                             inventoryRow: form.inventoryList
                                 .where((x) =>

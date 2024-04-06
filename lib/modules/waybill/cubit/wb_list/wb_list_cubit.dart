@@ -3,9 +3,11 @@ import 'package:axol_inventarios/utilities/widgets/table_view/tableview_form.dar
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/data_response_model.dart';
+import '../../../../models/inventory_row_model.dart';
 import '../../../user/model/user_mdoel.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/wb_list_form_model.dart';
+import '../../repository/waybill_file_repo.dart';
 import '../../repository/waybill_repo.dart';
 import 'wb_list_state.dart';
 
@@ -95,6 +97,43 @@ class WbListCubit extends Cubit<WbListState> {
         form.waybillList = dynamicList;
       }
 
+      emit(LoadedWbListState());
+    } catch (e) {
+      emit(ErrorWbListState(error: e.toString()));
+    }
+  }
+
+  Future<void> saveCsv(int id) async {
+    try {
+      emit(InitialWbListState());
+      emit(LoadingWbListState());
+      List<InventoryRowModel> waybill;
+
+      waybill = await WaybillRepo.fetchWaybill(id);
+
+      await WaybillCsv.waybillCsvSave(waybill);
+      emit(LoadedWbListState());
+    } catch (e) {
+      emit(ErrorWbListState(error: e.toString()));
+    }
+  }
+
+  Future<void> openDetails(WaybillListModel waybill) async {
+    try {
+      emit(InitialWbListState());
+      emit(LoadingWbListState());
+      List<InventoryRowModel> waybillList;
+      WaybillListModel upWaybill;
+
+      waybillList = await WaybillRepo.fetchWaybill(waybill.id);
+      upWaybill = WaybillListModel(
+        id: waybill.id,
+        date: waybill.date,
+        list: waybillList,
+        warehouse: waybill.warehouse,
+      );
+
+      emit(OpenDetailsWbListState(waybillList: upWaybill));
       emit(LoadedWbListState());
     } catch (e) {
       emit(ErrorWbListState(error: e.toString()));
