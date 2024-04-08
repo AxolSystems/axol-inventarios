@@ -6,7 +6,7 @@ import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';
-import '../../../../sale/view/sale_view.dart';
+import '../../../../sale/sale_note/view/sale_view.dart';
 import '../../../../user/view/views/home_view.dart';
 import '../../cubit/routcustomer cubit/routcustomer_cubit.dart';
 import '../controller/listview_rc_controller.dart';

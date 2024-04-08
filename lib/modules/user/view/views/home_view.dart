@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/navigation_rail_axol.dart';
-import '../../cubit/home_view_cubit/home_view_cubit.dart';
-import '../../cubit/home_view_cubit/home_view_state.dart';
+import '../../cubit/home_view/home_view_cubit.dart';
+import '../../cubit/home_view/home_view_state.dart';
 import '../../model/user_mdoel.dart';
 
 class HomeView extends StatelessWidget {

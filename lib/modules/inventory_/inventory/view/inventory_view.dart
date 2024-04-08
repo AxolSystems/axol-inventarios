@@ -6,7 +6,7 @@ import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/navigation_rail_axol.dart';
-import '../../../sale/view/sale_view.dart';
+import '../../../sale/sale_note/view/sale_view.dart';
 import '../../../user/model/user_mdoel.dart';
 import '../../../user/view/views/home_view.dart';
 import '../../../waybill/view/waybill_view.dart';
