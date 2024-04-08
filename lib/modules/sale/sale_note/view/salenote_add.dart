@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
-import '../../../../utilities/widgets/appbar_axol.dart';
+import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../models/data_find.dart';
 import '../../../../utilities/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
@@ -132,10 +132,10 @@ class SaleNoteAddBuild extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
-      appBar: AppBarAxol(
+      appBar: AppBarAxol.appBar(
         title: title,
         isLoading: isLoading,
-      ).appBarAxol(),
+      ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -183,7 +183,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     showDialog(
                                       context: context,
                                       builder: (context) =>
-                                           const CustomerDrawerFind(),
+                                          const CustomerDrawerFind(),
                                     ).then((value) {
                                       if (value is DataFind &&
                                           value.data is CustomerModel) {
@@ -479,9 +479,9 @@ class SaleNoteAddBuild extends StatelessWidget {
                               final bool isQuantityFocus =
                                   form.productList[index].quantity.isFocus ??
                                       false;
-                              final bool isProductFocus = form
-                                      .productList[index].productCode.isFocus ??
-                                  false;
+                              final bool isProductFocus =
+                                  form.productList[index].productCode.isFocus ??
+                                      false;
                               final bool isPriceFocus =
                                   form.productList[index].unitPrice.isFocus ??
                                       false;

@@ -14,7 +14,7 @@ import '../../../../utilities/format.dart';
 import '../../../../utilities/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
-import '../../../../utilities/widgets/appbar_axol.dart';
+import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
@@ -100,10 +100,10 @@ class InventoryMoveAddBuild extends StatelessWidget {
     }
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
-      appBar: AppBarAxol(
+      appBar: AppBarAxol.appBar(
         title: 'Movimiento al inventario',
         isLoading: isLoading,
-      ).appBarAxol(),
+      ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

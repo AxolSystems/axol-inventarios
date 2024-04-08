@@ -2,7 +2,7 @@ import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../utilities/widgets/appbar_axol.dart';
+import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../utilities/navigation_utilities.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../inventory_/inventory/view/inventory_view.dart';
@@ -27,7 +27,7 @@ class SaleView extends StatelessWidget {
           length: 4,
           child: Scaffold(
             backgroundColor: ColorPalette.darkBackground,
-            appBar: const AppBarAxol(title: 'Ventas').appBarAxol(),
+            appBar: AppBarAxol.appBar(title: 'Ventas'),
             body: SizedBox(
               height: double.infinity,
               width: double.infinity,
@@ -37,7 +37,8 @@ class SaleView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   NavigationRail(
-                    destinations: NavigationUtilities.navRail,
+                    labelType: NavigationRailLabelType.all,
+                    destinations: NavigationUtilities.admin,
                     selectedIndex: 2,
                     backgroundColor: ColorPalette.darkBackground,
                     indicatorColor: ColorPalette.primary,
@@ -56,12 +57,11 @@ class SaleView extends StatelessWidget {
                                 builder: (context) => const InventoryView()));
                       }
                       if (value == 3) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const WaybillView()));
-                        }
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const WaybillView()));
+                      }
                     },
                   ),
                   const VerticalDivider(
@@ -88,8 +88,12 @@ class SaleView extends StatelessWidget {
                       ),
                       Expanded(
                           child: TabBarView(children: [
-                        SaleNoteTab(saleType: 0,),
-                        SaleNoteTab(saleType: 1,),
+                        SaleNoteTab(
+                          saleType: 0,
+                        ),
+                        SaleNoteTab(
+                          saleType: 1,
+                        ),
                         CustomerTab(),
                         ProviderVendorTab(),
                         //Text('Vendedores', style: Typo.bodyLight),

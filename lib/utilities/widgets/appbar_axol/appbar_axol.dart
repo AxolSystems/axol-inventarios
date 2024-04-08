@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
-import '../../global_widgets/appbar/iconbutton_return.dart';
-import 'loading_indicator/progress_indicator.dart';
+import '../../theme/theme.dart';
+import 'leading_appbar_axol.dart';
+import '../loading_indicator/progress_indicator.dart';
 
-class AppBarAxol extends StatelessWidget {
-  final String title;
-  final IconButtonReturn? iconButton;
-  final bool? isLoading;
-
-  const AppBarAxol({
-    super.key,
-    required this.title,
-    this.iconButton,
-    this.isLoading,
-  });
-
-  PreferredSize appBarAxol() {
+class AppBarAxol {
+  static PreferredSize appBar({
+    required String title,
+    LeadingAppBarAxol? leading,
+    bool? isLoading,
+  }) {
     final isLoading_ = isLoading ?? false;
     return PreferredSize(
       preferredSize: const Size.fromHeight(50),
@@ -33,7 +26,7 @@ class AppBarAxol extends StatelessWidget {
                 toolbarHeight: 45,
                 backgroundColor: ColorPalette.darkBackground,
                 automaticallyImplyLeading: false,
-                leading: iconButton,
+                leading: leading,
                 title: Text(
                   title,
                   style: Typo.title1,
@@ -49,10 +42,5 @@ class AppBarAxol extends StatelessWidget {
             ],
           )),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return appBarAxol();
   }
 }

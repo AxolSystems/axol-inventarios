@@ -2,11 +2,11 @@ import 'package:axol_inventarios/modules/waybill/view/wb_add_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../global_widgets/appbar/iconbutton_return.dart';
+import '../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
-import '../../../utilities/widgets/appbar_axol.dart';
+import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
@@ -67,11 +67,11 @@ class WbAddListBuild extends StatelessWidget {
   Widget wbAdd(BuildContext context, bool isLoading, WbAddFormModel form) {
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
-      appBar: AppBarAxol(
+      appBar: AppBarAxol.appBar(
         title: 'Nueva lista',
         isLoading: isLoading,
-        iconButton: const IconButtonReturn(iconName: 'return'),
-      ).appBarAxol(),
+        leading: const LeadingReturn(),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

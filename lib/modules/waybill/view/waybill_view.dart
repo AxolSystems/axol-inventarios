@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../utilities/navigation_utilities.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/appbar_axol.dart';
+import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../inventory_/inventory/view/inventory_view.dart';
 import '../../inventory_/movements/cubit/movements_view/movements_cubit.dart';
 import '../../inventory_/product/cubit/product_tab/product_tab_cubit.dart';
@@ -18,6 +19,7 @@ class WaybillView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const String title = 'Listas para carta porte';
+    final double widthScreen = MediaQuery.of(context).size.width;
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => MovementsCuibit()),
@@ -27,7 +29,55 @@ class WaybillView extends StatelessWidget {
             length: 2,
             child: Scaffold(
               backgroundColor: ColorPalette.darkBackground,
-              appBar: const AppBarAxol(title: title).appBarAxol(),
+              appBar: AppBarAxol.appBar(
+                title: title,
+                leading: widthScreen < 600
+                    ? LeadingMenu(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Row(
+                              children: [
+                                NavigationRail(
+                                    labelType: NavigationRailLabelType.all,
+                                    destinations: NavigationUtilities.admin,
+                                    selectedIndex: 3,
+                                    backgroundColor:
+                                        ColorPalette.darkBackground,
+                                    indicatorColor: ColorPalette.primary,
+                                    useIndicator: true,
+                                    onDestinationSelected: (value) {
+                                      if (value == 0) {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const HomeView()));
+                                      }
+                                      if (value == 1) {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const InventoryView()));
+                                      }
+                                      if (value == 2) {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SaleView()));
+                                      }
+                                    },
+                                  ),
+                                const Expanded(child: SizedBox()),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : null,
+              ),
               body: SizedBox(
                 height: double.infinity,
                 width: double.infinity,
@@ -36,50 +86,56 @@ class WaybillView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    NavigationRail(
-                      destinations: NavigationUtilities.navRail,
-                      selectedIndex: 3,
-                      backgroundColor: ColorPalette.darkBackground,
-                      indicatorColor: ColorPalette.primary,
-                      useIndicator: true,
-                      onDestinationSelected: (value) {
-                        if (value == 0) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeView()));
-                        }
-                        if (value == 1) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const InventoryView()));
-                        }
-                        if (value == 2) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SaleView()));
-                        }
-                      },
+                    Visibility(
+                      visible: widthScreen >= 600,
+                      child: NavigationRail(
+                        destinations: NavigationUtilities.admin,
+                        selectedIndex: 3,
+                        backgroundColor: ColorPalette.darkBackground,
+                        indicatorColor: ColorPalette.primary,
+                        useIndicator: true,
+                        onDestinationSelected: (value) {
+                          if (value == 0) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomeView()));
+                          }
+                          if (value == 1) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const InventoryView()));
+                          }
+                          if (value == 2) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SaleView()));
+                          }
+                        },
+                      ),
                     ),
                     const VerticalDivider(
                         thickness: 1, width: 1, color: ColorPalette.darkItems),
-                    const Expanded(
+                    Expanded(
                         child: Column(
                       children: [
                         TabBar(
                           indicatorColor: ColorPalette.primary,
                           tabs: [
-                            Tab(
+                            const Tab(
                               text: 'Almacén',
                             ),
                             Tab(
-                              text: 'Listas para carta porte',
+                              text: widthScreen < 600
+                                  ? 'Listas'
+                                  : 'Listas para carta porte',
                             ),
                           ],
                         ),
-                        Expanded(
+                        const Expanded(
                             child: TabBarView(children: [
                           WbWarehouseTab(),
                           WbListTab(),

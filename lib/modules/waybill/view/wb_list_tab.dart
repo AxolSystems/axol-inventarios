@@ -1,5 +1,4 @@
 import 'package:axol_inventarios/modules/waybill/cubit/wb_list/wb_list_state.dart';
-import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +10,7 @@ import '../cubit/wb_list/wb_list_cubit.dart';
 import '../model/waybill_list_model.dart';
 import '../model/wb_list_form_model.dart';
 import 'wb_list_details_bottomsheet.dart';
+import 'wb_list_details_drawer.dart';
 
 class WbListTab extends StatelessWidget {
   const WbListTab({super.key});
@@ -32,6 +32,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double widthScreen = MediaQuery.of(context).size.width;
     WbListFormModel form = context.read<WbListForm>().state;
     return BlocConsumer<WbListCubit, WbListState>(
       bloc: context.read<WbListCubit>()..initLoad(form),
@@ -53,11 +54,24 @@ class WbWarehouseTabBuild extends StatelessWidget {
                   ));
         }
         if (state is OpenDetailsWbListState) {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) =>
-                WbListDetailsBottomsheet(waybill: state.waybillList),
-          );
+          if (widthScreen < 600) {
+            showModalBottomSheet(
+              backgroundColor: ColorPalette.lightBackground,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(12))),
+              context: context,
+              builder: (context) => WbListDetailsBottomsheet(
+                waybill: state.waybillList,
+              ),
+            );
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) => WbListDetailsDrawer(
+                      waybill: state.waybillList,
+                    ));
+          }
         }
       },
     );

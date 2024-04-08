@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../utilities/widgets/appbar_axol.dart';
+import '../../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
@@ -22,7 +22,7 @@ class RoutCustomers extends StatelessWidget {
       ],
       child: Scaffold(
         backgroundColor: ColorPalette.darkBackground,
-        appBar: const AppBarAxol(title: 'Clientes de ruta').appBarAxol(),
+        appBar: AppBarAxol.appBar(title: 'Clientes de ruta'),
         body: SizedBox(
           height: double.infinity,
           width: double.infinity,
@@ -32,7 +32,8 @@ class RoutCustomers extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               NavigationRail(
-                destinations: NavigationUtilities.navRail,
+                labelType: NavigationRailLabelType.all,
+                destinations: NavigationUtilities.admin,
                 selectedIndex: 1,
                 backgroundColor: ColorPalette.darkBackground,
                 indicatorColor: ColorPalette.primary,

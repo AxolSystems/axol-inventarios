@@ -89,6 +89,7 @@ class WbListDetailsBottomsheet extends StatelessWidget {
                   final totalWeight = (row.product.weight ?? 0) * row.stock;
                   final totalPrice = row.product.price * row.stock;
                   return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     decoration: const BoxDecoration(
                         border: Border(
                             bottom:
@@ -173,49 +174,34 @@ class WbListDetailsBottomsheet extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        const Row(
+                        Row(
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-
+                                const Text(
+                                  'Peso total',
+                                  style: Typo.smallLabelDark,
+                                ),
+                                Text(
+                                  '${FormatNumber.format2dec(totalWeight)} KG',
+                                  style: Typo.bodyDark,
+                                ),
                               ],
                             ),
-
-              ///////////////////////////
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'Peso total',
-                                style: Typo.smallLabelDark,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'Valor total',
-                                style: Typo.smallLabelDark,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '${FormatNumber.format2dec(totalWeight)} KG',
-                                style: Typo.bodyDark,
-                              ),
-                            ),
                             const SizedBox(width: 8),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '\$${FormatNumber.format2dec(totalPrice)}',
-                                style: Typo.bodyDark,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Valor total',
+                                  style: Typo.smallLabelDark,
+                                ),
+                                Text(
+                                  '\$${FormatNumber.format2dec(totalPrice)}',
+                                  style: Typo.bodyDark,
+                                ),
+                              ],
                             ),
                           ],
                         ),

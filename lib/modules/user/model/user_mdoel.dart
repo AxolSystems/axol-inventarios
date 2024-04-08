@@ -13,4 +13,10 @@ class UserModel {
       required this.id,
       required this.rol,
       required this.password});
+
+  UserModel.empty()
+      : name = '',
+        id = -1,
+        rol = '',
+        password = '';
 }
