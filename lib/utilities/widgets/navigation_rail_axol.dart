@@ -90,6 +90,24 @@ class NavigationRailAxolMain extends StatelessWidget {
       } else {
         return NavigationRailAxol.empty();
       }
+    } else if (rol == NavigationRailAxolRol.vendor) {
+      if (view == NavigationRailAxolView.home) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.vendor,
+          selectedIndex: 0,
+          onDestinationSelected:
+              NavigationUtilities.destinationVendor(0, context),
+        );
+      } else if (view == NavigationRailAxolView.waybill) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.vendor,
+          selectedIndex: 1,
+          onDestinationSelected:
+              NavigationUtilities.destinationVendor(1, context),
+        );
+      } else {
+        return NavigationRailAxol.empty();
+      }
     } else {
       return NavigationRailAxol.empty();
     }

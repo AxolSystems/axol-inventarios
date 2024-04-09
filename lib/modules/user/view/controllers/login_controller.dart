@@ -19,12 +19,8 @@ class LoginController extends StatelessWidget {
         } else if (state is LoginSuccessState) {
           final rol = state.user.rol;
           if (rol == 'vendor') {
-            /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AdminPage(
-                          user: state.user,
-                        )));*/
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomeView()));
           } else if (rol == 'admin') {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const HomeView()));

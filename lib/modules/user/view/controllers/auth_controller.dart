@@ -20,7 +20,7 @@ class AuthController extends StatelessWidget {
         } else if (state is AuthAuthenticatedState) {
           final rol = state.user.rol;
           if (rol == 'vendor') {
-            return Container();
+            return const HomeView();
           } else if (rol == 'admin') {
             return const HomeView();
           } else {

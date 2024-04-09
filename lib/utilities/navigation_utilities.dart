@@ -114,6 +114,36 @@ class NavigationUtilities {
     };
   }
 
+  static Function(int value) destinationVendor(
+      int indexSelect, BuildContext context) {
+    int indexCount;
+    List<int> indexList = [];
+    List<Widget> viewList = [
+      const HomeView(),
+      const WaybillView(),
+    ];
+
+    indexCount = viewList.length;
+    for (int i = 0; i < indexCount; i++) {
+      if (indexSelect == i) {
+        indexList.add(-1);
+      } else {
+        indexList.add(i);
+      }
+    }
+
+    return (value) {
+      if (value == indexList[0]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[0]));
+      }
+      if (value == indexList[1]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[1]));
+      }
+    };
+  }
+
   static Widget emptyNavRailReturn() => const SizedBox(
         width: 72,
         child: Padding(

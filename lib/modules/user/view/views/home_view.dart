@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
+import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,6 +53,7 @@ class HomeViewBuild extends StatelessWidget {
     required bool isLoading,
     UserModel? user,
   }) {
+    final double widthScreen = MediaQuery.of(context).size.width;
     const String title = 'Inicio';
     Widget navigationRail;
     UserModel user_ = user ?? UserModel.empty();
@@ -59,6 +61,9 @@ class HomeViewBuild extends StatelessWidget {
     if (user_.rol == UserModel.rolAdmin) {
       navigationRail =
           const NavigationRailAxolMain.admin(view: NavigationRailAxolView.home);
+    } else if (user_.rol == UserModel.rolVendor) {
+      navigationRail = const NavigationRailAxolMain.vendor(
+          view: NavigationRailAxolView.home);
     } else {
       navigationRail = const SizedBox();
     }
@@ -67,6 +72,21 @@ class HomeViewBuild extends StatelessWidget {
       appBar: AppBarAxol.appBar(
         title: title,
         isLoading: isLoading,
+        leading: widthScreen < 600
+            ? LeadingMenu(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Row(
+                      children: [
+                        navigationRail,
+                        const Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  );
+                },
+              )
+            : null,
       ),
       body: SizedBox(
         height: double.infinity,
@@ -76,12 +96,15 @@ class HomeViewBuild extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            navigationRail,
+            Visibility(
+              visible: widthScreen >= 600,
+              child: navigationRail,
+            ),
             const VerticalDivider(
                 thickness: 1, width: 1, color: ColorPalette.darkItems),
             const Padding(
               padding: EdgeInsets.all(8),
-              child: Text('Version: 1.0.2', style: Typo.titleLight),
+              child: Text('Version: 1.0.3', style: Typo.titleLight),
             )
           ],
         ),

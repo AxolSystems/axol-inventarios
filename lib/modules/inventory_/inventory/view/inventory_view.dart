@@ -3,13 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
-import '../../../../../utilities/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/navigation_rail_axol.dart';
-import '../../../sale/sale_note/view/sale_view.dart';
 import '../../../user/model/user_mdoel.dart';
-import '../../../user/view/views/home_view.dart';
-import '../../../waybill/view/waybill_view.dart';
 import '../../movements/cubit/movements_view/movements_cubit.dart';
 import '../../movements/view/movement_tab.dart';
 import '../../product/cubit/product_tab/product_tab_cubit.dart';
