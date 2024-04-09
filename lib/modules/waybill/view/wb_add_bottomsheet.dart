@@ -82,13 +82,14 @@ class WbAddBottomSheetBuild extends StatelessWidget {
     List<InventoryRowModel> inventoryList,
     WbBottomSheetAddFormModel form,
   ) {
+    final double heightScreen = MediaQuery.of(context).size.height;
     List<DropdownMenuItem<String>> itemList = [];
     DropdownMenuItem<String> item;
     for (var element in inventoryList) {
       item = DropdownMenuItem(
         value: element.product.code,
         child: Text(
-          '${element.product.code}: ${element.stock}\n${element.product.description}',
+          '${element.product.code}: ${element.stock} ${element.product.description}',
           style: Typo.bodyDark,
           overflow: TextOverflow.visible,
         ),
@@ -96,33 +97,54 @@ class WbAddBottomSheetBuild extends StatelessWidget {
       itemList.add(item);
     }
     return SizedBox(
-      height: 400,
+      height: heightScreen * 0.8,
       child: Column(
         children: [
-          const SizedBox(height: 8),
-          DropdownButtonFormField(
+          Padding(
             padding: const EdgeInsets.all(8),
-            decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(8),
-                border: OutlineInputBorder()),
-            isDense: false,
-            itemHeight: 60,
-            value: form.itemValue,
-            items: itemList,
-            onChanged: (value) {
-              if (value != null) {
-                form.itemValue = value;
-                form.stock = inventoryList
-                    .where((x) => x.product.code == value)
-                    .first
-                    .stock;
-                form.product = inventoryList
-                    .where((x) => x.product.code == value)
-                    .first
-                    .product;
-                context.read<WbAddBottomSheetCubit>().load(form);
-              }
-            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: ColorPalette.lightItems10),
+                borderRadius: const BorderRadius.all(Radius.circular(8))
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: DropdownButtonFormField(
+                    isExpanded: true,
+                    padding: const EdgeInsets.all(8),
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        border: InputBorder.none),
+                    isDense: false,
+                    itemHeight: 60,
+                    value: form.itemValue,
+                    items: itemList,
+                    onChanged: (value) {
+                      if (value != null) {
+                        form.itemValue = value;
+                        form.stock = inventoryList
+                            .where((x) => x.product.code == value)
+                            .first
+                            .stock;
+                        form.product = inventoryList
+                            .where((x) => x.product.code == value)
+                            .first
+                            .product;
+                        context.read<WbAddBottomSheetCubit>().load(form);
+                      }
+                    },
+                  )),
+                  IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.search,
+                        color: ColorPalette.lightItems10,
+                      ))
+                ],
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
