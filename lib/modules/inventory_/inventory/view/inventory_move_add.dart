@@ -1,11 +1,9 @@
 import 'package:axol_inventarios/models/validation_form_model.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_move/inventory_move_row_model.dart';
-import 'package:axol_inventarios/modules/inventory_/inventory/model/report_inventory_row_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 import '../../../../models/data_find.dart';
 import '../../../../models/inventory_row_model.dart';
@@ -24,7 +22,6 @@ import '../../product/view/product_drawer_find.dart';
 import '../cubit/inventory_move/inventory_move_cubit.dart';
 import '../cubit/inventory_move/inventory_move_state.dart';
 import '../model/inventory_move/inventory_move_model.dart';
-import '../model/report_inventory_move_model.dart';
 import '../model/warehouse_model.dart';
 import 'inventory_move_dialog_save.dart';
 
@@ -88,6 +85,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
     List<DropdownMenuEntry<int>> entryConceptList = [];
     List<DropdownMenuEntry<int>> entryWarehouseList = [];
     DropdownMenuEntry<int> entry;
+    double totalWeight = 0;
     for (var concept in form.concepts) {
       entry = DropdownMenuEntry(
           value: concept.id, label: '${concept.id} - ${concept.text}');
@@ -97,6 +95,9 @@ class InventoryMoveAddBuild extends StatelessWidget {
       entry = DropdownMenuEntry(
           value: warehouse.id, label: '${warehouse.id} - ${warehouse.name}');
       entryWarehouseList.add(entry);
+    }
+    for (var move in form.moveList) {
+      totalWeight = move.weightTotal + totalWeight;
     }
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
@@ -316,12 +317,12 @@ class InventoryMoveAddBuild extends StatelessWidget {
                           child: Column(
                             children: [
                               HeaderTable(dataList: [
-                                DataTableAxol.text('Clave'),
-                                DataTableAxol.text('Descripción'),
-                                DataTableAxol.text('Cantidad'),
-                                DataTableAxol.text('Peso unitario'),
-                                DataTableAxol.text('Peso total'),
-                                DataTableAxol.text('Eliminar'),
+                                DataTableAxol(text: 'Clave', flex: 2),
+                                DataTableAxol(text: 'Descripción', flex: 4),
+                                DataTableAxol(text: 'Cantidad', flex: 2),
+                                DataTableAxol(text: 'Peso unitario', flex: 2),
+                                DataTableAxol(text: 'Peso total', flex: 2),
+                                DataTableAxol(text: 'Eliminar', flex: 1),
                               ]),
                               Expanded(
                                 child: ListView.builder(
@@ -332,6 +333,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                     return InputRow(children: [
                                       //---Clave
                                       TextFieldCell(
+                                        flex: 2,
                                         enabled: !isLoading,
                                         controller: form.moveList[index].codeTf,
                                         isLoading: form.moveList[index]
@@ -400,6 +402,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       //---Descripción
                                       LabelCell(
                                         row.product.description,
+                                        flex: 4,
                                         suffixIcon: Icons.arrow_outward,
                                         enabled: !isLoading,
                                         onPressedSuffix: () {
@@ -413,6 +416,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                       ),
                                       //---Cantidad
                                       TextFieldCell(
+                                        flex: 2,
                                         enabled: !isLoading,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(
@@ -448,13 +452,20 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                         },
                                       ),
                                       //---Peso unitario
-                                      LabelCell(form.moveList[index].weightUnit
-                                          .toString()),
+                                      LabelCell(
+                                        FormatNumber.format2dec(
+                                            form.moveList[index].weightUnit),
+                                        flex: 2,
+                                      ),
                                       //---Peso total
-                                      LabelCell(form.moveList[index].weightTotal
-                                          .toString()),
+                                      LabelCell(
+                                        FormatNumber.format2dec(
+                                            form.moveList[index].weightTotal),
+                                        flex: 2,
+                                      ),
                                       //---Eliminar
                                       ButtonCell(
+                                          flex: 1,
                                           enabled: !isLoading,
                                           onPressed: () {
                                             form.moveList.removeAt(index);
@@ -468,6 +479,18 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                           ))
                                     ]);
                                   },
+                                ),
+                              ),
+                              Container(
+                                color: ColorPalette.darkItems,
+                                child: Row(
+                                  children: [
+                                    const Expanded(child: SizedBox()),
+                                    Text(
+                                      'Peso total: ${FormatNumber.format2dec(totalWeight)} kg',
+                                      style: Typo.subtitleLight,
+                                    ),
+                                  ],
                                 ),
                               )
                             ],
@@ -501,37 +524,6 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                           .save(form, warehouse);
                                     },
                             ),
-                            /*ButtonTool(
-                              icon: Icons.picture_as_pdf,
-                              onPressed: isLoading
-                                  ? null
-                                  : () async {
-                                      Uint8List pdfInBytes =
-                                          await InventoryMovePdf().singleMove(
-                                              ReportInventoryMoveModel
-                                                  .singleMove(
-                                        warehouse: warehouse,
-                                        dateTime: form.date,
-                                        document: form.document.text,
-                                        concept: form.concept,
-                                        productList: ReportInventoryMoveModel
-                                            .movesToReportRows(form.moveList),
-                                      ));
-                                      final blob = html.Blob(
-                                          [pdfInBytes], 'application/pdf');
-                                      final url =
-                                          html.Url.createObjectUrlFromBlob(
-                                              blob);
-                                      final anchor = html.document
-                                              .createElement('a')
-                                          as html.AnchorElement
-                                        ..href = url
-                                        ..style.display = 'none'
-                                        ..download = 'movimiento_prueba.pdf';
-                                      html.document.body!.children.add(anchor);
-                                      anchor.click();
-                                    },
-                            ),*/
                           ],
                         ),
                       ],
