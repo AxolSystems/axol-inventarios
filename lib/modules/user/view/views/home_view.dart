@@ -2,6 +2,7 @@ import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
@@ -27,15 +28,29 @@ class HomeViewBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double widthScreen = MediaQuery.of(context).size.width;
     return BlocConsumer<HomeViewCubit, HomeViewState>(
       bloc: context.read<HomeViewCubit>()..initLoad(),
       builder: (context, state) {
         if (state is LoadingHomeViewState) {
-          return homeView(context: context, isLoading: true);
+          return homeView(
+            context: context,
+            isLoading: true,
+            widthScreen: widthScreen,
+          );
         } else if (state is LoadedHomeViewState) {
-          return homeView(context: context, isLoading: false, user: state.user);
+          return homeView(
+            context: context,
+            isLoading: false,
+            user: state.user,
+            widthScreen: widthScreen,
+          );
         } else {
-          return homeView(context: context, isLoading: false);
+          return homeView(
+            context: context,
+            isLoading: false,
+            widthScreen: widthScreen,
+          );
         }
       },
       listener: (context, state) {
@@ -51,6 +66,7 @@ class HomeViewBuild extends StatelessWidget {
   Widget homeView({
     required BuildContext context,
     required bool isLoading,
+    required double widthScreen,
     UserModel? user,
   }) {
     final double widthScreen = MediaQuery.of(context).size.width;
@@ -102,10 +118,44 @@ class HomeViewBuild extends StatelessWidget {
             ),
             const VerticalDivider(
                 thickness: 1, width: 1, color: ColorPalette.darkItems),
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: Text('Version: 1.0.3', style: Typo.titleLight),
-            )
+            const Expanded(child: SizedBox()),
+            SizedBox(
+                width: widthScreen > 790
+                    ? 700
+                    : widthScreen >= 600
+                        ? widthScreen - 90
+                        : widthScreen - 16,
+                child: Column(
+                  children: [
+                    Expanded(
+                        child: ListView(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 8),
+                          child: MarkdownBody(
+                            selectable: true,
+                            data: '''
+# Versión: 1.0.4
+
+- Agregado buscador para formulario de nuevo elemento en listas de carta porte.
+- Se ajustaron los tamaños de las celdas en el formulario de nuevo movimiento al 
+inventario, y se agregó peso total de los movimientos agregados.
+- Agregado soporte en markdown para notas de versión. 
+                        ''',
+                            styleSheet: MarkdownStyleSheet(
+                              h1: Typo.titleLight,
+                              p: Typo.bodyLight,
+                              listBullet: const TextStyle(
+                                  fontSize: 20, color: ColorPalette.lightText),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                  ],
+                )),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ),
