@@ -2,25 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/wb_bottomsheet_find_form_model.dart';
 
-enum WbBottomSheetFindState { intital, loading, load, error, save }
+enum WbBottomSheetFindState { intital, loading, load, error, select }
 
 class WbBottomSheetFindCubit extends Cubit<WbBottomSheetFindState> {
   WbBottomSheetFindCubit() : super(WbBottomSheetFindState.intital);
 
-  Future<void> initLoad(
-      WbButtonsheetFindFormModel form, String initValue) async {
-    try {
-      emit(WbBottomSheetFindState.intital);
-      emit(WbBottomSheetFindState.loading);
-      //form.itemValue = initValue;
-      emit(WbBottomSheetFindState.load);
-    } catch (e) {
-      form.errorMessage = e.toString();
-      emit(WbBottomSheetFindState.error);
-    }
-  }
-
-  Future<void> load(WbBottomSheetAddFormModel form) async {
+  Future<void> load(WbBottomSheetFindFormModel form) async {
     try {
       emit(WbBottomSheetFindState.intital);
       emit(WbBottomSheetFindState.loading);
@@ -31,7 +18,7 @@ class WbBottomSheetFindCubit extends Cubit<WbBottomSheetFindState> {
     }
   }
 
-  Future<void> save(WbBottomSheetAddFormModel form) async {
+  Future<void> select(WbBottomSheetFindFormModel form) async {
     try {
       emit(WbBottomSheetFindState.intital);
       emit(WbBottomSheetFindState.loading);
@@ -41,17 +28,13 @@ class WbBottomSheetFindCubit extends Cubit<WbBottomSheetFindState> {
         form.errorMessage = 'Seleccione una cantidad.';
         return;
       }
-      if (qty > form.stock) {
-        form.errorMessage = 'La cantidad no puede ser mayor al stock.';
-        return;
-      }
       if (qty <= 0) {
         form.errorMessage = 'La cantidad debe ser mayor a cero.';
         return;
       }
       form.errorMessage = null;
 
-      emit(WbBottomSheetFindState.save);
+      emit(WbBottomSheetFindState.select);
       emit(WbBottomSheetFindState.load);
     } catch (e) {
       form.errorMessage = e.toString();
@@ -60,6 +43,6 @@ class WbBottomSheetFindCubit extends Cubit<WbBottomSheetFindState> {
   }
 }
 
-class WbBottomSheetAddForm extends Cubit<WbBottomSheetAddFormModel> {
-  WbBottomSheetAddForm() : super(WbBottomSheetAddFormModel.empty());
+class WbBottomSheetFindForm extends Cubit<WbBottomSheetFindFormModel> {
+  WbBottomSheetFindForm() : super(WbBottomSheetFindFormModel.empty());
 }

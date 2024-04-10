@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../../models/inventory_row_model.dart';
 
-class WbButtonsheetFindFormModel {
+class WbBottomSheetFindFormModel {
   TextEditingController controller;
   List<InventoryRowModel> inventoryRowList;
+  String? errorMessage;
 
-  WbButtonsheetFindFormModel({
+  WbBottomSheetFindFormModel({
     required this.controller,
     required this.inventoryRowList,
+    required this.errorMessage,
   });
 
-  WbButtonsheetFindFormModel.empty() : 
+  WbBottomSheetFindFormModel.empty() : 
   controller = TextEditingController(),
-  inventoryRowList = [];
+  inventoryRowList = [],
+  errorMessage = null;
 }
