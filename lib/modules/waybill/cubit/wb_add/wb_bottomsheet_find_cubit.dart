@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/models/inventory_row_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/wb_bottomsheet_find_form_model.dart';
@@ -11,6 +12,29 @@ class WbBottomSheetFindCubit extends Cubit<WbBottomSheetFindState> {
     try {
       emit(WbBottomSheetFindState.intital);
       emit(WbBottomSheetFindState.loading);
+      emit(WbBottomSheetFindState.load);
+    } catch (e) {
+      form.errorMessage = e.toString();
+      emit(WbBottomSheetFindState.error);
+    }
+  }
+
+  Future<void> find(WbBottomSheetFindFormModel form,
+      List<InventoryRowModel> inventoryRowList) async {
+    try {
+      emit(WbBottomSheetFindState.intital);
+      emit(WbBottomSheetFindState.loading);
+      List<InventoryRowModel> upList;
+
+      upList = inventoryRowList
+          .where((x) =>
+              (x.product.code.toLowerCase().replaceAll(' ', '').contains(
+                  form.controller.text.toLowerCase().replaceAll(' ', ''))) ||
+              (x.product.description.toLowerCase().replaceAll(' ', '').contains(
+                  form.controller.text.replaceAll(' ', '').toLowerCase())))
+          .toList();
+      form.inventoryRowList = upList;
+
       emit(WbBottomSheetFindState.load);
     } catch (e) {
       form.errorMessage = e.toString();

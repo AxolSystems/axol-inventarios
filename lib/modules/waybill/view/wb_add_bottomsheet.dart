@@ -1,3 +1,5 @@
+import 'package:axol_inventarios/modules/waybill/view/wb_add_bottomsheet_find.dart';
+import 'package:axol_inventarios/utilities/format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,17 +33,6 @@ class WbAddBottomSheetBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WbBottomSheetAddFormModel form = context.read<WbBottomSheetAddForm>().state;
-    if (form.itemValue == '') {
-      form.itemValue = inventoryList.first.product.code;
-      form.stock = inventoryList
-          .where((x) => x.product.code == form.itemValue)
-          .first
-          .stock;
-      form.product = inventoryList
-          .where((x) => x.product.code == form.itemValue)
-          .first
-          .product;
-    }
     return BlocConsumer<WbAddBottomSheetCubit, WbAddBottomSheetState>(
       bloc: context.read<WbAddBottomSheetCubit>()
         ..initLoad(form, inventoryList.first.product.code),
@@ -103,41 +94,96 @@ class WbAddBottomSheetBuild extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Container(
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                border: Border.all(color: ColorPalette.lightItems10),
-                borderRadius: const BorderRadius.all(Radius.circular(8))
-              ),
+                  border: Border.all(color: ColorPalette.lightItems10),
+                  borderRadius: const BorderRadius.all(Radius.circular(8))),
               child: Row(
                 children: [
                   Expanded(
-                      child: DropdownButtonFormField(
-                    isExpanded: true,
-                    padding: const EdgeInsets.all(8),
-                    decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        border: InputBorder.none),
-                    isDense: false,
-                    itemHeight: 60,
-                    value: form.itemValue,
-                    items: itemList,
-                    onChanged: (value) {
-                      if (value != null) {
-                        form.itemValue = value;
-                        form.stock = inventoryList
-                            .where((x) => x.product.code == value)
-                            .first
-                            .stock;
-                        form.product = inventoryList
-                            .where((x) => x.product.code == value)
-                            .first
-                            .product;
-                        context.read<WbAddBottomSheetCubit>().load(form);
-                      }
-                    },
-                  )),
+                    child: Visibility(
+                        visible: form.product.code != '',
+                        replacement: const SizedBox(),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Clave',
+                                        style: Typo.smallLabelDark,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      Text(
+                                        form.product.code,
+                                        style: Typo.bodyDark,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ]),
+                                const SizedBox(width: 8),
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Stock',
+                                        style: Typo.smallLabelDark,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      Text(
+                                        FormatNumber.format2dec(form.stock),
+                                        style: Typo.bodyDark,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ]),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Descripción',
+                                      style: Typo.smallLabelDark,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Text(
+                                      form.product.description,
+                                      style: Typo.bodyDark,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        )),
+                  ),
                   IconButton(
                       padding: const EdgeInsets.all(0),
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(12))),
+                          context: context,
+                          builder: (context) => WbAddBottomsheetFind(
+                              inventoryRowList: inventoryList),
+                        ).then((value) {
+                          if (value is InventoryRowModel) {
+                            form.product = value.product;
+                            form.stock = value.stock;
+                            context.read<WbAddBottomSheetCubit>().load(form);
+                          }
+                        });
+                      },
                       icon: const Icon(
                         Icons.search,
                         color: ColorPalette.lightItems10,
