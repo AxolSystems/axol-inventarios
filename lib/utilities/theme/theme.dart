@@ -96,7 +96,12 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: ColorPalette.darkText);
-  static const titleLight = TextStyle(
+  static const titleLightH1 = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w600,
+      fontSize: 24,
+      color: ColorPalette.lightText);
+  static const titleLightH2 = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w600,
       fontSize: 20,
@@ -157,7 +162,7 @@ class Typo {
       fontSize: 16,
       color: ColorPalette.caution);
 
-  //Button mobile    
+  //Button mobile
   static const mobileLigth20 = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w600,

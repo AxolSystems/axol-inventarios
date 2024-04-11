@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import '../../../../changelog.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/navigation_rail_axol.dart';
@@ -135,16 +136,11 @@ class HomeViewBuild extends StatelessWidget {
                               vertical: 8, horizontal: 8),
                           child: MarkdownBody(
                             selectable: true,
-                            data: '''
-# Versión: 1.0.4
-
-- Agregado buscador para formulario de nuevo elemento en listas de carta porte.
-- Se ajustaron los tamaños de las celdas en el formulario de nuevo movimiento al 
-inventario, y se agregó peso total de los movimientos agregados.
-- Agregado soporte en markdown para notas de versión. 
-                        ''',
+                            data: Changelog.main,
                             styleSheet: MarkdownStyleSheet(
-                              h1: Typo.titleLight,
+                              h1: Typo.titleLightH1,
+                              h2: Typo.titleLightH2,
+                              h3: Typo.subtitleLight,
                               p: Typo.bodyLight,
                               listBullet: const TextStyle(
                                   fontSize: 20, color: ColorPalette.lightText),
