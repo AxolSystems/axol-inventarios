@@ -49,7 +49,7 @@ class InventoryListCubit extends Cubit<InventoryListState> {
     }
   }
 
-  Future<void> load(WarehouseModel warehouse, TableViewFormModel form) async {
+  Future<void> load(WarehouseModel warehouse, TableViewFormModel form, bool resetPage) async {
     try {
       emit(InitialInventoryListState());
       emit(LoadingInventoryListState());
@@ -82,6 +82,13 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       countReg = dataResponse.count;
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
+      if (countReg > 0) {
+        if (resetPage) {
+          form.currentPage = 1;
+        }
+      } else {
+        form.currentPage = 0;
+      }
 
       emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
     } catch (e) {

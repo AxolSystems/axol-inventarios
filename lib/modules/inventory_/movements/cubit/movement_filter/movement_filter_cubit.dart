@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../utilities/format.dart';
 import '../../../inventory/model/warehouse_model.dart';
 import '../../../inventory/repository/warehouses_repo.dart';
 import '../../model/movement_filter_form_model.dart';
@@ -18,11 +19,13 @@ class MovementFilterCubit extends Cubit<MovementFilterState> {
       List<WarehouseModel> warehouseList;
       warehouseList = await WarehousesRepo().fetchAllWarehouses();
       form.warehouseList = warehouseList;
-      form.endDate = filter.endDate;
-      form.initDate = filter.initDate;
+      form.endDate = FormatDate.endDay(filter.endDate);
+      form.initDate = FormatDate.startDay(filter.initDate);
       form.filterDate = filter.filterDate;
       form.tfWarehose.controller.value =
           TextEditingValue(text: filter.warehouse.name);
+      //print('init: ${FormatDate.}');
+      //print('end: ${FormatDate.dmy(form.endDate)}');
       emit(LoadedMovementFilterState());
     } catch (e) {
       emit(ErrorMovementFilterState(error: e.toString()));

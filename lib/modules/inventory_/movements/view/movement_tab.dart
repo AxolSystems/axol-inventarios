@@ -119,7 +119,7 @@ class MovementTabBuild extends StatelessWidget {
                 ).then((value) {
                   if (value is MovementFilterModel) {
                     form.filter = MovementFilterModel.filterToMap(value);
-                    //Actualizar aquí los parametros de página.
+                    form.currentPage = 1;
                     context.read<MovementTabCubit>().load(form);
                   }
                 });

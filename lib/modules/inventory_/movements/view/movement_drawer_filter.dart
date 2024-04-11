@@ -265,7 +265,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                                                   lastDate: DateTime.now())
                                               .then((value) {
                                             if (value != null) {
-                                              form.initDate = value;
+                                              form.initDate = FormatDate.startDay(value);
                                               context
                                                   .read<MovementFilterCubit>()
                                                   .load();
@@ -315,7 +315,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                                                   lastDate: DateTime.now())
                                               .then((value) {
                                             if (value != null) {
-                                              form.endDate = value;
+                                              form.endDate = FormatDate.endDay(value);
                                               context
                                                   .read<MovementFilterCubit>()
                                                   .load();

@@ -26,5 +26,5 @@ class MovementFilterFormModel {
         filterDate = false,
         initDate = DateTime(0),
         endDate = DateTime(3000),
-        entryList = [DropdownMenuEntry(value: 0, label: 'Inicial')];
+        entryList = [const DropdownMenuEntry(value: 0, label: 'Inicial')];
 }
