@@ -239,14 +239,14 @@ class InventoryMoveCubit extends Cubit<InventoryMoveState> {
         for (int i = 0; i < form.moveList.length; i++) {
           final element = form.moveList[i];
           final quantity = double.tryParse(element.quantityTf.text) ?? 0;
-          if (element.codeTf.text == '' && quantity < 1) {
+          if (element.codeTf.text == '' && quantity <= 1) {
             form.moveList.removeAt(i);
             i--;
           }
         }
         for (var element in form.moveList) {
           final quantity = double.tryParse(element.quantityTf.text) ?? 0;
-          if (element.codeTf.text == '' || quantity < 1) {
+          if (element.codeTf.text == '' || quantity <= 0) {
             form.states[form.tSave]!.state = ElementState.error;
             form.states[form.tSave]!.message = form.emRowMissing;
             emit(ErrorInventoryMoveState(error: form.emRowMissing));
