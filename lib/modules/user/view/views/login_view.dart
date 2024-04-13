@@ -24,38 +24,47 @@ class LoginView extends StatelessWidget {
           BlocProvider(create: (_) => UserTxtCubit()),
         ],
         child: Scaffold(
+            resizeToAvoidBottomInset: true,
             backgroundColor: ColorPalette.darkBackground,
-            body: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              //shrinkWrap: true,
-              children: [
-                Visibility(visible: MediaQuery.of(context).size.height > 570, child: const Logo()),
-                const Center(child: SizedBox(
-                  width: 800,
-                  height: 220,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(24, 8, 24, 8),
-                        child: TextFieldUser(),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                //shrinkWrap: true,
+                children: [
+                  Visibility(
+                      visible: MediaQuery.of(context).size.height > 570,
+                      child: const Logo()),
+                  const Center(
+                    child: SizedBox(
+                      width: 800,
+                      height: 220,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(24, 8, 24, 8),
+                            child: TextFieldUser(),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(24, 8, 24, 8),
+                            child: TextFieldPassword(),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(24, 8, 24, 0),
+                            child: ButtonLogin(),
+                          ),
+                          LoginController(),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(24, 8, 24, 8),
-                        child: TextFieldPassword(),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(24, 8, 24, 0),
-                        child: ButtonLogin(),
-                      ),
-                      LoginController(),
-                    ],
-                  ),
-                ),)
-                
-              ],
+                    ),
+                  )
+                ],
+              ),
             )));
   }
 }
