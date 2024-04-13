@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/navigation_rail_axol.dart';
+import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
 import '../../../user/model/user_mdoel.dart';
 import '../../customer/view/customer_tab.dart';
 import '../cubit/sale_view/sale_view_cubit.dart';

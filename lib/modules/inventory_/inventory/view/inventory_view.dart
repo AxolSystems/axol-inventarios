@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/navigation_rail_axol.dart';
+import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
 import '../../../user/model/user_mdoel.dart';
 import '../../movements/cubit/movements_view/movements_cubit.dart';
 import '../../movements/view/movement_tab.dart';

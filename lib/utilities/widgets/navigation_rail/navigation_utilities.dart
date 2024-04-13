@@ -1,11 +1,11 @@
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 
-import '../modules/inventory_/inventory/view/inventory_view.dart';
-import '../modules/sale/sale_note/view/sale_view.dart';
-import '../modules/user/view/views/home_view.dart';
-import '../modules/waybill/view/waybill_view.dart';
-import 'widgets/button.dart';
+import '../../../modules/inventory_/inventory/view/inventory_view.dart';
+import '../../../modules/sale/sale_note/view/sale_view.dart';
+import '../../../modules/user/view/views/home_view.dart';
+import '../../../modules/waybill/view/waybill_view.dart';
+import '../button.dart';
 
 class NavigationUtilities {
   static const List<NavigationRailDestination> admin = [

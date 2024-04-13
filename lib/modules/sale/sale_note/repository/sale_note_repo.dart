@@ -4,6 +4,7 @@ import 'package:axol_inventarios/modules/sale/sale_note/model/sale_product_model
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../models/data_response_model.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../model/sale_note_model.dart';
 import '../model/salenote_filter_model.dart';
@@ -23,7 +24,7 @@ class SaleNoteRepo {
   static const String _status = SaleNoteModel.tStatus;
   final _supabase = Supabase.instance.client;
 
-  Future<List<SaleNoteModel>> fetchNotes(
+  Future<DataResponseModel> fetchNotes(
       SaleFilterModel filter, String finder) async {
     CustomerModel customer = CustomerModel.empty();
     List<SaleNoteModel> salesNotes = [];
@@ -35,6 +36,8 @@ class SaleNoteRepo {
     SaleProductModel saleProduct;
     Map<String, dynamic> jsonbProducts;
     List mapList;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    DataResponseModel dataResponse;
     final int rangeMin = filter.rangeMin ?? 0;
     final int rangeMax = filter.rangeMax ?? 0;
 
@@ -51,9 +54,10 @@ class SaleNoteRepo {
     }
 
     if (finder == '') {
-      saleNoteDB = await _supabase
+      postgrestResponse = await _supabase
           .from(_table)
-          .select<List<Map<String, dynamic>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
           .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     } else {
@@ -64,14 +68,16 @@ class SaleNoteRepo {
       if (double.tryParse(finder) != null) {
         textOr = '$textOr,$_id.eq.$finder';
       }
-      saleNoteDB = await _supabase
+      postgrestResponse = await _supabase
           .from(_table)
-          .select<List<Map<String, dynamic>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
           .or(textOr)
           .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     }
-    
+    saleNoteDB = postgrestResponse.data ?? [];
+
     for (var element in saleNoteDB) {
       productList = [];
       jsonbProducts = element[_products];
@@ -97,10 +103,14 @@ class SaleNoteRepo {
         status: element[_status],
         saleProduct: productList,
       );
-      
       salesNotes.add(saleNote);
     }
-    return salesNotes;
+
+    dataResponse = DataResponseModel(
+      dataList: salesNotes,
+      count: postgrestResponse.count ?? 0,
+    );
+    return dataResponse;
   }
 
   Future<int> fetchAvailableId() async {

@@ -74,7 +74,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                   autoFocus: true,
                   isTxtExpand: true,
                   onSubmitted: (value) {
-                    context.read<SaleNoteTabCubit>().load(saleType, form);
+                    context.read<SaleNoteTabCubit>().load(saleType, form, true);
                   },
                   onChanged: (value) {
                     form.finder = TextfieldModel(
@@ -87,7 +87,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                       context
                           .read<SaleNoteTabForm>()
                           .setForm(TableViewFormModel.empty());
-                      context.read<SaleNoteTabCubit>().load(saleType, form);
+                      context.read<SaleNoteTabCubit>().load(saleType, form, true);
                     }
                   },
                 )),
@@ -108,7 +108,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                       ),
                     ).then((value) {
                       form.finder = TextfieldModel.empty();
-                      context.read<SaleNoteTabCubit>().load(saleType, form);
+                      context.read<SaleNoteTabCubit>().load(saleType, form, true);
                       context
                           .read<SaleNoteTabForm>()
                           .setForm(TableViewFormModel.empty());
@@ -236,7 +236,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                                   form.finder = TextfieldModel.empty();
                                   context
                                       .read<SaleNoteTabCubit>()
-                                      .load(saleType, form);
+                                      .load(saleType, form, true);
                                   context
                                       .read<SaleNoteTabForm>()
                                       .setForm(TableViewFormModel.empty());
@@ -338,13 +338,13 @@ class SaleNoteTabBuild extends StatelessWidget {
                 onPressedLeft: () {
                   if (form.currentPage > 1) {
                     form.currentPage = form.currentPage - 1;
-                    context.read<SaleNoteTabCubit>().load(saleType, form);
+                    context.read<SaleNoteTabCubit>().load(saleType, form, false);
                   }
                 },
                 onPressedRight: () {
                   if (form.currentPage < form.limitPage) {
                     form.currentPage = form.currentPage + 1;
-                    context.read<SaleNoteTabCubit>().load(saleType, form);
+                    context.read<SaleNoteTabCubit>().load(saleType, form, false);
                   }
                 },
               ),

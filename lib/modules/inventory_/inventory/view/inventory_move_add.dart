@@ -9,7 +9,7 @@ import '../../../../models/data_find.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../../utilities/data_state.dart';
 import '../../../../utilities/format.dart';
-import '../../../../utilities/navigation_utilities.dart';
+import '../../../../utilities/widgets/navigation_rail/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';

@@ -76,21 +76,17 @@ class CustomerTabBuild extends StatelessWidget {
                 form.finder = TextfieldModel(
                     text: value,
                     position: textController.selection.base.offset);
-                context.read<CustomerTabCubit>().load(form);
+                context.read<CustomerTabCubit>().load(form, true);
               },
               onChanged: (value) {
                 form.finder = TextfieldModel(
                     text: value,
                     position: textController.selection.base.offset);
-                //context.read<CustomerTabForm>().setForm(form);
               },
               onPressed: () {
                 if (isLoading == false) {
-                  /*context
-                      .read<CustomerTabForm>()
-                      .setForm(TextfieldModel.empty());*/
                   form.finder = TextfieldModel.empty();
-                  context.read<CustomerTabCubit>().load(form);
+                  context.read<CustomerTabCubit>().load(form, true);
                 }
               },
             ),
@@ -109,7 +105,7 @@ class CustomerTabBuild extends StatelessWidget {
                 context: context,
                 builder: (context) => const ProviderCustomerAdd(),
               ).then((value) {
-                context.read<CustomerTabCubit>().load(form);
+                context.read<CustomerTabCubit>().load(form, true);
               });
             },
             icon: const Icon(
@@ -189,7 +185,7 @@ class CustomerTabBuild extends StatelessWidget {
                           ).then((value) {
                             context
                                 .read<CustomerTabCubit>()
-                                .load(form);
+                                .load(form, true);
                           });
                         },
                       ),
@@ -204,13 +200,13 @@ class CustomerTabBuild extends StatelessWidget {
           onPressedLeft: () {
             if (form.currentPage > 1) {
               form.currentPage = form.currentPage - 1;
-              context.read<CustomerTabCubit>().load(form);
+              context.read<CustomerTabCubit>().load(form, false);
             }
           },
           onPressedRight: () {
             if (form.currentPage < form.limitPage) {
               form.currentPage = form.currentPage + 1;
-              context.read<CustomerTabCubit>().load(form);
+              context.read<CustomerTabCubit>().load(form, false);
             }
           },
         ),

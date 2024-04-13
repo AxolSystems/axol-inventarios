@@ -41,11 +41,11 @@ class CustomerDrawerFindBuild extends StatelessWidget {
             onPressed: () {
               //context.read<Customer>().setForm(TextfieldFormModel.empty());
               form.finder.text = '';
-              context.read<CustomerFindCubit>().load(form);
+              context.read<CustomerFindCubit>().load(form, true);
             },
             onSubmitted: (value) {
               form.finder.text = value;
-              context.read<CustomerFindCubit>().load(form);
+              context.read<CustomerFindCubit>().load(form, true);
             },
             listData: state.dataList,
             currentPage: form.currentPage,
@@ -54,13 +54,13 @@ class CustomerDrawerFindBuild extends StatelessWidget {
             onPressedNext: () {
               if (form.currentPage < form.totalPages) {
                 form.currentPage = form.currentPage + 1;
-                context.read<CustomerFindCubit>().load(form);
+                context.read<CustomerFindCubit>().load(form, false);
               }
             },
             onPressedPrev: () {
               if (form.currentPage > 1) {
                 form.currentPage = form.currentPage - 1;
-                context.read<CustomerFindCubit>().load(form);
+                context.read<CustomerFindCubit>().load(form, false);
               }
             },
           );

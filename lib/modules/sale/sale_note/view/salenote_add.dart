@@ -8,7 +8,7 @@ import '../../../../utilities/format.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../models/data_find.dart';
-import '../../../../utilities/navigation_utilities.dart';
+import '../../../../utilities/widgets/navigation_rail/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/btn_select_inptu_form.dart';
 import '../../../../utilities/widgets/input_table.dart';

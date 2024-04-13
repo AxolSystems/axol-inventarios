@@ -1,6 +1,6 @@
 import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
 import 'package:axol_inventarios/modules/inventory_/inventory/view/inventory_move_add.dart';
-import 'package:axol_inventarios/utilities/navigation_utilities.dart';
+import 'package:axol_inventarios/utilities/widgets/navigation_rail/navigation_utilities.dart';
 import 'package:axol_inventarios/utilities/widgets/appbar_axol/appbar_axol.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:flutter/material.dart';

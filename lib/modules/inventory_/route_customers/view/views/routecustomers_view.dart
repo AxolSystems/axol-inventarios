@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
-import '../../../../../utilities/navigation_utilities.dart';
+import '../../../../../utilities/widgets/navigation_rail/navigation_utilities.dart';
 import '../../../../../utilities/theme/theme.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_form.dart';
 import '../../../../sale/sale_note/cubit/salenote_tab/salenote_tab_cubit.dart';

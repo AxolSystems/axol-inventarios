@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/data_find.dart';
+import '../../../../../models/data_response_model.dart';
 import '../../../../../utilities/widgets/drawer_find.dart';
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../model/customer_find_form_model.dart';
@@ -14,15 +15,19 @@ class CustomerFindCubit extends Cubit<DrawerFindState> {
     final String find = form.finder.text;
     final int countReg;
     final int limit = TableViewFormModel.rows50;
-    List<CustomerModel> customersDB;
+    List<CustomerModel> customersDB = [];
     List<DataFind> dataList = [];
     DataFind data;
+    DataResponseModel dataResponse;
     try {
       emit(InitialDrawerFindState());
       emit(LoadingDrawerFindState());
-      countReg = await CustomerRepo().countRecords();
-      customersDB = await CustomerRepo()
+      dataResponse = await CustomerRepo()
           .fetchCustomersIlike(find, rangeMax: limit - 1, rangeMin: 0);
+      countReg = dataResponse.count;
+      if (dataResponse.dataList is List<CustomerModel>) {
+        customersDB = dataResponse.dataList as List<CustomerModel>;
+      }
       form.currentPage = 1;
       form.totalReg = countReg;
       form.totalPages = (countReg / limit).ceil();
@@ -40,23 +45,30 @@ class CustomerFindCubit extends Cubit<DrawerFindState> {
     }
   }
 
-  Future<void> load(CustomerFindFormModel form) async {
+  Future<void> load(CustomerFindFormModel form, bool resetPage) async {
     final String find = form.finder.text;
     final int rangeMax;
     final int rangeMin;
     final int countReg;
     final int limit = TableViewFormModel.rows50;
-    List<CustomerModel> customersDB;
+    List<CustomerModel> customersDB = [];
     List<DataFind> dataList = [];
     DataFind data;
+    DataResponseModel dataResponse;
     try {
       emit(InitialDrawerFindState());
       emit(LoadingDrawerFindState());
-      countReg = await CustomerRepo().countRecords();
+      if (resetPage) {
+        form.currentPage = 1;
+      }
       rangeMax = (form.currentPage * limit) - 1;
       rangeMin = (form.currentPage * limit) - limit;
-      customersDB = await CustomerRepo()
+      dataResponse = await CustomerRepo()
           .fetchCustomersIlike(find, rangeMax: rangeMax, rangeMin: rangeMin);
+      countReg = dataResponse.count;
+      if (dataResponse.dataList is List<CustomerModel>) {
+        customersDB = dataResponse.dataList as List<CustomerModel>;
+      }
       form.totalReg = countReg;
       form.totalPages = (countReg / limit).ceil();
       //customersDB = await CustomerRepo().fetchCustomersIlike(find);

@@ -2,7 +2,7 @@ import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:axol_inventarios/modules/waybill/cubit/waybill_view/waybill_view_cubit.dart';
 import 'package:axol_inventarios/modules/waybill/cubit/waybill_view/waybill_view_state.dart';
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
-import 'package:axol_inventarios/utilities/widgets/navigation_rail_axol.dart';
+import 'package:axol_inventarios/utilities/widgets/navigation_rail/navigation_rail_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

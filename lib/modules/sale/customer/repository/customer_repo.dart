@@ -1,6 +1,8 @@
 import 'package:axol_inventarios/modules/sale/customer/model/customer_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../models/data_response_model.dart';
+
 class CustomerRepo {
   final String _table = 'customers';
   final String _id = CustomerModel.empty().tId;
@@ -55,11 +57,13 @@ class CustomerRepo {
     return customers;
   }
 
-  Future<List<CustomerModel>> fetchCustomersIlike(String inText,
+  Future<DataResponseModel> fetchCustomersIlike(String inText,
       {int? rangeMax, int? rangeMin}) async {
     List<Map<String, dynamic>> customersDB = [];
     List<CustomerModel> customers = [];
     CustomerModel customer = CustomerModel.empty();
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    DataResponseModel dataResponse;
     final int rangeMax_ = rangeMax ?? 999;
     final int rangeMin_ = rangeMin ?? 0;
 
@@ -70,19 +74,24 @@ class CustomerRepo {
       textOr = '$_id.eq.$inText';
     }
     if (inText == '') {
-      customersDB = await _supabase
+      postgrestResponse = await _supabase
           .from(_table)
-          .select<List<Map<String, dynamic>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+            '*', const FetchOptions(count: CountOption.estimated)
+          )
           .order(_id, ascending: true)
           .range(rangeMin_, rangeMax_);
     } else {
-      customersDB = await _supabase
+      postgrestResponse = await _supabase
           .from(_table)
-          .select<List<Map<String, dynamic>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+            '*', const FetchOptions(count: CountOption.estimated)
+          )
           .or(textOr)
           .order(_id, ascending: true)
           .range(rangeMin_, rangeMax_);
     }
+    customersDB = postgrestResponse.data ?? [];
     if (customersDB.isNotEmpty) {
       for (var element in customersDB) {
         customer = CustomerModel(
@@ -101,7 +110,11 @@ class CustomerRepo {
         customers.add(customer);
       }
     }
-    return customers;
+    dataResponse = DataResponseModel(
+      dataList: customers,
+      count: postgrestResponse.count ?? 0,
+    );
+    return dataResponse;
   }
 
   Future<int> fetchAvailableId() async {

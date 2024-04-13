@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/models/data_response_model.dart';
 import 'package:axol_inventarios/modules/inventory_/product/model/product_model.dart';
 import 'package:axol_inventarios/modules/sale/customer/model/customer_model.dart';
 import 'package:axol_inventarios/modules/sale/sale_note/model/sale_product_model.dart';
@@ -23,7 +24,7 @@ class SaleReferralRepo {
   static const String _status = SaleNoteModel.tStatus;
   final _supabase = Supabase.instance.client;
 
-  Future<List<SaleNoteModel>> fetchReferral(
+  Future<DataResponseModel> fetchReferral(
       SaleFilterModel filter, String finder) async {
     CustomerModel customer = CustomerModel.empty();
     List<SaleNoteModel> salesNotes = [];
@@ -35,6 +36,8 @@ class SaleReferralRepo {
     SaleProductModel saleProduct;
     Map<String, dynamic> jsonbProducts;
     List mapList;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    DataResponseModel dataResponse;
     final int rangeMin = filter.rangeMin ?? 0;
     final int rangeMax = filter.rangeMax ?? 0;
 
@@ -51,8 +54,10 @@ class SaleReferralRepo {
     }
 
     if (finder == '') {
-      saleNoteDB =
-          await _supabase.from(_table).select<List<Map<String, dynamic>>>()
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
           .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     } else {
@@ -63,13 +68,15 @@ class SaleReferralRepo {
       if (double.tryParse(finder) != null) {
         textOr = '$textOr,$_id.eq.$finder';
       }
-      saleNoteDB = await _supabase
+      postgrestResponse = await _supabase
           .from(_table)
-          .select<List<Map<String, dynamic>>>()
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.exact))
           .or(textOr)
           .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
     }
+    saleNoteDB = postgrestResponse.data ?? [];
     for (var element in saleNoteDB) {
       productList = [];
       jsonbProducts = element[_products];
@@ -97,14 +104,21 @@ class SaleReferralRepo {
       );
       salesNotes.add(saleNote);
     }
-    return salesNotes;
+    dataResponse = DataResponseModel(
+      dataList: salesNotes,
+      count: postgrestResponse.count ?? 0,
+    );
+    return dataResponse;
   }
 
   Future<int> fetchAvailableId() async {
     List<Map<String, dynamic>> saleNoteIdDB = [];
     int newId = -1;
-    saleNoteIdDB =
-        await _supabase.from(_table).select<List<Map<String, dynamic>>>(_id).order(_id).limit(1);
+    saleNoteIdDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>(_id)
+        .order(_id)
+        .limit(1);
     if (saleNoteIdDB.isNotEmpty) {
       newId = int.tryParse(saleNoteIdDB.first[_id].toString()) ?? -1;
       if (newId > -1) {

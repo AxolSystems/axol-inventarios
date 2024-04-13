@@ -4,6 +4,7 @@ import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../../models/data_response_model.dart';
 import '../../../../inventory_/inventory/model/inventory_model.dart';
 import '../../../../inventory_/inventory/model/inventory_move/concept_move_model.dart';
 import '../../../../inventory_/inventory/model/warehouse_model.dart';
@@ -61,9 +62,10 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
 
   Future<void> fetchCustomer(String find, SaleNoteAddFormModel form) async {
     SaleNoteAddFormModel upForm = form;
-    List<CustomerModel> customerList;
+    List<CustomerModel> customerList = [];
     List<String> findSplit;
     String upFind = find;
+    DataResponseModel dataResponse;
     try {
       emit(InitialSaleNoteAddState());
       emit(LoadingSaleNoteAddState());
@@ -72,7 +74,10 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       if (findSplit.isNotEmpty) {
         upFind = findSplit.first;
       }
-      customerList = await CustomerRepo().fetchCustomersIlike(upFind);
+      dataResponse = await CustomerRepo().fetchCustomersIlike(upFind);
+      if (dataResponse.dataList is List<CustomerModel>) {
+        customerList = dataResponse.dataList as List<CustomerModel>;
+      }
       if (customerList.length == 1) {
         upForm.customer = customerList.first;
         upForm.customerTf.validation = ValidationFormModel.trueValid();
