@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
+import '../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../inventory_/movements/cubit/movements_view/movements_cubit.dart';
 import '../../inventory_/product/cubit/product_tab/product_tab_cubit.dart';
 import 'wb_list_tab.dart';
@@ -95,7 +96,10 @@ class WaybillViewBuild extends StatelessWidget {
                             context: context,
                             builder: (context) => Row(
                               children: [
-                                navigationRail,
+                                Material(
+                                  child:
+                                      NavRailAxol(navRailMain: navigationRail),
+                                ),
                                 const Expanded(child: SizedBox()),
                               ],
                             ),
@@ -113,7 +117,10 @@ class WaybillViewBuild extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Visibility(
-                        visible: widthScreen >= 600, child: navigationRail),
+                        visible: widthScreen >= 600,
+                        child: NavRailAxol(
+                          navRailMain: navigationRail,
+                        )),
                     const VerticalDivider(
                         thickness: 1, width: 1, color: ColorPalette.darkItems),
                     Expanded(

@@ -7,6 +7,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../changelog.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
 import '../../cubit/home_view/home_view_cubit.dart';
 import '../../cubit/home_view/home_view_state.dart';
@@ -96,7 +97,9 @@ class HomeViewBuild extends StatelessWidget {
                     context: context,
                     builder: (context) => Row(
                       children: [
-                        navigationRail,
+                        Material(
+                          child: NavRailAxol(navRailMain: navigationRail),
+                        ),
                         const Expanded(child: SizedBox()),
                       ],
                     ),
@@ -115,7 +118,7 @@ class HomeViewBuild extends StatelessWidget {
           children: [
             Visibility(
               visible: widthScreen >= 600,
-              child: navigationRail,
+              child: NavRailAxol(navRailMain: navigationRail),
             ),
             const VerticalDivider(
                 thickness: 1, width: 1, color: ColorPalette.darkItems),
