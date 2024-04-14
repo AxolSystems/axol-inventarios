@@ -3,75 +3,80 @@ import 'package:flutter/material.dart';
 
 import '../../../modules/inventory_/inventory/view/inventory_view.dart';
 import '../../../modules/sale/sale_note/view/sale_view.dart';
+import '../../../modules/sale_report/view/salereport_view.dart';
 import '../../../modules/user/view/views/home_view.dart';
 import '../../../modules/waybill/view/waybill_view.dart';
 import '../button.dart';
 
 class NavigationUtilities {
+  static const NavigationRailDestination _destinationHome =
+      NavigationRailDestination(
+          icon: Icon(
+            Icons.home,
+            color: ColorPalette.lightBackground,
+          ),
+          label: Text(
+            'Inicio',
+            style: Typo.labelLight,
+          ),
+          indicatorColor: ColorPalette.primary);
+  static const NavigationRailDestination _destinationInventory =
+      NavigationRailDestination(
+          icon: Icon(
+            Icons.inventory,
+            color: ColorPalette.lightBackground,
+          ),
+          label: Text(
+            'Inventario',
+            style: Typo.labelLight,
+          ),
+          indicatorColor: ColorPalette.primary);
+  static const NavigationRailDestination _destinationSale =
+      NavigationRailDestination(
+          icon: Icon(
+            Icons.note,
+            color: ColorPalette.lightBackground,
+          ),
+          label: Text(
+            'Notas',
+            style: Typo.labelLight,
+          ),
+          indicatorColor: ColorPalette.primary);
+  static const NavigationRailDestination _destinationWaybill =
+      NavigationRailDestination(
+          icon: Icon(
+            Icons.list_alt,
+            color: ColorPalette.lightBackground,
+          ),
+          label: Text(
+            'Carta porte',
+            style: Typo.labelLight,
+          ),
+          indicatorColor: ColorPalette.primary);
+  static const NavigationRailDestination _destinationSaleReport =
+      NavigationRailDestination(
+          icon: Icon(
+            Icons.paste,
+            color: ColorPalette.lightBackground,
+          ),
+          label: Text(
+            'Reporte de ventas',
+            style: Typo.labelLight,
+          ),
+          indicatorColor: ColorPalette.primary);
+
   static const List<NavigationRailDestination> admin = [
-    NavigationRailDestination(
-        icon: Icon(
-          Icons.home,
-          color: ColorPalette.lightBackground,
-        ),
-        label: Text(
-          'Inicio',
-          style: Typo.labelLight,
-        ),
-        indicatorColor: ColorPalette.primary),
-    NavigationRailDestination(
-        icon: Icon(
-          Icons.inventory,
-          color: ColorPalette.lightBackground,
-        ),
-        label: Text(
-          'Inventario',
-          style: Typo.labelLight,
-        ),
-        indicatorColor: ColorPalette.primary),
-    NavigationRailDestination(
-        icon: Icon(
-          Icons.note,
-          color: ColorPalette.lightBackground,
-        ),
-        label: Text(
-          'Notas',
-          style: Typo.labelLight,
-        ),
-        indicatorColor: ColorPalette.primary),
-    NavigationRailDestination(
-        icon: Icon(
-          Icons.list_alt,
-          color: ColorPalette.lightBackground,
-        ),
-        label: Text(
-          'Carta porte',
-          style: Typo.labelLight,
-        ),
-        indicatorColor: ColorPalette.primary),
+    _destinationHome,
+    _destinationInventory,
+    _destinationSale,
+    _destinationWaybill,
+    _destinationSaleReport,
   ];
 
   static const List<NavigationRailDestination> vendor = [
-    NavigationRailDestination(
-        icon: Icon(
-          Icons.home,
-          color: ColorPalette.lightBackground,
-        ),
-        label: Text(
-          'Inicio',
-          style: Typo.labelLight,
-        ),
-        indicatorColor: ColorPalette.primary),
-    NavigationRailDestination(
-        icon: Icon(
-          Icons.list_alt,
-          color: ColorPalette.lightBackground,
-        ),
-        label: Text(
-          'Carta porte',
-          style: Typo.labelLight,
-        ),
-        indicatorColor: ColorPalette.primary),
+    _destinationHome,
+    _destinationWaybill,
+    _destinationSaleReport
   ];
 
   static Function(int value) destinationAdmin(
@@ -83,6 +88,7 @@ class NavigationUtilities {
       const InventoryView(),
       const SaleView(),
       const WaybillView(),
+      const SaleReportView(),
     ];
 
     indexCount = viewList.length;
@@ -111,6 +117,10 @@ class NavigationUtilities {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => viewList[3]));
       }
+      if (value == indexList[4]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[4]));
+      }
     };
   }
 
@@ -121,6 +131,7 @@ class NavigationUtilities {
     List<Widget> viewList = [
       const HomeView(),
       const WaybillView(),
+      const SaleReportView(),
     ];
 
     indexCount = viewList.length;
@@ -140,6 +151,10 @@ class NavigationUtilities {
       if (value == indexList[1]) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => viewList[1]));
+      }
+      if (value == indexList[2]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[2]));
       }
     };
   }

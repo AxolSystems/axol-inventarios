@@ -40,7 +40,7 @@ class NavigationRailAxol extends StatelessWidget {
 ////
 //// ---- NavigationRailAxolMain ----
 ////
-enum NavigationRailAxolView { home, inventory, note, waybill }
+enum NavigationRailAxolView { home, inventory, note, waybill, saleReport }
 
 enum NavigationRailAxolRol { admin, vendor }
 
@@ -87,6 +87,13 @@ class NavigationRailAxolMain extends StatelessWidget {
           onDestinationSelected:
               NavigationUtilities.destinationAdmin(3, context),
         );
+      } if (view == NavigationRailAxolView.saleReport) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.admin,
+          selectedIndex: 4,
+          onDestinationSelected:
+              NavigationUtilities.destinationAdmin(4, context),
+        );
       } else {
         return NavigationRailAxol.empty();
       }
@@ -104,6 +111,13 @@ class NavigationRailAxolMain extends StatelessWidget {
           selectedIndex: 1,
           onDestinationSelected:
               NavigationUtilities.destinationVendor(1, context),
+        );
+      } else if (view == NavigationRailAxolView.saleReport) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.vendor,
+          selectedIndex: 2,
+          onDestinationSelected:
+              NavigationUtilities.destinationVendor(2, context),
         );
       } else {
         return NavigationRailAxol.empty();
