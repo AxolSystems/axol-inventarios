@@ -19,7 +19,7 @@ class InventoryMovePdf {
     pdf.addPage(pw.MultiPage(
       header: (context) => pw.Column(
         children: [
-          pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV', style: title),
+          pw.Text('J&J PLASTICOS RECYCLING S DE RL DE CV', style: title),
           pw.Padding(
               padding: const pw.EdgeInsets.only(left: 16),
               child: pw.Row(children: [
@@ -240,7 +240,7 @@ class InventoryMovePdf {
     pdf.addPage(pw.MultiPage(
       header: (context) => pw.Column(
         children: [
-          pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV', style: title),
+          pw.Text('J&J PLASTICOS RECYCLING S DE RL DE CV', style: title),
           pw.Padding(
               padding: const pw.EdgeInsets.only(left: 16),
               child: pw.Row(children: [
@@ -422,7 +422,7 @@ class InventoryMovePdf {
               child: pw.Text('Logo'),
             ),
             pw.Expanded(
-              child: pw.Text('J&J PLASTICOS RECYCLUNG S DE RL DE CV',
+              child: pw.Text('J&J PLASTICOS RECYCLING S DE RL DE CV',
                   style: title, textAlign: pw.TextAlign.center),
             ),
           ]),
