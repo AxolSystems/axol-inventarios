@@ -8,7 +8,6 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/table_view/table_view.dart';
 import '../cubit/wb_list/wb_list_cubit.dart';
-import '../model/waybill_list_model.dart';
 import '../model/wb_list_form_model.dart';
 import 'wb_list_details_bottomsheet.dart';
 import 'wb_list_details_drawer.dart';

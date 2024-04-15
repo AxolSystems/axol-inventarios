@@ -1,8 +1,8 @@
+import 'package:axol_inventarios/modules/sale_report/view/srp_add_drawer.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
@@ -68,6 +68,7 @@ class SaleReportAddBuild extends StatelessWidget {
   }
 
   Widget srpAdd(BuildContext context, bool isLoading, SrpAddFormModel form) {
+    //final widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol.appBar(
@@ -92,17 +93,21 @@ class SaleReportAddBuild extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       showDatePicker(
-                          context: context,
-                          initialDate: form.dateTime,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now()).then((value) {
-                            if (value != null) {
-                              form.dateTime = value;
-                              context.read<SrpAddCubit>().load();
-                            }
-                          });
+                              context: context,
+                              initialDate: form.dateTime,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now())
+                          .then((value) {
+                        if (value != null) {
+                          form.dateTime = value;
+                          context.read<SrpAddCubit>().load();
+                        }
+                      });
                     },
-                    child: Text(FormatDate.dmy(form.dateTime), style: Typo.subtitleLight,),
+                    child: Text(
+                      FormatDate.dmy(form.dateTime),
+                      style: Typo.subtitleLight,
+                    ),
                   ),
                 ],
               )),
@@ -223,6 +228,30 @@ class SaleReportAddBuild extends StatelessWidget {
             ),
           ),
           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: TextField(
+                controller: form.note,
+                decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: ColorPalette.lightItems10)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: ColorPalette.primary, width: 2)),
+                    label: Text(
+                      'Nota',
+                      style: Typo.labelLight,
+                    )),
+                style: Typo.bodyLight,
+                minLines: 1,
+                maxLines: 2,
+                keyboardType: TextInputType.multiline,
+              ),
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.all(8),
             child: Row(
               children: [
@@ -235,9 +264,11 @@ class SaleReportAddBuild extends StatelessWidget {
                           side: const BorderSide(
                               color: ColorPalette.lightItems10),
                         ),
-                        onPressed: !isLoading ? () {
-                          context.read<SrpAddCubit>().save(form);
-                        } : null,
+                        onPressed: !isLoading
+                            ? () {
+                                context.read<SrpAddCubit>().save(form);
+                              }
+                            : null,
                         child: const Icon(
                           Icons.save,
                           color: ColorPalette.lightItems10,
@@ -258,22 +289,51 @@ class SaleReportAddBuild extends StatelessWidget {
                           width: 1,
                         ),
                       ),
-                      onPressed: !isLoading ? () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(12))),
-                          context: context,
-                          builder: (context) => SrpAddBottomsheet(
-                              inventoryList: form.inventoryList),
-                        ).then((value) {
-                          if (value is SaleReportRowModel) {
-                            form.saleReportList.add(value);
-                            context.read<SrpAddCubit>().load();
-                          }
-                        });
-                      } : null,
+                      onPressed: !isLoading
+                          ? () {
+                              /*if (widthScreen < 600) {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(12))),
+                                  context: context,
+                                  builder: (context) => SrpAddBottomsheet(
+                                      inventoryList: form.inventoryList),
+                                ).then((value) {
+                                  if (value is SaleReportRowModel) {
+                                    form.saleReportList.add(value);
+                                    context.read<SrpAddCubit>().load();
+                                  }
+                                });
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => SrpAddDrawer(
+                                          inventoryList: form.inventoryList,
+                                        )).then((value) {
+                                  if (value is SaleReportRowModel) {
+                                    form.saleReportList.add(value);
+                                    context.read<SrpAddCubit>().load();
+                                  }
+                                });
+                              }*/
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(12))),
+                                context: context,
+                                builder: (context) => SrpAddBottomsheet(
+                                    inventoryList: form.inventoryList),
+                              ).then((value) {
+                                if (value is SaleReportRowModel) {
+                                  form.saleReportList.add(value);
+                                  context.read<SrpAddCubit>().load();
+                                }
+                              });
+                            }
+                          : null,
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

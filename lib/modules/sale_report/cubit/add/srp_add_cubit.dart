@@ -4,7 +4,11 @@ import '../../../../models/data_response_model.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../inventory_/inventory/repository/inventory_repo.dart';
+import '../../../user/model/user_mdoel.dart';
+import '../../../user/repository/user_repo.dart';
+import '../../model/salereport_model.dart';
 import '../../model/srp_add_form_model.dart';
+import '../../repository/salereport_repo.dart';
 import 'srp_add_state.dart';
 
 class SrpAddCubit extends Cubit<SrpAddState> {
@@ -54,22 +58,27 @@ class SrpAddCubit extends Cubit<SrpAddState> {
     try {
       emit(InitialSrpAddState());
       emit(LoadingSrpAddState());
-      //WaybillListModel waybillList;
+      SaleReportModel saleReport;
       int id;
+      UserModel user;
 
       if (form.saleReportList .isEmpty) {
         emit(const ErrorSrpAddState(error: 'Agregue al menos un producto.'));
         return;
       }
 
-      /*id = await WaybillRepo.fetchAvailableId();
-      waybillList = WaybillListModel(
+      user = await LocalUser().getLocalUser();
+
+      id = await SaleReportRepo.fetchAvailableId();
+      saleReport = SaleReportModel(
         id: id,
-        date: DateTime.now(),
-        list: form.waybillList,
+        date: form.dateTime,
+        report: form.saleReportList,
         warehouse: form.warehouse,
+        note: form.note.text,
+        user: user.id,
       );
-      await WaybillRepo.insert(waybillList);*/
+      await SaleReportRepo.insert(saleReport);
 
       emit(SavedSrpAddState());
       emit(LoadedSrpAddState());
