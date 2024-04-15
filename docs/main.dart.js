@@ -59003,7 +59003,7 @@ case 1:return A.v(q,r)}})
 return A.w($async$Qb,r)}}
 A.asl.prototype={
 $1(a){var s=null,r=this.a,q=this.b,p=q.a,o=t.n_,n=q.b
-return A.kq(A.a([A.a5("J&J PLASTICOS RECYCLUNG S DE RL DE CV",B.mE,s),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("        Almac\xe9n de origen: ",r,s)),new A.ah(2,B.o,A.a5(""+p.a+" - "+p.b,r,s)),new A.ah(1,B.o,A.a5("Movimiento de salida: ",r,s)),new A.ah(1,B.o,A.a5("58 - Salida por traspaso",r,s))],o),B.O,B.P)),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("        Almac\xe9n destino: ",r,s)),new A.ah(2,B.o,A.a5(""+n.a+" - "+n.b,r,s)),new A.ah(1,B.o,A.a5("Movimiento de entrada: ",r,s)),new A.ah(1,B.o,A.a5("7 - Entrada por traspaso",r,s))],o),B.O,B.P)),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("        Fecha: ",r,s)),new A.ah(2,B.o,A.a5(A.hI(q.e),r,s)),new A.ah(1,B.o,A.a5("Documento: ",r,s)),new A.ah(1,B.o,A.a5(q.c,r,s))],o),B.O,B.P)),A.d5(s,A.ft(A.a([new A.ah(1,B.o,A.a5("Cantidad",r,s)),new A.ah(1,B.o,A.a5("Clave",r,s)),new A.ah(3,B.o,A.a5("Descripci\xf3n",r,s)),new A.ah(1,B.o,A.a5("Peso unitario",r,B.e5)),new A.ah(1,B.o,A.a5("Peso producto",r,B.e5)),new A.ah(1,B.o,A.a5("Precio",r,B.e5))],o),B.O,B.P),s,B.je,s,s,B.vv,s)],o),B.O,B.P)},
+return A.kq(A.a([A.a5("J&J PLASTICOS RECYCLING S DE RL DE CV",B.mE,s),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("        Almac\xe9n de origen: ",r,s)),new A.ah(2,B.o,A.a5(""+p.a+" - "+p.b,r,s)),new A.ah(1,B.o,A.a5("Movimiento de salida: ",r,s)),new A.ah(1,B.o,A.a5("58 - Salida por traspaso",r,s))],o),B.O,B.P)),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("        Almac\xe9n destino: ",r,s)),new A.ah(2,B.o,A.a5(""+n.a+" - "+n.b,r,s)),new A.ah(1,B.o,A.a5("Movimiento de entrada: ",r,s)),new A.ah(1,B.o,A.a5("7 - Entrada por traspaso",r,s))],o),B.O,B.P)),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("        Fecha: ",r,s)),new A.ah(2,B.o,A.a5(A.hI(q.e),r,s)),new A.ah(1,B.o,A.a5("Documento: ",r,s)),new A.ah(1,B.o,A.a5(q.c,r,s))],o),B.O,B.P)),A.d5(s,A.ft(A.a([new A.ah(1,B.o,A.a5("Cantidad",r,s)),new A.ah(1,B.o,A.a5("Clave",r,s)),new A.ah(3,B.o,A.a5("Descripci\xf3n",r,s)),new A.ah(1,B.o,A.a5("Peso unitario",r,B.e5)),new A.ah(1,B.o,A.a5("Peso producto",r,B.e5)),new A.ah(1,B.o,A.a5("Precio",r,B.e5))],o),B.O,B.P),s,B.je,s,s,B.vv,s)],o),B.O,B.P)},
 $S:56}
 A.ask.prototype={
 $1(a){var s,r,q,p,o,n,m,l,k,j,i,h,g,f=null,e="#,##0.00",d="en_US",c=t.n_,b=A.a([],c)
@@ -59029,7 +59029,7 @@ return b},
 $S:71}
 A.asj.prototype={
 $1(a){var s=null,r=this.b,q=this.c,p=q.r,o=t.n_,n=q.a
-return A.kq(A.a([A.a5("J&J PLASTICOS RECYCLUNG S DE RL DE CV",B.mE,s),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("     Concepto: ",r,s)),new A.ah(4,B.o,A.a5(""+p.a+" - "+p.c,r,s)),new A.ah(1,B.o,A.a5("Fecha: ",r,s)),new A.ah(2,B.o,A.a5(A.hI(q.e),r,s))],o),B.O,B.P)),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("     Almac\xe9n: ",r,s)),new A.ah(4,B.o,A.a5(""+n.a+" - "+n.b,r,s)),new A.ah(1,B.o,A.a5(this.a.a,r,s)),new A.ah(2,B.o,A.a5(q.c,r,s))],o),B.O,B.P)),A.d5(s,A.ft(A.a([new A.ah(1,B.o,A.a5("Cantidad",r,B.aC)),new A.cL(12,s,s),new A.ah(1,B.o,A.a5("Clave",r,s)),new A.ah(3,B.o,A.a5("Descripci\xf3n",r,s)),new A.ah(1,B.o,A.a5("Peso unitario",r,B.e5)),new A.ah(1,B.o,A.a5("Peso producto",r,B.e5))],o),B.O,B.P),s,B.je,s,s,B.vv,s)],o),B.O,B.P)},
+return A.kq(A.a([A.a5("J&J PLASTICOS RECYCLING S DE RL DE CV",B.mE,s),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("     Concepto: ",r,s)),new A.ah(4,B.o,A.a5(""+p.a+" - "+p.c,r,s)),new A.ah(1,B.o,A.a5("Fecha: ",r,s)),new A.ah(2,B.o,A.a5(A.hI(q.e),r,s))],o),B.O,B.P)),new A.hq(B.hB,A.ft(A.a([new A.ah(1,B.o,A.a5("     Almac\xe9n: ",r,s)),new A.ah(4,B.o,A.a5(""+n.a+" - "+n.b,r,s)),new A.ah(1,B.o,A.a5(this.a.a,r,s)),new A.ah(2,B.o,A.a5(q.c,r,s))],o),B.O,B.P)),A.d5(s,A.ft(A.a([new A.ah(1,B.o,A.a5("Cantidad",r,B.aC)),new A.cL(12,s,s),new A.ah(1,B.o,A.a5("Clave",r,s)),new A.ah(3,B.o,A.a5("Descripci\xf3n",r,s)),new A.ah(1,B.o,A.a5("Peso unitario",r,B.e5)),new A.ah(1,B.o,A.a5("Peso producto",r,B.e5))],o),B.O,B.P),s,B.je,s,s,B.vv,s)],o),B.O,B.P)},
 $S:56}
 A.asi.prototype={
 $1(a){var s,r,q,p,o,n,m,l,k,j,i,h=null,g="#,##0.00",f="en_US",e=t.n_,d=A.a([],e)
@@ -59052,7 +59052,7 @@ return d},
 $S:71}
 A.ash.prototype={
 $1(a){var s=null,r=A.aih(A.b2I(),s),q=t.n_,p=this.a,o=this.b
-return A.kq(A.a([A.ft(A.a([A.d5(s,A.a5("Logo",s,s),s,r,60,s,s,60),new A.ah(1,B.o,A.a5("J&J PLASTICOS RECYCLUNG S DE RL DE CV",B.mE,B.e5))],q),B.O,B.P),A.a5("Resumen de movimientos",B.mE,s),A.d5(s,new A.hq(B.Wa,A.ft(A.a([new A.ah(1,B.o,A.a5("Fecha: ",p,s)),new A.ah(6,B.o,A.a5(A.hI(o.a)+" - "+A.hI(o.b),B.Q,s)),new A.ah(2,B.o,A.a5("    Documento: ",p,s)),new A.ah(8,B.o,A.a5(o.c,B.Q,s))],q),B.O,B.P)),s,B.je,s,s,s,s)],q),B.O,B.P)},
+return A.kq(A.a([A.ft(A.a([A.d5(s,A.a5("Logo",s,s),s,r,60,s,s,60),new A.ah(1,B.o,A.a5("J&J PLASTICOS RECYCLING S DE RL DE CV",B.mE,B.e5))],q),B.O,B.P),A.a5("Resumen de movimientos",B.mE,s),A.d5(s,new A.hq(B.Wa,A.ft(A.a([new A.ah(1,B.o,A.a5("Fecha: ",p,s)),new A.ah(6,B.o,A.a5(A.hI(o.a)+" - "+A.hI(o.b),B.Q,s)),new A.ah(2,B.o,A.a5("    Documento: ",p,s)),new A.ah(8,B.o,A.a5(o.c,B.Q,s))],q),B.O,B.P)),s,B.je,s,s,s,s)],q),B.O,B.P)},
 $S:56}
 A.asg.prototype={
 $1(a){var s,r,q,p=null,o=this.a,n=A.a5("Usuario: ",o,p),m=A.a5(this.b.a,B.Q,B.bN)
