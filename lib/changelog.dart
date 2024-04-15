@@ -5,7 +5,7 @@ class Changelog {
 ## [1.0.4] - 2024-04-11
 ### Añadido
 - Agregado buscador para formulario de nuevo elemento en listas de carta porte.
-- Agregado soporte en markdown para notas de versión. 
+- Agregado soporte en markdown para notas de versión.
 ### Modificado
 - Se ajustaron los tamaños de las celdas en el formulario de nuevo movimiento al inventario, y se agregó peso total de los movimientos agregados.
 ### Corregido
