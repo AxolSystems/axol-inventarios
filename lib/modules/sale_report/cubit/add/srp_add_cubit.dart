@@ -73,7 +73,7 @@ class SrpAddCubit extends Cubit<SrpAddState> {
       saleReport = SaleReportModel(
         id: id,
         date: form.dateTime,
-        report: form.saleReportList,
+        reportRows: form.saleReportList,
         warehouse: form.warehouse,
         note: form.note.text,
         user: user.id,

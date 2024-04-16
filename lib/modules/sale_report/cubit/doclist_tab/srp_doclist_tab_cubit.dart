@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/salereport_model.dart';
 import '../../model/srp_doclist_form_model.dart';
+import '../../repository/salereport_file_repo.dart';
 import '../../repository/salereport_repo.dart';
 import 'srp_doclist_tab_state.dart';
 
@@ -89,22 +90,20 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
     }
   }
 
-  /*Future<void> saveCsv(int id) async {
+  Future<void> saveCsv(SaleReportModel report) async {
     try {
       emit(InitialSrpDoclistState());
       emit(LoadingSrpDoclistState());
-      List<InventoryRowModel> waybill;
 
-      waybill = await WaybillRepo.fetchWaybill(id);
+      await SaleReportCsv.srpCsvSave(report);
 
-      await WaybillCsv.waybillCsvSave(waybill);
       emit(LoadedSrpDoclistState());
     } catch (e) {
       emit(ErrorSrpDoclistState(error: e.toString()));
     }
   }
 
-  Future<void> openDetails(WaybillListModel waybill) async {
+  /*Future<void> openDetails(WaybillListModel waybill) async {
     try {
       emit(InitialSrpDoclistState());
       emit(LoadingSrpDoclistState());

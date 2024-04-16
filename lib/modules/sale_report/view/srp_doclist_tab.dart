@@ -137,7 +137,7 @@ class SrpDoclistTabBuild extends StatelessWidget {
                           color: ColorPalette.lightItems10,
                         ),
                         onPressed: () {
-                          //context.read<SrpDoclistCubit>().saveCsv(saleReport.id);
+                          context.read<SrpDoclistCubit>().saveCsv(saleReport);
                         },
                       ),
                       const SizedBox(width: 8),

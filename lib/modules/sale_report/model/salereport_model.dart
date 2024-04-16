@@ -7,7 +7,7 @@ class SaleReportModel {
   final int id;
   final DateTime date;
   final int user;
-  final List<SaleReportRowModel> report;
+  final List<SaleReportRowModel> reportRows;
   final WarehouseModel warehouse;
   final String note;
 
@@ -15,7 +15,7 @@ class SaleReportModel {
     required this.date,
     required this.id,
     required this.note,
-    required this.report,
+    required this.reportRows,
     required this.user,
     required this.warehouse,
   });
@@ -24,7 +24,7 @@ class SaleReportModel {
       : date = DateTime(0),
         id = -1,
         note = '',
-        report = [],
+        reportRows = [],
         user = -1,
         warehouse = WarehouseModel.empty();
 

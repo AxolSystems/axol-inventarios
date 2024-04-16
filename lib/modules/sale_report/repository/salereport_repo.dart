@@ -75,7 +75,7 @@ class SaleReportRepo {
             retailManager: user.id,
           ),
           note: element[_note],
-          report: SaleReportModel.mapToModel(element[_report], productList),
+          reportRows: SaleReportModel.mapToModel(element[_report], productList),
           user: element[_user],
         );
         saleReportList.add(saleReport);
@@ -119,7 +119,7 @@ class SaleReportRepo {
       _id: saleReport.id,
       _date: saleReport.date.millisecondsSinceEpoch,
       _user: saleReport.user,
-      _report: SaleReportModel.modelToMap(saleReport.report), //Convertir a map
+      _report: SaleReportModel.modelToMap(saleReport.reportRows), //Convertir a map
       _warehouseId: saleReport.warehouse.id,
       _warehouseName: saleReport.warehouse.name,
       _note: saleReport.note,
