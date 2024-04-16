@@ -91,7 +91,7 @@ class WbAddListBuild extends StatelessWidget {
                   Expanded(
                       flex: 1,
                       child: Text(
-                        'Calve',
+                        'Clave',
                         style: Typo.subtitleLight,
                         textAlign: TextAlign.left,
                       )),
@@ -138,13 +138,16 @@ class WbAddListBuild extends StatelessWidget {
                                   top: Radius.circular(12))),
                           context: context,
                           builder: (context) => WbAddDetailsBottomsheet(
-                            waybillRow: waybill,
+                            form: form,
+                            index: index,
                             inventoryRow: form.inventoryList
                                 .where((x) =>
                                     x.product.code == waybill.product.code)
                                 .first,
                           ),
-                        );
+                        ).then((value) {
+                          context.read<WbAddCubit>().load();
+                        });
                       },
                       child: Padding(
                           padding: const EdgeInsets.symmetric(

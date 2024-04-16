@@ -4,9 +4,10 @@ import 'package:axol_inventarios/modules/user/repository/user_repo.dart';
 import 'package:axol_inventarios/utilities/widgets/table_view/tableview_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../model/salereport_model.dart';
 import '../../model/srp_doclist_form_model.dart';
 import '../../repository/salereport_repo.dart';
-import 'doclist_tab_state.dart';
+import 'srp_doclist_tab_state.dart';
 
 class SrpDoclistCubit extends Cubit<SrpDoclistState> {
   SrpDoclistCubit() : super(InitialSrpDoclistState());
@@ -18,24 +19,18 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
 
       DataResponseModel dataResponse;
       UserModel user;
-      int manager;
       final int countReg;
       final int limit = TableViewFormModel.rows50;
       List<dynamic> dynamicList;
 
       //Identifica el tipo de usuario
       user = await LocalUser().getLocalUser();
-      if (user.rol == UserModel.rolAdmin) {
-        manager = -2;
-      } else {
-        manager = user.id;
-      }
 
       //Consulta listas
       dataResponse = await SaleReportRepo.fetchSaleReportList(
-        manager: manager,
         rangeMax: limit - 1,
         rangeMin: 0,
+        user: user,
       );
       countReg = dataResponse.count;
 
@@ -43,24 +38,23 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
       form.totalPages = (countReg / limit).ceil();
       form.totalReg = countReg;
       dynamicList = dataResponse.dataList;
-      if (dynamicList is List<WaybillListModel>) {
-        form.waybillList = dynamicList;
+      if (dynamicList is List<SaleReportModel>) {
+        form.saleReportList = dynamicList;
       }
 
-      emit(LoadedWbListState());
+      emit(LoadedSrpDoclistState());
     } catch (e) {
       emit(ErrorSrpDoclistState(error: e.toString()));
     }
   }
 
-  Future<void> load(WbListFormModel form) async {
+  Future<void> load(SrpDoclistFormModel form) async {
     try {
       emit(InitialSrpDoclistState());
       emit(LoadingSrpDoclistState());
 
       DataResponseModel dataResponse;
       UserModel user;
-      int manager;
       final int countReg;
       final int limit = TableViewFormModel.rows50;
       final int rangeMin;
@@ -72,15 +66,10 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
 
       //Identifica el tipo de usuario
       user = await LocalUser().getLocalUser();
-      if (user.rol == UserModel.rolAdmin) {
-        manager = -2;
-      } else {
-        manager = user.id;
-      }
 
       //Consulta listas
-      dataResponse = await WaybillRepo.fetchLists(
-        manager: manager,
+      dataResponse = await SaleReportRepo.fetchSaleReportList(
+        user: user,
         rangeMax: rangeMax,
         rangeMin: rangeMin,
       );
@@ -90,8 +79,8 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
       form.totalPages = (countReg / limit).ceil();
       form.totalReg = countReg;
       dynamicList = dataResponse.dataList;
-      if (dynamicList is List<WaybillListModel>) {
-        form.waybillList = dynamicList;
+      if (dynamicList is List<SaleReportModel>) {
+        form.saleReportList = dynamicList;
       }
 
       emit(LoadedSrpDoclistState());
@@ -100,7 +89,7 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
     }
   }
 
-  Future<void> saveCsv(int id) async {
+  /*Future<void> saveCsv(int id) async {
     try {
       emit(InitialSrpDoclistState());
       emit(LoadingSrpDoclistState());
@@ -135,9 +124,9 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
     } catch (e) {
       emit(ErrorSrpDoclistState(error: e.toString()));
     }
-  }
+  }*/
 }
 
-class SrpDoclistForm extends Cubit<WbListFormModel> {
-  SrpDoclistForm() : super(WbListFormModel.empty());
+class SrpDoclistForm extends Cubit<SrpDoclistFormModel> {
+  SrpDoclistForm() : super(SrpDoclistFormModel.empty());
 }

@@ -13,12 +13,15 @@ class WbWarehouseTabCubit extends Cubit<WbWarehouseTabState> {
     try {
       emit(InitialWbWarehouseTabState());
       emit(LoadingWbWarehouseTabState());
-
-      List<WarehouseModel> warehouseList;
+      List<WarehouseModel> warehouseList = [];
       UserModel user;
 
       user = await LocalUser().getLocalUser();
-      warehouseList = await WarehousesRepo().fetchWarehouseManager(user.id);
+      if (user.rol == UserModel.rolAdmin) {
+        warehouseList = await WarehousesRepo().fetchAllWarehouses();
+      } else if (user.rol == UserModel.rolVendor) {
+        warehouseList = await WarehousesRepo().fetchWarehouseManager(user.id);
+      }
       emit(LoadedWbWarehouseTabState(warehouseList: warehouseList));
     } catch (e) {
       emit(ErrorWbWarehouseTabState(error: e.toString()));

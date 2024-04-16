@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utilities/format.dart';
+import '../../../utilities/theme/theme.dart';
+import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
+import '../../../utilities/widgets/table_view/table_view.dart';
+import '../cubit/doclist_tab/srp_doclist_tab_cubit.dart';
+import '../cubit/doclist_tab/srp_doclist_tab_state.dart';
+import '../model/srp_doclist_form_model.dart';
+
 class SrpDoclistTab extends StatelessWidget {
   const SrpDoclistTab({super.key});
 
@@ -8,41 +17,41 @@ class SrpDoclistTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => WbListCubit()),
-        BlocProvider(create: (_) => WbListForm()),
+        BlocProvider(create: (_) => SrpDoclistCubit()),
+        BlocProvider(create: (_) => SrpDoclistForm()),
       ],
-      child: const WbWarehouseTabBuild(),
+      child: const SrpDoclistTabBuild(),
     );
   }
 }
 
-class WbWarehouseTabBuild extends StatelessWidget {
-  const WbWarehouseTabBuild({super.key});
+class SrpDoclistTabBuild extends StatelessWidget {
+  const SrpDoclistTabBuild({super.key});
 
   @override
   Widget build(BuildContext context) {
     final double widthScreen = MediaQuery.of(context).size.width;
-    WbListFormModel form = context.read<WbListForm>().state;
-    return BlocConsumer<WbListCubit, WbListState>(
-      bloc: context.read<WbListCubit>()..initLoad(form),
+    SrpDoclistFormModel form = context.read<SrpDoclistForm>().state;
+    return BlocConsumer<SrpDoclistCubit, SrpDoclistState>(
+      bloc: context.read<SrpDoclistCubit>()..initLoad(form),
       builder: (context, state) {
-        if (state is LoadingWbListState) {
-          return wbListTab(context, true, form);
-        } else if (state is LoadedWbListState) {
-          return wbListTab(context, false, form);
+        if (state is LoadingSrpDoclistState) {
+          return sroDoclistTab(context, true, form);
+        } else if (state is LoadedSrpDoclistState) {
+          return sroDoclistTab(context, false, form);
         } else {
-          return wbListTab(context, false, form);
+          return sroDoclistTab(context, false, form);
         }
       },
       listener: (context, state) {
-        if (state is ErrorWbListState) {
+        if (state is ErrorSrpDoclistState) {
           showDialog(
               context: context,
               builder: (context) => AlertDialogAxol(
                     text: state.error,
                   ));
         }
-        if (state is OpenDetailsWbListState) {
+        /*if (state is OpenDetailsSrpDoclistState) {
           if (widthScreen < 600) {
             showModalBottomSheet(
               backgroundColor: ColorPalette.lightBackground,
@@ -61,12 +70,12 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       waybill: state.waybillList,
                     ));
           }
-        }
+        }*/
       },
     );
   }
 
-  Widget wbListTab(BuildContext context, bool isLoading, WbListFormModel form) {
+  Widget sroDoclistTab(BuildContext context, bool isLoading, SrpDoclistFormModel form) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -78,9 +87,9 @@ class WbWarehouseTabBuild extends StatelessWidget {
         Expanded(
             child: ListView.builder(
           shrinkWrap: true,
-          itemCount: form.waybillList.length,
+          itemCount: form.saleReportList.length,
           itemBuilder: (context, index) {
-            final waybill = form.waybillList[index];
+            final saleReport = form.saleReportList[index];
 
             return Container(
                 decoration: const BoxDecoration(
@@ -95,7 +104,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          waybill.id.toString(),
+                          saleReport.id.toString(),
                           style: Typo.bodyLight,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.fade,
@@ -105,7 +114,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       Expanded(
                         flex: 3,
                         child: Text(
-                          FormatDate.dmy(waybill.date),
+                          FormatDate.dmy(saleReport.date),
                           style: Typo.bodyLight,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.fade,
@@ -115,7 +124,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       Expanded(
                         flex: 3,
                         child: Text(
-                          waybill.warehouse.name,
+                          saleReport.warehouse.name,
                           style: Typo.bodyLight,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.fade,
@@ -128,7 +137,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                           color: ColorPalette.lightItems10,
                         ),
                         onPressed: () {
-                          context.read<WbListCubit>().saveCsv(waybill.id);
+                          //context.read<SrpDoclistCubit>().saveCsv(saleReport.id);
                         },
                       ),
                       const SizedBox(width: 8),
@@ -138,7 +147,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                           color: ColorPalette.lightItems10,
                         ),
                         onPressed: () {
-                          context.read<WbListCubit>().openDetails(waybill);
+                          //context.read<SrpDoclistCubit>().openDetails(saleReport);
                         },
                       ),
                     ],
@@ -153,13 +162,13 @@ class WbWarehouseTabBuild extends StatelessWidget {
           onPressedLeft: () {
             if (form.currentPage > 1) {
               form.currentPage = form.currentPage - 1;
-              context.read<WbListCubit>().load(form);
+              context.read<SrpDoclistCubit>().load(form);
             }
           },
           onPressedRight: () {
             if (form.currentPage < form.totalPages) {
               form.currentPage = form.currentPage + 1;
-              context.read<WbListCubit>().load(form);
+              context.read<SrpDoclistCubit>().load(form);
             }
           },
         ),

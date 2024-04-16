@@ -1,14 +1,19 @@
+import 'package:axol_inventarios/models/inventory_row_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
+import '../../../utilities/widgets/button.dart';
+import '../model/wb_add_form_model.dart';
 
 class WbAddDetailsBottomsheet extends StatelessWidget {
+  final WbAddFormModel form;
+  final int index;
   final InventoryRowModel inventoryRow;
-  final InventoryRowModel waybillRow;
   const WbAddDetailsBottomsheet({
     super.key,
-    required this.inventoryRow, required this.waybillRow,
+    required this.form,
+    required this.index,
+    required this.inventoryRow,
   });
 
   @override
@@ -20,24 +25,32 @@ class WbAddDetailsBottomsheet extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Clave: ${waybillRow.product.code}',
+              'Clave: ${form.waybillList[index].product.code}',
               style: Typo.bodyDark,
             ),
             const SizedBox(height: 8),
             Text(
-              'Descripción: ${waybillRow.product.description}',
+              'Descripción: ${form.waybillList[index].product.description}',
               style: Typo.bodyDark,
               overflow: TextOverflow.visible,
             ),
             const SizedBox(height: 8),
             Text(
-              'Cantidad a llevar: ${waybillRow.stock}',
+              'Cantidad a llevar: ${form.waybillList[index].stock}',
               style: Typo.bodyDark,
             ),
             const SizedBox(height: 8),
             Text(
               'Stock: ${inventoryRow.stock}',
               style: Typo.bodyDark,
+            ),
+            const Expanded(child: SizedBox()),
+            AlertButtonDialog(
+              text: 'Eliminar',
+              onPressed: () {
+                form.waybillList.removeAt(index);
+                Navigator.pop(context);
+              },
             ),
           ],
         ),

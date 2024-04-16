@@ -2,6 +2,16 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.5] - 2024-04-15
+### Corregido
+- Error en buscadores de las vistas de inventario que no reiniciaba el contador de páginas de la listas consultadas en la base de datos.
+- Error en buscadores de las vistas de notas de venta que impedía actualizar el número de página y de registros consultados.
+### Añadido
+- Botón para cerrar sesión en la barra de navegación lateral.
+- Botón para eliminar elemento del formulario para nueva lista de carta porte, ubicado en vista de detalles de fila de carta porte. Se accede a dicha vista al dejar presionado la fila que se requiere revisar.
+### Próximos cambios
+- En proceso para agregar reportes de ventas.
+
 ## [1.0.4] - 2024-04-11
 ### Añadido
 - Agregado buscador para formulario de nuevo elemento en listas de carta porte.
@@ -27,6 +37,6 @@ class Changelog {
 - Corrección de error en formulario de nuevas notas de venta y remisiones, el cual indicaba que no había stock suficiente en cualquier situación o dejaba la página cargando todo el tiempo. 
 - Ahora al cancelar una nota de venta o remisión también se guarda el movimiento en el historial de movimientos.
 ### Modificado
-- Se cambió el título de la vista de inventario, antes se llamaba "Manú de almacenes", ahora "Inventario".
+- Se cambió el título de la vista de inventario, antes se llamaba "Menú de almacenes", ahora "Inventario".
 ''';
 }

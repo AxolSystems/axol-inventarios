@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:axol_inventarios/modules/inventory_/product/model/product_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
+import '../../inventory_/product/repository/product_repo.dart';
 import '../model/salereport_model.dart';
 
 class SaleReportRepo {
@@ -30,8 +29,8 @@ class SaleReportRepo {
     SaleReportModel saleReport;
     DataResponseModel dataResponse;
     List<ProductModel> productList;
-    String conde;
-    List<String> codeList;
+    String code;
+    List<String> codeList = [];
     final rangeMin_ = rangeMin ?? 0;
     final rangeMax_ = rangeMax ?? 999;
 
@@ -46,8 +45,7 @@ class SaleReportRepo {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '*',
-              const FetchOptions(count: CountOption.exact))
+              '*', const FetchOptions(count: CountOption.exact))
           .eq(_user, user.id)
           .order(_date, ascending: false)
           .range(rangeMin_, rangeMax_);
@@ -56,9 +54,17 @@ class SaleReportRepo {
     saleReportListDB = postgrestResponse.data ?? [];
 
     if (saleReportListDB.isNotEmpty) {
-      for (var element in saleReportListDB) {
-
+      for (var saleRep in saleReportListDB) {
+        final Map<String, dynamic> rows = saleRep[_report];
+        for (var value in rows.values) {
+          code = value.split('~').first;
+          if (codeList.contains(code) == false) {
+            codeList.add(code);
+          }
+        }
       }
+
+      productList = await ProductRepo().fetchProductListCode(codeList);
       for (var element in saleReportListDB) {
         saleReport = SaleReportModel(
           id: element[_id],
