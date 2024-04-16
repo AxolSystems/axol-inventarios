@@ -43,7 +43,7 @@ class WaybillCsv {
     if (waybill.isNotEmpty) {
       for (var data in waybill) {
         dataRow = [];
-        totalPrice = data.product.price * data.stock;
+        totalPrice = data.product.price * (data.product.weight ?? 0) * data.stock;
         totalWeight = (data.product.weight ?? 0) * data.stock;
         dataRow.add(data.product.code);
         dataRow.add(data.product.description);

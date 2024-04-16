@@ -87,7 +87,8 @@ class WbListDetailsBottomsheet extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final row = waybill.list[index];
                   final totalWeight = (row.product.weight ?? 0) * row.stock;
-                  final totalPrice = row.product.price * row.stock;
+                  final totalPrice =
+                      row.product.price * (row.product.weight ?? 0) * row.stock;
                   return Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     decoration: const BoxDecoration(
