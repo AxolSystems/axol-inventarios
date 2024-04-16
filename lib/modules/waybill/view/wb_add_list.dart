@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/waybill/view/wb_add_bottomsheet.dart';
+import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -203,7 +204,29 @@ class WbAddListBuild extends StatelessWidget {
                               color: ColorPalette.lightItems10),
                         ),
                         onPressed: () {
-                          context.read<WbAddCubit>().save(form);
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialogAxol(
+                                    text: '¿Desea guardar los datos actuales?',
+                                    actions: [
+                                      SecondaryButtonDialog(
+                                        text: 'Cancelar',
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                      ),
+                                      PrimaryButtonDialog(
+                                        text: 'Guardar',
+                                        onPressed: () {
+                                          Navigator.pop(context, true);
+                                        },
+                                      ),
+                                    ],
+                                  )).then((value) {
+                            if (value == true) {
+                              context.read<WbAddCubit>().save(form);
+                            }
+                          });
                         },
                         child: const Icon(
                           Icons.save,
