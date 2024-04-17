@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../models/data_response_model.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
+import '../../../../sale_report/model/salereport_model.dart';
+import '../../../../sale_report/repository/salereport_repo.dart';
 import '../../model/warehouse_model.dart';
+import '../../repository/inventory_file_repo.dart';
 import '../../repository/inventory_repo.dart';
 import 'inventory_list_state.dart';
 
@@ -92,4 +95,22 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       emit(ErrorInventoryListState(error: e.toString()));
     }
   }
+
+  Future<void> csvSubReport(
+      List<InventoryRowModel> inventoryRowList, int idReport) async {
+    try {
+      emit(InitialInventoryListState());
+      emit(LoadingInventoryListState());
+      SaleReportModel report;
+      
+      report = await SaleReportRepo.fetchSaleReportById(idReport);
+      print(report.warehouse.name);
+      await InventoryCsv.srpSubSaleCsv(inventoryRowList, report);
+
+      emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
+    } catch (e) {
+      emit(ErrorInventoryListState(error: e.toString()));
+    }
+  }
 }
+

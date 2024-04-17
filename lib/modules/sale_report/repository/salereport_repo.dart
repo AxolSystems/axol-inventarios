@@ -63,8 +63,8 @@ class SaleReportRepo {
           }
         }
       }
-
       productList = await ProductRepo().fetchProductListCode(codeList);
+
       for (var element in saleReportListDB) {
         saleReport = SaleReportModel(
           id: element[_id],
@@ -86,6 +86,48 @@ class SaleReportRepo {
         dataList: saleReportList, count: postgrestResponse.count ?? 0);
 
     return dataResponse;
+  }
+
+  static Future<SaleReportModel> fetchSaleReportById(int id) async {
+    List<Map<String, dynamic>> srpListDB;
+    SaleReportModel saleReport;
+    String code;
+    List<String> codeList = [];
+    List<ProductModel> productList;
+
+    srpListDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>()
+        .eq(_id, id);
+    if (srpListDB.isNotEmpty) {
+      for (var saleRep in srpListDB) {
+        final Map<String, dynamic> rows = saleRep[_report];
+        for (var value in rows.values) {
+          code = value.split('~').first;
+          if (codeList.contains(code) == false) {
+            codeList.add(code);
+          }
+        }
+      }
+      productList = await ProductRepo().fetchProductListCode(codeList);
+      saleReport = SaleReportModel(
+        date: DateTime.fromMillisecondsSinceEpoch(srpListDB.first[_date] ?? 0),
+        id: id,
+        note: srpListDB.first[_note],
+        reportRows:
+            SaleReportModel.mapToModel(srpListDB.first[_report], productList),
+        user: srpListDB.first[_user],
+        warehouse: WarehouseModel(
+          id: srpListDB.first[_warehouseId],
+          name: srpListDB.first[_warehouseName],
+          retailManager: srpListDB.first[_user],
+        ),
+      );
+    } else {
+      saleReport = SaleReportModel.empty();
+    }
+
+    return saleReport;
   }
 
   static Future<int> fetchAvailableId() async {
@@ -119,7 +161,8 @@ class SaleReportRepo {
       _id: saleReport.id,
       _date: saleReport.date.millisecondsSinceEpoch,
       _user: saleReport.user,
-      _report: SaleReportModel.modelToMap(saleReport.reportRows), //Convertir a map
+      _report:
+          SaleReportModel.modelToMap(saleReport.reportRows), //Convertir a map
       _warehouseId: saleReport.warehouse.id,
       _warehouseName: saleReport.warehouse.name,
       _note: saleReport.note,

@@ -15,6 +15,16 @@ class InventoryRowModel {
     required this.warehouseName,
   });
 
+  InventoryRowModel.empty() : 
+  product = ProductModel.empty(),
+  stock = 0,
+  warehouseName = '';
+
+  InventoryRowModel.setStock(
+      {required InventoryRowModel inventoryRow, required this.stock})
+      : product = inventoryRow.product,
+        warehouseName = inventoryRow.warehouseName;
+
   static Map<String, dynamic> rowToMapWaybill(
       List<InventoryRowModel> inventoryRowList) {
     Map<String, dynamic> map = {};

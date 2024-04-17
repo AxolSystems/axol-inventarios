@@ -129,16 +129,7 @@ class InventoryListBuild extends StatelessWidget {
                         IconButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => InventoryMoveAdd(
-                                warehouse: warehouse,
-                              ),
-                            ).then((value) {
-                              context
-                                  .read<InventoryListCubit>()
-                                  .load(warehouse, form, true);
-                            });
+                            context.read<InventoryListCubit>().csvSubReport(inventoryRowList, 1);
                           },
                           icon: const Icon(
                             Icons.download,
