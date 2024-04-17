@@ -7,6 +7,7 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
+import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/text_label.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/add/srp_add_cubit.dart';
@@ -266,7 +267,30 @@ class SaleReportAddBuild extends StatelessWidget {
                         ),
                         onPressed: !isLoading
                             ? () {
-                                context.read<SrpAddCubit>().save(form);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialogAxol(
+                                          text:
+                                              '¿Desea guardar los datos actuales?',
+                                          actions: [
+                                            SecondaryButtonDialog(
+                                              text: 'Cancelar',
+                                              onPressed: () {
+                                                Navigator.pop(context, false);
+                                              },
+                                            ),
+                                            PrimaryButtonDialog(
+                                              text: 'Guardar',
+                                              onPressed: () {
+                                                Navigator.pop(context, true);
+                                              },
+                                            ),
+                                          ],
+                                        )).then((value) {
+                                  if (value == true) {
+                                    context.read<SrpAddCubit>().save(form);
+                                  }
+                                });
                               }
                             : null,
                         child: const Icon(

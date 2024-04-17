@@ -7,7 +7,7 @@ import '../../../inventory/model/report_inventory_move_model.dart';
 import '../../../inventory/model/report_multimove/report_multimove_model.dart';
 import '../../../inventory/model/report_multimove/report_mutlimove_row_model.dart';
 import '../../../inventory/model/warehouse_model.dart';
-import '../../../inventory/repository/inventory_pdf_repo.dart';
+import '../../../inventory/repository/inventory_file_repo.dart';
 import '../../../inventory/repository/warehouses_repo.dart';
 import '../../../product/model/product_model.dart';
 import '../../../product/repository/product_repo.dart';

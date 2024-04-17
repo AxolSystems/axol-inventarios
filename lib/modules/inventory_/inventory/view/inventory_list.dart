@@ -95,7 +95,9 @@ class InventoryListBuild extends StatelessWidget {
                     autoFocus: true,
                     isTxtExpand: true,
                     onSubmitted: (value) {
-                      context.read<InventoryListCubit>().load(warehouse, form, true);
+                      context
+                          .read<InventoryListCubit>()
+                          .load(warehouse, form, true);
                     },
                     onChanged: (value) {
                       form.finder = TextfieldModel(
@@ -122,25 +124,49 @@ class InventoryListBuild extends StatelessWidget {
                   ),
                   Visibility(
                     visible: warehouse.id != -2,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => InventoryMoveAdd(
-                            warehouse: warehouse,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => InventoryMoveAdd(
+                                warehouse: warehouse,
+                              ),
+                            ).then((value) {
+                              context
+                                  .read<InventoryListCubit>()
+                                  .load(warehouse, form, true);
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.download,
+                            color: ColorPalette.darkItems,
+                            size: 30,
                           ),
-                        ).then((value) {
-                          context
-                              .read<InventoryListCubit>()
-                              .load(warehouse, form, true);
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.add_outlined,
-                        color: ColorPalette.darkItems,
-                        size: 30,
-                      ),
+                        ),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => InventoryMoveAdd(
+                                warehouse: warehouse,
+                              ),
+                            ).then((value) {
+                              context
+                                  .read<InventoryListCubit>()
+                                  .load(warehouse, form, true);
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add_outlined,
+                            color: ColorPalette.darkItems,
+                            size: 30,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ]),
@@ -233,13 +259,17 @@ class InventoryListBuild extends StatelessWidget {
                   onPressedLeft: () {
                     if (form.currentPage > 1) {
                       form.currentPage = form.currentPage - 1;
-                      context.read<InventoryListCubit>().load(warehouse, form, false);
+                      context
+                          .read<InventoryListCubit>()
+                          .load(warehouse, form, false);
                     }
                   },
                   onPressedRight: () {
                     if (form.currentPage < form.limitPage) {
                       form.currentPage = form.currentPage + 1;
-                      context.read<InventoryListCubit>().load(warehouse, form, false);
+                      context
+                          .read<InventoryListCubit>()
+                          .load(warehouse, form, false);
                     }
                   },
                 ),

@@ -1,50 +1,75 @@
-import 'package:axol_inventarios/utilities/format.dart';
-import 'package:csv/csv.dart';
-import 'dart:convert';
-
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+import 'package:flutter/services.dart';
 
-import '../model/salereport_model.dart';
+import '../../../../models/inventory_row_model.dart';
+import '../../../../utilities/format.dart';
+import '../../../sale_report/model/salereport_model.dart';
+import '../../../user/model/user_mdoel.dart';
+import '../../../user/repository/user_repo.dart';
+import '../model/report_inventory_move_model.dart';
+import '../model/report_multimove/report_multimove_model.dart';
+import '../view/inventory_move_pdf.dart';
 
-class SaleReportCsv {
-  static Future<void> srpCsvSave(SaleReportModel report) async {
+class InventoryPdfRepo {
+  static Future<void> transferPdf(ReportInventoryMoveModel dataReport) async {
+    final String titleFile = 'traspaso_${dataReport.document}.pdf';
+    Uint8List pdfInBytes =
+        await InventoryMovePdf().transfer(dataReport);
+    final blob = html.Blob([pdfInBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = titleFile;
+    html.document.body!.children.add(anchor);
+    anchor.click();
+  }
+
+  static Future<void> singleMove(ReportInventoryMoveModel dataReport) async {
+    final String titleFile = 'movimiento_${dataReport.document}.pdf';
+    Uint8List pdfInBytes =
+        await InventoryMovePdf().singleMove(dataReport);
+    final blob = html.Blob([pdfInBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = titleFile;
+    html.document.body!.children.add(anchor);
+    anchor.click();
+  }
+
+  static Future<void> multiMove(ReportMultimoveModel dataReport) async {
+    final String titleFile = 'reporte_de_movimientos_${dataReport.document}.pdf';
+    final UserModel user = await LocalUser().getLocalUser();
+    Uint8List pdfInBytes =
+        await InventoryMovePdf().multiMove(dataReport, user, DateTime.now());
+    final blob = html.Blob([pdfInBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = titleFile;
+    html.document.body!.children.add(anchor);
+    anchor.click();
+  }
+}
+
+class InventoryCsv {
+  static Future<void> srpSubSaleCsv(List<InventoryRowModel> inventory, SaleReportModel report) async {
     const String titleFile = 'reporte_de_ventas.csv';
     List<List<dynamic>> rows = [];
     List<List<dynamic>> header = [];
     List<List<dynamic>> body = [];
     List<List<dynamic>> footer = [];
     List<String> dataRow = [];
-    List<int> orderKeys = [0,2,1,5,8,6,7,3,4];
-    Map<int,String> clasMap = {
-      0: 'BOLSA NEGRA',
-      1: 'BOLSA NEGRA EN CAJA',
-      2: 'BOLSA NEGRA CONTADA',
-      3: 'STRETCH FILM',
-      4: 'POLIDUCTO',
-      5: 'ROLLO NEGRO EXTRUSION',
-      6: 'RESINA BAJA DENSIDAD',
-      7: 'BOLSA CAMISETA',
-      8: 'BOLSA ALTA DENSIDAD',
-    };
-    Map<int,List<List<String>>> rowMap = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-    };
     String csv;
     double subtotal;
     double total = 0;
 
     //Crea encabezado
     header.add([
-      'REPORTE DE VENTAS',
       '',
       '',
       '',
@@ -53,18 +78,17 @@ class SaleReportCsv {
       report.warehouse.name,
       '',
       'Fecha: ',
-      FormatDate.dmy(report.date),
+      FormatDate.dmy(DateTime.now()),
     ]);
     header.add([
       'CLAVE',
-      'EMPAQUE',
-      'GAL',
-      'MEDIDA',
-      'CALIBRE',
-      'PIEZAS',
-      'CLIENTE',
+      'DESCRIPCION',
+      'STOCK INICIAL',
       'CANTIDAD VENDIDO',
-      'PRECIO UNITARIO',
+      'STOCK FINAL',
+      'PESO UNITARIO',
+      'PESO PRODUCTO',
+      'PRECIO KG',
       'SUBTOTAL',
     ]);
 

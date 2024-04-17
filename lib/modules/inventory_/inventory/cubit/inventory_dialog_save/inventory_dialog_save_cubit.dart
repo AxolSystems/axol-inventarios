@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/report_inventory_move_model.dart';
-import '../../repository/inventory_pdf_repo.dart';
+import '../../repository/inventory_file_repo.dart';
 import 'inventory_dialog_save_state.dart';
 
 class InventoryDialogSaveCubit extends Cubit<InventoryDialogSaveState> {
