@@ -16,6 +16,7 @@ import '../../../../utilities/widgets/toolbar.dart';
 import '../../product/view/product_drawer_details.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
+import 'inv_download_drawer.dart';
 
 class InventoryList extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -129,7 +130,11 @@ class InventoryListBuild extends StatelessWidget {
                         IconButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            context.read<InventoryListCubit>().csvSubReport(inventoryRowList, 1);
+                            showDialog(
+                                context: context,
+                                builder: (context) => InvDownloadDrawer(
+                                      inventoryRowList: inventoryRowList,
+                                    ));
                           },
                           icon: const Icon(
                             Icons.download,

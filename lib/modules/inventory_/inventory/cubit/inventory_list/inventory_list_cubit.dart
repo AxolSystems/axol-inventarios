@@ -95,22 +95,5 @@ class InventoryListCubit extends Cubit<InventoryListState> {
       emit(ErrorInventoryListState(error: e.toString()));
     }
   }
-
-  Future<void> csvSubReport(
-      List<InventoryRowModel> inventoryRowList, int idReport) async {
-    try {
-      emit(InitialInventoryListState());
-      emit(LoadingInventoryListState());
-      SaleReportModel report;
-      
-      report = await SaleReportRepo.fetchSaleReportById(idReport);
-      print(report.warehouse.name);
-      await InventoryCsv.srpSubSaleCsv(inventoryRowList, report);
-
-      emit(LoadedInventoryListState(inventoryRowList: inventoryRowList));
-    } catch (e) {
-      emit(ErrorInventoryListState(error: e.toString()));
-    }
-  }
 }
 

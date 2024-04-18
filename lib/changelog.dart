@@ -2,6 +2,14 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.6] - 2024-04-17
+### Añadido
+- Ventana emergente de confirmación de guardado para nueva lista de carta porte y nuevo reporte de venta.
+- Descarga de archivos csv para reportes de ventas.
+- Descarga de archivos csv de estado de inventario descontando ventas del reporte seleccionado.
+### Corregido
+- Formula de calculo para valor total de mercancía en listas para cartas porte.
+
 ## [1.0.5] - 2024-04-15
 ### Corregido
 - Error en buscadores de las vistas de inventario que no reiniciaba el contador de páginas de la listas consultadas en la base de datos.

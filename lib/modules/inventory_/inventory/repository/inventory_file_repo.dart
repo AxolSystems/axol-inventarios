@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../../utilities/format.dart';
 import '../../../sale_report/model/salereport_model.dart';
+import '../../../sale_report/model/salereport_row_model.dart';
 import '../../../user/model/user_mdoel.dart';
 import '../../../user/repository/user_repo.dart';
 import '../model/report_inventory_move_model.dart';
@@ -60,7 +61,7 @@ class InventoryPdfRepo {
 class InventoryCsv {
   static Future<void> srpSubSaleCsv(
       List<InventoryRowModel> inventory, SaleReportModel report) async {
-    const String titleFile = 'reporte_de_ventas.csv';
+    const String titleFile = 'inventario_restando_ventas.csv';
     List<List<dynamic>> rows = [];
     List<List<dynamic>> header = [];
     List<List<dynamic>> body = [];
@@ -68,7 +69,7 @@ class InventoryCsv {
     List<String> dataRow = [];
     String csv;
     InventoryRowModel inventoryRow;
-    List<InventoryRowModel> inventoryList = [];
+    List<InventoryRowModel> upInventoryList = [];
 
     //Crea encabezado
     header.add([
@@ -95,7 +96,6 @@ class InventoryCsv {
     ]);
 
     //Actualiza inventario
-    print('flag1');
     if (report.reportRows.isNotEmpty && inventory.isNotEmpty) {
       for (var element in report.reportRows) {
         final List list = inventory
@@ -106,29 +106,26 @@ class InventoryCsv {
           final double stock = inventoryRow.stock - element.quantity;
           inventoryRow = InventoryRowModel.setStock(
               inventoryRow: inventoryRow, stock: stock);
-          inventoryList.add(inventoryRow);
+          upInventoryList.add(inventoryRow);
         }
       }
-      print('flag2');
       for (var element in inventory) {
-        final int containt = inventoryList
+        final int containt = upInventoryList
             .indexWhere((x) => x.product.code == element.product.code);
         if (containt == -1) {
-          inventoryList.add(element);
+          upInventoryList.add(element);
         }
       }
-      print('flag3');
-
-      inventoryList.sort((a, b) => a.product.code.compareTo(b.product.code));
+      upInventoryList.sort((a, b) => a.product.code.compareTo(b.product.code));
       
-      if (inventoryList.isNotEmpty) {
-        for (var data in inventoryList) {
+      if (upInventoryList.isNotEmpty) {
+        for (var data in upInventoryList) {
           dataRow = [];
           final double intiStock = inventory
-              .firstWhere((x) => x.product.code == data.product.code)
+              .firstWhere((x) => x.product.code == data.product.code, orElse: () => InventoryRowModel.empty(),)
               .stock;
           final double saleQty = report.reportRows
-              .firstWhere((x) => x.product.code == data.product.code)
+              .firstWhere((x) => x.product.code == data.product.code, orElse: () => SaleReportRowModel.empty(),)
               .quantity;
           final productWeight = (data.product.weight ?? 0) * data.stock;
           final subtotal = data.product.price * data.stock * (data.product.weight ?? 0);
@@ -143,11 +140,9 @@ class InventoryCsv {
           dataRow.add(data.product.price.toString());
           dataRow.add(subtotal.toString());
           body.add(dataRow);
-          print('flag3.5');
         }
       }
     }
-    print('flag4');
     //Llena filas
     rows.addAll(header);
     rows.addAll(body);

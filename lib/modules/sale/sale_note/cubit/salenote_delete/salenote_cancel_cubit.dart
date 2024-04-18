@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
 import 'package:axol_inventarios/modules/sale/sale_note/repository/sale_referral_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -6,7 +5,6 @@ import 'package:uuid/uuid.dart';
 import '../../../../inventory_/inventory/model/inventory_model.dart';
 import '../../../../inventory_/inventory/model/inventory_move/concept_move_model.dart';
 import '../../../../inventory_/inventory/repository/inventory_repo.dart';
-import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
 import '../../../../inventory_/movements/model/movement_model.dart';
 import '../../../../inventory_/movements/repository/movement_repo.dart';
 import '../../../../inventory_/product/model/product_model.dart';
