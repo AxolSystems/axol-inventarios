@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../models/data_response_model.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
-import '../../../../sale_report/model/salereport_model.dart';
-import '../../../../sale_report/repository/salereport_repo.dart';
 import '../../model/warehouse_model.dart';
-import '../../repository/inventory_file_repo.dart';
 import '../../repository/inventory_repo.dart';
 import 'inventory_list_state.dart';
 

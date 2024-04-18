@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,9 @@ import '../model/inv_download_form_model.dart';
 
 class InvDownloadDrawer extends StatelessWidget {
   final List<InventoryRowModel> inventoryRowList;
-  const InvDownloadDrawer({super.key, required this.inventoryRowList});
+  final WarehouseModel warehouse;
+  const InvDownloadDrawer(
+      {super.key, required this.inventoryRowList, required this.warehouse});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +25,17 @@ class InvDownloadDrawer extends StatelessWidget {
         BlocProvider(create: (_) => InvDownloadDrawerCubit()),
         BlocProvider(create: (_) => InvDownloadForm()),
       ],
-      child: InvDownloadDrawerBuild(inventoryRowList: inventoryRowList),
+      child: InvDownloadDrawerBuild(
+          inventoryRowList: inventoryRowList, warehouse: warehouse),
     );
   }
 }
 
 class InvDownloadDrawerBuild extends StatelessWidget {
   final List<InventoryRowModel> inventoryRowList;
-  const InvDownloadDrawerBuild({super.key, required this.inventoryRowList});
+  final WarehouseModel warehouse;
+  const InvDownloadDrawerBuild(
+      {super.key, required this.inventoryRowList, required this.warehouse});
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +44,14 @@ class InvDownloadDrawerBuild extends StatelessWidget {
       bloc: context.read<InvDownloadDrawerCubit>()..load(),
       builder: (context, state) {
         if (state is LoadingInvDownloadDrawerState) {
-          return invDownloadDrawer(context, true, form, inventoryRowList);
+          return invDownloadDrawer(
+              context, true, form, inventoryRowList, warehouse);
         } else if (state is LoadedInvDownloadDrawerState) {
-          return invDownloadDrawer(context, false, form, inventoryRowList);
+          return invDownloadDrawer(
+              context, false, form, inventoryRowList, warehouse);
         } else {
-          return invDownloadDrawer(context, false, form, inventoryRowList);
+          return invDownloadDrawer(
+              context, false, form, inventoryRowList, warehouse);
         }
       },
       listener: (context, state) {
@@ -57,8 +66,12 @@ class InvDownloadDrawerBuild extends StatelessWidget {
     );
   }
 
-  Widget invDownloadDrawer(BuildContext context, bool isLoading,
-      InvDownloadFormModel form, List<InventoryRowModel> inventoryRowList) {
+  Widget invDownloadDrawer(
+      BuildContext context,
+      bool isLoading,
+      InvDownloadFormModel form,
+      List<InventoryRowModel> inventoryRowList,
+      WarehouseModel warehouse) {
     return DrawerBox(
       header: const Text(
         'Descarga de almacén',
@@ -155,7 +168,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                       'Escriba el número de folio del reporte de ventas que quiera descontar del inventario actual.',
                       style: Typo.smallLabelDark,
                     ),
-                    /*const SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         SizedBox(
@@ -169,7 +182,14 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                               Icons.download,
                               color: ColorPalette.lightItems10,
                             ),
-                            onPressed: isLoading ? null : () {},
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    context
+                                        .read<InvDownloadDrawerCubit>()
+                                        .csvInventory(
+                                            warehouse, inventoryRowList);
+                                  },
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -186,7 +206,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),*/
+                    ),
                   ],
                 ),
               )

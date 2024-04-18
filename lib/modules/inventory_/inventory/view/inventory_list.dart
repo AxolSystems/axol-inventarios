@@ -134,6 +134,7 @@ class InventoryListBuild extends StatelessWidget {
                                 context: context,
                                 builder: (context) => InvDownloadDrawer(
                                       inventoryRowList: inventoryRowList,
+                                      warehouse: warehouse,
                                     ));
                           },
                           icon: const Icon(
