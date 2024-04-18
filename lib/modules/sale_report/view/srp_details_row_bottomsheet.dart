@@ -7,11 +7,11 @@ import '../../../utilities/widgets/text_label.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
 
-class SrpDetailsBottomsheet extends StatelessWidget {
+class SrpDetailsRowBottomsheet extends StatelessWidget {
   final SaleReportRowModel row;
   final int index;
   final SrpAddFormModel form;
-  const SrpDetailsBottomsheet({
+  const SrpDetailsRowBottomsheet({
     super.key,
     required this.row,
     required this.index,

@@ -90,40 +90,17 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
     }
   }
 
-  Future<void> saveCsv(SaleReportModel report) async {
+  Future<void> openDetails(SaleReportModel report) async {
     try {
       emit(InitialSrpDoclistState());
       emit(LoadingSrpDoclistState());
 
-      await SaleReportCsv.srpCsvSave(report);
-
+      emit(OpenDetailsSrpDoclistState(saleReport: report));
       emit(LoadedSrpDoclistState());
     } catch (e) {
       emit(ErrorSrpDoclistState(error: e.toString()));
     }
   }
-
-  /*Future<void> openDetails(WaybillListModel waybill) async {
-    try {
-      emit(InitialSrpDoclistState());
-      emit(LoadingSrpDoclistState());
-      List<InventoryRowModel> waybillList;
-      WaybillListModel upWaybill;
-
-      waybillList = await WaybillRepo.fetchWaybill(waybill.id);
-      upWaybill = WaybillListModel(
-        id: waybill.id,
-        date: waybill.date,
-        list: waybillList,
-        warehouse: waybill.warehouse,
-      );
-
-      emit(OpenDetailsSrpDoclistState(saleReport: ));
-      emit(LoadedSrpDoclistState());
-    } catch (e) {
-      emit(ErrorSrpDoclistState(error: e.toString()));
-    }
-  }*/
 }
 
 class SrpDoclistForm extends Cubit<SrpDoclistFormModel> {

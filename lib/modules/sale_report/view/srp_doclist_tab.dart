@@ -9,6 +9,7 @@ import '../../../utilities/widgets/table_view/table_view.dart';
 import '../cubit/doclist_tab/srp_doclist_tab_cubit.dart';
 import '../cubit/doclist_tab/srp_doclist_tab_state.dart';
 import '../model/srp_doclist_form_model.dart';
+import 'srp_details_doc_bottomsheet.dart';
 
 class SrpDoclistTab extends StatelessWidget {
   const SrpDoclistTab({super.key});
@@ -51,31 +52,24 @@ class SrpDoclistTabBuild extends StatelessWidget {
                     text: state.error,
                   ));
         }
-        /*if (state is OpenDetailsSrpDoclistState) {
-          if (widthScreen < 600) {
-            showModalBottomSheet(
+        if (state is OpenDetailsSrpDoclistState) {
+          showModalBottomSheet(
               backgroundColor: ColorPalette.lightBackground,
+              isScrollControlled: true,
               shape: const RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(12))),
               context: context,
-              builder: (context) => WbListDetailsBottomsheet(
-                waybill: state.waybillList,
-              ),
-            );
-          } else {
-            showDialog(
-                context: context,
-                builder: (context) => WbListDetailsDrawer(
-                      waybill: state.waybillList,
-                    ));
-          }
-        }*/
+              builder: (context) => SrpDetailsDocBottomsheet(
+                    saleReport: state.saleReport,
+                  ));
+        }
       },
     );
   }
 
-  Widget sroDoclistTab(BuildContext context, bool isLoading, SrpDoclistFormModel form) {
+  Widget sroDoclistTab(
+      BuildContext context, bool isLoading, SrpDoclistFormModel form) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -97,60 +91,49 @@ class SrpDoclistTabBuild extends StatelessWidget {
                     bottom: BorderSide(color: ColorPalette.darkItems),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          saleReport.id.toString(),
-                          style: Typo.bodyLight,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.fade,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(side: BorderSide.none),
+                  onPressed: () {
+                    context.read<SrpDoclistCubit>().openDetails(saleReport);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            saleReport.id.toString(),
+                            style: Typo.bodyLight,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          FormatDate.dmy(saleReport.date),
-                          style: Typo.bodyLight,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.fade,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            FormatDate.dmy(saleReport.date),
+                            style: Typo.bodyLight,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          saleReport.warehouse.name,
-                          style: Typo.bodyLight,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.fade,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            saleReport.warehouse.name,
+                            style: Typo.bodyLight,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.download,
-                          color: ColorPalette.lightItems10,
-                        ),
-                        onPressed: () {
-                          context.read<SrpDoclistCubit>().saveCsv(saleReport);
-                        },
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_outward,
-                          color: ColorPalette.lightItems10,
-                        ),
-                        onPressed: () {
-                          //context.read<SrpDoclistCubit>().openDetails(saleReport);
-                        },
-                      ),
-                    ],
+                        const SizedBox(width: 8),
+                        const Icon(Icons.navigate_next,
+                            color: ColorPalette.lightItems10),
+                      ],
+                    ),
                   ),
                 ));
           },

@@ -1,0 +1,247 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../utilities/format.dart';
+import '../../../utilities/theme/theme.dart';
+import '../../../utilities/widgets/button.dart';
+import '../cubit/doc_details/srp_doc_details_cubit.dart';
+import '../cubit/doc_details/srp_doc_details_state.dart';
+import '../model/salereport_model.dart';
+
+class SrpDetailsDocBottomsheet extends StatelessWidget {
+  final SaleReportModel saleReport;
+  const SrpDetailsDocBottomsheet({super.key, required this.saleReport});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SrpDocDetailsCubit(),
+      child: SrpDetailsDocBottomSheetBuild(saleReport: saleReport),
+    );
+  }
+}
+
+class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
+  final SaleReportModel saleReport;
+  const SrpDetailsDocBottomSheetBuild({super.key, required this.saleReport});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<SrpDocDetailsCubit, SrpDocDetailsState>(
+      builder: (context, state) {
+        if (state is LoadingSrpDocDetailsState) {
+          return srpDetailsDocBottomsheet(context, true, saleReport);
+        } else if (state is LoadedSrpDocDetailsState) {
+          return srpDetailsDocBottomsheet(context, false, saleReport);
+        } else {
+          return srpDetailsDocBottomsheet(context, false, saleReport);
+        }
+      },
+      listener: (context, state) {},
+    );
+  }
+
+  Widget srpDetailsDocBottomsheet(
+      BuildContext context, bool isLoading, SaleReportModel report) {
+    final double heightScreen = MediaQuery.of(context).size.height;
+    double total = 0;
+    for (var row in report.reportRows) {
+      total = total + (row.quantity * row.unitPrice);
+    }
+    return SizedBox(
+      height: heightScreen * 0.9,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: ColorPalette.lightItems10))),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Column(
+                          children: [
+                            const Text('Id', style: Typo.smallLabelDark),
+                            Text(report.id.toString(), style: Typo.bodyDark),
+                          ],
+                        )),
+                    const SizedBox(width: 8),
+                    Expanded(
+                        flex: 3,
+                        child: Column(
+                          children: [
+                            const Text('Almacén', style: Typo.smallLabelDark),
+                            Text(
+                                '${report.warehouse.id} - ${report.warehouse.name}')
+                          ],
+                        )),
+                    const SizedBox(width: 8),
+                    Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            const Text('Fecha', style: Typo.smallLabelDark),
+                            Text(FormatDate.dmy(report.date),
+                                style: Typo.bodyDark),
+                          ],
+                        )),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: report.reportRows.length,
+              itemBuilder: (context, index) {
+                final row = report.reportRows[index];
+                final subtotal = row.quantity * row.unitPrice;
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          bottom:
+                              BorderSide(color: ColorPalette.lightItems20))),
+                  child: Column(children: [
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: Column(
+                              children: [
+                                const Text('Clave', style: Typo.smallLabelDark),
+                                Text(row.product.code, style: Typo.bodyDark),
+                              ],
+                            )),
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              children: [
+                                const Text('Descripción',
+                                    style: Typo.smallLabelDark),
+                                Text(row.product.description,
+                                    style: Typo.bodyDark),
+                              ],
+                            )),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Column(
+                          children: [
+                            const Text('Cantidad', style: Typo.smallLabelDark),
+                            Text(FormatNumber.format2dec(row.quantity),
+                                style: Typo.bodyDark),
+                          ],
+                        )),
+                        Expanded(
+                            child: Column(
+                          children: [
+                            const Text('Precio unitario',
+                                style: Typo.smallLabelDark),
+                            Text('\$ ${FormatNumber.format2dec(row.unitPrice)}',
+                                style: Typo.bodyDark),
+                          ],
+                        )),
+                        Expanded(
+                            child: Column(
+                          children: [
+                            const Text('Subtotal', style: Typo.smallLabelDark),
+                            Text('\$ ${FormatNumber.format2dec(subtotal)}',
+                                style: Typo.bodyDark),
+                          ],
+                        ))
+                      ],
+                    ),
+                    Visibility(
+                        visible: row.customerName != '',
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  const Text('Cliente',
+                                      style: Typo.smallLabelDark),
+                                  Text(row.customerName, style: Typo.bodyDark),
+                                ],
+                              )
+                            ],
+                          ),
+                        )),
+                  ]),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            decoration: const BoxDecoration(
+                border:
+                    Border(top: BorderSide(color: ColorPalette.lightItems10))),
+            child: Row(
+              children: [
+                SecondaryButtonDialog(
+                  text: 'Ver nota',
+                  onPressed: () {},
+                ),
+                const SizedBox(width: 8),
+                const Text('Total: ', style: Typo.labelDark),
+                const Expanded(child: SizedBox()),
+                Text(
+                  '\$ ${FormatNumber.format2dec(total)}',
+                  style: Typo.labelDark,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 40,
+                    child: SecondaryButtonDialog(
+                      text: 'Descargar PDF',
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: SizedBox(
+                  height: 40,
+                  child: SecondaryButtonDialog(
+                    text: 'Descargar CSV',
+                    onPressed: () {
+                      context.read<SrpDocDetailsCubit>().saveCsv(saleReport);
+                    },
+                  ),
+                )),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: SecondaryButtonDialog(
+                text: 'Editar',
+                onPressed: () {},
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

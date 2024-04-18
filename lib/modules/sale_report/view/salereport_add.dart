@@ -15,7 +15,7 @@ import '../cubit/add/srp_add_state.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
 import 'srp_add_bottomsheet.dart';
-import 'srp_details_bottomsheet.dart';
+import 'srp_details_row_bottomsheet.dart';
 
 class SaleReportAdd extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -138,7 +138,7 @@ class SaleReportAddBuild extends StatelessWidget {
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(12))),
                             context: context,
-                            builder: (context) => SrpDetailsBottomsheet(
+                            builder: (context) => SrpDetailsRowBottomsheet(
                               row: row,
                               form: form,
                               index: index,
