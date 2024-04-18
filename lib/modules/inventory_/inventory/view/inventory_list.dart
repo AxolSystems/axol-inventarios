@@ -68,11 +68,17 @@ class InventoryListBuild extends StatelessWidget {
         TextEditingValue(
             text: form.finder.text,
             selection: TextSelection.collapsed(offset: form.finder.position)));
+    final String title;
+    if (warehouse.id == -2) {
+      title = 'Inventario: ${warehouse.name}';
+    } else {
+      title = 'Inventario: ${warehouse.id} - ${warehouse.name}';
+    }
 
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol.appBar(
-        title: 'Inventario',
+        title: title,
         isLoading: isLoading,
       ),
       body: Row(
