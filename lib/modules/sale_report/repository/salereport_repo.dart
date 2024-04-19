@@ -168,4 +168,17 @@ class SaleReportRepo {
       _note: saleReport.note,
     });
   }
+
+  static Future<void> update(SaleReportModel saleReport, int id) async {
+    await _supabase.from(_table).update({
+      _id: saleReport.id,
+      _date: saleReport.date.millisecondsSinceEpoch,
+      _user: saleReport.user,
+      _report:
+          SaleReportModel.modelToMap(saleReport.reportRows), //Convertir a map
+      _warehouseId: saleReport.warehouse.id,
+      _warehouseName: saleReport.warehouse.name,
+      _note: saleReport.note,
+    }).eq(_id, id);
+  }
 }

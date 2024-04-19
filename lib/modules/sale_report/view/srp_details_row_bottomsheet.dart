@@ -96,13 +96,26 @@ class SrpDetailsRowBottomsheet extends StatelessWidget {
               ],
             ),
             const Expanded(child: SizedBox()),
-            AlertButtonDialog(
-              text: 'Eliminar',
-              onPressed: () {
-                form.saleReportList.removeAt(index);
-                Navigator.pop(context);
-              },
-            ),
+            Row(
+              children: [
+                Expanded(
+                  child: AlertButtonDialog(
+                    text: 'Eliminar',
+                    onPressed: () {
+                      form.saleReportList.removeAt(index);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: SecondaryButtonDialog(
+                    text: 'Editar',
+                    onPressed: () {},
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

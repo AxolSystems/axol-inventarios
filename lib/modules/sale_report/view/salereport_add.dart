@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/modules/sale_report/view/srp_add_drawer.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +11,7 @@ import '../../../utilities/widgets/text_label.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/add/srp_add_cubit.dart';
 import '../cubit/add/srp_add_state.dart';
+import '../model/salereport_model.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
 import 'srp_add_bottomsheet.dart';
@@ -19,7 +19,14 @@ import 'srp_details_row_bottomsheet.dart';
 
 class SaleReportAdd extends StatelessWidget {
   final WarehouseModel warehouse;
-  const SaleReportAdd({super.key, required this.warehouse});
+  final SrpAddSubState subState;
+  final SaleReportModel? reportEdit; 
+
+  const SaleReportAdd(
+      {super.key,
+      required this.warehouse,
+      required this.subState,
+      this.reportEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +37,8 @@ class SaleReportAdd extends StatelessWidget {
       ],
       child: SaleReportAddBuild(
         warehouse: warehouse,
+        subState: subState,
+        reportEdit: reportEdit,
       ),
     );
   }
@@ -37,13 +46,21 @@ class SaleReportAdd extends StatelessWidget {
 
 class SaleReportAddBuild extends StatelessWidget {
   final WarehouseModel warehouse;
-  const SaleReportAddBuild({super.key, required this.warehouse});
+  final SrpAddSubState subState;
+  final SaleReportModel? reportEdit;
+
+  const SaleReportAddBuild(
+      {super.key,
+      required this.warehouse,
+      required this.subState,
+      this.reportEdit});
 
   @override
   Widget build(BuildContext context) {
     SrpAddFormModel form = context.read<SrpAddForm>().state;
+    
     return BlocConsumer<SrpAddCubit, SrpAddState>(
-      bloc: context.read<SrpAddCubit>()..initLoad(warehouse, form),
+      bloc: context.read<SrpAddCubit>()..initLoad(warehouse, form, subState, reportEdit),
       builder: (context, state) {
         if (state is LoadingSrpAddState) {
           return srpAdd(context, true, form);
@@ -62,18 +79,28 @@ class SaleReportAddBuild extends StatelessWidget {
                   ));
         }
         if (state is SavedSrpAddState) {
-          Navigator.pop(context);
+          if (subState == SrpAddSubState.add) {
+            Navigator.pop(context);
+          } else if (subState == SrpAddSubState.edit) {
+            Navigator.pop(context);
+            Navigator.pop(context, subState);
+          }
         }
       },
     );
   }
 
   Widget srpAdd(BuildContext context, bool isLoading, SrpAddFormModel form) {
-    //final widthScreen = MediaQuery.of(context).size.width;
+    final String title;
+    if (subState == SrpAddSubState.edit) {
+      title = 'Editar report';
+    } else {
+      title = 'Nuevo reporte';
+    }
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol.appBar(
-        title: 'Nuevo reporte',
+        title: title,
         isLoading: isLoading,
         leading: const LeadingReturn(),
       ),
@@ -92,7 +119,7 @@ class SaleReportAddBuild extends StatelessWidget {
                     overflow: TextOverflow.fade,
                   ),
                   TextButton(
-                    onPressed: () {
+                    onPressed: subState == SrpAddSubState.edit ? null : () {
                       showDatePicker(
                               context: context,
                               initialDate: form.dateTime,
@@ -288,7 +315,7 @@ class SaleReportAddBuild extends StatelessWidget {
                                           ],
                                         )).then((value) {
                                   if (value == true) {
-                                    context.read<SrpAddCubit>().save(form);
+                                    context.read<SrpAddCubit>().save(form, subState, reportEdit);
                                   }
                                 });
                               }

@@ -10,6 +10,7 @@ class SrpAddBottomsheetFormModel {
   String? errorMessageQty;
   String? errorMessagePrice;
   double stock;
+  bool? initEdit;
 
   SrpAddBottomsheetFormModel({
     required this.qtyCtrl,
@@ -19,6 +20,7 @@ class SrpAddBottomsheetFormModel {
     required this.unitPriceCtrl,
     required this.customerCtrl,
     required this.errorMessagePrice,
+    this.initEdit,
   });
 
   SrpAddBottomsheetFormModel.empty()
@@ -28,5 +30,6 @@ class SrpAddBottomsheetFormModel {
         product = ProductModel.empty(),
         errorMessageQty = null,
         errorMessagePrice = null,
-        stock = 0;
+        stock = 0,
+        initEdit = null;
 }

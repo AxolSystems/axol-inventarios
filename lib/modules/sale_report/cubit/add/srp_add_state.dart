@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+enum SrpAddSubState {add, edit}
+
 abstract class SrpAddState extends Equatable {
   const SrpAddState();
 }

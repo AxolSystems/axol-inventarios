@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/button.dart';
+import '../cubit/add/srp_add_state.dart';
 import '../cubit/doc_details/srp_doc_details_cubit.dart';
 import '../cubit/doc_details/srp_doc_details_state.dart';
 import '../model/salereport_model.dart';
+import 'salereport_add.dart';
 
 class SrpDetailsDocBottomsheet extends StatelessWidget {
   final SaleReportModel saleReport;
@@ -28,9 +30,11 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SrpDocDetailsCubit, SrpDocDetailsState>(
+      bloc: context.read<SrpDocDetailsCubit>()..initLoad(),
       builder: (context, state) {
         if (state is LoadingSrpDocDetailsState) {
-          return srpDetailsDocBottomsheet(context, true, saleReport);
+          return srpDetailsDocBottomsheet(
+              context, true, saleReport, state.loadingState);
         } else if (state is LoadedSrpDocDetailsState) {
           return srpDetailsDocBottomsheet(context, false, saleReport);
         } else {
@@ -42,7 +46,8 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
   }
 
   Widget srpDetailsDocBottomsheet(
-      BuildContext context, bool isLoading, SaleReportModel report) {
+      BuildContext context, bool isLoading, SaleReportModel report,
+      [LoadingSrpDocDetails? loading]) {
     final double heightScreen = MediaQuery.of(context).size.height;
     double total = 0;
     for (var row in report.reportRows) {
@@ -190,7 +195,31 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
               children: [
                 SecondaryButtonDialog(
                   text: 'Ver nota',
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(12))),
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          width: double.infinity,
+                          height: double.infinity,
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: ColorPalette.lightItems10),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Text(report.note, style: Typo.bodyDark),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 8),
                 const Text('Total: ', style: Typo.labelDark),
@@ -211,7 +240,8 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
                     height: 40,
                     child: SecondaryButtonDialog(
                       text: 'Descargar PDF',
-                      onPressed: () {},
+                      onPressed: isLoading ? null : () {},
+                      loadingState: loading == LoadingSrpDocDetails.downPdf,
                     ),
                   ),
                 ),
@@ -221,9 +251,14 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
                   height: 40,
                   child: SecondaryButtonDialog(
                     text: 'Descargar CSV',
-                    onPressed: () {
-                      context.read<SrpDocDetailsCubit>().saveCsv(saleReport);
-                    },
+                    loadingState: loading == LoadingSrpDocDetails.downCsv,
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            context
+                                .read<SrpDocDetailsCubit>()
+                                .saveCsv(saleReport);
+                          },
                   ),
                 )),
               ],
@@ -236,7 +271,20 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
               height: 40,
               child: SecondaryButtonDialog(
                 text: 'Editar',
-                onPressed: () {},
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => SaleReportAdd(
+                              warehouse: report.warehouse,
+                              subState: SrpAddSubState.edit,
+                              reportEdit: report,
+                            ),
+                          ),
+                        );
+                      },
               ),
             ),
           ),

@@ -6,6 +6,7 @@ import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
+import '../cubit/add/srp_add_state.dart';
 import '../cubit/warehouses_tab/srp_warehouse_tab_cubit.dart';
 import '../cubit/warehouses_tab/srp_warehouse_tab_state.dart';
 import 'salereport_add.dart';
@@ -77,7 +78,7 @@ class SrpWarehouseTabBuild extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) => SaleReportAdd(warehouse: warehouse),
+                        builder: (BuildContext context) => SaleReportAdd(warehouse: warehouse, subState: SrpAddSubState.add),
                       ),
                     );
                   },

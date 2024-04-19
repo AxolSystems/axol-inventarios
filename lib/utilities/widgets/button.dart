@@ -44,6 +44,7 @@ class SecondaryButtonDialog extends StatefulWidget {
   final bool? isLoading;
   final Icon? icon;
   final BorderSide? border;
+  final bool? loadingState;
 
   const SecondaryButtonDialog({
     Key? key,
@@ -53,6 +54,7 @@ class SecondaryButtonDialog extends StatefulWidget {
     this.icon,
     this.border,
     this.textStyle,
+    this.loadingState,
   }) : super(key: key);
 
   @override
@@ -68,6 +70,7 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
     final bool isLoading_ = widget.isLoading ?? false;
     final BorderSide? border = widget.border;
     final TextStyle? textStyle = widget.textStyle;
+    final bool? loadingState = widget.loadingState;
     return OutlinedButton(
       onPressed: isLoading_ ? null : fOnPressed,
       style: OutlinedButton.styleFrom(
@@ -82,7 +85,15 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
           ? Row(
               children: [icon, Text(text, style: textStyle ?? Typo.bodyDark)],
             )
-          : Text(text, style: textStyle ?? Typo.bodyDark),
+          : loadingState == true
+              ? const SizedBox(
+                width: 20,
+                height: 20,
+                  child: CircularProgressIndicator(
+                    color: ColorPalette.lightItems10,
+                  ),
+                )
+              : Text(text, style: textStyle ?? Typo.bodyDark),
     );
   }
 }

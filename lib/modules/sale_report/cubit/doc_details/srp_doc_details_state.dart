@@ -9,9 +9,13 @@ class InitialSrpDocDetailsState extends SrpDocDetailsState {
   List<Object?> get props => [];
 }
 
+enum LoadingSrpDocDetails {main, downCsv, downPdf}
+
 class LoadingSrpDocDetailsState extends SrpDocDetailsState {
+  final LoadingSrpDocDetails loadingState;
+  const LoadingSrpDocDetailsState({required this.loadingState});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [loadingState];
 }
 
 class LoadedSrpDocDetailsState extends SrpDocDetailsState {

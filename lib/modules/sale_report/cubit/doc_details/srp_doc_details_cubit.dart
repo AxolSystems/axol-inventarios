@@ -10,7 +10,7 @@ class SrpDocDetailsCubit extends Cubit<SrpDocDetailsState> {
   Future<void> initLoad() async {
     try {
       emit(InitialSrpDocDetailsState());
-      emit(LoadingSrpDocDetailsState());
+      emit(const LoadingSrpDocDetailsState(loadingState: LoadingSrpDocDetails.main));
 
       emit(LoadedSrpDocDetailsState());
     } catch (e) {
@@ -21,7 +21,7 @@ class SrpDocDetailsCubit extends Cubit<SrpDocDetailsState> {
   Future<void> load() async {
     try {
       emit(InitialSrpDocDetailsState());
-      emit(LoadingSrpDocDetailsState());
+      emit(const LoadingSrpDocDetailsState(loadingState: LoadingSrpDocDetails.main));
 
       emit(LoadedSrpDocDetailsState());
     } catch (e) {
@@ -32,7 +32,7 @@ class SrpDocDetailsCubit extends Cubit<SrpDocDetailsState> {
   Future<void> saveCsv(SaleReportModel report) async {
     try {
       emit(InitialSrpDocDetailsState());
-      emit(LoadingSrpDocDetailsState());
+      emit(const LoadingSrpDocDetailsState(loadingState: LoadingSrpDocDetails.downCsv));
 
       await SaleReportCsv.srpCsvSave(report);
 

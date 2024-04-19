@@ -13,7 +13,11 @@ import 'srp_find_bottomsheet.dart';
 
 class SrpAddBottomsheet extends StatelessWidget {
   final List<InventoryRowModel> inventoryList;
-  const SrpAddBottomsheet({super.key, required this.inventoryList});
+  final SaleReportRowModel? rowEdit;
+  const SrpAddBottomsheet(
+      {super.key,
+      required this.inventoryList,
+      this.rowEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +33,26 @@ class SrpAddBottomsheet extends StatelessWidget {
 
 class WbAddBottomSheetBuild extends StatelessWidget {
   final List<InventoryRowModel> inventoryList;
-  const WbAddBottomSheetBuild({super.key, required this.inventoryList});
+  final SaleReportRowModel? rowEdit;
+  const WbAddBottomSheetBuild(
+      {super.key, required this.inventoryList, this.rowEdit});
 
   @override
   Widget build(BuildContext context) {
     SrpAddBottomsheetFormModel form =
         context.read<SrpAddBottomsheetForm>().state;
+    if (rowEdit != null) {
+      final InventoryRowModel invRow = inventoryList.firstWhere((x) => x.product.code == rowEdit!.product.code, orElse: InventoryRowModel.empty);
+      form = SrpAddBottomsheetFormModel(
+        qtyCtrl: TextEditingController(text: rowEdit!.quantity.toString()),
+        product: rowEdit!.product,
+        errorMessageQty: null,
+        stock: invRow.stock,
+        unitPriceCtrl: TextEditingController(text: rowEdit!.unitPrice.toString()),
+        customerCtrl: TextEditingController(text: rowEdit!.customerName),
+        errorMessagePrice: null,
+      );
+    }
     return BlocConsumer<SrpAddBottomsheetCubit, SrpAddBottomsheetState>(
       bloc: context.read<SrpAddBottomsheetCubit>()
         ..initLoad(form, inventoryList.first.product.code),

@@ -4,6 +4,8 @@ import '../../model/srp_add_bottomsheet_form_model.dart';
 
 enum SrpAddBottomsheetState { intital, loading, load, error, save }
 
+enum SrpAddBottomsheetSubtState {add, edit}
+
 class SrpAddBottomsheetCubit extends Cubit<SrpAddBottomsheetState> {
   SrpAddBottomsheetCubit() : super(SrpAddBottomsheetState.intital);
 
@@ -12,7 +14,7 @@ class SrpAddBottomsheetCubit extends Cubit<SrpAddBottomsheetState> {
     try {
       emit(SrpAddBottomsheetState.intital);
       emit(SrpAddBottomsheetState.loading);
-      //form.itemValue = initValue;
+
       emit(SrpAddBottomsheetState.load);
     } catch (e) {
       form.errorMessageQty = e.toString();

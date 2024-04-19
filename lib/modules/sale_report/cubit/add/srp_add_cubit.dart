@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/data_response_model.dart';
@@ -14,7 +15,7 @@ import 'srp_add_state.dart';
 class SrpAddCubit extends Cubit<SrpAddState> {
   SrpAddCubit() : super(InitialSrpAddState());
 
-  Future<void> initLoad(WarehouseModel warehouse, SrpAddFormModel form) async {
+  Future<void> initLoad(WarehouseModel warehouse, SrpAddFormModel form, SrpAddSubState subState, [SaleReportModel? reportEdit]) async {
     try {
       emit(InitialSrpAddState());
       emit(LoadingSrpAddState());
@@ -35,7 +36,14 @@ class SrpAddCubit extends Cubit<SrpAddState> {
 
       form.inventoryList = inventoryRowList;
       form.warehouse = warehouse;
-      form.dateTime = DateTime.now();
+      if (subState == SrpAddSubState.add) {
+        form.dateTime = DateTime.now();
+      } else if (subState == SrpAddSubState.edit) {
+        form.dateTime = reportEdit!.date;
+        form.note = TextEditingController(text: reportEdit.note);
+        form.saleReportList = reportEdit.reportRows;
+      }
+      
 
       emit(LoadedSrpAddState());
     } catch (e) {
@@ -54,7 +62,7 @@ class SrpAddCubit extends Cubit<SrpAddState> {
     }
   }
 
-  Future<void> save(SrpAddFormModel form) async {
+  Future<void> save(SrpAddFormModel form, SrpAddSubState subState, [SaleReportModel? reportEdit]) async {
     try {
       emit(InitialSrpAddState());
       emit(LoadingSrpAddState());
@@ -62,23 +70,35 @@ class SrpAddCubit extends Cubit<SrpAddState> {
       int id;
       UserModel user;
 
-      if (form.saleReportList .isEmpty) {
+      if (form.saleReportList.isEmpty) {
         emit(const ErrorSrpAddState(error: 'Agregue al menos un producto.'));
         return;
       }
 
       user = await LocalUser().getLocalUser();
 
-      id = await SaleReportRepo.fetchAvailableId();
-      saleReport = SaleReportModel(
-        id: id,
-        date: form.dateTime,
-        reportRows: form.saleReportList,
-        warehouse: form.warehouse,
-        note: form.note.text,
-        user: user.id,
-      );
-      await SaleReportRepo.insert(saleReport);
+      if (subState == SrpAddSubState.add) {
+        id = await SaleReportRepo.fetchAvailableId();
+        saleReport = SaleReportModel(
+          id: id,
+          date: form.dateTime,
+          reportRows: form.saleReportList,
+          warehouse: form.warehouse,
+          note: form.note.text,
+          user: user.id,
+        );
+        await SaleReportRepo.insert(saleReport);
+      } else if (subState == SrpAddSubState.edit) {
+        saleReport = SaleReportModel(
+          id: reportEdit?.id ?? -1,
+          date: form.dateTime,
+          reportRows: form.saleReportList,
+          warehouse: form.warehouse,
+          note: form.note.text,
+          user: user.id,
+        );
+        await SaleReportRepo.update(saleReport, reportEdit?.id ?? -1);
+      }
 
       emit(SavedSrpAddState());
       emit(LoadedSrpAddState());

@@ -6,6 +6,7 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../utilities/widgets/table_view/table_view.dart';
+import '../cubit/add/srp_add_state.dart';
 import '../cubit/doclist_tab/srp_doclist_tab_cubit.dart';
 import '../cubit/doclist_tab/srp_doclist_tab_state.dart';
 import '../model/srp_doclist_form_model.dart';
@@ -31,7 +32,6 @@ class SrpDoclistTabBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double widthScreen = MediaQuery.of(context).size.width;
     SrpDoclistFormModel form = context.read<SrpDoclistForm>().state;
     return BlocConsumer<SrpDoclistCubit, SrpDoclistState>(
       bloc: context.read<SrpDoclistCubit>()..initLoad(form),
@@ -62,7 +62,11 @@ class SrpDoclistTabBuild extends StatelessWidget {
               context: context,
               builder: (context) => SrpDetailsDocBottomsheet(
                     saleReport: state.saleReport,
-                  ));
+                  )).then((value) {
+                    if (value == SrpAddSubState.edit) {
+                      context.read<SrpDoclistCubit>().initLoad(form);
+                    }
+                  });
         }
       },
     );
