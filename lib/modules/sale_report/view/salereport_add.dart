@@ -20,7 +20,7 @@ import 'srp_details_row_bottomsheet.dart';
 class SaleReportAdd extends StatelessWidget {
   final WarehouseModel warehouse;
   final SrpAddSubState subState;
-  final SaleReportModel? reportEdit; 
+  final SaleReportModel? reportEdit;
 
   const SaleReportAdd(
       {super.key,
@@ -58,9 +58,10 @@ class SaleReportAddBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SrpAddFormModel form = context.read<SrpAddForm>().state;
-    
+
     return BlocConsumer<SrpAddCubit, SrpAddState>(
-      bloc: context.read<SrpAddCubit>()..initLoad(warehouse, form, subState, reportEdit),
+      bloc: context.read<SrpAddCubit>()
+        ..initLoad(warehouse, form, subState, reportEdit),
       builder: (context, state) {
         if (state is LoadingSrpAddState) {
           return srpAdd(context, true, form);
@@ -92,10 +93,16 @@ class SaleReportAddBuild extends StatelessWidget {
 
   Widget srpAdd(BuildContext context, bool isLoading, SrpAddFormModel form) {
     final String title;
+    double total = 0;
+
     if (subState == SrpAddSubState.edit) {
       title = 'Editar report';
     } else {
       title = 'Nuevo reporte';
+    }
+
+    for (var element in form.saleReportList) {
+      total = total + (element.quantity * element.unitPrice);
     }
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
@@ -119,19 +126,21 @@ class SaleReportAddBuild extends StatelessWidget {
                     overflow: TextOverflow.fade,
                   ),
                   TextButton(
-                    onPressed: subState == SrpAddSubState.edit ? null : () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: form.dateTime,
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime.now())
-                          .then((value) {
-                        if (value != null) {
-                          form.dateTime = value;
-                          context.read<SrpAddCubit>().load();
-                        }
-                      });
-                    },
+                    onPressed: subState == SrpAddSubState.edit
+                        ? null
+                        : () {
+                            showDatePicker(
+                                    context: context,
+                                    initialDate: form.dateTime,
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now())
+                                .then((value) {
+                              if (value != null) {
+                                form.dateTime = value;
+                                context.read<SrpAddCubit>().load();
+                              }
+                            });
+                          },
                     child: Text(
                       FormatDate.dmy(form.dateTime),
                       style: Typo.subtitleLight,
@@ -171,7 +180,10 @@ class SaleReportAddBuild extends StatelessWidget {
                               index: index,
                             ),
                           ).then((value) {
-                            context.read<SrpAddCubit>().load();
+                            if (value is SaleReportRowModel) {
+                              form.saleReportList[index] = value;
+                              context.read<SrpAddCubit>().load();
+                            }
                           });
                         },
                         child: Column(
@@ -256,6 +268,17 @@ class SaleReportAddBuild extends StatelessWidget {
             ),
           ),
           Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Total: ', style: Typo.labelLight),
+                Text('\$ ${FormatNumber.format2dec(total)}',
+                    style: Typo.labelLight)
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: SizedBox(
               width: double.infinity,
@@ -315,7 +338,9 @@ class SaleReportAddBuild extends StatelessWidget {
                                           ],
                                         )).then((value) {
                                   if (value == true) {
-                                    context.read<SrpAddCubit>().save(form, subState, reportEdit);
+                                    context
+                                        .read<SrpAddCubit>()
+                                        .save(form, subState, reportEdit);
                                   }
                                 });
                               }
@@ -342,33 +367,6 @@ class SaleReportAddBuild extends StatelessWidget {
                       ),
                       onPressed: !isLoading
                           ? () {
-                              /*if (widthScreen < 600) {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(12))),
-                                  context: context,
-                                  builder: (context) => SrpAddBottomsheet(
-                                      inventoryList: form.inventoryList),
-                                ).then((value) {
-                                  if (value is SaleReportRowModel) {
-                                    form.saleReportList.add(value);
-                                    context.read<SrpAddCubit>().load();
-                                  }
-                                });
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => SrpAddDrawer(
-                                          inventoryList: form.inventoryList,
-                                        )).then((value) {
-                                  if (value is SaleReportRowModel) {
-                                    form.saleReportList.add(value);
-                                    context.read<SrpAddCubit>().load();
-                                  }
-                                });
-                              }*/
                               showModalBottomSheet(
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(

@@ -53,6 +53,7 @@ class SrpDoclistTabBuild extends StatelessWidget {
                   ));
         }
         if (state is OpenDetailsSrpDoclistState) {
+          final user = state.user;
           showModalBottomSheet(
               backgroundColor: ColorPalette.lightBackground,
               isScrollControlled: true,
@@ -62,6 +63,7 @@ class SrpDoclistTabBuild extends StatelessWidget {
               context: context,
               builder: (context) => SrpDetailsDocBottomsheet(
                     saleReport: state.saleReport,
+                    user: user,
                   )).then((value) {
                     if (value == SrpAddSubState.edit) {
                       context.read<SrpDoclistCubit>().initLoad(form);

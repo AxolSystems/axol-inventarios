@@ -93,8 +93,8 @@ class SrpDoclistCubit extends Cubit<SrpDoclistState> {
     try {
       emit(InitialSrpDoclistState());
       emit(LoadingSrpDoclistState());
-
-      emit(OpenDetailsSrpDoclistState(saleReport: report));
+      final UserModel user = await LocalUser().getLocalUser();
+      emit(OpenDetailsSrpDoclistState(saleReport: report, user: user));
       emit(LoadedSrpDoclistState());
     } catch (e) {
       emit(ErrorSrpDoclistState(error: e.toString()));

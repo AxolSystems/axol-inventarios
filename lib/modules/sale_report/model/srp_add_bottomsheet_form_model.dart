@@ -1,6 +1,8 @@
+import 'package:axol_inventarios/models/inventory_row_model.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../inventory_/product/model/product_model.dart';
+import 'salereport_row_model.dart';
 
 class SrpAddBottomsheetFormModel {
   TextEditingController qtyCtrl;
@@ -10,7 +12,6 @@ class SrpAddBottomsheetFormModel {
   String? errorMessageQty;
   String? errorMessagePrice;
   double stock;
-  bool? initEdit;
 
   SrpAddBottomsheetFormModel({
     required this.qtyCtrl,
@@ -20,7 +21,6 @@ class SrpAddBottomsheetFormModel {
     required this.unitPriceCtrl,
     required this.customerCtrl,
     required this.errorMessagePrice,
-    this.initEdit,
   });
 
   SrpAddBottomsheetFormModel.empty()
@@ -30,6 +30,17 @@ class SrpAddBottomsheetFormModel {
         product = ProductModel.empty(),
         errorMessageQty = null,
         errorMessagePrice = null,
-        stock = 0,
-        initEdit = null;
+        stock = 0;
+
+  SrpAddBottomsheetFormModel.set(
+      {required SaleReportRowModel reportRow,
+      required InventoryRowModel inventoryRow})
+      : customerCtrl = TextEditingController(text: reportRow.customerName),
+        errorMessagePrice = null,
+        errorMessageQty = null,
+        product = reportRow.product,
+        qtyCtrl = TextEditingController(text: reportRow.quantity.toString()),
+        stock = inventoryRow.stock,
+        unitPriceCtrl =
+            TextEditingController(text: reportRow.unitPrice.toString());
 }

@@ -15,18 +15,24 @@ class SrpAddBottomsheet extends StatelessWidget {
   final List<InventoryRowModel> inventoryList;
   final SaleReportRowModel? rowEdit;
   const SrpAddBottomsheet(
-      {super.key,
-      required this.inventoryList,
-      this.rowEdit});
+      {super.key, required this.inventoryList, this.rowEdit});
 
   @override
   Widget build(BuildContext context) {
+    InventoryRowModel? inventoryRow;
+    if (rowEdit != null) {
+      inventoryRow = inventoryList.firstWhere(
+          (x) => x.product.code == rowEdit!.product.code,
+          orElse: InventoryRowModel.empty);
+    }
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SrpAddBottomsheetCubit()),
-        BlocProvider(create: (_) => SrpAddBottomsheetForm()),
+        BlocProvider(
+            create: (_) => SrpAddBottomsheetForm(rowEdit, inventoryRow)),
       ],
-      child: WbAddBottomSheetBuild(inventoryList: inventoryList),
+      child:
+          WbAddBottomSheetBuild(inventoryList: inventoryList, rowEdit: rowEdit),
     );
   }
 }
@@ -41,18 +47,6 @@ class WbAddBottomSheetBuild extends StatelessWidget {
   Widget build(BuildContext context) {
     SrpAddBottomsheetFormModel form =
         context.read<SrpAddBottomsheetForm>().state;
-    if (rowEdit != null) {
-      final InventoryRowModel invRow = inventoryList.firstWhere((x) => x.product.code == rowEdit!.product.code, orElse: InventoryRowModel.empty);
-      form = SrpAddBottomsheetFormModel(
-        qtyCtrl: TextEditingController(text: rowEdit!.quantity.toString()),
-        product: rowEdit!.product,
-        errorMessageQty: null,
-        stock: invRow.stock,
-        unitPriceCtrl: TextEditingController(text: rowEdit!.unitPrice.toString()),
-        customerCtrl: TextEditingController(text: rowEdit!.customerName),
-        errorMessagePrice: null,
-      );
-    }
     return BlocConsumer<SrpAddBottomsheetCubit, SrpAddBottomsheetState>(
       bloc: context.read<SrpAddBottomsheetCubit>()
         ..initLoad(form, inventoryList.first.product.code),
@@ -80,10 +74,9 @@ class WbAddBottomSheetBuild extends StatelessWidget {
             quantity: double.tryParse(form.qtyCtrl.text) ?? 0,
             unitPrice: double.tryParse(form.unitPriceCtrl.text) ?? 0,
           );
-          Navigator.pop(
-            context,
-            saleReportRow,
-          );
+          if (form.errorMessagePrice == null && form.errorMessageQty == null) {
+            Navigator.pop(context, saleReportRow);
+          }
         }
       },
     );
@@ -95,22 +88,9 @@ class WbAddBottomSheetBuild extends StatelessWidget {
     SrpAddBottomsheetFormModel form,
   ) {
     final double heightScreen = MediaQuery.of(context).size.height;
-    List<DropdownMenuItem<String>> itemList = [];
-    DropdownMenuItem<String> item;
     final double subTotal;
     final double quantity;
     final double unitPrice;
-    for (var element in inventoryList) {
-      item = DropdownMenuItem(
-        value: element.product.code,
-        child: Text(
-          '${element.product.code}: ${element.stock} ${element.product.description}',
-          style: Typo.bodyDark,
-          overflow: TextOverflow.visible,
-        ),
-      );
-      itemList.add(item);
-    }
     quantity = double.tryParse(form.qtyCtrl.text) ?? 0;
     unitPrice = double.tryParse(form.unitPriceCtrl.text) ?? 0;
     subTotal = quantity * unitPrice;

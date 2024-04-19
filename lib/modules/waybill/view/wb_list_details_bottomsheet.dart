@@ -10,8 +10,9 @@ class WbListDetailsBottomsheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double heightScreen = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: 500,
+      height: heightScreen * 0.9,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -99,110 +100,130 @@ class WbListDetailsBottomsheet extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Clave',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  row.product.code,
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Descripción',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  row.product.description,
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Cantidad',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  row.stock.toString(),
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Peso unitario',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  '${row.product.weight} KG',
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Valor unitario',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  '\$${row.product.price}',
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Peso total',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  '${FormatNumber.format2dec(totalWeight)} KG',
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Clave',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    row.product.code,
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Valor total',
-                                  style: Typo.smallLabelDark,
-                                ),
-                                Text(
-                                  '\$${FormatNumber.format2dec(totalPrice)}',
-                                  style: Typo.bodyDark,
-                                ),
-                              ],
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Descripción',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    row.product.description,
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Cantidad',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    FormatNumber.format2dec(row.stock),
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Peso unitario',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    '${row.product.weight} KG',
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Valor unitario',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    '\$ ${row.product.price}',
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Peso total',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    '${FormatNumber.format2dec(totalWeight)} KG',
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Valor total',
+                                    style: Typo.smallLabelDark,
+                                  ),
+                                  Text(
+                                    '\$ ${FormatNumber.format2dec(totalPrice)}',
+                                    style: Typo.bodyDark,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

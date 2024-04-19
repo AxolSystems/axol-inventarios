@@ -57,6 +57,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
           if (widthScreen < 600) {
             showModalBottomSheet(
               backgroundColor: ColorPalette.lightBackground,
+              isScrollControlled: true,
               shape: const RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(12))),

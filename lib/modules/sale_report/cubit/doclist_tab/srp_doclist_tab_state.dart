@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/salereport_model.dart';
@@ -23,9 +24,10 @@ class LoadedSrpDoclistState extends SrpDoclistState {
 
 class OpenDetailsSrpDoclistState extends SrpDoclistState {
   final SaleReportModel saleReport;
-  const OpenDetailsSrpDoclistState({required this.saleReport});
+  final UserModel user;
+  const OpenDetailsSrpDoclistState({required this.saleReport, required this.user});
   @override
-  List<Object?> get props => [saleReport];
+  List<Object?> get props => [saleReport, user];
 }
 
 class ErrorSrpDoclistState extends SrpDoclistState {

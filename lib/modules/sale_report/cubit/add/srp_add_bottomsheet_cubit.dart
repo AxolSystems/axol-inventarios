@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../models/inventory_row_model.dart';
+import '../../model/salereport_row_model.dart';
 import '../../model/srp_add_bottomsheet_form_model.dart';
 
 enum SrpAddBottomsheetState { intital, loading, load, error, save }
 
-enum SrpAddBottomsheetSubtState {add, edit}
+enum SrpAddBottomsheetSubtState { add, edit }
 
 class SrpAddBottomsheetCubit extends Cubit<SrpAddBottomsheetState> {
   SrpAddBottomsheetCubit() : super(SrpAddBottomsheetState.intital);
@@ -74,5 +76,11 @@ class SrpAddBottomsheetCubit extends Cubit<SrpAddBottomsheetState> {
 }
 
 class SrpAddBottomsheetForm extends Cubit<SrpAddBottomsheetFormModel> {
-  SrpAddBottomsheetForm() : super(SrpAddBottomsheetFormModel.empty());
+  final SaleReportRowModel? reportRow;
+  final InventoryRowModel? inventoryRow;
+  SrpAddBottomsheetForm([this.reportRow, this.inventoryRow])
+      : super((reportRow == null || inventoryRow == null)
+            ? SrpAddBottomsheetFormModel.empty()
+            : SrpAddBottomsheetFormModel.set(
+                reportRow: reportRow, inventoryRow: inventoryRow));
 }

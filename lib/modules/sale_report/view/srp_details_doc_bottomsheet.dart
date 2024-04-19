@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,20 +13,22 @@ import 'salereport_add.dart';
 
 class SrpDetailsDocBottomsheet extends StatelessWidget {
   final SaleReportModel saleReport;
-  const SrpDetailsDocBottomsheet({super.key, required this.saleReport});
+  final UserModel user;
+  const SrpDetailsDocBottomsheet({super.key, required this.saleReport, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SrpDocDetailsCubit(),
-      child: SrpDetailsDocBottomSheetBuild(saleReport: saleReport),
+      child: SrpDetailsDocBottomSheetBuild(saleReport: saleReport, user: user),
     );
   }
 }
 
 class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
   final SaleReportModel saleReport;
-  const SrpDetailsDocBottomSheetBuild({super.key, required this.saleReport});
+  final UserModel user;
+  const SrpDetailsDocBottomSheetBuild({super.key, required this.saleReport, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +51,21 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
   Widget srpDetailsDocBottomsheet(
       BuildContext context, bool isLoading, SaleReportModel report,
       [LoadingSrpDocDetails? loading]) {
+    final bool editVisible;
     final double heightScreen = MediaQuery.of(context).size.height;
     double total = 0;
     for (var row in report.reportRows) {
       total = total + (row.quantity * row.unitPrice);
+    }
+    if (user.rol == UserModel.rolVendor) {
+      final limitTime = report.date.add(const Duration(hours: 24));
+      if (limitTime.isAfter(DateTime.now())) {
+        editVisible = true;
+      } else {
+        editVisible = false;
+      }
+    } else {
+      editVisible = true;
     }
     return SizedBox(
       height: heightScreen * 0.9,
@@ -240,7 +254,7 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
                     height: 40,
                     child: SecondaryButtonDialog(
                       text: 'Descargar PDF',
-                      onPressed: isLoading ? null : () {},
+                      onPressed: null,
                       loadingState: loading == LoadingSrpDocDetails.downPdf,
                     ),
                   ),
@@ -264,27 +278,30 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            child: SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: SecondaryButtonDialog(
-                text: 'Editar',
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => SaleReportAdd(
-                              warehouse: report.warehouse,
-                              subState: SrpAddSubState.edit,
-                              reportEdit: report,
+          Visibility(
+            visible: editVisible,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: SecondaryButtonDialog(
+                  text: 'Editar',
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => SaleReportAdd(
+                                warehouse: report.warehouse,
+                                subState: SrpAddSubState.edit,
+                                reportEdit: report,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                ),
               ),
             ),
           ),

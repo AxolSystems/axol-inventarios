@@ -6,6 +6,7 @@ import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/text_label.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
+import 'srp_add_bottomsheet.dart';
 
 class SrpDetailsRowBottomsheet extends StatelessWidget {
   final SaleReportRowModel row;
@@ -111,7 +112,21 @@ class SrpDetailsRowBottomsheet extends StatelessWidget {
                 Expanded(
                   child: SecondaryButtonDialog(
                     text: 'Editar',
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(12))),
+                        context: context,
+                        builder: (context) => SrpAddBottomsheet(
+                          inventoryList: form.inventoryList,
+                          rowEdit: row,
+                        ),
+                      ).then((value) {
+                        Navigator.pop(context, value);
+                      });
+                    },
                   ),
                 ),
               ],
