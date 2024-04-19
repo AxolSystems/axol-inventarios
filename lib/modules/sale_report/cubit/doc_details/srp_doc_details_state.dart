@@ -23,11 +23,6 @@ class LoadedSrpDocDetailsState extends SrpDocDetailsState {
   List<Object?> get props => [];
 }
 
-class OpenDetailsSrpDocDetailsState extends SrpDocDetailsState {
-  @override
-  List<Object?> get props => [];
-}
-
 class ErrorSrpDocDetailsState extends SrpDocDetailsState {
   final String error;
   const ErrorSrpDocDetailsState({required this.error});
