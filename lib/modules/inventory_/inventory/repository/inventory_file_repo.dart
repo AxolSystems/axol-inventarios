@@ -188,6 +188,9 @@ class InventoryCsv {
     ]);
     header.add([
       'CLAVE',
+      'EMPAQUE',
+      'TIPO',
+      'GAL',
       'DESCRIPCION',
       'STOCK',
     ]);
@@ -197,6 +200,9 @@ class InventoryCsv {
         dataRow = [];
 
         dataRow.add(data.product.code);
+        dataRow.add(data.product.packing ?? '');
+        dataRow.add(data.product.type ?? '');
+        dataRow.add(data.product.capacity ?? '');
         dataRow.add(data.product.description);
         dataRow.add(data.stock.toString());
         body.add(dataRow);

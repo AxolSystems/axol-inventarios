@@ -287,10 +287,10 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
                 children: [
                   const Text('Total: ', style: Typo.labelDark),
                   const Expanded(child: SizedBox()),
-                  Text(
+                  /*Text(
                     '\$ ${FormatNumber.format2dec(total)}',
                     style: Typo.labelDark,
-                  ),
+                  ),*/ //Campio temporal
                 ],
               ),
             ),
@@ -328,7 +328,7 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: editVisible,
+              visible: true, //Cambio temporal
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 child: SizedBox(
