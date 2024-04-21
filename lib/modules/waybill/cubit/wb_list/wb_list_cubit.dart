@@ -124,6 +124,9 @@ class WbListCubit extends Cubit<WbListState> {
       emit(LoadingWbListState());
       List<InventoryRowModel> waybillList;
       WaybillListModel upWaybill;
+      UserModel user;
+
+      user = await LocalUser().getLocalUser();
 
       waybillList = await WaybillRepo.fetchWaybill(waybill.id);
       upWaybill = WaybillListModel(
@@ -133,7 +136,7 @@ class WbListCubit extends Cubit<WbListState> {
         warehouse: waybill.warehouse,
       );
 
-      emit(OpenDetailsWbListState(waybillList: upWaybill));
+      emit(OpenDetailsWbListState(waybillList: upWaybill, user: user));
       emit(LoadedWbListState());
     } catch (e) {
       emit(ErrorWbListState(error: e.toString()));

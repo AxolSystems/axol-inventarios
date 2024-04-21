@@ -11,22 +11,31 @@ import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../inventory_/inventory/model/warehouse_model.dart';
 import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
+import '../model/waybill_list_model.dart';
 import '../model/wb_add_form_model.dart';
 import 'wb_add_details_bottomsheet.dart';
 
 class WbAddList extends StatelessWidget {
   final WarehouseModel warehouse;
-  const WbAddList({super.key, required this.warehouse});
+  final WaybillListModel? waybillEdit;
+  const WbAddList({super.key, required this.warehouse, this.waybillEdit});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => WbAddCubit()),
-        BlocProvider(create: (_) => WbAddForm()),
+        BlocProvider(
+            create: (_) => waybillEdit == null
+                ? WbAddForm()
+                : WbAddForm.set(WbAddFormModel(
+                    inventoryList: [],
+                    warehouse: warehouse,
+                    waybillList: waybillEdit!.list))),
       ],
       child: WbAddListBuild(
         warehouse: warehouse,
+        waybillEdit: waybillEdit,
       ),
     );
   }
@@ -34,7 +43,8 @@ class WbAddList extends StatelessWidget {
 
 class WbAddListBuild extends StatelessWidget {
   final WarehouseModel warehouse;
-  const WbAddListBuild({super.key, required this.warehouse});
+  final WaybillListModel? waybillEdit;
+  const WbAddListBuild({super.key, required this.warehouse, this.waybillEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +69,29 @@ class WbAddListBuild extends StatelessWidget {
                   ));
         }
         if (state is SavedWbAddState) {
-          Navigator.pop(context);
+          if (waybillEdit != null) {
+            Navigator.pop(context, SavedWbAdd.edit);
+          } else {
+            Navigator.pop(context);
+          }
         }
       },
     );
   }
 
   Widget wbAdd(BuildContext context, bool isLoading, WbAddFormModel form) {
+    final String title;
+
+    if (waybillEdit != null) {
+      title = 'Editar lista';
+    } else {
+      title = 'Nueva lista';
+    }
+
     return Scaffold(
       backgroundColor: ColorPalette.darkBackground,
       appBar: AppBarAxol.appBar(
-        title: 'Nueva lista',
+        title: title,
         isLoading: isLoading,
         leading: const LeadingReturn(),
       ),
@@ -147,6 +169,9 @@ class WbAddListBuild extends StatelessWidget {
                                 .first,
                           ),
                         ).then((value) {
+                          if (value is InventoryRowModel) {
+                            form.waybillList[index] = value;
+                          }
                           context.read<WbAddCubit>().load();
                         });
                       },
@@ -224,7 +249,12 @@ class WbAddListBuild extends StatelessWidget {
                                     ],
                                   )).then((value) {
                             if (value == true) {
-                              context.read<WbAddCubit>().save(form);
+                              if (waybillEdit != null) {
+                                context.read<WbAddCubit>().save(form,
+                                    waybillEdit: waybillEdit, idEdit: waybillEdit!.id);
+                              } else {
+                                context.read<WbAddCubit>().save(form);
+                              }
                             }
                           });
                         },

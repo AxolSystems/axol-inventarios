@@ -35,7 +35,7 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
     try {
       emit(WbAddBottomSheetState.intital);
       emit(WbAddBottomSheetState.loading);
-      final qty = double.tryParse(form.controller.text);
+      final qty = double.tryParse(form.qtyCtrl.text);
 
       if (qty == null) {
         form.errorMessage = 'Seleccione una cantidad.';
@@ -62,4 +62,6 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
 
 class WbBottomSheetAddForm extends Cubit<WbBottomSheetAddFormModel> {
   WbBottomSheetAddForm() : super(WbBottomSheetAddFormModel.empty());
+  WbBottomSheetAddForm.set(WbBottomSheetAddFormModel form)
+      : super(WbBottomSheetAddFormModel.set(form));
 }

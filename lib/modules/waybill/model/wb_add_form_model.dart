@@ -16,4 +16,9 @@ class WbAddFormModel {
   inventoryList = [],
   waybillList = [],
   warehouse = WarehouseModel.empty();
+
+  WbAddFormModel.set(WbAddFormModel form) : 
+  inventoryList = form.inventoryList,
+  waybillList = form.waybillList,
+  warehouse = form.warehouse;
 }

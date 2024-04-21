@@ -145,4 +145,14 @@ class WaybillRepo {
       _manager: waybillList.warehouse.retailManager,
     });
   }
+
+  static Future<void> update(WaybillListModel waybillList, int id) async {
+    await _supabase.from(_table).update({
+      _list: InventoryRowModel.rowToMapWaybill(waybillList.list),
+      _warehouseId: waybillList.warehouse.id,
+      _warehouseName: waybillList.warehouse.name,
+      _date: waybillList.date.millisecondsSinceEpoch,
+      _manager: waybillList.warehouse.retailManager,
+    }).eq(_id, id);
+  }
 }

@@ -7,6 +7,7 @@ import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/table_view/table_view.dart';
+import '../cubit/wb_add/wb_add_state.dart';
 import '../cubit/wb_list/wb_list_cubit.dart';
 import '../model/wb_list_form_model.dart';
 import 'wb_list_details_bottomsheet.dart';
@@ -64,8 +65,13 @@ class WbWarehouseTabBuild extends StatelessWidget {
               context: context,
               builder: (context) => WbListDetailsBottomsheet(
                 waybill: state.waybillList,
+                user: state.user,
               ),
-            );
+            ).then((value) {
+              if (value == SavedWbAdd.edit) {
+                context.read<WbListCubit>().initLoad(form);
+              }
+            });
           } else {
             showDialog(
                 context: context,
@@ -94,14 +100,19 @@ class WbWarehouseTabBuild extends StatelessWidget {
           itemBuilder: (context, index) {
             final waybill = form.waybillList[index];
 
-            return Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: ColorPalette.darkItems),
+            return OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    side: BorderSide.none, padding: const EdgeInsets.all(0)),
+                onPressed: () {
+                  context.read<WbListCubit>().openDetails(waybill);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: ColorPalette.darkItems),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
                       Expanded(
@@ -134,7 +145,9 @@ class WbWarehouseTabBuild extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      IconButton(
+                      const Icon(Icons.navigate_next,
+                          color: ColorPalette.lightItems10),
+                      /*IconButton(
                         icon: const Icon(
                           Icons.download,
                           color: ColorPalette.lightItems10,
@@ -152,7 +165,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                         onPressed: () {
                           context.read<WbListCubit>().openDetails(waybill);
                         },
-                      ),
+                      ),*/
                     ],
                   ),
                 ));

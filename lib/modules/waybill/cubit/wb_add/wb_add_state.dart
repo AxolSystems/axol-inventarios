@@ -19,6 +19,8 @@ class LoadedWbAddState extends WbAddState {
   List<Object?> get props => [];
 }
 
+enum SavedWbAdd {add, edit}
+
 class SavedWbAddState extends WbAddState {
   @override
   List<Object?> get props => [];

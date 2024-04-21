@@ -4,32 +4,41 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../sale_report/cubit/doc_details/srp_doc_details_state.dart';
+import '../../user/model/user_mdoel.dart';
 import '../cubit/list_details/wb_list_details_cubit.dart';
 import '../cubit/list_details/wb_list_details_state.dart';
+import '../cubit/wb_add/wb_add_state.dart';
 import '../model/waybill_list_model.dart';
 import 'wb_add_list.dart';
 
 class WbListDetailsBottomsheet extends StatelessWidget {
   final WaybillListModel waybill;
-  const WbListDetailsBottomsheet({super.key, required this.waybill});
+  final UserModel user;
+  const WbListDetailsBottomsheet(
+      {super.key, required this.waybill, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => WbListDetailsCubit(),
-      child: WbListDetailsBottomsheetBuild(waybill: waybill),
+      child: WbListDetailsBottomsheetBuild(
+        waybill: waybill,
+        user: user,
+      ),
     );
   }
 }
 
 class WbListDetailsBottomsheetBuild extends StatelessWidget {
   final WaybillListModel waybill;
-  const WbListDetailsBottomsheetBuild({super.key, required this.waybill});
+  final UserModel user;
+  const WbListDetailsBottomsheetBuild(
+      {super.key, required this.waybill, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<WbListDetailsCubit, WbListDetailsState>(
+      bloc: context.read<WbListDetailsCubit>()..load(),
       builder: (context, state) {
         if (state is LoadingWbListDetailsState) {
           return wbLisDetailsBottomsheet(context, true, state.loadingState);
@@ -46,6 +55,7 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
   Widget wbLisDetailsBottomsheet(BuildContext context, bool isLoading,
       [LoadingWbListDetails? loading]) {
     final double heightScreen = MediaQuery.of(context).size.height;
+    final bool editVisible;
     double totalPrice = 0;
     double totalWeight = 0;
 
@@ -54,6 +64,19 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
           (element.product.price *
               element.stock *
               (element.product.weight ?? 0));
+      totalWeight =
+          totalWeight + (element.stock * (element.product.weight ?? 0));
+    }
+
+    if (user.rol == UserModel.rolVendor) {
+      final limitTime = waybill.date.add(const Duration(hours: 24));
+      if (limitTime.isAfter(DateTime.now())) {
+        editVisible = true;
+      } else {
+        editVisible = false;
+      }
+    } else {
+      editVisible = true;
     }
 
     return SizedBox(
@@ -279,21 +302,34 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: const BoxDecoration(
-                  border: Border(
-                      top: BorderSide(color: ColorPalette.lightItems10))),
-              child: Row(
-                children: [
-                  const Text('Total: ', style: Typo.labelDark),
-                  const Expanded(child: SizedBox()),
-                  /*Text(
-                    '\$ ${FormatNumber.format2dec(total)}',
-                    style: Typo.labelDark,
-                  ),*/ //Campio temporal
-                ],
-              ),
-            ),
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                decoration: const BoxDecoration(
+                    border: Border(
+                        top: BorderSide(color: ColorPalette.lightItems10))),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text('Valor total: ', style: Typo.labelDark),
+                        const Expanded(child: SizedBox()),
+                        Text(
+                          '\$ ${FormatNumber.format2dec(totalPrice)}',
+                          style: Typo.labelDark,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('Peso total: ', style: Typo.labelDark),
+                        const Expanded(child: SizedBox()),
+                        Text(
+                          '${FormatNumber.format2dec(totalWeight)} KG',
+                          style: Typo.labelDark,
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               child: Row(
@@ -328,7 +364,7 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: true, //Cambio temporal
+              visible: editVisible,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 child: SizedBox(
@@ -344,9 +380,14 @@ class WbListDetailsBottomsheetBuild extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (BuildContext context) => WbAddList(
                                   warehouse: waybill.warehouse,
+                                  waybillEdit: waybill,
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              if (value == SavedWbAdd.edit) {
+                                Navigator.pop(context, value);
+                              }
+                            });
                           },
                   ),
                 ),

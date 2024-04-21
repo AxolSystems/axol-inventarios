@@ -51,7 +51,7 @@ class WbAddCubit extends Cubit<WbAddState> {
     }
   }
 
-  Future<void> save(WbAddFormModel form) async {
+  Future<void> save(WbAddFormModel form, {WaybillListModel? waybillEdit, int? idEdit}) async {
     try {
       emit(InitialWbAddState());
       emit(LoadingWbAddState());
@@ -63,14 +63,24 @@ class WbAddCubit extends Cubit<WbAddState> {
         return;
       }
 
-      id = await WaybillRepo.fetchAvailableId();
-      waybillList = WaybillListModel(
-        id: id,
-        date: DateTime.now(),
-        list: form.waybillList,
-        warehouse: form.warehouse,
-      );
-      await WaybillRepo.insert(waybillList);
+      if (waybillEdit != null && idEdit != null) {
+        waybillList = WaybillListModel(
+          id: idEdit,
+          date: waybillEdit.date,
+          list: form.waybillList,
+          warehouse: form.warehouse,
+        );
+        await WaybillRepo.update(waybillList, idEdit);
+      } else {
+        id = await WaybillRepo.fetchAvailableId();
+        waybillList = WaybillListModel(
+          id: id,
+          date: DateTime.now(),
+          list: form.waybillList,
+          warehouse: form.warehouse,
+        );
+        await WaybillRepo.insert(waybillList);
+      }
 
       emit(SavedWbAddState());
       emit(LoadedWbAddState());
@@ -82,4 +92,6 @@ class WbAddCubit extends Cubit<WbAddState> {
 
 class WbAddForm extends Cubit<WbAddFormModel> {
   WbAddForm() : super(WbAddFormModel.empty());
+
+  WbAddForm.set(WbAddFormModel form) : super(WbAddFormModel.set(form));
 }

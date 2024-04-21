@@ -12,14 +12,19 @@ import '../model/wb_bottomsheet_form_model.dart';
 
 class WbAddBottomSheet extends StatelessWidget {
   final List<InventoryRowModel> inventoryList;
-  const WbAddBottomSheet({super.key, required this.inventoryList});
+  final WbBottomSheetAddFormModel? editRow;
+  const WbAddBottomSheet(
+      {super.key, required this.inventoryList, this.editRow});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => WbAddBottomSheetCubit()),
-        BlocProvider(create: (_) => WbBottomSheetAddForm()),
+        BlocProvider(
+            create: (_) => editRow == null
+                ? WbBottomSheetAddForm()
+                : WbBottomSheetAddForm.set(editRow!)),
       ],
       child: WbAddBottomSheetBuild(inventoryList: inventoryList),
     );
@@ -56,7 +61,7 @@ class WbAddBottomSheetBuild extends StatelessWidget {
         if (state == WbAddBottomSheetState.save) {
           final InventoryRowModel inventoryRow = InventoryRowModel(
             product: form.product,
-            stock: double.parse(form.controller.text),
+            stock: double.parse(form.qtyCtrl.text),
             warehouseName: inventoryList.first.warehouseName,
           );
           Navigator.pop(
@@ -196,7 +201,7 @@ class WbAddBottomSheetBuild extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: TextField(
               style: Typo.bodyDark,
-              controller: form.controller,
+              controller: form.qtyCtrl,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
               ],
