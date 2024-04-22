@@ -5,7 +5,7 @@ class Changelog {
 ## [1.0.7] - 2024-04-21
 ### Añadido
 - Descarga de archivos csv de estado de inventario del almacén seleccionado.
-- Ahora es posible editas las listas para cartas porte y reportes de venta hasta 24 horas después de haber sido creadas.
+- Ahora es posible editar las listas para cartas porte y reportes de venta hasta 24 horas después de haber sido creadas.
 ### Modificado
 - Se agregó nombre de almacén a vista de inventario.
 - Cambio en formato de archivo csv para estado de inventario.
