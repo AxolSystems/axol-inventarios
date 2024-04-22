@@ -71,13 +71,10 @@ class InventoryCsv {
     String csv;
     InventoryRowModel inventoryRow;
     List<InventoryRowModel> upInventoryList = [];
+    List<SaleReportRowModel> reportRows = [];
 
     //Crea encabezado
     header.add([
-      '',
-      '',
-      '',
-      '',
       'Almacen: ',
       report.warehouse.name,
       '',
@@ -88,17 +85,35 @@ class InventoryCsv {
       'CLAVE',
       'DESCRIPCION',
       'STOCK INICIAL',
-      'CANTIDAD VENDIDO',
+      'CANT. VEND.',
       'STOCK FINAL',
-      'PESO UNITARIO',
-      'PESO PRODUCTO',
+      'PESO UNIT.',
+      'PESO TOTAL',
       'PRECIO KG',
       'SUBTOTAL',
     ]);
 
     //Actualiza inventario
     if (report.reportRows.isNotEmpty && inventory.isNotEmpty) {
+      //Factoriza la lista sumando las cantidades con las mismcas claves.
       for (var element in report.reportRows) {
+        final inv = reportRows.firstWhere(
+            (x) => x.product.code == element.product.code,
+            orElse: SaleReportRowModel.empty);
+        if (inv.product.code == '') {
+          reportRows.add(element);
+        } else {
+          final i = reportRows.indexWhere((x) => x.product.code == element.product.code);
+          reportRows[i] = SaleReportRowModel(
+            customerName: reportRows[i].customerName,
+            product: reportRows[i].product,
+            quantity: report.reportRows[i].quantity + element.quantity,
+            unitPrice: reportRows[i].unitPrice,
+          );
+        }
+      }
+
+      for (var element in reportRows) {
         final List list = inventory
             .where((x) => x.product.code == element.product.code)
             .toList();
@@ -128,7 +143,7 @@ class InventoryCsv {
                 orElse: () => InventoryRowModel.empty(),
               )
               .stock;
-          final double saleQty = report.reportRows
+          final double saleQty = reportRows
               .firstWhere(
                 (x) => x.product.code == data.product.code,
                 orElse: () => SaleReportRowModel.empty(),

@@ -34,7 +34,7 @@ class WaybillRepo {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '$_id, $_warehouseId, $_warehouseName, $_date',
+              '$_id, $_warehouseId, $_warehouseName, $_date, $_manager',
               const FetchOptions(count: CountOption.exact))
           .order(_date, ascending: false)
           .range(rangeMin_, rangeMax_);
@@ -42,7 +42,7 @@ class WaybillRepo {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '$_id, $_warehouseId, $_warehouseName, $_date',
+              '$_id, $_warehouseId, $_warehouseName, $_date, $_manager',
               const FetchOptions(count: CountOption.exact))
           .eq(_manager, manager)
           .order(_date, ascending: false)
@@ -59,7 +59,7 @@ class WaybillRepo {
           warehouse: WarehouseModel(
             id: element[_warehouseId] ?? -1,
             name: element[_warehouseName] ?? '',
-            retailManager: manager,
+            retailManager: element[_manager],
           ),
         );
         waybillList.add(waybill);

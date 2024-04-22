@@ -2,6 +2,16 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.7] - 2024-04-21
+### Añadido
+- Descarga de archivos csv de estado de inventario del almacén seleccionado.
+- Ahora es posible editas las listas para cartas porte y reportes de venta hasta 24 horas después de haber sido creadas.
+### Modificado
+- Se agregó nombre de almacén a vista de inventario.
+- Cambio en formato de archivo csv para estado de inventario.
+### Corregido
+- Error en calculo de estado de inventario con descuento de reporte de ventas, el cual no sumaba las cantidades de los productos con la misma clave.
+
 ## [1.0.6] - 2024-04-17
 ### Añadido
 - Ventana emergente de confirmación de guardado para nueva lista de carta porte y nuevo reporte de venta.

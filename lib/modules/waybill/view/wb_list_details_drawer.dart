@@ -1,224 +1,40 @@
+import 'package:axol_inventarios/modules/waybill/view/wb_list_details_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/drawer_box.dart';
+import '../cubit/list_details/wb_list_details_cubit.dart';
+import '../cubit/list_details/wb_list_details_state.dart';
 import '../model/waybill_list_model.dart';
 
-class WbListDetailsDrawer extends StatelessWidget {
+/*class WbListDetailsDrawer extends StatelessWidget {
   final WaybillListModel waybill;
   const WbListDetailsDrawer({super.key, required this.waybill});
 
   @override
   Widget build(BuildContext context) {
-    return DrawerBox(
-      padding: const EdgeInsets.all(8),
-      header: Container(
-        decoration: const BoxDecoration(
-            border:
-                Border(bottom: BorderSide(color: ColorPalette.lightItems10))),
-        child: Container(
-          decoration: const BoxDecoration(
-              border: Border(
-            bottom: BorderSide(color: ColorPalette.lightItems10),
-          )),
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      'Id',
-                      style: Typo.smallLabelDark,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      'Almacén',
-                      style: Typo.smallLabelDark,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Fecha',
-                      style: Typo.smallLabelDark,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      waybill.id.toString(),
-                      style: Typo.bodyDark,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      waybill.warehouse.name,
-                      style: Typo.bodyDark,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      FormatDate.dmy(waybill.date),
-                      style: Typo.bodyDark,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        SecondaryButtonDialog(text: 'Regresar',
-        onPressed: () {
-          Navigator.pop(context);
-        },)
-      ],
-      child: Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: waybill.list.length,
-          itemBuilder: (context, index) {
-            final row = waybill.list[index];
-            final totalWeight = (row.product.weight ?? 0) * row.stock;
-            final totalPrice = row.product.price * row.stock;
-            return Container(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              decoration: const BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(color: ColorPalette.lightItems20))),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Clave',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            row.product.code,
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Descripción',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            row.product.description,
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Cantidad',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            row.stock.toString(),
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Peso unitario',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            '${row.product.weight} KG',
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Valor unitario',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            '\$${row.product.price}',
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Peso total',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            '${FormatNumber.format2dec(totalWeight)} KG',
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Valor total',
-                            style: Typo.smallLabelDark,
-                          ),
-                          Text(
-                            '\$${FormatNumber.format2dec(totalPrice)}',
-                            style: Typo.bodyDark,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+    return BlocProvider(
+      create: (context) => WbListDetailsCubit(),
+      child: WbListDetailsViewBuild(
+        waybill: waybill,
+        user: user,
       ),
     );
   }
 }
+
+class WbListDetailsDrawerBuild extends StatelessWidget {
+  const WbListDetailsDrawerBuild({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+  
+
+}*/

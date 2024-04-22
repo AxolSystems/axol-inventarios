@@ -10,7 +10,7 @@ import '../../../utilities/widgets/table_view/table_view.dart';
 import '../cubit/wb_add/wb_add_state.dart';
 import '../cubit/wb_list/wb_list_cubit.dart';
 import '../model/wb_list_form_model.dart';
-import 'wb_list_details_bottomsheet.dart';
+import 'wb_list_details_view.dart';
 import 'wb_list_details_drawer.dart';
 
 class WbListTab extends StatelessWidget {
@@ -55,7 +55,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                   ));
         }
         if (state is OpenDetailsWbListState) {
-          if (widthScreen < 600) {
+          if (true) {
             showModalBottomSheet(
               backgroundColor: ColorPalette.lightBackground,
               isScrollControlled: true,
@@ -63,7 +63,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(12))),
               context: context,
-              builder: (context) => WbListDetailsBottomsheet(
+              builder: (context) => WbListDetailsView(
                 waybill: state.waybillList,
                 user: state.user,
               ),
@@ -74,10 +74,16 @@ class WbWarehouseTabBuild extends StatelessWidget {
             });
           } else {
             showDialog(
-                context: context,
-                builder: (context) => WbListDetailsDrawer(
-                      waybill: state.waybillList,
-                    ));
+              context: context,
+              builder: (context) => WbListDetailsView(
+                waybill: state.waybillList,
+                user: state.user,
+              ),
+            ).then((value) {
+              if (value == SavedWbAdd.edit) {
+                context.read<WbListCubit>().initLoad(form);
+              }
+            });
           }
         }
       },
@@ -107,7 +113,8 @@ class WbWarehouseTabBuild extends StatelessWidget {
                   context.read<WbListCubit>().openDetails(waybill);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(color: ColorPalette.darkItems),
@@ -147,25 +154,6 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       const SizedBox(width: 8),
                       const Icon(Icons.navigate_next,
                           color: ColorPalette.lightItems10),
-                      /*IconButton(
-                        icon: const Icon(
-                          Icons.download,
-                          color: ColorPalette.lightItems10,
-                        ),
-                        onPressed: () {
-                          context.read<WbListCubit>().saveCsv(waybill.id);
-                        },
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_outward,
-                          color: ColorPalette.lightItems10,
-                        ),
-                        onPressed: () {
-                          context.read<WbListCubit>().openDetails(waybill);
-                        },
-                      ),*/
                     ],
                   ),
                 ));
