@@ -14,7 +14,7 @@ class DataTableAxol {
   final String text;
   final int flex;
 
-  DataTableAxol({required this.text, required, required this.flex});
+  DataTableAxol({required this.text, required this.flex});
 
   DataTableAxol.text(this.text) : flex = 1;
 }
@@ -30,10 +30,13 @@ class HeaderTable extends TableView {
     for (var data in dataList) {
       content = Expanded(
         flex: data.flex,
-        child: Center(
-          child: Text(
-            data.text,
-            style: Typo.subtitleLight,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: Center(
+            child: Text(
+              data.text,
+              style: Typo.subtitleLight,
+            ),
           ),
         ),
       );
@@ -58,12 +61,8 @@ class ListViewTable extends TableView {
   final List<List<DataTableAxol>> rowList;
   final List? dataList;
 
-  const ListViewTable({
-    super.key,
-    this.isLoading,
-    required this.rowList,
-    this.dataList
-  });
+  const ListViewTable(
+      {super.key, this.isLoading, required this.rowList, this.dataList});
 
   @override
   Widget build(BuildContext context) {

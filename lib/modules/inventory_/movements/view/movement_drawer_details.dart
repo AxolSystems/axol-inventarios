@@ -30,7 +30,9 @@ class MovementDrawerDetailsBuild extends StatelessWidget {
   }
 
   Widget movementDrawerDetails(BuildContext context, MovementModel movement) {
+    final widthScreen = MediaQuery.of(context).size.width;
     return DrawerBox(
+        width: widthScreen >= 600 ? 0.5 : 0.95,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         header: const Text(
           'Detalles de movimiento al inventario',

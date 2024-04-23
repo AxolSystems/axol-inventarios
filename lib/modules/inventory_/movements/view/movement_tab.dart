@@ -53,24 +53,59 @@ class MovementTabBuild extends StatelessWidget {
 
   Widget movementTab(BuildContext context, TableViewFormModel form,
       bool isLoading, List<MovementModel> movementList) {
+    final widthScreen = MediaQuery.of(context).size.width;
     TextEditingController textController = TextEditingController.fromValue(
         TextEditingValue(
             text: form.finder.text,
             selection: TextSelection.collapsed(offset: form.finder.position)));
     List<List<DataTableAxol>> rowList = [];
     List<DataTableAxol> row = [];
-    for (var movement in movementList) {
-      row = [];
-      row.add(DataTableAxol.text(movement.folio.toString()));
-      row.add(DataTableAxol.text(movement.warehouseName));
-      row.add(DataTableAxol.text(movement.document));
-      row.add(DataTableAxol.text(movement.code));
-      row.add(DataTableAxol.text(movement.description));
-      row.add(DataTableAxol.text(movement.concept.toString()));
-      row.add(DataTableAxol.text(FormatDate.dmy(movement.time)));
-      row.add(DataTableAxol.text(movement.quantity.toString()));
-      row.add(DataTableAxol.text(movement.stock.toString()));
-      rowList.add(row);
+    List<DataTableAxol> headList = [];
+
+    if (widthScreen >= 600) {
+      for (var movement in movementList) {
+        row = [];
+        row.add(DataTableAxol.text(movement.folio.toString()));
+        row.add(DataTableAxol.text(movement.warehouseName));
+        row.add(DataTableAxol.text(movement.document));
+        row.add(DataTableAxol.text(movement.code));
+        row.add(DataTableAxol.text(movement.description));
+        row.add(DataTableAxol.text(movement.concept.toString()));
+        row.add(DataTableAxol.text(FormatDate.dmy(movement.time)));
+        row.add(DataTableAxol.text(movement.quantity.toString()));
+        row.add(DataTableAxol.text(movement.stock.toString()));
+        rowList.add(row);
+        headList = [
+            DataTableAxol.text(MovementModel.lblFolio),
+            DataTableAxol.text(MovementModel.lblWarehouse),
+            DataTableAxol.text(MovementModel.lblDocument),
+            DataTableAxol.text(MovementModel.lblCode),
+            DataTableAxol.text(MovementModel.lblDescription),
+            DataTableAxol.text(MovementModel.lblConcept),
+            DataTableAxol.text(MovementModel.lblTime),
+            DataTableAxol.text(MovementModel.lblQuantity),
+            DataTableAxol.text(MovementModel.lblStock),
+          ];
+      }
+    } else {
+      for (var movement in movementList) {
+        row = [];
+        row.add(DataTableAxol.text(movement.warehouseId.toString()));
+        row.add(DataTableAxol.text(movement.document));
+        row.add(DataTableAxol.text(movement.code));
+        row.add(DataTableAxol(flex: 2, text: FormatDate.dmy(movement.time)));
+        row.add(DataTableAxol.text(movement.quantity.toString()));
+        row.add(DataTableAxol.text(movement.stock.toString()));
+        rowList.add(row);
+      headList = [
+            DataTableAxol.text(MovementModel.lblWarehouse),
+            DataTableAxol.text(MovementModel.lblDocument),
+            DataTableAxol.text(MovementModel.lblCode),
+            DataTableAxol(flex: 2, text: MovementModel.lblTime),
+            DataTableAxol.text(MovementModel.lblQuantity),
+            DataTableAxol.text(MovementModel.lblStock),
+          ];
+      }
     }
 
     return Column(
@@ -135,7 +170,8 @@ class MovementTabBuild extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => MovementDrawerPdf(movementList: movementList),
+                  builder: (context) =>
+                      MovementDrawerPdf(movementList: movementList),
                 );
               },
               icon: const Icon(
@@ -158,17 +194,7 @@ class MovementTabBuild extends StatelessWidget {
           ],
         ),
         HeaderTable(
-          dataList: [
-            DataTableAxol.text(MovementModel.lblFolio),
-            DataTableAxol.text(MovementModel.lblWarehouse),
-            DataTableAxol.text(MovementModel.lblDocument),
-            DataTableAxol.text(MovementModel.lblCode),
-            DataTableAxol.text(MovementModel.lblDescription),
-            DataTableAxol.text(MovementModel.lblConcept),
-            DataTableAxol.text(MovementModel.lblTime),
-            DataTableAxol.text(MovementModel.lblQuantity),
-            DataTableAxol.text(MovementModel.lblStock),
-          ],
+          dataList: headList,
         ),
         ListViewTable(
           isLoading: isLoading,

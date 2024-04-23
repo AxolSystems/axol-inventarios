@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
 import '../../../user/model/user_mdoel.dart';
@@ -64,12 +65,13 @@ class InventoryViewBuild extends StatelessWidget {
     UserModel? user,
   }) {
     const String title = 'Inventario';
+    final widthScreen = MediaQuery.of(context).size.width;
     Widget navigationRail;
     UserModel user_ = user ?? UserModel.empty();
 
     if (user_.rol == UserModel.rolAdmin) {
-      navigationRail =
-          const NavigationRailAxolMain.admin(view: NavigationRailAxolView.inventory);
+      navigationRail = const NavigationRailAxolMain.admin(
+          view: NavigationRailAxolView.inventory);
     } else {
       navigationRail = const SizedBox();
     }
@@ -82,7 +84,27 @@ class InventoryViewBuild extends StatelessWidget {
             length: 3,
             child: Scaffold(
               backgroundColor: ColorPalette.darkBackground,
-              appBar: AppBarAxol.appBar(title: title),
+              appBar: AppBarAxol.appBar(
+                title: title,
+                leading: widthScreen < 600
+                    ? LeadingMenu(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Row(
+                              children: [
+                                Material(
+                                  child:
+                                      NavRailAxol(navRailMain: navigationRail),
+                                ),
+                                const Expanded(child: SizedBox()),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : null,
+              ),
               body: SizedBox(
                 height: double.infinity,
                 width: double.infinity,
@@ -91,15 +113,19 @@ class InventoryViewBuild extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    NavRailAxol(navRailMain: navigationRail),
+                    Visibility(
+                      visible: widthScreen >= 600,
+                      child: NavRailAxol(navRailMain: navigationRail),
+                    ),
                     const VerticalDivider(
                         thickness: 1, width: 1, color: ColorPalette.darkItems),
-                    const Expanded(
+                     Expanded(
                         child: Column(
                       children: [
                         TabBar(
+                          isScrollable: widthScreen < 600 ? true : false,
                           indicatorColor: ColorPalette.primary,
-                          tabs: [
+                          tabs: const [
                             Tab(
                               text: 'Multialmacen',
                             ),
@@ -111,7 +137,7 @@ class InventoryViewBuild extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Expanded(
+                        const Expanded(
                             child: TabBarView(children: [
                           WarehouseTab(),
                           MovementTab(),

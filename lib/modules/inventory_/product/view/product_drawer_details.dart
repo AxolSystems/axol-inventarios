@@ -49,17 +49,15 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
   }
 
   Widget productDetailsCubit(BuildContext context, bool isLoading) {
+    final widthScreen = MediaQuery.of(context).size.width;
     return DrawerBox(
+      width: widthScreen > 760 ? 0.5 : widthScreen > 450 ? 0.8 : 0.95,
       padding: const EdgeInsets.symmetric(horizontal: 8),
         header: const Text(
           'Detalles del producto',
           style: Typo.subtitleDark,
         ),
         actions: [
-          /*Visibility(
-            visible: actions,
-            child: const AlertButtonDialog(),
-          ),*/
           Visibility(
             visible: actions,
             child: SecondaryButtonDialog(

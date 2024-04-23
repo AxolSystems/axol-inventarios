@@ -72,7 +72,9 @@ class InvDownloadDrawerBuild extends StatelessWidget {
       InvDownloadFormModel form,
       List<InventoryRowModel> inventoryRowList,
       WarehouseModel warehouse) {
+        final widthScreen = MediaQuery.of(context).size.width;
     return DrawerBox(
+      width: widthScreen >= 600 ? 0.5 : 0.95,
       header: const Text(
         'Descarga de almacén',
         style: Typo.titleDark,

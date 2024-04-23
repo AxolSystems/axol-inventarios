@@ -64,7 +64,9 @@ class MovementDrawerPdfBuild extends StatelessWidget {
     List<MovementModel> movementList,
     MovementPdfFormModel form,
   ) {
+    final widthScreen = MediaQuery.of(context).size.width;
     return DrawerBox(
+      width: widthScreen >= 600 ? 0.5 : 0.95,
       header: Column(
         children: [
           const Text(
@@ -113,9 +115,9 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                         height: 8,
                       ),
                       SizedBox(
-                        width: 120,
+                        width: widthScreen >= 600 ? 120 : 56,
                         child: SecondaryButtonDialog(
-                          text: 'Descargar',
+                          text: widthScreen >= 600 ? 'Descargar' : '',
                           textStyle: Typo.labelDark,
                           border: const BorderSide(
                               color: ColorPalette.lightItems10),
@@ -165,9 +167,9 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                       height: 8,
                     ),
                     SizedBox(
-                      width: 120,
+                      width: widthScreen >= 600 ? 120 : 56,
                       child: SecondaryButtonDialog(
-                        text: 'Descargar',
+                        text: widthScreen >= 600 ? 'Descargar' : '',
                         textStyle: Typo.labelDark,
                         border:
                             const BorderSide(color: ColorPalette.lightItems10),
@@ -265,9 +267,9 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                       height: 8,
                     ),
                     SizedBox(
-                      width: 120,
+                      width: widthScreen >= 600 ? 120 : 56,
                       child: SecondaryButtonDialog(
-                        text: 'Descargar',
+                        text: widthScreen >= 600 ? 'Descargar' : '',
                         textStyle: Typo.labelDark,
                         border:
                             const BorderSide(color: ColorPalette.lightItems10),

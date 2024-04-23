@@ -65,9 +65,15 @@ class MovementDrawerFilterBuild extends StatelessWidget {
   Widget movementDrawerFilter(
       BuildContext context, bool isLoading, MovementFilterFormModel form) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double elementWidth = ((screenWidth * 0.5) * (2 / 3)) - 16;
+    final double elementWidth;
     List<DropdownMenuEntry<int>> entryList = [const DropdownMenuEntry(value: -1, label: 'TODOS')];
     DropdownMenuEntry<int> entry;
+
+    if (screenWidth >= 600) {
+      elementWidth = ((screenWidth * 0.5) * (2 / 3)) - 16;
+    } else {
+      elementWidth = ((screenWidth * 0.95) * (2 / 3)) - 16;
+    }
 
     for (var warehouse in form.warehouseList) {
       entry = DropdownMenuEntry(value: warehouse.id, label: warehouse.name);
@@ -75,6 +81,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
     }
 
     return DrawerBox(
+      width: screenWidth >= 600 ? 0.5 : 0.95,
       header: const Text(
         'Filtros',
         style: Typo.titleDark,

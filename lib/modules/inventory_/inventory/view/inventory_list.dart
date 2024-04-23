@@ -9,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
+import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../../../utilities/widgets/toolbar.dart';
@@ -68,6 +70,7 @@ class InventoryListBuild extends StatelessWidget {
         TextEditingValue(
             text: form.finder.text,
             selection: TextSelection.collapsed(offset: form.finder.position)));
+    final widthScreen = MediaQuery.of(context).size.width;
     final String title;
     if (warehouse.id == -2) {
       title = 'Inventario: ${warehouse.name}';
@@ -80,11 +83,15 @@ class InventoryListBuild extends StatelessWidget {
       appBar: AppBarAxol.appBar(
         title: title,
         isLoading: isLoading,
+        leading: widthScreen < 600 ? const LeadingReturn() : null,
       ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          NavigationUtilities.emptyNavRailReturn(),
+          Visibility(
+            visible: widthScreen >= 600,
+            child: NavigationUtilities.emptyNavRailReturn(),
+          ),
           Expanded(
               child: Container(
             decoration: const BoxDecoration(
@@ -149,24 +156,27 @@ class InventoryListBuild extends StatelessWidget {
                             size: 30,
                           ),
                         ),
-                        IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => InventoryMoveAdd(
-                                warehouse: warehouse,
-                              ),
-                            ).then((value) {
-                              context
-                                  .read<InventoryListCubit>()
-                                  .load(warehouse, form, true);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.add_outlined,
-                            color: ColorPalette.darkItems,
-                            size: 30,
+                        Visibility(
+                          visible: widthScreen >= 600,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => InventoryMoveAdd(
+                                  warehouse: warehouse,
+                                ),
+                              ).then((value) {
+                                context
+                                    .read<InventoryListCubit>()
+                                    .load(warehouse, form, true);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.add_outlined,
+                              color: ColorPalette.darkItems,
+                              size: 30,
+                            ),
                           ),
                         ),
                       ],
