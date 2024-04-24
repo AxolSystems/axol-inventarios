@@ -95,7 +95,7 @@ class InventoryCsv {
 
     //Actualiza inventario
     if (report.reportRows.isNotEmpty && inventory.isNotEmpty) {
-      //Factoriza la lista sumando las cantidades con las mismcas claves.
+      //Factoriza la lista sumando las cantidades con las mismas claves.
       for (var element in report.reportRows) {
         final inv = reportRows.firstWhere(
             (x) => x.product.code == element.product.code,
@@ -107,7 +107,7 @@ class InventoryCsv {
           reportRows[i] = SaleReportRowModel(
             customerName: reportRows[i].customerName,
             product: reportRows[i].product,
-            quantity: report.reportRows[i].quantity + element.quantity,
+            quantity: reportRows[i].quantity + element.quantity,
             unitPrice: reportRows[i].unitPrice,
           );
         }
