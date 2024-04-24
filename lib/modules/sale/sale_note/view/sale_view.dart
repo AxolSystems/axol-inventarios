@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,6 +59,7 @@ class SaleViewBuild extends StatelessWidget {
     required bool isLoading,
     UserModel? user,
   }) {
+    final widthScreen = MediaQuery.of(context).size.width;
     Widget navigationRail;
     UserModel user_ = user ?? UserModel.empty();
 
@@ -73,12 +75,29 @@ class SaleViewBuild extends StatelessWidget {
         BlocProvider(create: (_) => SaleNoteTabForm()),
       ],
       child: DefaultTabController(
-          length: 4,
+          length: widthScreen >= 600 ? 4 : 2,
           child: Scaffold(
             backgroundColor: ColorPalette.darkBackground,
             appBar: AppBarAxol.appBar(
               title: 'Ventas',
               isLoading: isLoading,
+              leading: widthScreen < 600
+                  ? LeadingMenu(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Row(
+                            children: [
+                              Material(
+                                child: NavRailAxol(navRailMain: navigationRail),
+                              ),
+                              const Expanded(child: SizedBox()),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : null,
             ),
             body: SizedBox(
               height: double.infinity,
@@ -88,41 +107,63 @@ class SaleViewBuild extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  NavRailAxol(navRailMain: navigationRail),
+                  Visibility(
+                    visible: widthScreen >= 600,
+                    child: NavRailAxol(navRailMain: navigationRail),
+                  ),
                   const VerticalDivider(
                       thickness: 1, width: 1, color: ColorPalette.darkItems),
-                  const Expanded(
+                  Expanded(
                       child: Column(
                     children: [
                       TabBar(
                         indicatorColor: ColorPalette.primary,
-                        tabs: [
-                          Tab(
-                            text: 'Notas de venta',
-                          ),
-                          Tab(
-                            text: 'Remisiones',
-                          ),
-                          Tab(
-                            text: 'Clientes',
-                          ),
-                          Tab(
-                            text: 'Vendedores',
-                          ),
-                        ],
+                        tabs: widthScreen >= 600
+                            ? [
+                                const Tab(
+                                  text: 'Notas de venta',
+                                ),
+                                const Tab(
+                                  text: 'Remisiones',
+                                ),
+                                const Tab(
+                                  text: 'Clientes',
+                                ),
+                                const Tab(
+                                  text: 'Vendedores',
+                                ),
+                              ]
+                            : [
+                                const Tab(
+                                  text: 'Notas de venta',
+                                ),
+                                const Tab(
+                                  text: 'Remisiones',
+                                ),
+                              ],
                       ),
                       Expanded(
-                          child: TabBarView(children: [
-                        SaleNoteTab(
-                          saleType: 0,
-                        ),
-                        SaleNoteTab(
-                          saleType: 1,
-                        ),
-                        CustomerTab(),
-                        ProviderVendorTab(),
-                        //Text('Vendedores', style: Typo.bodyLight),
-                      ])),
+                          child: TabBarView(
+                              children: widthScreen >= 600
+                                  ? [
+                                      const SaleNoteTab(
+                                        saleType: 0,
+                                      ),
+                                      const SaleNoteTab(
+                                        saleType: 1,
+                                      ),
+                                      const CustomerTab(),
+                                      const ProviderVendorTab(),
+                                      //Text('Vendedores', style: Typo.bodyLight),
+                                    ]
+                                  : [
+                                      const SaleNoteTab(
+                                        saleType: 0,
+                                      ),
+                                      const SaleNoteTab(
+                                        saleType: 1,
+                                      ),
+                                    ])),
                     ],
                   )),
                 ],

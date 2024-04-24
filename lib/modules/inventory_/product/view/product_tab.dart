@@ -60,6 +60,7 @@ class ProductTabBuild extends StatelessWidget {
 
   Widget productTab(BuildContext context, List<ProductModel> productList,
       bool isLoading, TableViewFormModel form) {
+    final widthScreen = MediaQuery.of(context).size.width;
     TextEditingController textController = TextEditingController.fromValue(
         TextEditingValue(
             text: form.finder.text,
@@ -93,32 +94,38 @@ class ProductTabBuild extends StatelessWidget {
                 }
               },
             )),
-            const VerticalDivider(
-              thickness: 1,
-              width: 1,
-              color: ColorPalette.lightItems10,
-              indent: 4,
-              endIndent: 4,
+            Visibility(
+              visible: widthScreen >= 600,
+              child: const VerticalDivider(
+                thickness: 1,
+                width: 1,
+                color: ColorPalette.lightItems10,
+                indent: 4,
+                endIndent: 4,
+              ),
             ),
-            IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {},
-              icon: const Icon(
-                Icons.add_outlined,
-                color: ColorPalette.darkItems,
-                size: 30,
+            Visibility(
+              visible: widthScreen >= 600,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.add_outlined,
+                  color: ColorPalette.darkItems,
+                  size: 30,
+                ),
               ),
             ),
           ],
         ),
         Container(
           decoration: BoxDecorationTheme.headerTable(),
-          child: const Padding(
-            padding: EdgeInsets.all(8),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Center(
                       child: Text(
@@ -126,23 +133,23 @@ class ProductTabBuild extends StatelessWidget {
                     style: Typo.subtitleLight,
                   )),
                 ),
-                Expanded(
-                  flex: 1,
+                const Expanded(
+                  flex: 2,
                   child: Center(
                       child: Text(
                     'Descripción',
                     style: Typo.subtitleLight,
                   )),
                 ),
-                Expanded(
-                  flex: 1,
+                const Expanded(
+                  flex: 2,
                   child: Center(
                       child: Text(
                     'Tipo',
                     style: Typo.subtitleLight,
                   )),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Center(
                       child: Text(
@@ -150,13 +157,16 @@ class ProductTabBuild extends StatelessWidget {
                     style: Typo.subtitleLight,
                   )),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                      child: Text(
-                    'Empaque',
-                    style: Typo.subtitleLight,
-                  )),
+                Visibility(
+                  visible: widthScreen >= 600,
+                  child: const Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text(
+                      'Empaque',
+                      style: Typo.subtitleLight,
+                    )),
+                  ),
                 ),
               ],
             ),
@@ -176,7 +186,7 @@ class ProductTabBuild extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final productRow = productList[index];
                     return Container(
-                      height: 30,
+                      height: widthScreen >= 600 ? 30 : 40,
                       width: double.infinity,
                       decoration: const BoxDecoration(
                         border: Border(
@@ -194,8 +204,8 @@ class ProductTabBuild extends StatelessWidget {
                                         product: productRow,
                                         actions: true,
                                       )).then((value) {
-                                        context.read<ProductTabCubit>().load(form);
-                                      });
+                                context.read<ProductTabCubit>().load(form);
+                              });
                             },
                             child: Row(
                               children: [
@@ -211,7 +221,7 @@ class ProductTabBuild extends StatelessWidget {
                                 ),
                                 Expanded(
                                   // 2) Descripción
-                                  flex: 1,
+                                  flex: 2,
                                   child: Center(
                                     child: Text(
                                       productRow.description,
@@ -221,7 +231,7 @@ class ProductTabBuild extends StatelessWidget {
                                 ),
                                 Expanded(
                                   // 3) Tipo
-                                  flex: 1,
+                                  flex: 2,
                                   child: Center(
                                     child: Text(
                                       productRow.type.toString(),
@@ -239,13 +249,16 @@ class ProductTabBuild extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  // 5) Empaque
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      productRow.packing.toString(),
-                                      style: Typo.labelText1,
+                                Visibility(
+                                  visible: widthScreen >= 600,
+                                  child: Expanded(
+                                    // 5) Empaque
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        productRow.packing.toString(),
+                                        style: Typo.labelText1,
+                                      ),
                                     ),
                                   ),
                                 ),

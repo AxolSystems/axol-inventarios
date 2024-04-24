@@ -64,6 +64,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
 
   Widget saleNoteDrawerDetails(BuildContext context, bool isLoading,
       {List<SaleProductModel>? upProductList}) {
+    final widthScreen = MediaQuery.of(context).size.width;
     String title = '';
     List<SaleProductModel> upProductList_ = upProductList ?? [];
     List<Widget> productList = [];
@@ -85,6 +86,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
     }
 
     return DrawerBox(
+      width: widthScreen >= 600 ? 0.5 : 0.95,
       header: Text(
         title,
         style: Typo.subtitleDark,
@@ -135,15 +137,15 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
         DrawerBox.rowKeyValue('Cliente : ',
             '${saleNote.customer.id} - ${saleNote.customer.name}'),
         DrawerBox.rowKeyValue(CustomerModel.lblPhoneNumber,
-            '${saleNote.customer.phoneNumber ?? ''}'),
+            saleNote.customer.phoneNumber ?? ''),
         DrawerBox.rowKeyValue(
             CustomerModel.lblRfc, saleNote.customer.rfc ?? ''),
         DrawerBox.rowKeyValue(
             CustomerModel.lblPostalCode, saleNote.customer.postalCode ?? ''),
         DrawerBox.rowKeyValue(CustomerModel.lblIntNumber,
-            '${saleNote.customer.phoneNumber ?? ''}'),
+            saleNote.customer.phoneNumber ?? ''),
         DrawerBox.rowKeyValue(
-            CustomerModel.lblOutNumber, '${saleNote.customer.outNumber ?? ''}'),
+            CustomerModel.lblOutNumber, saleNote.customer.outNumber ?? ''),
         DrawerBox.rowKeyValue(
             CustomerModel.lblStreet, saleNote.customer.street ?? ''),
         DrawerBox.rowKeyValue(

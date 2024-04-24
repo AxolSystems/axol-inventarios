@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/textfield_model.dart';
+import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
@@ -55,6 +56,7 @@ class SaleNoteTabBuild extends StatelessWidget {
 
   Widget saleNoteTab(BuildContext context, List<SaleNoteModel> listData,
       bool isLoading, TableViewFormModel form) {
+    final widthScreen = MediaQuery.of(context).size.width;
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
         text: form.finder.text,
@@ -87,111 +89,141 @@ class SaleNoteTabBuild extends StatelessWidget {
                       context
                           .read<SaleNoteTabForm>()
                           .setForm(TableViewFormModel.empty());
-                      context.read<SaleNoteTabCubit>().load(saleType, form, true);
+                      context
+                          .read<SaleNoteTabCubit>()
+                          .load(saleType, form, true);
                     }
                   },
                 )),
-                const VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: ColorPalette.lightItems10,
-                  indent: 4,
-                  endIndent: 4,
-                ),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => SaleNoteAdd(
-                        saleType: saleType,
+                Visibility(
+                  visible: widthScreen >= 600,
+                  child: Row(
+                    children: [
+                      const VerticalDivider(
+                        thickness: 1,
+                        width: 1,
+                        color: ColorPalette.lightItems10,
+                        indent: 4,
+                        endIndent: 4,
                       ),
-                    ).then((value) {
-                      form.finder = TextfieldModel.empty();
-                      context.read<SaleNoteTabCubit>().load(saleType, form, true);
-                      context
-                          .read<SaleNoteTabForm>()
-                          .setForm(TableViewFormModel.empty());
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.add_outlined,
-                    color: ColorPalette.darkItems,
-                    size: 30,
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => SaleNoteAdd(
+                              saleType: saleType,
+                            ),
+                          ).then((value) {
+                            form.finder = TextfieldModel.empty();
+                            context
+                                .read<SaleNoteTabCubit>()
+                                .load(saleType, form, true);
+                            context
+                                .read<SaleNoteTabForm>()
+                                .setForm(TableViewFormModel.empty());
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.add_outlined,
+                          color: ColorPalette.darkItems,
+                          size: 30,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ]),
               Container(
                 decoration: BoxDecorationTheme.headerTable(),
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(
+                      const Expanded(
                         flex: 1,
-                        child: Center(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2),
                             child: Text(
-                          'Clave',
-                          style: Typo.subtitleLight,
-                        )),
+                              'Clave',
+                              style: Typo.subtitleLight,
+                            )),
+                      ),
+                      Visibility(
+                        visible: widthScreen >= 600,
+                        child: const Expanded(
+                          flex: 1,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4),
+                              child: Text(
+                                'Cliente',
+                                style: Typo.subtitleLight,
+                              )),
+                        ),
+                      ),
+                      const Expanded(
+                        flex: 3,
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(
+                              'Nombre de cliente',
+                              style: Typo.subtitleLight,
+                            )),
                       ),
                       Expanded(
-                        flex: 1,
-                        child: Center(
+                        flex: 2,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
                             child: Text(
-                          'Cliente',
-                          style: Typo.subtitleLight,
-                        )),
+                              widthScreen >= 600
+                                  ? 'Fecha de elaboración'
+                                  : 'Fecha',
+                              style: Typo.subtitleLight,
+                            )),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
+                      const Expanded(
+                        flex: 2,
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
                             child: Text(
-                          'Nombre de cliente',
-                          style: Typo.subtitleLight,
-                        )),
+                              'Importe total',
+                              style: Typo.subtitleLight,
+                            )),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 1,
-                        child: Center(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2),
                             child: Text(
-                          'Fecha de elaboración',
-                          style: Typo.subtitleLight,
-                        )),
+                              'Almacén',
+                              style: Typo.subtitleLight,
+                            )),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(
-                          'Importe total',
-                          style: Typo.subtitleLight,
-                        )),
+                      Visibility(
+                        visible: widthScreen >= 600,
+                        child: const Expanded(
+                          flex: 2,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4),
+                              child: Text(
+                                'Vendedor',
+                                style: Typo.subtitleLight,
+                              )),
+                        ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(
-                          'Almacén',
-                          style: Typo.subtitleLight,
-                        )),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(
-                          'Vendedor',
-                          style: Typo.subtitleLight,
-                        )),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(
-                          'Estado',
-                          style: Typo.subtitleLight,
-                        )),
-                      ),
+                      Visibility(
+                        visible: widthScreen >= 600,
+                        child: const Expanded(
+                          flex: 1,
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4),
+                              child: Text(
+                                'Estado',
+                                style: Typo.subtitleLight,
+                              )),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -247,49 +279,63 @@ class SaleNoteTabBuild extends StatelessWidget {
                                   Expanded(
                                     //1) Clave
                                     flex: 1,
-                                    child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 2),
                                       child: Text(
                                         saleNoteRow.id.toString(),
                                         style: Typo.labelText1,
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    // 2) Cliente
-                                    flex: 1,
-                                    child: Center(
-                                      child: Text(
-                                        saleNoteRow.customer.id.toString(),
-                                        style: Typo.labelText1,
+                                  Visibility(
+                                    visible: widthScreen >= 600,
+                                    child: Expanded(
+                                      // 2) Cliente
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        child: Text(
+                                          saleNoteRow.customer.id.toString(),
+                                          style: Typo.labelText1,
+                                        ),
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     // 3) Nombre de cliente
-                                    flex: 1,
-                                    child: Center(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
                                       child: Text(
                                         saleNoteRow.customer.name,
                                         style: Typo.labelText1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     // 4) Fecha de elaboración
-                                    flex: 1,
-                                    child: Center(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
                                       child: Text(
-                                        '${saleNoteRow.date.day}/${saleNoteRow.date.month}/${saleNoteRow.date.year}',
+                                        FormatDate.dmy(saleNoteRow.date),
                                         style: Typo.labelText1,
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     // 5) Importe total
-                                    flex: 1,
-                                    child: Center(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
                                       child: Text(
-                                        '\$${saleNoteRow.total}',
+                                        '\$ ${FormatNumber.format2dec(saleNoteRow.total)}',
                                         style: Typo.labelText1,
                                       ),
                                     ),
@@ -297,30 +343,44 @@ class SaleNoteTabBuild extends StatelessWidget {
                                   Expanded(
                                     // 6) Almacen
                                     flex: 1,
-                                    child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 2),
                                       child: Text(
                                         saleNoteRow.warehouse.id.toString(),
                                         style: Typo.labelText1,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    // 7) Vendedor
-                                    flex: 1,
-                                    child: Center(
-                                      child: Text(
-                                        saleNoteRow.vendor.name,
-                                        style: Typo.labelText1,
+                                  Visibility(
+                                    visible: widthScreen >= 600,
+                                    child: Expanded(
+                                      // 7) Vendedor
+                                      flex: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        child: Text(
+                                          saleNoteRow.vendor.name,
+                                          style: Typo.labelText1,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    // 8) Estado
-                                    flex: 1,
-                                    child: Center(
-                                      child: Text(
-                                        status,
-                                        style: Typo.labelText1,
+                                  Visibility(
+                                    visible: widthScreen >= 600,
+                                    child: Expanded(
+                                      // 8) Estado
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        child: Text(
+                                          status,
+                                          style: Typo.labelText1,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -338,13 +398,17 @@ class SaleNoteTabBuild extends StatelessWidget {
                 onPressedLeft: () {
                   if (form.currentPage > 1) {
                     form.currentPage = form.currentPage - 1;
-                    context.read<SaleNoteTabCubit>().load(saleType, form, false);
+                    context
+                        .read<SaleNoteTabCubit>()
+                        .load(saleType, form, false);
                   }
                 },
                 onPressedRight: () {
                   if (form.currentPage < form.limitPage) {
                     form.currentPage = form.currentPage + 1;
-                    context.read<SaleNoteTabCubit>().load(saleType, form, false);
+                    context
+                        .read<SaleNoteTabCubit>()
+                        .load(saleType, form, false);
                   }
                 },
               ),
