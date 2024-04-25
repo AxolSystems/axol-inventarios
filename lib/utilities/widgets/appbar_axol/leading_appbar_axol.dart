@@ -7,7 +7,8 @@ abstract class LeadingAppBarAxol extends StatelessWidget {
 }
 
 class LeadingReturn extends LeadingAppBarAxol {
-  const LeadingReturn({super.key});
+  final Color? color;
+  const LeadingReturn({super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,9 @@ class LeadingReturn extends LeadingAppBarAxol {
       onPressed: () {
         Navigator.pop(context);
       },
-      icon: const Icon(
+      icon: Icon(
         Icons.arrow_back_ios,
-        color: ColorPalette.lightText,
+        color: color ?? ColorPalette.lightText,
         size: 30,
       ),
     );

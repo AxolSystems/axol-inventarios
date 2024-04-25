@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/waybill/view/wb_add_bottomsheet_find.dart';
 import 'package:axol_inventarios/utilities/format.dart';
+import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/button.dart';
+import '../../../utilities/widgets/drawer_box.dart';
 import '../cubit/wb_add/wb_add_bottomsheet_cubit.dart';
 import '../model/wb_bottomsheet_form_model.dart';
 
@@ -78,7 +81,7 @@ class WbAddBottomSheetBuild extends StatelessWidget {
     List<InventoryRowModel> inventoryList,
     WbBottomSheetAddFormModel form,
   ) {
-    final double heightScreen = MediaQuery.of(context).size.height;
+    final double widthScreen = MediaQuery.of(context).size.width;
     List<DropdownMenuItem<String>> itemList = [];
     DropdownMenuItem<String> item;
     for (var element in inventoryList) {
@@ -92,169 +95,169 @@ class WbAddBottomSheetBuild extends StatelessWidget {
       );
       itemList.add(item);
     }
-    return SizedBox(
-      height: heightScreen * 0.8,
-      child: Column(
-        children: [
-          Padding(
+    return DrawerBox(
+      width: widthScreen >= 600 ? 0.5 : 0.95,
+      header: widthScreen < 600
+          ? const Row(
+              children: [
+                LeadingReturn(
+                  color: ColorPalette.darkItems,
+                )
+              ],
+            )
+          : null,
+      actions: widthScreen < 600
+          ? [
+              SizedBox(
+                height: 50,
+                width: ((widthScreen * 0.95) - 8),
+                child: PrimaryButtonDialog(
+                  text: 'Guardar',
+                  onPressed: () {
+                    context.read<WbAddBottomSheetCubit>().save(form);
+                  },
+                ),
+              ),
+            ]
+          : [
+              SizedBox(
+                child: PrimaryButtonDialog(
+                  text: 'Guardar',
+                  onPressed: () {
+                    context.read<WbAddBottomSheetCubit>().save(form);
+                  },
+                ),
+              ),
+              SecondaryButtonDialog(
+                text: 'Regresar',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+      children: [
+        //Column(
+        // children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Container(
             padding: const EdgeInsets.all(8),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  border: Border.all(color: ColorPalette.lightItems10),
-                  borderRadius: const BorderRadius.all(Radius.circular(8))),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Visibility(
-                        visible: form.product.code != '',
-                        replacement: const SizedBox(),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Clave',
-                                        style: Typo.smallLabelDark,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      Text(
-                                        form.product.code,
-                                        style: Typo.bodyDark,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ]),
-                                const SizedBox(width: 8),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Stock',
-                                        style: Typo.smallLabelDark,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      Text(
-                                        FormatNumber.format2dec(form.stock),
-                                        style: Typo.bodyDark,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ]),
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                            Row(
-                              children: [
-                                Column(
+            decoration: BoxDecoration(
+                border: Border.all(color: ColorPalette.lightItems10),
+                borderRadius: const BorderRadius.all(Radius.circular(8))),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Visibility(
+                      visible: form.product.code != '',
+                      replacement: const SizedBox(),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      'Descripción',
+                                      'Clave',
                                       style: Typo.smallLabelDark,
                                       textAlign: TextAlign.left,
                                     ),
                                     Text(
-                                      form.product.description,
+                                      form.product.code,
                                       style: Typo.bodyDark,
                                       textAlign: TextAlign.left,
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                        )),
-                  ),
-                  IconButton(
-                      padding: const EdgeInsets.all(0),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(12))),
-                          context: context,
-                          builder: (context) => WbAddBottomsheetFind(
-                              inventoryRowList: inventoryList),
-                        ).then((value) {
-                          if (value is InventoryRowModel) {
-                            form.product = value.product;
-                            form.stock = value.stock;
-                            context.read<WbAddBottomSheetCubit>().load(form);
-                          }
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.search,
-                        color: ColorPalette.lightItems10,
-                      ))
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextField(
-              style: Typo.bodyDark,
-              controller: form.qtyCtrl,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
+                                  ]),
+                              const SizedBox(width: 8),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Stock',
+                                      style: Typo.smallLabelDark,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Text(
+                                      FormatNumber.format2dec(form.stock),
+                                      style: Typo.bodyDark,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ]),
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+                          Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Descripción',
+                                    style: Typo.smallLabelDark,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  Text(
+                                    form.product.description,
+                                    style: Typo.bodyDark,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      )),
+                ),
+                IconButton(
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(12))),
+                        context: context,
+                        builder: (context) => WbAddBottomsheetFind(
+                            inventoryRowList: inventoryList),
+                      ).then((value) {
+                        if (value is InventoryRowModel) {
+                          form.product = value.product;
+                          form.stock = value.stock;
+                          context.read<WbAddBottomSheetCubit>().load(form);
+                        }
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.search,
+                      color: ColorPalette.lightItems10,
+                    ))
               ],
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: 'Cantidad',
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                errorText: form.errorMessage,
-              ),
             ),
           ),
-          const Expanded(child: SizedBox()),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: SizedBox(
-              height: 50,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: ColorPalette.primary,
-                  side: const BorderSide(
-                    color: ColorPalette.primary,
-                    width: 1,
-                  ),
-                ),
-                onPressed: () {
-                  context.read<WbAddBottomSheetCubit>().save(form);
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.save,
-                        color: ColorPalette.lightBackground,
-                        size: 30,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Guardar',
-                        style: Typo.mobileLigth20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: TextField(
+            style: Typo.bodyDark,
+            controller: form.qtyCtrl,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
+            ],
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: 'Cantidad',
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+              errorText: form.errorMessage,
             ),
           ),
-        ],
-      ),
+        ),
+        //const Expanded(child: SizedBox()),
+      ],
+      //],
+      //),
     );
   }
 }
