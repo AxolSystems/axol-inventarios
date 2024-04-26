@@ -2,39 +2,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/wb_bottomsheet_form_model.dart';
 
-enum WbAddBottomSheetState { intital, loading, load, error, save }
+enum WbAddDrawerState { intital, loading, load, error, save }
 
-class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
-  WbAddBottomSheetCubit() : super(WbAddBottomSheetState.intital);
+class WbAddDrawerCubit extends Cubit<WbAddDrawerState> {
+  WbAddDrawerCubit() : super(WbAddDrawerState.intital);
 
   Future<void> initLoad(
-      WbBottomSheetAddFormModel form, String initValue) async {
+      WbDrawerAddFormModel form, String initValue) async {
     try {
-      emit(WbAddBottomSheetState.intital);
-      emit(WbAddBottomSheetState.loading);
+      emit(WbAddDrawerState.intital);
+      emit(WbAddDrawerState.loading);
       //form.itemValue = initValue;
-      emit(WbAddBottomSheetState.load);
+      emit(WbAddDrawerState.load);
     } catch (e) {
       form.errorMessage = e.toString();
-      emit(WbAddBottomSheetState.error);
+      emit(WbAddDrawerState.error);
     }
   }
 
-  Future<void> load(WbBottomSheetAddFormModel form) async {
+  Future<void> load(WbDrawerAddFormModel form) async {
     try {
-      emit(WbAddBottomSheetState.intital);
-      emit(WbAddBottomSheetState.loading);
-      emit(WbAddBottomSheetState.load);
+      emit(WbAddDrawerState.intital);
+      emit(WbAddDrawerState.loading);
+      emit(WbAddDrawerState.load);
     } catch (e) {
       form.errorMessage = e.toString();
-      emit(WbAddBottomSheetState.error);
+      emit(WbAddDrawerState.error);
     }
   }
 
-  Future<void> save(WbBottomSheetAddFormModel form) async {
+  Future<void> save(WbDrawerAddFormModel form) async {
     try {
-      emit(WbAddBottomSheetState.intital);
-      emit(WbAddBottomSheetState.loading);
+      emit(WbAddDrawerState.intital);
+      emit(WbAddDrawerState.loading);
       final qty = double.tryParse(form.qtyCtrl.text);
 
       if (qty == null) {
@@ -51,17 +51,17 @@ class WbAddBottomSheetCubit extends Cubit<WbAddBottomSheetState> {
       }
       form.errorMessage = null;
 
-      emit(WbAddBottomSheetState.save);
-      emit(WbAddBottomSheetState.load);
+      emit(WbAddDrawerState.save);
+      emit(WbAddDrawerState.load);
     } catch (e) {
       form.errorMessage = e.toString();
-      emit(WbAddBottomSheetState.error);
+      emit(WbAddDrawerState.error);
     }
   }
 }
 
-class WbBottomSheetAddForm extends Cubit<WbBottomSheetAddFormModel> {
-  WbBottomSheetAddForm() : super(WbBottomSheetAddFormModel.empty());
-  WbBottomSheetAddForm.set(WbBottomSheetAddFormModel form)
-      : super(WbBottomSheetAddFormModel.set(form));
+class WbDrawerAddForm extends Cubit<WbDrawerAddFormModel> {
+  WbDrawerAddForm() : super(WbDrawerAddFormModel.empty());
+  WbDrawerAddForm.set(WbDrawerAddFormModel form)
+      : super(WbDrawerAddFormModel.set(form));
 }

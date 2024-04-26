@@ -10,7 +10,6 @@ import '../../../utilities/widgets/table_view/table_view.dart';
 import '../cubit/wb_add/wb_add_state.dart';
 import '../cubit/wb_list/wb_list_cubit.dart';
 import '../model/wb_list_form_model.dart';
-import 'wb_list_details_view.dart';
 import 'wb_list_details_drawer.dart';
 
 class WbListTab extends StatelessWidget {
@@ -55,27 +54,9 @@ class WbWarehouseTabBuild extends StatelessWidget {
                   ));
         }
         if (state is OpenDetailsWbListState) {
-          if (true) {
-            showModalBottomSheet(
-              backgroundColor: ColorPalette.lightBackground,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(12))),
-              context: context,
-              builder: (context) => WbListDetailsView(
-                waybill: state.waybillList,
-                user: state.user,
-              ),
-            ).then((value) {
-              if (value == SavedWbAdd.edit) {
-                context.read<WbListCubit>().initLoad(form);
-              }
-            });
-          } else {
             showDialog(
               context: context,
-              builder: (context) => WbListDetailsView(
+              builder: (context) => WbListDetailsDrwer(
                 waybill: state.waybillList,
                 user: state.user,
               ),
@@ -84,7 +65,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                 context.read<WbListCubit>().initLoad(form);
               }
             });
-          }
+          
         }
       },
     );

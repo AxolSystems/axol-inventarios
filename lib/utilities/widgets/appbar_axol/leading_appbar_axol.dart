@@ -8,12 +8,13 @@ abstract class LeadingAppBarAxol extends StatelessWidget {
 
 class LeadingReturn extends LeadingAppBarAxol {
   final Color? color;
-  const LeadingReturn({super.key, this.color});
+  final Function()? onPressed;
+  const LeadingReturn({super.key, this.color, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
+      onPressed: onPressed ?? () {
         Navigator.pop(context);
       },
       icon: Icon(

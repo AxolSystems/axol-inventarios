@@ -6,12 +6,14 @@ class PrimaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final bool? isLoading;
+  final TextStyle? textStyle;
 
   const PrimaryButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
     this.isLoading,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
     final String fText = widget.text ?? 'Guardar';
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
+    final TextStyle textStyle = widget.textStyle ?? Typo.bodyLight;
     return OutlinedButton(
       onPressed: isLoading_ ? () {} : fOnPressed,
       style: OutlinedButton.styleFrom(
@@ -32,7 +35,7 @@ class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
         backgroundColor: ColorPalette.primary,
         side: BorderSide.none,
       ),
-      child: Text(fText, style: Typo.bodyLight),
+      child: Text(fText, style: textStyle),
     );
   }
 }
@@ -101,12 +104,14 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
 class AlertButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
+  final TextStyle? textStyle;
   final bool? isLoading;
 
   const AlertButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
+    this.textStyle,
     this.isLoading,
   }) : super(key: key);
 
@@ -118,6 +123,7 @@ class _AlertButtonDialog extends State<AlertButtonDialog> {
   @override
   Widget build(BuildContext context) {
     final String fText = widget.text ?? 'Eliminar';
+    final TextStyle textStyle = widget.textStyle ?? Typo.bodyLight;
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
     return OutlinedButton(
@@ -128,7 +134,7 @@ class _AlertButtonDialog extends State<AlertButtonDialog> {
         backgroundColor: ColorPalette.caution,
         side: BorderSide.none,
       ),
-      child: Text(fText, style: Typo.bodyLight),
+      child: Text(fText, style: textStyle),
     );
   }
 }

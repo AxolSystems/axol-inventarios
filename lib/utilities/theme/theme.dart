@@ -168,6 +168,21 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: ColorPalette.lightText);
+  static const mobileDark20 = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      color: ColorPalette.darkText);
+      static const mobileLigth18 = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 18,
+      color: ColorPalette.lightText);
+  static const mobileDark18 = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 18,
+      color: ColorPalette.darkText);
 }
 
 class BoxDecorationTheme {

@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/modules/waybill/view/wb_add_bottomsheet.dart';
+import 'package:axol_inventarios/modules/waybill/view/wb_add_drawer.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -179,12 +179,7 @@ class WbAddListBuild extends StatelessWidget {
                                             side: BorderSide.none),
                                         onPressed: () {},
                                         onLongPress: () {
-                                          showModalBottomSheet(
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            12))),
+                                          showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 WbAddDetailsBottomsheet(
@@ -327,7 +322,7 @@ class WbAddListBuild extends StatelessWidget {
                                             showDialog(
                                               context: context,
                                               builder: (context) =>
-                                                  WbAddBottomSheet(
+                                                  WbAddDrawer(
                                                       inventoryList:
                                                           form.inventoryList),
                                             ).then((value) {
@@ -386,7 +381,7 @@ class WbAddListBuild extends StatelessWidget {
                                         showDialog(
                                           context: context,
                                           builder: (context) =>
-                                              WbAddBottomSheet(
+                                              WbAddDrawer(
                                                   inventoryList:
                                                       form.inventoryList),
                                         ).then((value) {
