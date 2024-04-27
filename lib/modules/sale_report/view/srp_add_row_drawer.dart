@@ -1,20 +1,21 @@
+import 'package:axol_inventarios/modules/sale_report/model/salereport_row_model.dart';
+import 'package:axol_inventarios/modules/sale_report/model/srp_add_row_form_model.dart';
+import 'package:axol_inventarios/modules/sale_report/view/srp_find_bottomsheet.dart';
+import 'package:axol_inventarios/utilities/format.dart';
+import 'package:axol_inventarios/utilities/theme/theme.dart';
+import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
+import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/inventory_row_model.dart';
-import '../../../utilities/format.dart';
-import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../cubit/add/srp_add_row_cubit.dart';
-import '../model/salereport_row_model.dart';
-import '../model/srp_add_row_form_model.dart';
-import 'srp_find_bottomsheet.dart';
 
-class SrpAddBottomsheet extends StatelessWidget {
+class SrpAddRowDrawer extends StatelessWidget {
   final List<InventoryRowModel> inventoryList;
   final SaleReportRowModel? rowEdit;
-  const SrpAddBottomsheet(
+  const SrpAddRowDrawer(
       {super.key, required this.inventoryList, this.rowEdit});
 
   @override
@@ -32,15 +33,15 @@ class SrpAddBottomsheet extends StatelessWidget {
             create: (_) => SrpAddRowForm(rowEdit, inventoryRow)),
       ],
       child:
-          WbAddBottomSheetBuild(inventoryList: inventoryList, rowEdit: rowEdit),
+          WbAddRowDrawerBuild(inventoryList: inventoryList, rowEdit: rowEdit),
     );
   }
 }
 
-class WbAddBottomSheetBuild extends StatelessWidget {
+class WbAddRowDrawerBuild extends StatelessWidget {
   final List<InventoryRowModel> inventoryList;
   final SaleReportRowModel? rowEdit;
-  const WbAddBottomSheetBuild(
+  const WbAddRowDrawerBuild(
       {super.key, required this.inventoryList, this.rowEdit});
 
   @override
@@ -52,11 +53,11 @@ class WbAddBottomSheetBuild extends StatelessWidget {
         ..initLoad(form, inventoryList.first.product.code),
       builder: (context, state) {
         if (state == SrpAddRowState.loading) {
-          return wbAddBottomSheet(context, inventoryList, form);
+          return wbAddRowDrawer(context, inventoryList, form);
         } else if (state == SrpAddRowState.load) {
-          return wbAddBottomSheet(context, inventoryList, form);
+          return wbAddRowDrawer(context, inventoryList, form);
         } else {
-          return wbAddBottomSheet(context, inventoryList, form);
+          return wbAddRowDrawer(context, inventoryList, form);
         }
       },
       listener: (context, state) {
@@ -82,20 +83,20 @@ class WbAddBottomSheetBuild extends StatelessWidget {
     );
   }
 
-  Widget wbAddBottomSheet(
+  Widget wbAddRowDrawer(
     BuildContext context,
     List<InventoryRowModel> inventoryList,
     SrpAddRowFormModel form,
   ) {
-    final double heightScreen = MediaQuery.of(context).size.height;
+    final double widthScreen = MediaQuery.of(context).size.width;
     final double subTotal;
     final double quantity;
     final double unitPrice;
     quantity = double.tryParse(form.qtyCtrl.text) ?? 0;
     unitPrice = double.tryParse(form.unitPriceCtrl.text) ?? 0;
     subTotal = quantity * unitPrice;
-    return SizedBox(
-      height: heightScreen * 0.8,
+    return DrawerBox(
+      width: widthScreen < 600 ? 0.95 : 0.5,
       child: Column(
         children: [
           Padding(

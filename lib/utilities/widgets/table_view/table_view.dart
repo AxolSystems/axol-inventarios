@@ -13,10 +13,13 @@ abstract class TableView extends StatelessWidget {
 class DataTableAxol {
   final String text;
   final int flex;
+  final double? space;
 
-  DataTableAxol({required this.text, required this.flex});
+  DataTableAxol({required this.text, required this.flex, this.space});
 
-  DataTableAxol.text(this.text) : flex = 1;
+  DataTableAxol.text(this.text) : flex = 1, space = null;
+
+  DataTableAxol.space(this.space) : flex = 0, text = '';
 }
 
 class HeaderTable extends TableView {
@@ -28,18 +31,22 @@ class HeaderTable extends TableView {
     List<Widget> contentList = [];
     Widget content;
     for (var data in dataList) {
-      content = Expanded(
-        flex: data.flex,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          child: Center(
-            child: Text(
-              data.text,
-              style: Typo.subtitleLight,
+      if (data.space != null) {
+        content = SizedBox(width: data.space);
+      } else {
+        content = Expanded(
+          flex: data.flex,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Center(
+              child: Text(
+                data.text,
+                style: Typo.subtitleLight,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
       contentList.add(content);
     }
 

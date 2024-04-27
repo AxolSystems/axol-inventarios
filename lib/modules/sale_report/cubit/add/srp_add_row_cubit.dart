@@ -2,43 +2,43 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/inventory_row_model.dart';
 import '../../model/salereport_row_model.dart';
-import '../../model/srp_add_bottomsheet_form_model.dart';
+import '../../model/srp_add_row_form_model.dart';
 
-enum SrpAddBottomsheetState { intital, loading, load, error, save }
+enum SrpAddRowState { intital, loading, load, error, save }
 
-enum SrpAddBottomsheetSubtState { add, edit }
+enum SrpAddRowSubtState { add, edit }
 
-class SrpAddBottomsheetCubit extends Cubit<SrpAddBottomsheetState> {
-  SrpAddBottomsheetCubit() : super(SrpAddBottomsheetState.intital);
+class SrpAddRowCubit extends Cubit<SrpAddRowState> {
+  SrpAddRowCubit() : super(SrpAddRowState.intital);
 
   Future<void> initLoad(
-      SrpAddBottomsheetFormModel form, String initValue) async {
+      SrpAddRowFormModel form, String initValue) async {
     try {
-      emit(SrpAddBottomsheetState.intital);
-      emit(SrpAddBottomsheetState.loading);
+      emit(SrpAddRowState.intital);
+      emit(SrpAddRowState.loading);
 
-      emit(SrpAddBottomsheetState.load);
+      emit(SrpAddRowState.load);
     } catch (e) {
       form.errorMessageQty = e.toString();
-      emit(SrpAddBottomsheetState.error);
+      emit(SrpAddRowState.error);
     }
   }
 
-  Future<void> load(SrpAddBottomsheetFormModel form) async {
+  Future<void> load(SrpAddRowFormModel form) async {
     try {
-      emit(SrpAddBottomsheetState.intital);
-      emit(SrpAddBottomsheetState.loading);
-      emit(SrpAddBottomsheetState.load);
+      emit(SrpAddRowState.intital);
+      emit(SrpAddRowState.loading);
+      emit(SrpAddRowState.load);
     } catch (e) {
       form.errorMessageQty = e.toString();
-      emit(SrpAddBottomsheetState.error);
+      emit(SrpAddRowState.error);
     }
   }
 
-  Future<void> save(SrpAddBottomsheetFormModel form) async {
+  Future<void> save(SrpAddRowFormModel form) async {
     try {
-      emit(SrpAddBottomsheetState.intital);
-      emit(SrpAddBottomsheetState.loading);
+      emit(SrpAddRowState.intital);
+      emit(SrpAddRowState.loading);
       final qty = double.tryParse(form.qtyCtrl.text);
       final unitPrice = double.tryParse(form.unitPriceCtrl.text);
       bool isQtyValid = true;
@@ -66,21 +66,21 @@ class SrpAddBottomsheetCubit extends Cubit<SrpAddBottomsheetState> {
         form.errorMessagePrice = null;
       }
 
-      emit(SrpAddBottomsheetState.save);
-      emit(SrpAddBottomsheetState.load);
+      emit(SrpAddRowState.save);
+      emit(SrpAddRowState.load);
     } catch (e) {
       form.errorMessageQty = e.toString();
-      emit(SrpAddBottomsheetState.error);
+      emit(SrpAddRowState.error);
     }
   }
 }
 
-class SrpAddBottomsheetForm extends Cubit<SrpAddBottomsheetFormModel> {
+class SrpAddRowForm extends Cubit<SrpAddRowFormModel> {
   final SaleReportRowModel? reportRow;
   final InventoryRowModel? inventoryRow;
-  SrpAddBottomsheetForm([this.reportRow, this.inventoryRow])
+  SrpAddRowForm([this.reportRow, this.inventoryRow])
       : super((reportRow == null || inventoryRow == null)
-            ? SrpAddBottomsheetFormModel.empty()
-            : SrpAddBottomsheetFormModel.set(
+            ? SrpAddRowFormModel.empty()
+            : SrpAddRowFormModel.set(
                 reportRow: reportRow, inventoryRow: inventoryRow));
 }

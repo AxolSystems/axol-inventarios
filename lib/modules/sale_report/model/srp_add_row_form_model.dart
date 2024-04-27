@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import '../../inventory_/product/model/product_model.dart';
 import 'salereport_row_model.dart';
 
-class SrpAddBottomsheetFormModel {
+class SrpAddRowFormModel {
   TextEditingController qtyCtrl;
   TextEditingController unitPriceCtrl;
   TextEditingController customerCtrl;
@@ -13,7 +13,7 @@ class SrpAddBottomsheetFormModel {
   String? errorMessagePrice;
   double stock;
 
-  SrpAddBottomsheetFormModel({
+  SrpAddRowFormModel({
     required this.qtyCtrl,
     required this.product,
     required this.errorMessageQty,
@@ -23,7 +23,7 @@ class SrpAddBottomsheetFormModel {
     required this.errorMessagePrice,
   });
 
-  SrpAddBottomsheetFormModel.empty()
+  SrpAddRowFormModel.empty()
       : qtyCtrl = TextEditingController(),
         unitPriceCtrl = TextEditingController(),
         customerCtrl = TextEditingController(),
@@ -32,7 +32,7 @@ class SrpAddBottomsheetFormModel {
         errorMessagePrice = null,
         stock = 0;
 
-  SrpAddBottomsheetFormModel.set(
+  SrpAddRowFormModel.set(
       {required SaleReportRowModel reportRow,
       required InventoryRowModel inventoryRow})
       : customerCtrl = TextEditingController(text: reportRow.customerName),
