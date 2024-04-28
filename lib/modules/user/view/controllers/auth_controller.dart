@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../model/user_mdoel.dart';
 import '../views/home_view.dart';
 import '../views/login_view.dart';
 import '../views/splash_view.dart';
@@ -19,12 +20,14 @@ class AuthController extends StatelessWidget {
           return const SplashView();
         } else if (state is AuthAuthenticatedState) {
           final rol = state.user.rol;
-          if (rol == 'vendor') {
+          if (rol == UserModel.rolVendor) {
             return const HomeView();
-          } else if (rol == 'admin') {
+          } else if (rol == UserModel.rolAdmin) {
+            return const HomeView();
+          } else if (rol == UserModel.rolSup) {
             return const HomeView();
           } else {
-            return const Text('Error: no entro a ni una pagina.');
+            return const Text('Error: no entró a página.');
           }
         } else if (state is AuthUnuauthenticatedState) {
           return const Center(child: LoginView());

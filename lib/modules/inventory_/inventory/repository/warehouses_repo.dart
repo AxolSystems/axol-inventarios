@@ -140,14 +140,27 @@ class WarehousesRepo {
     return warehouses;
   }
 
-  Future<List<WarehouseModel>> fetchWarehouseManager(int retailManager) async {
+  Future<List<WarehouseModel>> fetchWarehouseManager(int retailManager, [List<int>? idList]) async {
     List<WarehouseModel> warehouseList = [];
     List<Map<String, dynamic>> warehouseListDb = [];
     WarehouseModel warehouse;
-    warehouseListDb = await _supabase
+    String filters;
+
+    if (idList == null) {
+      warehouseListDb = await _supabase
         .from(_table)
         .select<List<Map<String, dynamic>>>()
         .eq(_retailManager, retailManager);
+    } else {
+      filters = '$_retailManager.eq.$retailManager';
+      for (int id in idList) {
+        filters = '$filters,$_id.eq.$id';
+      }
+      warehouseListDb = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>()
+        .or(filters);
+    }
     if (warehouseListDb.isNotEmpty) {
       for (var element in warehouseListDb) {
         warehouse = WarehouseModel(

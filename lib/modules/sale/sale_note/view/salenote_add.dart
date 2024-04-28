@@ -578,6 +578,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                         builder: (context) =>
                                             ProductDrawerDetails(
                                           product: row.product,
+                                          user: form.user,
                                         ),
                                       );
                                     },

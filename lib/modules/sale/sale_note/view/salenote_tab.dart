@@ -9,6 +9,7 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../cubit/salenote_tab/salenote_tab_cubit.dart';
 import '../cubit/salenote_tab/salenote_tab_state.dart';
 import '../cubit/salenote_tab/salenote_tab_form.dart';
@@ -57,10 +58,18 @@ class SaleNoteTabBuild extends StatelessWidget {
   Widget saleNoteTab(BuildContext context, List<SaleNoteModel> listData,
       bool isLoading, TableViewFormModel form) {
     final widthScreen = MediaQuery.of(context).size.width;
+    final bool editable;
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
         text: form.finder.text,
         selection: TextSelection.collapsed(offset: form.finder.position));
+
+    if (form.user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return Row(
       children: [
         Expanded(
@@ -86,9 +95,9 @@ class SaleNoteTabBuild extends StatelessWidget {
                   onPressed: () {
                     if (isLoading == false) {
                       form.finder = TextfieldModel.empty();
-                      context
+                      /*context
                           .read<SaleNoteTabForm>()
-                          .setForm(TableViewFormModel.empty());
+                          .setForm(TableViewFormModel.empty());*/
                       context
                           .read<SaleNoteTabCubit>()
                           .load(saleType, form, true);
@@ -96,7 +105,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                   },
                 )),
                 Visibility(
-                  visible: widthScreen >= 600,
+                  visible: widthScreen >= 600 && editable,
                   child: Row(
                     children: [
                       const VerticalDivider(
@@ -119,9 +128,9 @@ class SaleNoteTabBuild extends StatelessWidget {
                             context
                                 .read<SaleNoteTabCubit>()
                                 .load(saleType, form, true);
-                            context
+                            /*context
                                 .read<SaleNoteTabForm>()
-                                .setForm(TableViewFormModel.empty());
+                                .setForm(TableViewFormModel.empty());*/
                           });
                         },
                         icon: const Icon(
@@ -264,14 +273,15 @@ class SaleNoteTabBuild extends StatelessWidget {
                                     builder: (context) => SaleNoteDrawerDetails(
                                           saleNote: saleNoteRow,
                                           saleType: saleType,
+                                          user: form.user,
                                         )).then((value) {
                                   form.finder = TextfieldModel.empty();
                                   context
                                       .read<SaleNoteTabCubit>()
                                       .load(saleType, form, true);
-                                  context
+                                  /*context
                                       .read<SaleNoteTabForm>()
-                                      .setForm(TableViewFormModel.empty());
+                                      .setForm(TableViewFormModel.empty());*/
                                 });
                               },
                               child: Row(

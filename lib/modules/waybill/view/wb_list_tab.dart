@@ -32,7 +32,6 @@ class WbWarehouseTabBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double widthScreen = MediaQuery.of(context).size.width;
     WbListFormModel form = context.read<WbListForm>().state;
     return BlocConsumer<WbListCubit, WbListState>(
       bloc: context.read<WbListCubit>()..initLoad(form),

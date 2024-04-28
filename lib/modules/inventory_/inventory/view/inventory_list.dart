@@ -15,6 +15,7 @@ import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../../product/view/product_drawer_details.dart';
 import '../cubit/inventory_list/inventory_list_cubit.dart';
 import '../cubit/inventory_list/inventory_list_state.dart';
@@ -71,11 +72,19 @@ class InventoryListBuild extends StatelessWidget {
             text: form.finder.text,
             selection: TextSelection.collapsed(offset: form.finder.position)));
     final widthScreen = MediaQuery.of(context).size.width;
+    final bool editable;
     final String title;
+
     if (warehouse.id == -2) {
       title = 'Inventario: ${warehouse.name}';
     } else {
       title = 'Inventario: ${warehouse.id} - ${warehouse.name}';
+    }
+
+    if (form.user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
     }
 
     return Scaffold(
@@ -157,7 +166,7 @@ class InventoryListBuild extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                          visible: widthScreen >= 600,
+                          visible: widthScreen >= 600 && editable,
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             onPressed: () {
@@ -224,6 +233,7 @@ class InventoryListBuild extends StatelessWidget {
                                 context: context,
                                 builder: (context) => ProductDrawerDetails(
                                   product: inventoryRow.product,
+                                  user: form.user,
                                 ),
                               );
                             },

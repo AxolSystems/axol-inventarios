@@ -73,6 +73,9 @@ class WaybillViewBuild extends StatelessWidget {
     } else if (user_.rol == UserModel.rolVendor) {
       navigationRail = const NavigationRailAxolMain.vendor(
           view: NavigationRailAxolView.waybill);
+    } else if (user_.rol == UserModel.rolSup) {
+      navigationRail = const NavigationRailAxolMain.sup(
+          view: NavigationRailAxolView.waybill);
     } else {
       navigationRail = const SizedBox();
     }

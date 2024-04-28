@@ -42,7 +42,7 @@ class NavigationRailAxol extends StatelessWidget {
 ////
 enum NavigationRailAxolView { home, inventory, note, waybill, saleReport }
 
-enum NavigationRailAxolRol { admin, vendor }
+enum NavigationRailAxolRol { admin, vendor, sup }
 
 class NavigationRailAxolMain extends StatelessWidget {
   final NavigationRailAxolRol rol;
@@ -55,6 +55,9 @@ class NavigationRailAxolMain extends StatelessWidget {
 
   const NavigationRailAxolMain.vendor({super.key, required this.view})
       : rol = NavigationRailAxolRol.vendor;
+
+  const NavigationRailAxolMain.sup({super.key, required this.view})
+      : rol = NavigationRailAxolRol.sup;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +90,8 @@ class NavigationRailAxolMain extends StatelessWidget {
           onDestinationSelected:
               NavigationUtilities.destinationAdmin(3, context),
         );
-      } if (view == NavigationRailAxolView.saleReport) {
+      }
+      if (view == NavigationRailAxolView.saleReport) {
         return NavigationRailAxol(
           destinations: NavigationUtilities.admin,
           selectedIndex: 4,
@@ -105,19 +109,61 @@ class NavigationRailAxolMain extends StatelessWidget {
           onDestinationSelected:
               NavigationUtilities.destinationVendor(0, context),
         );
-      } else if (view == NavigationRailAxolView.waybill) {
+      } else if (view == NavigationRailAxolView.inventory) {
         return NavigationRailAxol(
           destinations: NavigationUtilities.vendor,
           selectedIndex: 1,
           onDestinationSelected:
               NavigationUtilities.destinationVendor(1, context),
         );
-      } else if (view == NavigationRailAxolView.saleReport) {
+      } else if (view == NavigationRailAxolView.waybill) {
         return NavigationRailAxol(
           destinations: NavigationUtilities.vendor,
           selectedIndex: 2,
           onDestinationSelected:
               NavigationUtilities.destinationVendor(2, context),
+        );
+      } else if (view == NavigationRailAxolView.saleReport) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.vendor,
+          selectedIndex: 3,
+          onDestinationSelected:
+              NavigationUtilities.destinationVendor(3, context),
+        );
+      } else {
+        return NavigationRailAxol.empty();
+      }
+    } else if (rol == NavigationRailAxolRol.sup) {
+      if (view == NavigationRailAxolView.home) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.sup,
+          selectedIndex: 0,
+          onDestinationSelected: NavigationUtilities.destinationSup(0, context),
+        );
+      } else if (view == NavigationRailAxolView.inventory) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.sup,
+          selectedIndex: 1,
+          onDestinationSelected: NavigationUtilities.destinationSup(1, context),
+        );
+      } else if (view == NavigationRailAxolView.note) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.sup,
+          selectedIndex: 2,
+          onDestinationSelected: NavigationUtilities.destinationSup(2, context),
+        );
+      } else if (view == NavigationRailAxolView.waybill) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.sup,
+          selectedIndex: 3,
+          onDestinationSelected: NavigationUtilities.destinationSup(3, context),
+        );
+      }
+      if (view == NavigationRailAxolView.saleReport) {
+        return NavigationRailAxol(
+          destinations: NavigationUtilities.sup,
+          selectedIndex: 4,
+          onDestinationSelected: NavigationUtilities.destinationSup(4, context),
         );
       } else {
         return NavigationRailAxol.empty();

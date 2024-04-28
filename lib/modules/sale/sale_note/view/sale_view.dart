@@ -66,6 +66,9 @@ class SaleViewBuild extends StatelessWidget {
     if (user_.rol == UserModel.rolAdmin) {
       navigationRail =
           const NavigationRailAxolMain.admin(view: NavigationRailAxolView.note);
+    } else if (user_.rol == UserModel.rolSup) {
+      navigationRail =
+          const NavigationRailAxolMain.sup(view: NavigationRailAxolView.note);
     } else {
       navigationRail = const SizedBox();
     }

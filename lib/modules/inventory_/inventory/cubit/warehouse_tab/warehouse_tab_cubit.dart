@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/repository/user_repo.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/warehouses_repo.dart';
 import 'warehouse_tab_state.dart';
@@ -9,12 +11,18 @@ class WarehouseTabCubit extends Cubit<WarehouseTabState> {
 
   Future<void> initLoad() async {
     try {
+      final UserModel user;
+      List<WarehouseModel> warehouseList;
       emit(InitialWarehouseTabState());
+      user = await LocalUser().getLocalUser();
       emit(LoadingWarehouseTabState());
 
-      List<WarehouseModel> warehouseList;
-      warehouseList = await WarehousesRepo().fetchAllWarehouses();
-      warehouseList.insert(0, WarehouseModel.multi());
+      if (user.rol == UserModel.rolVendor) {
+        warehouseList = await WarehousesRepo().fetchWarehouseManager(user.id,[1]);
+      } else {
+        warehouseList = await WarehousesRepo().fetchAllWarehouses();
+        warehouseList.insert(0, WarehouseModel.multi());
+      }
 
       emit(LoadedWarehouseTabState(warehouseList: warehouseList));
     } catch (e) {
@@ -24,11 +32,18 @@ class WarehouseTabCubit extends Cubit<WarehouseTabState> {
 
   Future<void> load() async {
     try {
+      final UserModel user;
+      List<WarehouseModel> warehouseList;
       emit(InitialWarehouseTabState());
+      user = await LocalUser().getLocalUser();
       emit(LoadingWarehouseTabState());
 
-      List<WarehouseModel> warehouseList;
-      warehouseList = await WarehousesRepo().fetchAllWarehouses();
+      if (user.rol == UserModel.rolVendor) {
+        warehouseList = await WarehousesRepo().fetchWarehouseManager(user.id,[1]);
+      } else {
+        warehouseList = await WarehousesRepo().fetchAllWarehouses();
+        warehouseList.insert(0, WarehouseModel.multi());
+      }
 
       emit(LoadedWarehouseTabState(warehouseList: warehouseList));
     } catch (e) {

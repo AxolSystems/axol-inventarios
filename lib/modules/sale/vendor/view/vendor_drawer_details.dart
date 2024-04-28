@@ -4,15 +4,25 @@ import 'package:flutter/material.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/providers.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../model/vendor_model.dart';
 
 class VendorDrawerDetails extends StatelessWidget {
   final VendorModel vendor;
+  final UserModel? user;
 
-  const VendorDrawerDetails({super.key, required this.vendor});
+  const VendorDrawerDetails({super.key, required this.vendor, this.user});
 
   @override
   Widget build(BuildContext context) {
+    final bool editable;
+
+    if (user != null && user?.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return DrawerBox(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       header: const Text(
@@ -25,13 +35,16 @@ class VendorDrawerDetails extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        AlertButtonDialog(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => ProviderVendorDelete(vendor: vendor),
-            );
-          },
+        Visibility(
+          visible: editable,
+          child: AlertButtonDialog(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => ProviderVendorDelete(vendor: vendor),
+              );
+            },
+          ),
         ),
       ],
       children: [

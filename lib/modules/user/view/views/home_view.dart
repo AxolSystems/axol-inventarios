@@ -82,6 +82,9 @@ class HomeViewBuild extends StatelessWidget {
     } else if (user_.rol == UserModel.rolVendor) {
       navigationRail = const NavigationRailAxolMain.vendor(
           view: NavigationRailAxolView.home);
+    } else if (user_.rol == UserModel.rolSup) {
+      navigationRail = const NavigationRailAxolMain.sup(
+          view: NavigationRailAxolView.home);
     } else {
       navigationRail = const SizedBox();
     }

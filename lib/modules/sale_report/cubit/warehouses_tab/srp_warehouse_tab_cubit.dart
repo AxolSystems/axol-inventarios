@@ -14,11 +14,16 @@ class SrpWarehouseTabCubit extends Cubit<SrpWarehouseTabState> {
       emit(InitialSrpWarehouseTabState());
       emit(LoadingSrpWarehouseTabState());
 
-      List<WarehouseModel> warehouseList;
+      List<WarehouseModel> warehouseList = [];
       UserModel user;
 
       user = await LocalUser().getLocalUser();
-      warehouseList = await WarehousesRepo().fetchWarehouseManager(user.id);
+      if (user.rol == UserModel.rolAdmin) {
+        warehouseList = await WarehousesRepo().fetchAllWarehouses();
+      } else if (user.rol == UserModel.rolVendor) {
+        warehouseList = await WarehousesRepo().fetchWarehouseManager(user.id);
+      }
+
       emit(LoadedSrpWarehouseTabState(warehouseList: warehouseList));
     } catch (e) {
       emit(ErrorSrpWarehouseTabState(error: e.toString()));

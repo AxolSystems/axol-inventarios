@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,9 @@ import 'product_drawer_edit.dart';
 
 class ProductDrawerDetails extends StatelessWidget {
   final ProductModel product;
+  final UserModel user;
   final bool? actions;
-  const ProductDrawerDetails({super.key, required this.product, this.actions});
+  const ProductDrawerDetails({super.key, required this.product, this.actions, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class ProductDrawerDetails extends StatelessWidget {
       child: ProductDrawerDetailsBuild(
         product: product,
         actions: actions ?? false,
+        user: user,
       ),
     );
   }
@@ -29,8 +32,9 @@ class ProductDrawerDetails extends StatelessWidget {
 class ProductDrawerDetailsBuild extends StatelessWidget {
   final ProductModel product;
   final bool actions;
+  final UserModel user;
   const ProductDrawerDetailsBuild(
-      {super.key, required this.product, required this.actions});
+      {super.key, required this.product, required this.actions, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +54,14 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
 
   Widget productDetailsCubit(BuildContext context, bool isLoading) {
     final widthScreen = MediaQuery.of(context).size.width;
+    final bool editable;
+
+    if (user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return DrawerBox(
       width: widthScreen > 760 ? 0.5 : widthScreen > 450 ? 0.8 : 0.95,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -59,7 +71,7 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
         ),
         actions: [
           Visibility(
-            visible: actions,
+            visible: actions && editable,
             child: SecondaryButtonDialog(
               text: 'Editar',
               onPressed: () {

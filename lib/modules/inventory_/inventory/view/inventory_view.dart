@@ -66,22 +66,63 @@ class InventoryViewBuild extends StatelessWidget {
   }) {
     const String title = 'Inventario';
     final widthScreen = MediaQuery.of(context).size.width;
+    final List<Widget> tabs;
+    final List<Widget> tabsView;
     Widget navigationRail;
     UserModel user_ = user ?? UserModel.empty();
 
     if (user_.rol == UserModel.rolAdmin) {
       navigationRail = const NavigationRailAxolMain.admin(
           view: NavigationRailAxolView.inventory);
+    } else if (user_.rol == UserModel.rolSup) {
+      navigationRail = const NavigationRailAxolMain.sup(
+          view: NavigationRailAxolView.inventory);
+    } else if (user_.rol == UserModel.rolVendor) {
+      navigationRail = const NavigationRailAxolMain.vendor(
+          view: NavigationRailAxolView.inventory);
     } else {
       navigationRail = const SizedBox();
     }
+
+    if (user == null || user.rol == UserModel.rolVendor) {
+      tabs = const [
+        Tab(
+          text: 'Multialmacen',
+        ),
+        Tab(
+          text: 'Productos',
+        ),
+      ];
+      tabsView = [
+        const WarehouseTab(),
+        const ProductTab(),
+      ];
+    } else {
+      tabs = const [
+        Tab(
+          text: 'Multialmacen',
+        ),
+        Tab(
+          text: 'Movimientos',
+        ),
+        Tab(
+          text: 'Productos',
+        ),
+      ];
+      tabsView = [
+        const WarehouseTab(),
+        const MovementTab(),
+        const ProductTab(),
+      ];
+    }
+
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => MovementsCuibit()),
           BlocProvider(create: (_) => ProductTabCubit()),
         ],
         child: DefaultTabController(
-            length: 3,
+            length: tabs.length,
             child: Scaffold(
               backgroundColor: ColorPalette.darkBackground,
               appBar: AppBarAxol.appBar(
@@ -119,30 +160,16 @@ class InventoryViewBuild extends StatelessWidget {
                     ),
                     const VerticalDivider(
                         thickness: 1, width: 1, color: ColorPalette.darkItems),
-                     Expanded(
+                    Expanded(
                         child: Column(
                       children: [
                         TabBar(
-                          isScrollable: widthScreen < 600 ? true : false,
-                          indicatorColor: ColorPalette.primary,
-                          tabs: const [
-                            Tab(
-                              text: 'Multialmacen',
-                            ),
-                            Tab(
-                              text: 'Movimientos',
-                            ),
-                            Tab(
-                              text: 'Productos',
-                            ),
-                          ],
+                            isScrollable: widthScreen < 600 ? true : false,
+                            indicatorColor: ColorPalette.primary,
+                            tabs: tabs),
+                        Expanded(
+                          child: TabBarView(children: tabsView),
                         ),
-                        const Expanded(
-                            child: TabBarView(children: [
-                          WarehouseTab(),
-                          MovementTab(),
-                          ProductTab(),
-                        ]))
                       ],
                     )),
                   ],

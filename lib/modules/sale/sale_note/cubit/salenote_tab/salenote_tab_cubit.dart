@@ -2,6 +2,8 @@ import 'package:axol_inventarios/modules/sale/sale_note/model/salenote_filter_mo
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/data_response_model.dart';
+import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/repository/user_repo.dart';
 import '../../model/sale_note_model.dart';
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
 import '../../repository/sale_note_repo.dart';
@@ -60,10 +62,14 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
     try {
       final int countReg;
       final int limit = TableViewFormModel.rows50;
+      final UserModel user;
       emit(InitialSaleNoteState());
+      user =  await LocalUser().getLocalUser();
+      form.user = user;
       emit(LoadingSaleNoteState());
       List<SaleNoteModel> notesDB = [];
       DataResponseModel dataResponse;
+      
       //Nota de venta
       if (saleType == 0) {
         dataResponse = await SaleNoteRepo().fetchNotes(

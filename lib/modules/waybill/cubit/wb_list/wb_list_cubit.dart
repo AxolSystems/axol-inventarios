@@ -28,7 +28,7 @@ class WbListCubit extends Cubit<WbListState> {
 
       //Identifica el tipo de usuario
       user = await LocalUser().getLocalUser();
-      if (user.rol == UserModel.rolAdmin) {
+      if (user.rol == UserModel.rolAdmin || user.rol == UserModel.rolSup) {
         manager = -2;
       } else {
         manager = user.id;

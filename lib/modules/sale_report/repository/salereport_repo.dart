@@ -34,7 +34,7 @@ class SaleReportRepo {
     final rangeMin_ = rangeMin ?? 0;
     final rangeMax_ = rangeMax ?? 999;
 
-    if (user.rol == UserModel.rolAdmin) {
+    if (user.rol == UserModel.rolAdmin || user.rol == UserModel.rolSup) {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(

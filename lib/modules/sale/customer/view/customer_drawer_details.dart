@@ -4,15 +4,26 @@ import 'package:flutter/material.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/providers.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../model/customer_model.dart';
 
 class CustomerDrawerDetails extends StatelessWidget {
   final CustomerModel customer;
+  final UserModel user;
 
-  const CustomerDrawerDetails({super.key, required this.customer});
+  const CustomerDrawerDetails(
+      {super.key, required this.customer, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final bool editable;
+
+    if (user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return DrawerBox(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       header: const Text(
@@ -25,13 +36,17 @@ class CustomerDrawerDetails extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        AlertButtonDialog(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => ProviderCustomerDelete(customer: customer),
-            );
-          },
+        Visibility(
+          visible: editable,
+          child: AlertButtonDialog(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) =>
+                    ProviderCustomerDelete(customer: customer),
+              );
+            },
+          ),
         ),
       ],
       children: [
@@ -83,7 +98,7 @@ class CustomerDrawerDetails extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Text(
-                '${customer.phoneNumber ?? ''}',
+                customer.phoneNumber ?? '',
                 style: Typo.bodyDark,
               ),
             ),
@@ -137,7 +152,7 @@ class CustomerDrawerDetails extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Text(
-                '${customer.intNumber ?? ''}',
+                customer.intNumber ?? '',
                 style: Typo.bodyDark,
               ),
             ),
@@ -155,7 +170,7 @@ class CustomerDrawerDetails extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Text(
-                '${customer.outNumber ?? ''}',
+                customer.outNumber ?? '',
                 style: Typo.bodyDark,
               ),
             ),

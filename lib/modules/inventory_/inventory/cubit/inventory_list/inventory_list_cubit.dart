@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../models/data_response_model.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
+import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/repository/user_repo.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/inventory_repo.dart';
 import 'inventory_list_state.dart';
@@ -13,7 +15,10 @@ class InventoryListCubit extends Cubit<InventoryListState> {
   Future<void> initLoad(
       WarehouseModel warehouse, TableViewFormModel form) async {
     try {
+      final UserModel user;
       emit(InitialInventoryListState());
+      user = await LocalUser().getLocalUser();
+      form.user = user;
       emit(LoadingInventoryListState());
 
       final int countReg;

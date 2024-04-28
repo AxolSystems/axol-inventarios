@@ -83,6 +83,8 @@ class WbListDetailsDrawerBuild extends StatelessWidget {
       } else {
         editVisible = false;
       }
+    } else if (user.rol == UserModel.rolSup) {
+      editVisible = false;
     } else {
       editVisible = true;
     }

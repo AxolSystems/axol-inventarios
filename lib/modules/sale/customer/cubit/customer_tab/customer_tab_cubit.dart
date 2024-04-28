@@ -4,6 +4,8 @@ import 'package:axol_inventarios/modules/sale/customer/repository/customer_repo.
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
+import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/repository/user_repo.dart';
 import 'customer_tab_state.dart';
 
 class CustomerTabCubit extends Cubit<CustomerTabState> {
@@ -43,12 +45,19 @@ class CustomerTabCubit extends Cubit<CustomerTabState> {
   Future<void> initLoad(TableViewFormModel form) async {
     List<CustomerModel> customerListDB = [];
     try {
+      final UserModel user;
       final String find = form.finder.text;
       final int countReg;
       final int limit = TableViewFormModel.rows50;
       DataResponseModel dataResponse;
+
       emit(InitialCustomerTabState());
+
+      user = await LocalUser().getLocalUser();
+      form.user = user;
+
       emit(LoadingCustomerTabState());
+
       dataResponse = await CustomerRepo()
           .fetchCustomersIlike(find, rangeMax: limit - 1, rangeMin: 0);
       countReg = dataResponse.count;
@@ -58,6 +67,7 @@ class CustomerTabCubit extends Cubit<CustomerTabState> {
       form.currentPage = 1;
       form.totalReg = countReg;
       form.limitPage = (countReg / limit).ceil();
+      
       emit(LoadedCustomerTabState(customerList: customerListDB));
     } catch (e) {
       emit(InitialCustomerTabState());

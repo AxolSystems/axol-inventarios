@@ -75,11 +75,65 @@ class NavigationUtilities {
 
   static const List<NavigationRailDestination> vendor = [
     _destinationHome,
+    _destinationInventory,
     _destinationWaybill,
     _destinationSaleReport
   ];
 
+  static const List<NavigationRailDestination> sup = [
+    _destinationHome,
+    _destinationInventory,
+    _destinationSale,
+    _destinationWaybill,
+    _destinationSaleReport,
+  ];
+
   static Function(int value) destinationAdmin(
+      int indexSelect, BuildContext context) {
+    int indexCount;
+    List<int> indexList = [];
+    List<Widget> viewList = [
+      const HomeView(),
+      const InventoryView(),
+      const SaleView(),
+      const WaybillView(),
+      const SaleReportView(),
+    ];
+
+    indexCount = viewList.length;
+    for (int i = 0; i < indexCount; i++) {
+      if (indexSelect == i) {
+        indexList.add(-1);
+      } else {
+        indexList.add(i);
+      }
+    }
+
+    return (value) {
+      if (value == indexList[0]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[0]));
+      }
+      if (value == indexList[1]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[1]));
+      }
+      if (value == indexList[2]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[2]));
+      }
+      if (value == indexList[3]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[3]));
+      }
+      if (value == indexList[4]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[4]));
+      }
+    };
+  }
+
+  static Function(int value) destinationSup(
       int indexSelect, BuildContext context) {
     int indexCount;
     List<int> indexList = [];
@@ -130,6 +184,7 @@ class NavigationUtilities {
     List<int> indexList = [];
     List<Widget> viewList = [
       const HomeView(),
+      const InventoryView(),
       const WaybillView(),
       const SaleReportView(),
     ];
@@ -155,6 +210,10 @@ class NavigationUtilities {
       if (value == indexList[2]) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => viewList[2]));
+      }
+      if (value == indexList[3]) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => viewList[3]));
       }
     };
   }

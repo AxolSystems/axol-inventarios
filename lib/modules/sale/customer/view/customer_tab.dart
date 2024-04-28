@@ -13,6 +13,7 @@ import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../cubit/customer_tab/customer_tab_cubit.dart';
 import '../cubit/customer_tab/customer_tab_state.dart';
 import '../model/customer_model.dart';
@@ -56,11 +57,18 @@ class CustomerTabBuild extends StatelessWidget {
 
   Column customerTab(BuildContext context, List<CustomerModel> customerList,
       bool isLoading, TableViewFormModel form) {
-    //TableViewFormModel upForm;
+    final bool editable;
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
         text: form.finder.text,
         selection: TextSelection.collapsed(offset: form.finder.position));
+
+    if (form.user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return Column(
       children: [
         VerticalToolBar(children: [
@@ -91,29 +99,35 @@ class CustomerTabBuild extends StatelessWidget {
               },
             ),
           ),
-          const VerticalDivider(
-            thickness: 1,
-            width: 1,
-            color: ColorPalette.lightItems10,
-            indent: 4,
-            endIndent: 4,
-          ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => const ProviderCustomerAdd(),
-              ).then((value) {
-                context.read<CustomerTabCubit>().load(form, true);
-              });
-            },
-            icon: const Icon(
-              Icons.add_outlined,
-              color: ColorPalette.darkItems,
-              size: 30,
-            ),
-          ),
+          Visibility(
+            visible: editable,
+              child: Row(
+            children: [
+              const VerticalDivider(
+                thickness: 1,
+                width: 1,
+                color: ColorPalette.lightItems10,
+                indent: 4,
+                endIndent: 4,
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const ProviderCustomerAdd(),
+                  ).then((value) {
+                    context.read<CustomerTabCubit>().load(form, true);
+                  });
+                },
+                icon: const Icon(
+                  Icons.add_outlined,
+                  color: ColorPalette.darkItems,
+                  size: 30,
+                ),
+              ),
+            ],
+          ))
         ]),
         Container(
           decoration: BoxDecorationTheme.headerTable(),
@@ -181,11 +195,9 @@ class CustomerTabBuild extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (context) =>
-                                CustomerDrawerDetails(customer: customer),
+                                CustomerDrawerDetails(customer: customer, user: form.user,),
                           ).then((value) {
-                            context
-                                .read<CustomerTabCubit>()
-                                .load(form, true);
+                            context.read<CustomerTabCubit>().load(form, true);
                           });
                         },
                       ),

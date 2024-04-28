@@ -6,7 +6,7 @@ import '../../../../../utilities/widgets/table_view/tableview_form.dart';
 class SaleNoteTabForm extends Cubit<TableViewFormModel> {
   SaleNoteTabForm() : super(TableViewFormModel.empty());
 
-  void setText(String text) {
+  /*void setText(String text) {
     final TableViewFormModel form = state;
     final TableViewFormModel upForm = TableViewFormModel(
         finder: TextfieldModel(text: text, position: form.finder.position),
@@ -34,5 +34,5 @@ class SaleNoteTabForm extends Cubit<TableViewFormModel> {
     final TableViewFormModel upForm = form;
     emit(TableViewFormModel.empty());
     emit(upForm);
-  }
+  }*/
 }

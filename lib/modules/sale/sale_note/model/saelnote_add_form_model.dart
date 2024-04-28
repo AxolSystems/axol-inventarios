@@ -1,5 +1,6 @@
 import '../../../../models/textfield_form_model.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../../customer/model/customer_model.dart';
 import '../../vendor/model/vendor_model.dart';
 import 'salenote_row_form_model.dart';
@@ -16,6 +17,7 @@ class SaleNoteAddFormModel {
   String note;
   double total;
   List<SaleNoteRowFormModel> productList;
+  UserModel user;
 
   final String _emInvalidData = 'Dato invalido';
 
@@ -33,6 +35,7 @@ class SaleNoteAddFormModel {
     required this.note,
     required this.total,
     required this.vendor,
+    required this.user,
   });
 
   SaleNoteAddFormModel.empty()
@@ -46,7 +49,8 @@ class SaleNoteAddFormModel {
         dateTime = DateTime.now(),
         id = -1,
         note = '',
-        total = 0;
+        total = 0,
+        user = UserModel.empty();
 
   static const String pCustomer = 'customer';
   static const String pVendor = 'vendor';

@@ -2,6 +2,17 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.8] - 2024-04-28
+### Añadido
+- Tipo de cuenta con permiso de lectura.
+- Modulo de inventario para cuenta de vendedor.
+### Corregido
+- Error en formula para restar reportes de ventas a inventarios.
+### Modificado
+- Vista responsiva en modulo de inventarios.
+- Vista responsiva en modulo de ventas.
+- Vista responsiva en modulo de listas pata cartas porte.
+
 ## [1.0.7] - 2024-04-21
 ### Añadido
 - Descarga de archivos csv de estado de inventario del almacén seleccionado.

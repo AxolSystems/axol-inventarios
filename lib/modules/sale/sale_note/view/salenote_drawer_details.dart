@@ -7,6 +7,7 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/loading_indicator/shimmer_indicator.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../../customer/model/customer_model.dart';
 import '../cubit/salenote_details/salenote_details_cubit.dart';
 import '../cubit/salenote_details/salenote_details_state.dart';
@@ -17,8 +18,12 @@ import 'salenote_dialog_cancel.dart';
 class SaleNoteDrawerDetails extends StatelessWidget {
   final int saleType;
   final SaleNoteModel saleNote;
+  final UserModel user;
   const SaleNoteDrawerDetails(
-      {super.key, required this.saleNote, required this.saleType});
+      {super.key,
+      required this.saleNote,
+      required this.saleType,
+      required this.user});
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
@@ -28,14 +33,19 @@ class SaleNoteDrawerDetails extends StatelessWidget {
           child: SaleNoteDrawerDetailsBuild(
             saleNote: saleNote,
             saleType: saleType,
+            user: user,
           ));
 }
 
 class SaleNoteDrawerDetailsBuild extends StatelessWidget {
+  final UserModel user;
   final SaleNoteModel saleNote;
   final int saleType;
   const SaleNoteDrawerDetailsBuild(
-      {super.key, required this.saleNote, required this.saleType});
+      {super.key,
+      required this.saleNote,
+      required this.saleType,
+      required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +75,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
   Widget saleNoteDrawerDetails(BuildContext context, bool isLoading,
       {List<SaleProductModel>? upProductList}) {
     final widthScreen = MediaQuery.of(context).size.width;
+    final bool editable;
     String title = '';
     List<SaleProductModel> upProductList_ = upProductList ?? [];
     List<Widget> productList = [];
@@ -85,6 +96,12 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
       title = 'Remisión';
     }
 
+    if (user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return DrawerBox(
       width: widthScreen >= 600 ? 0.5 : 0.95,
       header: Text(
@@ -93,7 +110,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
       ),
       actions: [
         Visibility(
-            visible: saleNote.status == 1,
+            visible: saleNote.status == 1 && editable,
             child: AlertButtonDialog(
               text: 'Cancelar',
               isLoading: isLoading,
@@ -136,14 +153,14 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
         ),
         DrawerBox.rowKeyValue('Cliente : ',
             '${saleNote.customer.id} - ${saleNote.customer.name}'),
-        DrawerBox.rowKeyValue(CustomerModel.lblPhoneNumber,
-            saleNote.customer.phoneNumber ?? ''),
+        DrawerBox.rowKeyValue(
+            CustomerModel.lblPhoneNumber, saleNote.customer.phoneNumber ?? ''),
         DrawerBox.rowKeyValue(
             CustomerModel.lblRfc, saleNote.customer.rfc ?? ''),
         DrawerBox.rowKeyValue(
             CustomerModel.lblPostalCode, saleNote.customer.postalCode ?? ''),
-        DrawerBox.rowKeyValue(CustomerModel.lblIntNumber,
-            saleNote.customer.phoneNumber ?? ''),
+        DrawerBox.rowKeyValue(
+            CustomerModel.lblIntNumber, saleNote.customer.phoneNumber ?? ''),
         DrawerBox.rowKeyValue(
             CustomerModel.lblOutNumber, saleNote.customer.outNumber ?? ''),
         DrawerBox.rowKeyValue(

@@ -11,6 +11,7 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../cubit/product_tab/product_tab_cubit.dart';
 import '../cubit/product_tab/product_tab_state.dart';
 import '../model/product_model.dart';
@@ -61,10 +62,17 @@ class ProductTabBuild extends StatelessWidget {
   Widget productTab(BuildContext context, List<ProductModel> productList,
       bool isLoading, TableViewFormModel form) {
     final widthScreen = MediaQuery.of(context).size.width;
+    final bool editable;
     TextEditingController textController = TextEditingController.fromValue(
         TextEditingValue(
             text: form.finder.text,
             selection: TextSelection.collapsed(offset: form.finder.position)));
+
+    if (form.user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
 
     return Column(
       children: [
@@ -95,7 +103,7 @@ class ProductTabBuild extends StatelessWidget {
               },
             )),
             Visibility(
-              visible: widthScreen >= 600,
+              visible: widthScreen >= 600 && editable,
               child: const VerticalDivider(
                 thickness: 1,
                 width: 1,
@@ -105,7 +113,7 @@ class ProductTabBuild extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: widthScreen >= 600,
+              visible: widthScreen >= 600 && editable,
               child: IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {},
@@ -203,6 +211,7 @@ class ProductTabBuild extends StatelessWidget {
                                   builder: (context) => ProductDrawerDetails(
                                         product: productRow,
                                         actions: true,
+                                        user: form.user,
                                       )).then((value) {
                                 context.read<ProductTabCubit>().load(form);
                               });

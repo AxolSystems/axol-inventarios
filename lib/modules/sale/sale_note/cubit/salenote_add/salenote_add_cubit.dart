@@ -13,6 +13,7 @@ import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
 import '../../../../inventory_/movements/model/movement_model.dart';
 import '../../../../inventory_/movements/repository/movement_repo.dart';
 import '../../../../inventory_/product/model/product_model.dart';
+import '../../../../user/model/user_mdoel.dart';
 import '../../../../user/repository/user_repo.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';
@@ -29,10 +30,13 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   SaleNoteAddCubit() : super(InitialSaleNoteAddState());
 
   Future<void> initLoad(SaleNoteAddFormModel form, int saleType) async {
-    SaleNoteAddFormModel upForm = form;
-    int availableId = -1;
     try {
+      final UserModel user;
+      SaleNoteAddFormModel upForm = form;
+      int availableId = -1;
       emit(InitialSaleNoteAddState());
+      user = await LocalUser().getLocalUser();
+      form.user = user;
       emit(LoadingSaleNoteAddState());
       if (saleType == 0) {
         availableId = await SaleNoteRepo().fetchAvailableId();
@@ -143,16 +147,11 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         form.warehouseTf.validation = ValidationFormModel.trueValid();
         form.warehouseTf.value =
             '${warehouseList.first.id} - ${warehouseList.first.name}';
-        print(warehouseList.first.id);
-        print(warehouseList.first.name);
-        print(warehouseList.first.retailManager);
         form.warehouse = warehouseList.first;
         await validateAllList(form);
       } else {
         form.warehouseTf.validation = ValidationFormModel(
             isValid: false, errorMessage: form.emInvalidData);
-        /*upForm.warehouseTf.validation = ValidationFormModel(
-            isValid: false, errorMessage: form.emInvalidData);*/
       }
       emit(LoadedSaleNoteAddState());
     } catch (e) {

@@ -8,6 +8,7 @@ import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
+import '../../../user/model/user_mdoel.dart';
 import '../cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../cubit/vendor_tab/vendor_tab_form.dart';
 import '../cubit/vendor_tab/vendor_tab_state.dart';
@@ -30,9 +31,9 @@ class VendorTab extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is LoadingVendorTabState) {
-          return vendorTab(context, [], true);
+          return vendorTab(context, [], true, state.user);
         } else if (state is LoadedVendorTabState) {
-          return vendorTab(context, state.vendorList, false);
+          return vendorTab(context, state.vendorList, false, state.user);
         } else {
           return vendorTab(context, [], false);
         }
@@ -41,13 +42,22 @@ class VendorTab extends StatelessWidget {
   }
 
   Widget vendorTab(
-      BuildContext context, List<VendorModel> vendorList, bool isLoading) {
+      BuildContext context, List<VendorModel> vendorList, bool isLoading,
+      [UserModel? user]) {
+    final bool editable;
     TextfieldModel form = context.read<VendorTabForm>().state;
     TextfieldModel upForm;
     TextEditingController textController = TextEditingController();
     textController.value = TextEditingValue(
         text: form.text,
         selection: TextSelection.collapsed(offset: form.position));
+
+    if (user != null && user.rol == UserModel.rolAdmin) {
+      editable = true;
+    } else {
+      editable = false;
+    }
+
     return Column(
       children: [
         Container(
@@ -83,28 +93,35 @@ class VendorTab extends StatelessWidget {
                   },
                 ),
               ),
-              const VerticalDivider(
-                thickness: 1,
-                width: 1,
-                color: ColorPalette.lightItems10,
-                indent: 4,
-                endIndent: 4,
-              ),
-              IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) =>
-                        const ProviderVendorAdd(), //Sustituir por ProviderVendorAdd
-                  ).then((value) {
-                    context.read<VendorTabCubit>().load(form.text);
-                  });
-                },
-                icon: const Icon(
-                  Icons.add_outlined,
-                  color: ColorPalette.darkItems,
-                  size: 30,
+              Visibility(
+                visible: editable,
+                child: Row(
+                  children: [
+                    const VerticalDivider(
+                      thickness: 1,
+                      width: 1,
+                      color: ColorPalette.lightItems10,
+                      indent: 4,
+                      endIndent: 4,
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) =>
+                              const ProviderVendorAdd(), //Sustituir por ProviderVendorAdd
+                        ).then((value) {
+                          context.read<VendorTabCubit>().load(form.text);
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.add_outlined,
+                        color: ColorPalette.darkItems,
+                        size: 30,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -177,6 +194,7 @@ class VendorTab extends StatelessWidget {
                               context: context,
                               builder: (context) => VendorDrawerDetails(
                                     vendor: vendor,
+                                    user: user,
                                   )).then((value) {
                             context.read<VendorTabCubit>().load(form.text);
                           });

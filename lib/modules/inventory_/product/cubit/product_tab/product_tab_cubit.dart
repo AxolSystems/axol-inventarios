@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
+import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/repository/user_repo.dart';
 import '../../model/product_model.dart';
 import '../../model/product_response_model.dart';
 import '../../repository/product_repo.dart';
@@ -14,7 +16,10 @@ class ProductTabCubit extends Cubit<ProductTabState> {
       ProductResponseModel productResponse;
       final int countReg;
       final int limit = TableViewFormModel.rows50;
+      final UserModel user;
       emit(InitialProductTabState());
+      user = await LocalUser().getLocalUser();
+      form.user = user;
       emit(LoadingProductTabState());
       //countReg = await ProductRepo().countRecords();
       productResponse = await ProductRepo().fetchProductFinder(form.finder.text,

@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,10 +19,13 @@ class LoginController extends StatelessWidget {
               const SnackBar(content: Text('Usuario o contraseña invalida.')));
         } else if (state is LoginSuccessState) {
           final rol = state.user.rol;
-          if (rol == 'vendor') {
+          if (rol == UserModel.rolAdmin) {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const HomeView()));
-          } else if (rol == 'admin') {
+          } else if (rol == UserModel.rolVendor) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomeView()));
+          } else if (rol == UserModel.rolSup) {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const HomeView()));
           }

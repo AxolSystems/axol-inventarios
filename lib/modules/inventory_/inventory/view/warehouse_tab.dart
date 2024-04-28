@@ -76,7 +76,7 @@ class WarehouseTabBuild extends StatelessWidget {
                 ),
                 child: ButtonRowTable(
                   onPressed: () {
-                    if (index == 0) {
+                    if (warehouse.id == -2) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
