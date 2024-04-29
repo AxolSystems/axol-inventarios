@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/sale_report/view/srp_details_row_drawer.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 import 'package:axol_inventarios/utilities/widgets/navigation_rail/navigation_utilities.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import '../model/salereport_model.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
 import 'srp_add_bottomsheet.dart';
+import 'srp_add_row_drawer.dart';
 import 'srp_details_row_bottomsheet.dart';
 
 class SaleReportAdd extends StatelessWidget {
@@ -198,8 +200,6 @@ class SaleReportAddBuild extends StatelessWidget {
                                         final subtotal =
                                             row.quantity * row.unitPrice;
                                         return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4),
                                           decoration: const BoxDecoration(
                                             border: Border(
                                               bottom: BorderSide(
@@ -211,17 +211,10 @@ class SaleReportAddBuild extends StatelessWidget {
                                             style: OutlinedButton.styleFrom(
                                                 side: BorderSide.none),
                                             onPressed: () {
-                                              showModalBottomSheet(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.vertical(
-                                                                top: Radius
-                                                                    .circular(
-                                                                        12))),
+                                              showDialog(
                                                 context: context,
                                                 builder: (context) =>
-                                                    SrpDetailsRowBottomsheet(
+                                                    SrpDetailsRowDrawer(
                                                   row: row,
                                                   form: form,
                                                   index: index,
@@ -314,32 +307,11 @@ class SaleReportAddBuild extends StatelessWidget {
                               ),
                               children: [
                                 ButtonTool(
-                                  icon: Icons.add,
-                                  onPressed: isLoading
-                                      ? null
-                                      : () {
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            12))),
-                                            context: context,
-                                            builder: (context) =>
-                                                SrpAddBottomsheet(
-                                                    inventoryList:
-                                                        form.inventoryList),
-                                          ).then((value) {
-                                            if (value is SaleReportRowModel) {
-                                              form.saleReportList.add(value);
-                                              context
-                                                  .read<SrpAddCubit>()
-                                                  .load();
-                                            }
-                                          });
-                                        },
-                                ),
+                                    icon: Icons.add,
+                                    onPressed: isLoading
+                                        ? null
+                                        : SaleReportAddFunctions.onPressedAdd(
+                                            context, form)),
                                 ButtonTool(
                                   icon: Icons.save,
                                   onPressed: isLoading
@@ -451,28 +423,8 @@ class SaleReportAddBuild extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: !isLoading
-                                      ? () {
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            shape: const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            12))),
-                                            context: context,
-                                            builder: (context) =>
-                                                SrpAddBottomsheet(
-                                                    inventoryList:
-                                                        form.inventoryList),
-                                          ).then((value) {
-                                            if (value is SaleReportRowModel) {
-                                              form.saleReportList.add(value);
-                                              context
-                                                  .read<SrpAddCubit>()
-                                                  .load();
-                                            }
-                                          });
-                                        }
+                                      ? SaleReportAddFunctions.onPressedAdd(
+                                          context, form)
                                       : null,
                                   child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -508,6 +460,22 @@ class SaleReportAddBuild extends StatelessWidget {
           ],
         ));
   }
+}
+
+class SaleReportAddFunctions {
+  static Function() onPressedAdd(BuildContext context, SrpAddFormModel form) =>
+      () {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              SrpAddRowDrawer(inventoryList: form.inventoryList),
+        ).then((value) {
+          if (value is SaleReportRowModel) {
+            form.saleReportList.add(value);
+            context.read<SrpAddCubit>().load();
+          }
+        });
+      };
 }
 
 class SaleReportAddWidgets {
