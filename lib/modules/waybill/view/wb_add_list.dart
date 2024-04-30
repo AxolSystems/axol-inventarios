@@ -15,7 +15,7 @@ import '../cubit/wb_add/wb_add_cubit.dart';
 import '../cubit/wb_add/wb_add_state.dart';
 import '../model/waybill_list_model.dart';
 import '../model/wb_add_form_model.dart';
-import 'wb_add_details_bottomsheet.dart';
+import 'wb_add_details_drawer.dart';
 
 class WbAddList extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -182,7 +182,7 @@ class WbAddListBuild extends StatelessWidget {
                                           showDialog(
                                             context: context,
                                             builder: (context) =>
-                                                WbAddDetailsBottomsheet(
+                                                WbAddDetailsDrawer(
                                               form: form,
                                               index: index,
                                               inventoryRow: form.inventoryList

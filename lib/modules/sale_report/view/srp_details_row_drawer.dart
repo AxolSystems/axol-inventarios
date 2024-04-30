@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/modules/sale_report/view/srp_add_bottomsheet.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,7 @@ import '../../../utilities/widgets/drawer_box.dart';
 import '../../../utilities/widgets/text_label.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
+import 'srp_add_row_drawer.dart';
 
 class SrpDetailsRowDrawer extends StatelessWidget {
   final SaleReportRowModel row;
@@ -25,34 +25,91 @@ class SrpDetailsRowDrawer extends StatelessWidget {
     final subtotal = row.quantity * row.unitPrice;
     final double widthScreen = MediaQuery.of(context).size.width;
     return DrawerBox(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 8),
       width: widthScreen >= 600 ? 0.5 : 0.95,
-      actions: [
-        SecondaryButtonDialog(
-          text: 'Editar',
-          onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(12))),
-              context: context,
-              builder: (context) => SrpAddBottomsheet(
-                inventoryList: form.inventoryList,
-                rowEdit: row,
+      header: Visibility(
+        visible: widthScreen < 600,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: ColorPalette.darkItems,
+                )),
+          ],
+        ),
+      ),
+      actions: widthScreen >= 600
+          ? [
+              AlertButtonDialog(
+                text: 'Eliminar',
+                onPressed: () {
+                  form.saleReportList.removeAt(index);
+                  Navigator.pop(context);
+                },
               ),
-            ).then((value) {
-              Navigator.pop(context, value);
-            });
-          },
-        ),
-        AlertButtonDialog(
-          text: 'Eliminar',
-          onPressed: () {
-            form.saleReportList.removeAt(index);
-            Navigator.pop(context);
-          },
-        ),
-      ],
+              SecondaryButtonDialog(
+                text: 'Editar',
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => SrpAddRowDrawer(
+                      inventoryList: form.inventoryList,
+                      rowEdit: row,
+                    ),
+                  ).then((value) {
+                    if (value != null) {
+                      Navigator.pop(context, value);
+                    }
+                  });
+                },
+              ),
+              SecondaryButtonDialog(
+                text: 'Regresar',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ]
+          : [
+              SizedBox(
+                width: ((widthScreen * 0.95) / 2) - 16,
+                height: 40,
+                child: AlertButtonDialog(
+                  text: 'Eliminar',
+                  textStyle: Typo.mobileLigth18,
+                  onPressed: () {
+                    form.saleReportList.removeAt(index);
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              SizedBox(
+                width: ((widthScreen * 0.95) / 2) - 16,
+                height: 40,
+                child: SecondaryButtonDialog(
+                  text: 'Editar',
+                  textStyle: Typo.mobileDark18,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => SrpAddRowDrawer(
+                        inventoryList: form.inventoryList,
+                        rowEdit: row,
+                      ),
+                    ).then((value) {
+                      if (value != null) {
+                        Navigator.pop(context, value);
+                      }
+                    });
+                  },
+                ),
+              )
+            ],
       children: [
         Row(
           children: [

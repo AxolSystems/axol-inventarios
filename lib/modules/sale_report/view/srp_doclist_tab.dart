@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/sale_report/view/srp_details_doc_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -54,21 +55,16 @@ class SrpDoclistTabBuild extends StatelessWidget {
         }
         if (state is OpenDetailsSrpDoclistState) {
           final user = state.user;
-          showModalBottomSheet(
-              backgroundColor: ColorPalette.lightBackground,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(12))),
+          showDialog(
               context: context,
-              builder: (context) => SrpDetailsDocBottomsheet(
+              builder: (context) => SrpDetailsDocDrawer(
                     saleReport: state.saleReport,
                     user: user,
                   )).then((value) {
-                    if (value == SrpAddSubState.edit) {
-                      context.read<SrpDoclistCubit>().initLoad(form);
-                    }
-                  });
+            if (value == SrpAddSubState.edit) {
+              context.read<SrpDoclistCubit>().initLoad(form);
+            }
+          });
         }
       },
     );

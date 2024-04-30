@@ -86,14 +86,38 @@ class WbAddRowDrawerBuild extends StatelessWidget {
     SrpAddRowFormModel form,
   ) {
     final double widthScreen = MediaQuery.of(context).size.width;
+    final double widthDrawer;
     final double subTotal;
     final double quantity;
     final double unitPrice;
     quantity = double.tryParse(form.qtyCtrl.text) ?? 0;
     unitPrice = double.tryParse(form.unitPriceCtrl.text) ?? 0;
     subTotal = quantity * unitPrice;
+
+    if (rowEdit != null) {
+      widthDrawer = 0.05;
+    } else {
+      widthDrawer = 0;
+    }
+
     return DrawerBox(
-      width: widthScreen < 600 ? 0.95 : 0.5,
+      width: widthScreen < 600 ? (0.95 - widthDrawer) : (0.5 - widthDrawer),
+      header: Visibility(
+        visible: widthScreen < 600,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: ColorPalette.darkItems,
+                )),
+          ],
+        ),
+      ),
       actions: [
         Expanded(
           child: Column(

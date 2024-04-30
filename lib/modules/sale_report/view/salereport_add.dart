@@ -18,9 +18,7 @@ import '../cubit/add/srp_add_state.dart';
 import '../model/salereport_model.dart';
 import '../model/salereport_row_model.dart';
 import '../model/srp_add_form_model.dart';
-import 'srp_add_bottomsheet.dart';
 import 'srp_add_row_drawer.dart';
-import 'srp_details_row_bottomsheet.dart';
 
 class SaleReportAdd extends StatelessWidget {
   final WarehouseModel warehouse;
@@ -224,10 +222,10 @@ class SaleReportAddBuild extends StatelessWidget {
                                                     is SaleReportRowModel) {
                                                   form.saleReportList[index] =
                                                       value;
-                                                  context
-                                                      .read<SrpAddCubit>()
-                                                      .load();
                                                 }
+                                                context
+                                                    .read<SrpAddCubit>()
+                                                    .load();
                                               });
                                             },
                                             child: widthScreen < 600

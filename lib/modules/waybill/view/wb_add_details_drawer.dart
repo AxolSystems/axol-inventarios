@@ -11,11 +11,11 @@ import '../model/wb_add_form_model.dart';
 import '../model/wb_bottomsheet_form_model.dart';
 import 'wb_add_drawer.dart';
 
-class WbAddDetailsBottomsheet extends StatelessWidget {
+class WbAddDetailsDrawer extends StatelessWidget {
   final WbAddFormModel form;
   final int index;
   final InventoryRowModel inventoryRow;
-  const WbAddDetailsBottomsheet({
+  const WbAddDetailsDrawer({
     super.key,
     required this.form,
     required this.index,
