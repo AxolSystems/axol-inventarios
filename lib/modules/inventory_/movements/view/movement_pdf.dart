@@ -201,7 +201,7 @@ class MovementPdf {
 
         return widgetList;
       },
-      pageFormat: PdfPageFormat.a4,
+      pageFormat: PdfPageFormat.letter,
       margin: const pw.EdgeInsets.all(24),
     ));
     return pdf.save();

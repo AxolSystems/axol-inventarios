@@ -10,10 +10,12 @@ import '../model/sale_product_model.dart';
 class SaleNotePDF {
   Future<Uint8List> saleNotePDF(SaleNoteModel saleNote,
       List<SaleProductModel> productList, int saleType) async {
-    Uint8List image = (await rootBundle.load('assets/images/logo_jj.png')).buffer.asUint8List();
+    Uint8List image = (await rootBundle.load('assets/images/logo_jj.png'))
+        .buffer
+        .asUint8List();
     final pdf = pw.Document();
     const primaryColor = PdfColors.grey300;
-    const pw.TextStyle bodyText = pw.TextStyle(fontSize: 10);
+    const pw.TextStyle bodyText = pw.TextStyle(fontSize: 9);
     final pw.TextStyle subtitleText10 =
         pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold);
     final pw.TextStyle subtitleText12 =
@@ -169,44 +171,53 @@ class SaleNotePDF {
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Cantidad ', style: bodyText),
+                  flex: 2,
+                  child: pw.Text('Cantidad ', style: subtitleText10),
                 ),
-                pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Unidad ', style: bodyText),
-                ),
-                pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Clave ', style: bodyText),
-                ),
+                pw.SizedBox(width: 4),
                 pw.Expanded(
                   flex: 2,
-                  child: pw.Text('Descripción ', style: bodyText),
+                  child: pw.Text('Unidad ', style: subtitleText10),
                 ),
-                pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Peso ', style: bodyText),
-                ),
-                pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Galones ', style: bodyText),
-                ),
-                pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Calibre ', style: bodyText),
-                ),
+                pw.SizedBox(width: 4),
                 pw.Expanded(
                   flex: 2,
-                  child: pw.Text('Presentación ', style: bodyText),
+                  child: pw.Text('Clave ', style: subtitleText10),
                 ),
+                pw.SizedBox(width: 4),
                 pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('P/U ', style: bodyText),
+                  flex: 4,
+                  child: pw.Text('Descripción ', style: subtitleText10),
                 ),
+                pw.SizedBox(width: 4),
                 pw.Expanded(
-                  flex: 1,
-                  child: pw.Text('Importe ', style: bodyText),
+                  flex: 3,
+                  child: pw.Text('Peso ', style: subtitleText10),
+                ),
+                pw.SizedBox(width: 4),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text('Galones ', style: subtitleText10),
+                ),
+                pw.SizedBox(width: 4),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text('Calibre ', style: subtitleText10),
+                ),
+                pw.SizedBox(width: 4),
+                pw.Expanded(
+                  flex: 3,
+                  child: pw.Text('Presentación ', style: subtitleText10),
+                ),
+                pw.SizedBox(width: 4),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text('P/U ', style: subtitleText10),
+                ),
+                pw.SizedBox(width: 4),
+                pw.Expanded(
+                  flex: 2,
+                  child: pw.Text('Importe ', style: subtitleText10),
                 ),
               ]),
         ),
@@ -322,86 +333,99 @@ class SaleNotePDF {
         pw.Widget widget;
 
         for (var row in productList) {
-          widget = pw.Row(children: [
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                FormatNumber.format2dec(row.quantity),
-                style: bodyText,
+          widget = pw.Row(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  FormatNumber.format2dec(row.quantity),
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                row.product.packing ?? '',
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  row.product.packing ?? '',
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                row.product.code,
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  row.product.code,
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                row.product.description,
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 4,
+                child: pw.Text(
+                  row.product.description,
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                '${row.product.weight} KG',
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 3,
+                child: pw.Text(
+                  '${(row.product.weight ?? 0) * row.quantity} KG',
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                row.product.capacity ?? '',
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  row.product.capacity ?? '',
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                '${row.product.gauge ?? ''}',
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  '${row.product.gauge ?? ''}',
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                row.product.pieces ?? '',
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 3,
+                child: pw.Text(
+                  row.product.pieces ?? '',
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                FormatNumber.format2dec(row.price),
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  FormatNumber.format2dec(row.price),
+                  style: bodyText,
+                ),
               ),
-            ),
-            pw.Expanded(
-              flex: 1,
-              child: pw.Text(
-                FormatNumber.format2dec(row.price * row.quantity),
-                style: bodyText,
+              pw.SizedBox(width: 4),
+              pw.Expanded(
+                flex: 2,
+                child: pw.Text(
+                  FormatNumber.format2dec(row.price * row.quantity),
+                  style: bodyText,
+                ),
               ),
-            ),
-          ]);
+            ],
+          );
           rowList.add(widget);
           widget = pw.Text(row.note, style: bodyText);
+          widget = pw.SizedBox(height: 6);
           rowList.add(widget);
         }
 
         return rowList;
       },
-      pageFormat: PdfPageFormat.a4,
+      pageFormat: PdfPageFormat.letter,
       margin: const pw.EdgeInsets.symmetric(horizontal: 24, vertical: 12),
     ));
     return pdf.save();

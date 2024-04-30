@@ -217,7 +217,7 @@ class InventoryMovePdf {
 
         return rowList;
       },
-      pageFormat: PdfPageFormat.a4,
+      pageFormat: PdfPageFormat.letter,
       margin: const pw.EdgeInsets.symmetric(vertical: 24, horizontal: 12),
     ));
 
@@ -393,7 +393,7 @@ class InventoryMovePdf {
 
         return rowList;
       },
-      pageFormat: PdfPageFormat.a4,
+      pageFormat: PdfPageFormat.letter,
       margin: const pw.EdgeInsets.all(24),
     ));
 
@@ -712,7 +712,7 @@ class InventoryMovePdf {
         ));
         return widgetList;
       },
-      pageFormat: PdfPageFormat.a4,
+      pageFormat: PdfPageFormat.letter,
       margin: const pw.EdgeInsets.all(24),
     ));
 

@@ -117,7 +117,7 @@ class PdfMovementsFormats {
             ]),
         footer: (context) => pw.Text('${context.pageNumber}'),
         margin: const pw.EdgeInsets.all(10),
-        pageFormat: PdfPageFormat.a4,
+        pageFormat: PdfPageFormat.letter,
         build: (context) {
           return [
             pw.Column(
@@ -251,7 +251,7 @@ class PdfMovementsFormats {
             ]),
         footer: (context) => pw.Text('${context.pageNumber}'),
         margin: const pw.EdgeInsets.all(10),
-        pageFormat: PdfPageFormat.a4,
+        pageFormat: PdfPageFormat.letter,
         build: (context) {
           return [
             pw.Column(
