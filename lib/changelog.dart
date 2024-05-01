@@ -2,6 +2,11 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.9] - 2024-05-01
+### Modificado
+- Vista responsiva en modulo de reportes de venta.
+- Formato pdf de notas de venta.
+
 ## [1.0.8] - 2024-04-28
 ### Añadido
 - Tipo de cuenta con permiso de lectura.
