@@ -124,11 +124,9 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                             onPressed: isLoading
                                 ? null
                                 : () {
-                                    final id =
-                                        int.tryParse(form.controller.text) ?? 0;
                                     context
                                         .read<InvDownloadDrawerCubit>()
-                                        .csvSubSale(id, inventoryRowList);
+                                        .csvSubSale(form.controller.text, inventoryRowList);
                                   },
                           ),
                         ),
@@ -137,9 +135,9 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                             child: TextField(
                           controller: form.controller,
                           enabled: !isLoading,
-                          inputFormatters: [
+                          /*inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*$')),
-                          ],
+                          ],*/
                           style: Typo.bodyDark,
                           decoration: InputDecoration(
                             filled: true,

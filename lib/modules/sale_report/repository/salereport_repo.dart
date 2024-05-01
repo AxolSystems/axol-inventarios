@@ -88,17 +88,19 @@ class SaleReportRepo {
     return dataResponse;
   }
 
-  static Future<SaleReportModel> fetchSaleReportById(int id) async {
+  static Future<List<SaleReportModel>> fetchSaleReportById(
+      List<int> idList) async {
     List<Map<String, dynamic>> srpListDB;
     SaleReportModel saleReport;
     String code;
     List<String> codeList = [];
     List<ProductModel> productList;
+    List<SaleReportModel> saleReportList = [];
 
     srpListDB = await _supabase
         .from(_table)
         .select<List<Map<String, dynamic>>>()
-        .eq(_id, id);
+        .in_(_id, idList);
     if (srpListDB.isNotEmpty) {
       for (var saleRep in srpListDB) {
         final Map<String, dynamic> rows = saleRep[_report];
@@ -110,24 +112,29 @@ class SaleReportRepo {
         }
       }
       productList = await ProductRepo().fetchProductListCode(codeList);
-      saleReport = SaleReportModel(
-        date: DateTime.fromMillisecondsSinceEpoch(srpListDB.first[_date] ?? 0),
-        id: id,
-        note: srpListDB.first[_note],
-        reportRows:
-            SaleReportModel.mapToModel(srpListDB.first[_report], productList),
-        user: srpListDB.first[_user],
-        warehouse: WarehouseModel(
-          id: srpListDB.first[_warehouseId],
-          name: srpListDB.first[_warehouseName],
-          retailManager: srpListDB.first[_user],
-        ),
-      );
+
+      for (var srp in srpListDB) {
+        saleReport = SaleReportModel(
+          date:
+              DateTime.fromMillisecondsSinceEpoch(srp[_date] ?? 0),
+          id: srp[_id],
+          note: srp[_note],
+          reportRows:
+              SaleReportModel.mapToModel(srp[_report], productList),
+          user: srp[_user],
+          warehouse: WarehouseModel(
+            id: srp[_warehouseId],
+            name: srp[_warehouseName],
+            retailManager: srp[_user],
+          ),
+        );
+        saleReportList.add(saleReport);
+      }
     } else {
       saleReport = SaleReportModel.empty();
     }
 
-    return saleReport;
+    return saleReportList;
   }
 
   static Future<int> fetchAvailableId() async {

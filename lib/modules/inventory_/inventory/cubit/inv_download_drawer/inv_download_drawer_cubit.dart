@@ -26,14 +26,23 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
   }
 
   Future<void> csvSubSale(
-      int idReport, List<InventoryRowModel> inventoryRowList) async {
+      String idListText, List<InventoryRowModel> inventoryRowList) async {
     try {
       emit(InitialInvDownloadDrawerState());
       emit(LoadingInvDownloadDrawerState());
-      SaleReportModel report;
+      List<SaleReportModel> reportList;
+      int? id;
+      List<int> idList = [];
+      
+      for (String element in idListText.split(',')) {
+        id = int.tryParse(element);
+        if (id != null) {
+          idList.add(id);
+        }
+      }
 
-      report = await SaleReportRepo.fetchSaleReportById(idReport);
-      await InventoryCsv.invSubSaleCsv(inventoryRowList, report);
+      reportList = await SaleReportRepo.fetchSaleReportById(idList);
+      await InventoryCsv.invSubSaleCsv(inventoryRowList, reportList);
 
       emit(LoadedInvDownloadDrawerState());
     } catch (e) {

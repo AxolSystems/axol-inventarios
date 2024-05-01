@@ -60,8 +60,8 @@ class InventoryPdfRepo {
 }
 
 class InventoryCsv {
-  static Future<void> invSubSaleCsv(
-      List<InventoryRowModel> inventory, SaleReportModel report) async {
+  static Future<void> invSubSaleCsv(List<InventoryRowModel> inventory,
+      List<SaleReportModel> reportList) async {
     const String titleFile = 'inventario_restando_ventas.csv';
     List<List<dynamic>> rows = [];
     List<List<dynamic>> header = [];
@@ -76,7 +76,8 @@ class InventoryCsv {
     //Crea encabezado
     header.add([
       'Almacen: ',
-      report.warehouse.name,
+      // ignore: sdk_version_since
+      reportList.firstOrNull?.warehouse.name ?? '',
       '',
       'Fecha: ',
       FormatDate.dmy(DateTime.now()),
@@ -93,26 +94,31 @@ class InventoryCsv {
       'SUBTOTAL',
     ]);
 
-    //Actualiza inventario
-    if (report.reportRows.isNotEmpty && inventory.isNotEmpty) {
-      //Factoriza la lista sumando las cantidades con las mismas claves.
-      for (var element in report.reportRows) {
-        final inv = reportRows.firstWhere(
-            (x) => x.product.code == element.product.code,
-            orElse: SaleReportRowModel.empty);
-        if (inv.product.code == '') {
-          reportRows.add(element);
-        } else {
-          final i = reportRows.indexWhere((x) => x.product.code == element.product.code);
-          reportRows[i] = SaleReportRowModel(
-            customerName: reportRows[i].customerName,
-            product: reportRows[i].product,
-            quantity: reportRows[i].quantity + element.quantity,
-            unitPrice: reportRows[i].unitPrice,
-          );
+    for (SaleReportModel report in reportList) {
+      if (report.reportRows.isNotEmpty) {
+        //Factoriza la lista sumando las cantidades con las mismas claves.
+        for (var element in report.reportRows) {
+          final inv = reportRows.firstWhere(
+              (x) => x.product.code == element.product.code,
+              orElse: SaleReportRowModel.empty);
+          if (inv.product.code == '') {
+            reportRows.add(element);
+          } else {
+            final i = reportRows
+                .indexWhere((x) => x.product.code == element.product.code);
+            reportRows[i] = SaleReportRowModel(
+              customerName: reportRows[i].customerName,
+              product: reportRows[i].product,
+              quantity: reportRows[i].quantity + element.quantity,
+              unitPrice: reportRows[i].unitPrice,
+            );
+          }
         }
       }
+    }
 
+    //Actualiza inventario
+    if (inventory.isNotEmpty && reportList.isNotEmpty) {
       for (var element in reportRows) {
         final List list = inventory
             .where((x) => x.product.code == element.product.code)
