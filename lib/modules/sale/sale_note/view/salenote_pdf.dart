@@ -339,6 +339,7 @@ class SaleNotePDF {
         pw.Widget widget;
 
         for (var row in productList) {
+          final weight = (row.product.weight ?? 0) * row.quantity;
           widget = pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -378,7 +379,7 @@ class SaleNotePDF {
               pw.Expanded(
                 flex: 3,
                 child: pw.Text(
-                  '${(row.product.weight ?? 0) * row.quantity} KG',
+                  '${FormatNumber.format2dec(weight)} KG',
                   style: bodyText9,
                 ),
               ),

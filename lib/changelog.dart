@@ -6,6 +6,8 @@ class Changelog {
 ### Modificado
 - Vista responsiva en modulo de reportes de venta.
 - Formato pdf de notas de venta.
+### Corregido
+- Formato a dos decimales del peso de nota de venta.
 
 ## [1.0.8] - 2024-04-28
 ### Añadido
