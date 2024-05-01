@@ -17,6 +17,7 @@ class ProductRepo {
   static const String _packing = 'packing';
   static const String _capacity = 'capacity';
   static const String _price = 'price';
+  static const String _unitSale = 'unit_sale';
 
   final _supabase = Supabase.instance.client;
 
@@ -46,6 +47,7 @@ class ProductRepo {
         type: element[_properties][_type],
         weight: double.parse(element[_properties][_weight]),
         price: element[_price],
+        unitSale: element[_unitSale] ?? '',
       );
         products.add(product);
       }
@@ -98,6 +100,7 @@ class ProductRepo {
         type: productDB[_properties][_type],
         weight: double.parse(productDB[_properties][_weight]),
         price: productDB[_price],
+        unitSale: productDB[_unitSale] ?? '',
       );
     } else {
       productDB = {};
@@ -123,6 +126,7 @@ class ProductRepo {
         properties: productsDB.single[_properties],
         class_: productsDB.single[_class],
         price: productsDB.single[_price],
+        unitSale: productsDB.single[_unitSale] ?? '',
       );
     } else {
       product = null;
@@ -145,6 +149,7 @@ class ProductRepo {
           properties: element[_properties] ?? ProductModel.empty().properties,
           class_: element[_class],
           price: element[_price],
+          unitSale: element[_unitSale] ?? '',
         );
         products.add(product);
       }
@@ -185,7 +190,8 @@ class ProductRepo {
         pieces: element[_properties]?[_pieces] ?? '',
         type: element[_properties]?[_type] ?? '',
         weight: double.tryParse(element[_properties]?[_weight] ?? '') ?? 0,
-        price: element[_price] ?? 0
+        price: element[_price] ?? 0,
+        unitSale: element[_unitSale] ?? '',
       );
         productResponse.productList.add(product);
       }
@@ -206,6 +212,8 @@ class ProductRepo {
       _description: product.description,
       _properties: product.properties,
       _class: product.class_,
+      _price: product.price,
+      _unitSale: product.unitSale,
     }).eq(_code, product.code);
   }
 

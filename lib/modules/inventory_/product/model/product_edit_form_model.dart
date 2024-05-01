@@ -9,6 +9,8 @@ class ProductEditFormModel {
   TextfieldFormModel tfGauge;
   TextfieldFormModel tfPices;
   TextfieldFormModel tfWeight;
+  TextfieldFormModel tfPrice;
+  TextfieldFormModel tfUnitSale;
   int class_;
   int focusIndex;
 
@@ -22,6 +24,8 @@ class ProductEditFormModel {
     required this.tfPices,
     required this.tfType,
     required this.focusIndex,
+    required this.tfPrice,
+    required this.tfUnitSale,
     required this.class_,
   });
 
@@ -34,6 +38,8 @@ class ProductEditFormModel {
         tfPices = TextfieldFormModel.empty(),
         tfType = TextfieldFormModel.empty(),
         tfWeight = TextfieldFormModel.empty(),
+        tfPrice = TextfieldFormModel.empty(),
+        tfUnitSale = TextfieldFormModel.empty(),
         class_ = -1,
         focusIndex = -1;
 }

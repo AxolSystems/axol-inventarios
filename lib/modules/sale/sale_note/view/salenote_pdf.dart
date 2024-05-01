@@ -15,7 +15,8 @@ class SaleNotePDF {
         .asUint8List();
     final pdf = pw.Document();
     const primaryColor = PdfColors.grey300;
-    const pw.TextStyle bodyText = pw.TextStyle(fontSize: 9);
+    const pw.TextStyle bodyText9 = pw.TextStyle(fontSize: 9);
+    const pw.TextStyle bodyText11 = pw.TextStyle(fontSize: 11);
     final pw.TextStyle subtitleText10 =
         pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold);
     final pw.TextStyle subtitleText12 =
@@ -54,7 +55,7 @@ class SaleNotePDF {
                 border: pw.Border(bottom: pw.BorderSide(color: primaryColor))),
             child: pw.Row(children: [
               pw.Container(
-                width: 120,
+                width: 140,
                 //height: 70,
                 child: pw.Image(pw.MemoryImage(image)),
                 //pw.Center(child: pw.Text('Logo')),
@@ -62,16 +63,17 @@ class SaleNotePDF {
               pw.Expanded(
                   child: pw.Column(children: [
                 pw.Text('J&J PLASTICOS RECYCLING S DE RL DE CV'),
-                pw.Text('JAJ100906LL9', style: bodyText),
-                pw.Text('21500', style: bodyText),
-                pw.Text('Tel: 665-521-7218 Cel: 665-799-3117', style: bodyText),
+                pw.Text('JAJ100906LL9', style: bodyText9),
+                pw.Text('21500', style: bodyText9),
+                pw.Text('Tel: 665-521-7218 Cel: 665-799-3117', style: bodyText9),
                 pw.Text('email: bolsasvallelaspalmas@gmail.com',
-                    style: bodyText),
+                    style: bodyText9),
               ])),
               pw.VerticalDivider(
-                thickness: 1,
+                thickness: 0.5,
                 width: 16,
                 endIndent: 10,
+                color: primaryColor,
               ),
               pw.Column(children: [
                 pw.Container(
@@ -131,95 +133,99 @@ class SaleNotePDF {
                   pw.Text(
                     'Nombre: ${saleNote.customer.name}',
                     textAlign: pw.TextAlign.left,
-                    style: bodyText,
+                    style: bodyText9,
                   ),
                   pw.Text(
                     'RFC: ${saleNote.customer.rfc ?? ''}',
                     textAlign: pw.TextAlign.left,
-                    style: bodyText,
+                    style: bodyText9,
                   ),
                   pw.Text(
                     'Tel: ${saleNote.customer.phoneNumber ?? ''}',
                     textAlign: pw.TextAlign.left,
-                    style: bodyText,
+                    style: bodyText9,
                   ),
                   pw.Text(
                     'Domicilio: ${saleNote.customer.intNumber ?? ''}, ${saleNote.customer.outNumber ?? ''}, ${saleNote.customer.street ?? ''}, CP: ${saleNote.customer.postalCode ?? ''}',
                     textAlign: pw.TextAlign.left,
-                    style: bodyText,
+                    style: bodyText9,
                   ),
                   pw.Text(
                       'Ciudad: ${saleNote.customer.town ?? ''}, ${saleNote.customer.country ?? ''}',
                       textAlign: pw.TextAlign.left,
-                      style: bodyText),
+                      style: bodyText9),
                   pw.Text(
                     'Colonia: ${saleNote.customer.hood ?? ''}',
                     textAlign: pw.TextAlign.left,
-                    style: bodyText,
+                    style: bodyText9,
                   ),
                 ])),
         pw.Container(
           height: 30,
           width: double.infinity,
           alignment: pw.Alignment.centerLeft,
-          child: pw.Text(saleNote.note, style: bodyText),
+          child: pw.Text(saleNote.note, style: subtitleText10),
         ),
-        pw.Container(
-          height: 30,
-          color: primaryColor,
-          child: pw.Row(
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('Cantidad ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('Unidad ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('Clave ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 4,
-                  child: pw.Text('Descripción ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Text('Peso ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('Galones ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('Calibre ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Text('Presentación ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('P/U ', style: subtitleText10),
-                ),
-                pw.SizedBox(width: 4),
-                pw.Expanded(
-                  flex: 2,
-                  child: pw.Text('Importe ', style: subtitleText10),
-                ),
-              ]),
+        pw.Padding(
+          padding: const pw.EdgeInsets.only(bottom: 6),
+          child: pw.Container(
+            height: 26,
+            color: primaryColor,
+            child: pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: [
+                  pw.SizedBox(width: 8),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('Cantidad ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('Unidad ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('Clave ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 4,
+                    child: pw.Text('Descripción ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 3,
+                    child: pw.Text('Peso ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('Galones ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('Calibre ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 3,
+                    child: pw.Text('Presentación ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('P/U ', style: subtitleText10),
+                  ),
+                  pw.SizedBox(width: 4),
+                  pw.Expanded(
+                    flex: 2,
+                    child: pw.Text('Importe ', style: subtitleText10),
+                  ),
+                ]),
+          ),
         ),
       ]),
       footer: (context) =>
@@ -236,11 +242,11 @@ class SaleNotePDF {
                   child: pw.Text('Cantidad con letra', style: subtitleText10),
                 ),
                 pw.Container(
-                  height: 15,
+                  height: 20,
                   alignment: pw.Alignment.center,
                   child: pw.Text(
                       '${charNum.toUpperCase()} PESOS ${FormatNumber.format2dig(cents)}/100 M.N.',
-                      style: bodyText),
+                      style: bodyText11),
                 )
               ],
             ),
@@ -254,19 +260,19 @@ class SaleNotePDF {
                   alignment: pw.Alignment.center,
                   child: pw.Text('Total', style: subtitleText10)),
               pw.Container(
-                height: 15,
+                height: 20,
                 color: primaryColor,
                 child: pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: [
-                      pw.Text('  \$ ', style: bodyText),
+                      pw.Text('  \$ ', style: bodyText11),
                       pw.Expanded(
                           child: pw.Container(
-                        height: 15,
+                        height: 20,
                         alignment: pw.Alignment.centerRight,
                         color: PdfColors.white,
-                        child: pw.Text(FormatNumber.format2dec(totalAmount),
-                            style: bodyText),
+                        child: pw.Text('${FormatNumber.format2dec(totalAmount)}  ',
+                            style: subtitleText12),
                       )),
                       pw.SizedBox(width: 8),
                     ]),
@@ -285,7 +291,7 @@ class SaleNotePDF {
               ),
               pw.Container(
                 alignment: pw.Alignment.center,
-                child: pw.Text(saleNote.vendor.id.toString(), style: bodyText),
+                child: pw.Text(saleNote.vendor.id.toString(), style: bodyText11),
               ),
             ],
           )),
@@ -300,7 +306,7 @@ class SaleNotePDF {
               pw.Container(
                 alignment: pw.Alignment.center,
                 child: pw.Text('${FormatNumber.format2dec(totalWight)} KG',
-                    style: bodyText),
+                    style: bodyText11),
               ),
             ],
           )),
@@ -317,7 +323,7 @@ class SaleNotePDF {
           child: pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.center,
             children: [
-              pw.Text('Firma: '),
+              pw.Text('Firma: ', style: bodyText11),
               pw.Container(
                   height: 15,
                   width: 300,
@@ -336,19 +342,20 @@ class SaleNotePDF {
           widget = pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
+              pw.SizedBox(width: 8),
               pw.Expanded(
                 flex: 2,
                 child: pw.Text(
                   FormatNumber.format2dec(row.quantity),
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
               pw.Expanded(
                 flex: 2,
                 child: pw.Text(
-                  row.product.packing ?? '',
-                  style: bodyText,
+                  row.product.unitSale,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -356,7 +363,7 @@ class SaleNotePDF {
                 flex: 2,
                 child: pw.Text(
                   row.product.code,
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -364,7 +371,7 @@ class SaleNotePDF {
                 flex: 4,
                 child: pw.Text(
                   row.product.description,
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -372,7 +379,7 @@ class SaleNotePDF {
                 flex: 3,
                 child: pw.Text(
                   '${(row.product.weight ?? 0) * row.quantity} KG',
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -380,7 +387,7 @@ class SaleNotePDF {
                 flex: 2,
                 child: pw.Text(
                   row.product.capacity ?? '',
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -388,7 +395,7 @@ class SaleNotePDF {
                 flex: 2,
                 child: pw.Text(
                   '${row.product.gauge ?? ''}',
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -396,7 +403,7 @@ class SaleNotePDF {
                 flex: 3,
                 child: pw.Text(
                   row.product.pieces ?? '',
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -404,7 +411,7 @@ class SaleNotePDF {
                 flex: 2,
                 child: pw.Text(
                   FormatNumber.format2dec(row.price),
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
               pw.SizedBox(width: 4),
@@ -412,13 +419,13 @@ class SaleNotePDF {
                 flex: 2,
                 child: pw.Text(
                   FormatNumber.format2dec(row.price * row.quantity),
-                  style: bodyText,
+                  style: bodyText9,
                 ),
               ),
             ],
           );
           rowList.add(widget);
-          widget = pw.Text(row.note, style: bodyText);
+          widget = pw.Text(row.note, style: bodyText9);
           widget = pw.SizedBox(height: 6);
           rowList.add(widget);
         }

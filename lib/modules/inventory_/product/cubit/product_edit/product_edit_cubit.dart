@@ -50,6 +50,16 @@ class ProductEditCubit extends Cubit<ProductEditState> {
         selection: TextSelection.collapsed(
             offset: product.capacity?.toString().length ?? 0),
       );
+      form.tfPrice.controller.value = TextEditingValue(
+        text: product.price.toString(),
+        selection:
+            TextSelection.collapsed(offset: product.price.toString().length),
+      );
+      form.tfUnitSale.controller.value = TextEditingValue(
+        text: product.unitSale,
+        selection:
+            TextSelection.collapsed(offset: product.unitSale.toString().length),
+      );
       form.class_ = product.class_;
       emit(LoadedProductEditState());
     } catch (e) {
@@ -67,7 +77,8 @@ class ProductEditCubit extends Cubit<ProductEditState> {
     }
   }
 
-  Future<void> save(ProductEditFormModel form, String code, double price) async {
+  Future<void> save(
+      ProductEditFormModel form, String code, double price) async {
     try {
       emit(InitialProductEditState());
       emit(LoadingProductEditState());
@@ -75,7 +86,8 @@ class ProductEditCubit extends Cubit<ProductEditState> {
           class_: form.class_,
           code: code,
           description: form.tfDescription.controller.text,
-          price: price,
+          price: double.parse(form.tfPrice.controller.text),
+          unitSale: form.tfUnitSale.controller.text,
           properties: {
             ProductModel.tCode: code,
             ProductModel.tType: form.tfType.controller.text,

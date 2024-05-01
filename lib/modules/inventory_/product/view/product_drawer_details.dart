@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
+import 'package:axol_inventarios/utilities/format.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ class ProductDrawerDetails extends StatelessWidget {
   final ProductModel product;
   final UserModel user;
   final bool? actions;
-  const ProductDrawerDetails({super.key, required this.product, this.actions, required this.user});
+  const ProductDrawerDetails(
+      {super.key, required this.product, this.actions, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,10 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
   final bool actions;
   final UserModel user;
   const ProductDrawerDetailsBuild(
-      {super.key, required this.product, required this.actions, required this.user});
+      {super.key,
+      required this.product,
+      required this.actions,
+      required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +68,12 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
     }
 
     return DrawerBox(
-      width: widthScreen > 760 ? 0.5 : widthScreen > 450 ? 0.8 : 0.95,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+        width: widthScreen > 760
+            ? 0.5
+            : widthScreen > 450
+                ? 0.8
+                : 0.95,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         header: const Text(
           'Detalles del producto',
           style: Typo.subtitleDark,
@@ -102,6 +111,8 @@ class ProductDrawerDetailsBuild extends StatelessWidget {
           DrawerBox.rowKeyValue('Presentación: ', product.pieces ?? ''),
           DrawerBox.rowKeyValue('Peso: ',
               product.weight == null ? '' : product.weight.toString()),
+          DrawerBox.rowKeyValue('Precio: ', '\$ ${FormatNumber.format2dec(product.price)}'),
+          DrawerBox.rowKeyValue('Unidad de venta: ', product.unitSale),
         ]);
   }
 }

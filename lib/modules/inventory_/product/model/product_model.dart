@@ -3,6 +3,7 @@ class ProductModel {
   final String description;
   final int class_;
   final double price;
+  final String unitSale;
   final Map<String, dynamic>? properties;
   final String? type;
   final double? gauge;
@@ -37,6 +38,7 @@ class ProductModel {
     required this.description,
     required this.class_,
     required this.price,
+    required this.unitSale,
     this.properties,
     this.type,
     this.gauge,
@@ -52,6 +54,7 @@ class ProductModel {
         code: '',
         description: '',
         price: 0,
+        unitSale: '',
         properties: {
           tCode: '',
           tDescription: '',
@@ -82,6 +85,7 @@ class ProductModel {
       properties: newMap,
       class_: product.class_,
       price: product.price,
+      unitSale: product.unitSale
     );
     return newProduct;
   }
@@ -89,6 +93,7 @@ class ProductModel {
   ProductModel.singleCode(this.code)
       : description = '',
         price = 0,
+        unitSale = '',
         capacity = null,
         class_ = -1,
         gauge = null,

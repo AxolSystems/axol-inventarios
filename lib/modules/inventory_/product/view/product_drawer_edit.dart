@@ -176,6 +176,27 @@ class ProductDrawerEditBuild extends StatelessWidget {
               context.read<ProductEditCubit>().load();
             },
           ),
+          TextFieldInputForm(
+            controller: form.tfPrice.controller,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
+            ],
+            label: ProductModel.lblWeight,
+            isFocus: form.focusIndex == 8,
+            onSubmitted: (value) {
+              form.focusIndex = 9;
+              context.read<ProductEditCubit>().load();
+            },
+          ),
+          TextFieldInputForm(
+            controller: form.tfUnitSale.controller,
+            label: ProductModel.lblPieces,
+            isFocus: form.focusIndex == 9,
+            onSubmitted: (value) {
+              form.focusIndex = 10;
+              context.read<ProductEditCubit>().load();
+            },
+          ),
           DropdownButton(
             value: form.class_,
             items: const [
