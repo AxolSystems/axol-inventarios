@@ -51,6 +51,7 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
       }
       form.limitPage = (countReg / limit).ceil();
       form.totalReg = countReg;
+      form.filter[0] = SaleFilterModel.currentFind(form.finder.text);
       emit(LoadedSaleNoteState(salenoteList: salenoteListDB));
     } catch (e) {
       emit(InitialSaleNoteState());
@@ -64,12 +65,12 @@ class SaleNoteTabCubit extends Cubit<SaleNoteTabState> {
       final int limit = TableViewFormModel.rows50;
       final UserModel user;
       emit(InitialSaleNoteState());
-      user =  await LocalUser().getLocalUser();
+      user = await LocalUser().getLocalUser();
       form.user = user;
       emit(LoadingSaleNoteState());
       List<SaleNoteModel> notesDB = [];
       DataResponseModel dataResponse;
-      
+
       //Nota de venta
       if (saleType == 0) {
         dataResponse = await SaleNoteRepo().fetchNotes(

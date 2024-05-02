@@ -125,7 +125,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
             )),
         SecondaryButtonDialog(
           text: 'Descargar PDF',
-          isLoading: isLoading,
+          enabled: isLoading,
           onPressed: () {
             context
                 .read<SaleNoteDetailsCubit>()
@@ -133,7 +133,7 @@ class SaleNoteDrawerDetailsBuild extends StatelessWidget {
           },
         ),
         SecondaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           onPressed: () {
             Navigator.pop(context);
           },

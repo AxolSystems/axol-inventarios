@@ -257,7 +257,7 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
                     child: SecondaryButtonDialog(
                       text: 'Descargar PDF',
                       onPressed: null,
-                      loadingState: loading == LoadingSrpDocDetails.downPdf,
+                      loading: loading == LoadingSrpDocDetails.downPdf,
                     ),
                   ),
                 ),
@@ -267,7 +267,7 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
                   height: 40,
                   child: SecondaryButtonDialog(
                     text: 'Descargar CSV',
-                    loadingState: loading == LoadingSrpDocDetails.downCsv,
+                    loading: loading == LoadingSrpDocDetails.downCsv,
                     onPressed: isLoading
                         ? null
                         : () {

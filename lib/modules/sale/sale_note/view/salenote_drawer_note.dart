@@ -83,13 +83,13 @@ class SaleNoteDrawerNoteBuild extends StatelessWidget {
       ),
       actions: [
         SecondaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         PrimaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           onPressed: () {
             if (row == null) {
               textNote_ = controller.value.text;

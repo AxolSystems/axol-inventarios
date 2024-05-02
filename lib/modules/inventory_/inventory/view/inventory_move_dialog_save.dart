@@ -64,7 +64,7 @@ class InventoryMoveDialogSaveBuild extends StatelessWidget {
           },
         ),
         SecondaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           text: 'Descargar PDF',
           onPressed: () {
             if (reportData.concept.id == 58) {

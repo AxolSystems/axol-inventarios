@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/sale/sale_note/model/salenote_filter_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,7 @@ import '../cubit/salenote_tab/salenote_tab_form.dart';
 import '../model/sale_note_model.dart';
 import '../../../../utilities/widgets/table_view/tableview_form.dart';
 import 'salenote_add.dart';
+import 'salenote_dialog_down.dart';
 import 'salenote_drawer_details.dart';
 
 class SaleNoteTab extends StatelessWidget {
@@ -95,9 +97,6 @@ class SaleNoteTabBuild extends StatelessWidget {
                   onPressed: () {
                     if (isLoading == false) {
                       form.finder = TextfieldModel.empty();
-                      /*context
-                          .read<SaleNoteTabForm>()
-                          .setForm(TableViewFormModel.empty());*/
                       context
                           .read<SaleNoteTabCubit>()
                           .load(saleType, form, true);
@@ -116,6 +115,22 @@ class SaleNoteTabBuild extends StatelessWidget {
                         endIndent: 4,
                       ),
                       IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => SaleNoteDialogDown(
+                                regCount: form.totalReg,
+                                saleType: saleType,
+                                filter:
+                                    form.filter[0] ?? SaleFilterModel.empty(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.download,
+                            color: ColorPalette.darkItems,
+                          )),
+                      IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () {
                           showDialog(
@@ -128,9 +143,6 @@ class SaleNoteTabBuild extends StatelessWidget {
                             context
                                 .read<SaleNoteTabCubit>()
                                 .load(saleType, form, true);
-                            /*context
-                                .read<SaleNoteTabForm>()
-                                .setForm(TableViewFormModel.empty());*/
                           });
                         },
                         icon: const Icon(
@@ -279,9 +291,6 @@ class SaleNoteTabBuild extends StatelessWidget {
                                   context
                                       .read<SaleNoteTabCubit>()
                                       .load(saleType, form, true);
-                                  /*context
-                                      .read<SaleNoteTabForm>()
-                                      .setForm(TableViewFormModel.empty());*/
                                 });
                               },
                               child: Row(

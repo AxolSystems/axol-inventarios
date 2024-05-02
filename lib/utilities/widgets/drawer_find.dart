@@ -143,7 +143,7 @@ class DrawerFind extends StatelessWidget {
         )),
         const Expanded(child: SizedBox()),
         SecondaryButtonDialog(
-          isLoading: false,
+          enabled: false,
           onPressed: () {
             Navigator.pop(context);
           },

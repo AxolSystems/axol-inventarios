@@ -55,4 +55,16 @@ class SaleNoteModel {
         note = '',
         status = -1,
         saleProduct = [];
+
+  SaleNoteModel.setSaleProduct({required this.saleProduct, required SaleNoteModel saleNote}) : 
+    id = saleNote.id,
+    customer = saleNote.customer,
+    date = saleNote.date,
+    subtotal = saleNote.subtotal,
+    iva = saleNote.iva,
+    total = saleNote.total,
+    warehouse = saleNote.warehouse,
+    vendor = saleNote.vendor,
+    note = saleNote.note,
+    status = saleNote.status;
 }

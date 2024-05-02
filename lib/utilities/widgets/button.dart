@@ -5,15 +5,19 @@ import '../theme/theme.dart';
 class PrimaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
-  final bool? isLoading;
+  final bool? enabled;
+  final bool? loading;
+  final Icon? icon;
   final TextStyle? textStyle;
 
   const PrimaryButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
-    this.isLoading,
+    this.enabled,
     this.textStyle,
+    this.loading,
+    this.icon
   }) : super(key: key);
 
   @override
@@ -23,10 +27,12 @@ class PrimaryButtonDialog extends StatefulWidget {
 class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
   @override
   Widget build(BuildContext context) {
-    final String fText = widget.text ?? 'Guardar';
+    final icon = widget.icon;
+    final String text = widget.text ?? 'Guardar';
     final Function() fOnPressed = widget.onPressed ?? () {};
-    final bool isLoading_ = widget.isLoading ?? false;
+    final bool isLoading_ = widget.enabled ?? false;
     final TextStyle textStyle = widget.textStyle ?? Typo.bodyLight;
+    final bool? loading = widget.loading;
     return OutlinedButton(
       onPressed: isLoading_ ? () {} : fOnPressed,
       style: OutlinedButton.styleFrom(
@@ -35,7 +41,20 @@ class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
         backgroundColor: ColorPalette.primary,
         side: BorderSide.none,
       ),
-      child: Text(fText, style: textStyle),
+      //child: Text(fText, style: textStyle),
+      child: icon != null
+          ? Row(
+              children: [icon, Text(text, style: textStyle)],
+            )
+          : loading == true
+              ? const SizedBox(
+                width: 20,
+                height: 20,
+                  child: CircularProgressIndicator(
+                    color: ColorPalette.lightItems10,
+                  ),
+                )
+              : Text(text, style: textStyle),
     );
   }
 }
@@ -44,20 +63,20 @@ class SecondaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;
   final String? text;
   final TextStyle? textStyle;
-  final bool? isLoading;
+  final bool? enabled;
   final Icon? icon;
   final BorderSide? border;
-  final bool? loadingState;
+  final bool? loading;
 
   const SecondaryButtonDialog({
     Key? key,
     this.onPressed,
     this.text,
-    this.isLoading,
+    this.enabled,
     this.icon,
     this.border,
     this.textStyle,
-    this.loadingState,
+    this.loading,
   }) : super(key: key);
 
   @override
@@ -70,10 +89,10 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
     final icon = widget.icon;
     final String text = widget.text ?? 'Regresar';
     final Function()? fOnPressed = widget.onPressed;
-    final bool isLoading_ = widget.isLoading ?? false;
+    final bool isLoading_ = widget.enabled ?? false;
     final BorderSide? border = widget.border;
     final TextStyle? textStyle = widget.textStyle;
-    final bool? loadingState = widget.loadingState;
+    final bool? loading = widget.loading;
     return OutlinedButton(
       onPressed: isLoading_ ? null : fOnPressed,
       style: OutlinedButton.styleFrom(
@@ -88,7 +107,7 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
           ? Row(
               children: [icon, Text(text, style: textStyle ?? Typo.bodyDark)],
             )
-          : loadingState == true
+          : loading == true
               ? const SizedBox(
                 width: 20,
                 height: 20,

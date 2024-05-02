@@ -181,7 +181,7 @@ class ProductDrawerEditBuild extends StatelessWidget {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
             ],
-            label: ProductModel.lblWeight,
+            label: ProductModel.lblPrice,
             isFocus: form.focusIndex == 8,
             onSubmitted: (value) {
               form.focusIndex = 9;
@@ -190,7 +190,7 @@ class ProductDrawerEditBuild extends StatelessWidget {
           ),
           TextFieldInputForm(
             controller: form.tfUnitSale.controller,
-            label: ProductModel.lblPieces,
+            label: ProductModel.lblUnit,
             isFocus: form.focusIndex == 9,
             onSubmitted: (value) {
               form.focusIndex = 10;

@@ -242,7 +242,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
         Text('${form.totalReg} registros', style: Typo.bodyDark),
         const Expanded(child: SizedBox()),
         SecondaryButtonDialog(
-          isLoading: false,
+          enabled: false,
           onPressed: () {
             Navigator.pop(context);
           },

@@ -28,6 +28,7 @@ class MainApp extends StatelessWidget {
       home: const AuthPage(),
       theme: ThemeData(
         colorSchemeSeed: ColorPalette.primary,
+        useMaterial3: false,
       ),
     );
   }

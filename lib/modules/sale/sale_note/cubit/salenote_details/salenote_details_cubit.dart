@@ -5,7 +5,7 @@ import '../../../../inventory_/product/model/product_model.dart';
 import '../../../../inventory_/product/repository/product_repo.dart';
 import '../../model/sale_note_model.dart';
 import '../../model/sale_product_model.dart';
-import '../../repository/sale_pdf_repo.dart';
+import '../../repository/sale_file_repo.dart';
 import 'salenote_details_state.dart';
 
 class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
@@ -42,7 +42,7 @@ class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
     try {
       emit(InitialSaleNoteDetailsState());
       emit(LoadingSaleNoteDetailsState());
-      await SalePdfRepo.saleNoteSave(saleNote, productList, saleType);
+      await SaleFileRepo.saleNotePdf(saleNote, productList, saleType);
       emit(LoadedSaleNoteDetailsState(productList: productList));
     } catch (e) {
       emit(InitialSaleNoteDetailsState());

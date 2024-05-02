@@ -208,7 +208,7 @@ class WbListDetailsDrawerBuild extends StatelessWidget {
                         child: SecondaryButtonDialog(
                           text: 'Descargar PDF',
                           onPressed: null,
-                          loadingState: loading == LoadingWbListDetails.downPdf,
+                          loading: loading == LoadingWbListDetails.downPdf,
                         ),
                       ),
                     ),
@@ -218,7 +218,7 @@ class WbListDetailsDrawerBuild extends StatelessWidget {
                       height: 40,
                       child: SecondaryButtonDialog(
                         text: 'Descargar CSV',
-                        loadingState: loading == LoadingWbListDetails.downCsv,
+                        loading: loading == LoadingWbListDetails.downCsv,
                         onPressed: isLoading
                             ? null
                             : () {

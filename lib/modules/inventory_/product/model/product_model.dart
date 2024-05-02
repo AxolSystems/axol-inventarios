@@ -32,6 +32,8 @@ class ProductModel {
   static String get lblMeasure => 'Medida';
   static String get lblPacking => 'Empaque';
   static String get lblCapacity => 'Capacidad';
+  static String get lblPrice => 'Precio';
+  static String get lblUnit => 'Unidad';
 
   ProductModel({
     required this.code,

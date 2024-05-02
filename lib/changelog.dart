@@ -2,6 +2,11 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.10] - 2024-05-01
+### Añadido
+- Filtro por clave en notas de ventas y remisiones. Al escribir en el buscador "clave:" y luego el número de la nota, se filtrara dicha nota; puede filtrar una lista de notas en especifico escribiendo cada número de nota separado por una coma; también puede filtrar un rango escribiendo un guión entre dos números de notas.
+- Descarga en csv de tabla con los datos de las notas de ventas y remisiones filtrados en el momento.
+
 ## [1.0.9] - 2024-05-01
 ### Modificado
 - Vista responsiva en modulo de reportes de venta.

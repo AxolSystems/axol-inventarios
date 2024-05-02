@@ -39,7 +39,7 @@ class SaleNoteRepo {
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     DataResponseModel dataResponse;
     final int rangeMin = filter.rangeMin ?? 0;
-    final int rangeMax = filter.rangeMax ?? 0;
+    final int rangeMax = filter.rangeMax ?? 999;
 
     if (filter.customer > -1) {
       filters['${SaleNoteModel.tCustomer}->>${customer.tId}'] = filter.customer;
@@ -60,6 +60,41 @@ class SaleNoteRepo {
               '*', const FetchOptions(count: CountOption.exact))
           .order(_time, ascending: false)
           .range(rangeMin, rangeMax);
+    } else if (finder.toLowerCase().startsWith('clave:')) {
+      final List<String> list;
+      final find = finder.toLowerCase().replaceFirst('clave:', '');
+      if (find.contains('-')) {
+        list = find.split('-');
+        if (list.length == 2) {
+          postgrestResponse = await _supabase
+              .from(_table)
+              .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+                  '*', const FetchOptions(count: CountOption.exact))
+              .gte(_id, list.first)
+              .lte(_id, list.last)
+              .order(_time, ascending: false)
+              .range(rangeMin, rangeMax);
+        } else {
+          postgrestResponse = const PostgrestResponse(data: null, status: 0);
+        }
+      } else if (find.contains(',')) {
+        list = find.split(',');
+        postgrestResponse = await _supabase
+              .from(_table)
+              .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+                  '*', const FetchOptions(count: CountOption.exact))
+              .in_(_id, list)
+              .order(_time, ascending: false)
+              .range(rangeMin, rangeMax);
+      } else {
+        postgrestResponse = await _supabase
+            .from(_table)
+            .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+                '*', const FetchOptions(count: CountOption.exact))
+            .eq(_id, find)
+            .order(_time, ascending: false)
+            .range(rangeMin, rangeMax);
+      }
     } else {
       textOr =
           '${SaleNoteModel.tCustomer}->>${customer.tName}.ilike.%$finder%,';

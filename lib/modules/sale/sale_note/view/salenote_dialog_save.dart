@@ -81,7 +81,7 @@ class SaleNoteDialogSaveBuild extends StatelessWidget {
           ),
         ),
         SecondaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           text: 'Descargar PDF',
           onPressed: () async {
             context.read<SaleDialogSaveCubit>().downloadPdf(saleNote, productList, saleType);

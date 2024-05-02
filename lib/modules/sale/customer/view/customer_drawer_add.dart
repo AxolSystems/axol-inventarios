@@ -114,13 +114,13 @@ class CustomerDrawerAdd extends StatelessWidget {
       ),
       actions: [
         SecondaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         PrimaryButtonDialog(
-          isLoading: isLoading,
+          enabled: isLoading,
           onPressed: () {
             context.read<CustomerAddCubit>().save(form);
           },
