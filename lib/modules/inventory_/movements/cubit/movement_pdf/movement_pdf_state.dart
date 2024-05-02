@@ -9,19 +9,19 @@ class InitialMovePdfState extends MovementPdfState {
   List<Object?> get props => [];
 }
 
-class LoadingMovePdfState extends MovementPdfState {
+class LoadingMoveFileState extends MovementPdfState {
   @override
   List<Object?> get props => [];
 }
 
-class LoadedMovePdfState extends MovementPdfState {
+class LoadedMoveFileState extends MovementPdfState {
   @override
   List<Object?> get props => [];
 }
 
-class ErrorMovePdfState extends MovementPdfState {
+class ErrorMoveFileState extends MovementPdfState {
   final String error;
-  const ErrorMovePdfState({required this.error});
+  const ErrorMoveFileState({required this.error});
   @override
   String toString() => 'Error: $error';
   @override

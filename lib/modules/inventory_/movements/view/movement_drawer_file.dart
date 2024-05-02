@@ -13,42 +13,42 @@ import '../cubit/movement_pdf/movement_pdf_cubit.dart';
 import '../model/movement_model.dart';
 import '../model/movement_pdf_form_model.dart';
 
-class MovementDrawerPdf extends StatelessWidget {
+class MovementDrawerFile extends StatelessWidget {
   final List<MovementModel> movementList;
-  const MovementDrawerPdf({super.key, required this.movementList});
+  const MovementDrawerFile({super.key, required this.movementList});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => MovementPdfCubit()),
-        BlocProvider(create: (_) => MovementPdfForm()),
+        BlocProvider(create: (_) => MovementFileCubit()),
+        BlocProvider(create: (_) => MovementFileForm()),
       ],
-      child: MovementDrawerPdfBuild(movementList: movementList),
+      child: MovementDrawerFileBuild(movementList: movementList),
     );
   }
 }
 
-class MovementDrawerPdfBuild extends StatelessWidget {
+class MovementDrawerFileBuild extends StatelessWidget {
   final List<MovementModel> movementList;
-  const MovementDrawerPdfBuild({super.key, required this.movementList});
+  const MovementDrawerFileBuild({super.key, required this.movementList});
 
   @override
   Widget build(BuildContext context) {
-    MovementPdfFormModel form = context.read<MovementPdfForm>().state;
+    MovementFileFormModel form = context.read<MovementFileForm>().state;
     return BlocConsumer(
-      bloc: context.read<MovementPdfCubit>()..load(),
+      bloc: context.read<MovementFileCubit>()..initLoad(form),
       builder: (context, state) {
-        if (state is LoadingMovePdfState) {
-          return movementDrawerPdf(context, true, [], form);
-        } else if (state is LoadedMovePdfState) {
-          return movementDrawerPdf(context, false, movementList, form);
+        if (state is LoadingMoveFileState) {
+          return movementDrawerFile(context, true, [], form);
+        } else if (state is LoadedMoveFileState) {
+          return movementDrawerFile(context, false, movementList, form);
         } else {
-          return movementDrawerPdf(context, false, [], form);
+          return movementDrawerFile(context, false, [], form);
         }
       },
       listener: (context, state) {
-        if (state is ErrorMovePdfState) {
+        if (state is ErrorMoveFileState) {
           showDialog(
             context: context,
             builder: (context) => AlertDialogAxol(text: state.error),
@@ -58,13 +58,26 @@ class MovementDrawerPdfBuild extends StatelessWidget {
     );
   }
 
-  Widget movementDrawerPdf(
+  Widget movementDrawerFile(
     BuildContext context,
     bool isLoading,
     List<MovementModel> movementList,
-    MovementPdfFormModel form,
+    MovementFileFormModel form,
   ) {
     final widthScreen = MediaQuery.of(context).size.width;
+    List<DropdownMenuItem<int>> items = [
+      const DropdownMenuItem(value: -2, child: Text('TODOS'))
+    ];
+    DropdownMenuItem<int> item;
+
+    for (var warehouse in form.warehouseList) {
+      item = DropdownMenuItem(
+        value: warehouse.id,
+        child: Text('${warehouse.id} - ${warehouse.name}'),
+      );
+      items.add(item);
+    }
+
     return DrawerBox(
       width: widthScreen >= 600 ? 0.5 : 0.95,
       header: Column(
@@ -129,7 +142,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                               ? null
                               : () {
                                   context
-                                      .read<MovementPdfCubit>()
+                                      .read<MovementFileCubit>()
                                       .downloadPdf(movementList);
                                 },
                         ),
@@ -190,7 +203,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                               text: 'Agrege folio existente'));
                                 } else {
                                   context
-                                      .read<MovementPdfCubit>()
+                                      .read<MovementFileCubit>()
                                       .downloadPdfFolio(folio);
                                 }
                               },
@@ -281,7 +294,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                             ? null
                             : () {
                                 context
-                                    .read<MovementPdfCubit>()
+                                    .read<MovementFileCubit>()
                                     .downloadPdfDocument(
                                       document: form.document.text,
                                       concept: form.concept.text,
@@ -379,7 +392,7 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                 value: form.filterDate,
                                 onChanged: (value) {
                                   form.filterDate = value;
-                                  context.read<MovementPdfCubit>().load();
+                                  context.read<MovementFileCubit>().load();
                                 },
                               ),
                             ),
@@ -437,7 +450,9 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                       if (value != null) {
                                         form.startTime =
                                             FormatDate.startDay(value);
-                                        context.read<MovementPdfCubit>().load();
+                                        context
+                                            .read<MovementFileCubit>()
+                                            .load();
                                       }
                                     });
                                   },
@@ -484,7 +499,336 @@ class MovementDrawerPdfBuild extends StatelessWidget {
                                         .then((value) {
                                       if (value != null) {
                                         form.endTime = FormatDate.endDay(value);
-                                        context.read<MovementPdfCubit>().load();
+                                        context
+                                            .read<MovementFileCubit>()
+                                            .load();
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.calendar_month,
+                                    color: ColorPalette.lightItems10,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+        ),
+        const Divider(
+          color: ColorPalette.lightItems20,
+          height: 1,
+          thickness: 1,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Movimientos al inventario',
+                        style: Typo.boldLabelDark),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      width: widthScreen >= 600 ? 80 : 56,
+                      child: SecondaryButtonDialog(
+                        text: widthScreen >= 600 ? 'CSV' : '',
+                        textStyle: Typo.labelDark,
+                        border:
+                            const BorderSide(color: ColorPalette.lightItems10),
+                        icon: const Icon(
+                          Icons.download,
+                          color: ColorPalette.lightItems10,
+                        ),
+                        onPressed: isLoading ? null : () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Almacén',
+                        style: Typo.labelDark,
+                      ),
+                      DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          constraints:
+                              BoxConstraints.tight(const Size.fromHeight(40)),
+                        ),
+                        items: items,
+                        value: form.warehouseSelect,
+                        onChanged: (value) {
+                          if (value != null) {
+                            form.warehouseSelect = value;
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Seleccione el almacén del que se requiere tomar los datos.',
+                        style: Typo.smallLabelDark,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Switch(
+                                activeColor: ColorPalette.primary,
+                                value: form.input,
+                                onChanged: (value) {
+                                  form.input = value;
+                                  context.read<MovementFileCubit>().load();
+                                },
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Entradas', style: Typo.labelDark),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Toma los movimientos que son entradas al inventario.',
+                                  style: Typo.smallLabelDark,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Switch(
+                                activeColor: ColorPalette.primary,
+                                value: form.output,
+                                onChanged: (value) {
+                                  form.output = value;
+                                  context.read<MovementFileCubit>().load();
+                                },
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Salidas', style: Typo.labelDark),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Toma los movimientos que son salidas al inventario',
+                                  style: Typo.smallLabelDark,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Switch(
+                                activeColor: ColorPalette.primary,
+                                value: form.factorize,
+                                onChanged: (value) {
+                                  form.factorize = value;
+                                  context.read<MovementFileCubit>().load();
+                                },
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Factorizar movimientos',
+                                    style: Typo.labelDark),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Junta todos los movimientos con la misma clave',
+                                  style: Typo.smallLabelDark,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Switch(
+                                activeColor: ColorPalette.primary,
+                                value: form.filterDateMoves,
+                                onChanged: (value) {
+                                  form.filterDateMoves = value;
+                                  context.read<MovementFileCubit>().load();
+                                },
+                              ),
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Filtrar fecha', style: Typo.labelDark),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Filtra las fechas que se encuentren dentro del rango indicado por Fecha Inicial y Fecha Final',
+                                  style: Typo.smallLabelDark,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Fecha inicial',
+                        style: Typo.labelDark,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              color: ColorPalette.filled,
+                              border:
+                                  Border.all(color: ColorPalette.lightItems10),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Center(
+                                  child: Text(
+                                      FormatDate.dmy(form.startTimeMoves),
+                                      style: Typo.bodyDark),
+                                )),
+                                IconButton(
+                                  onPressed: () {
+                                    showDatePicker(
+                                            context: context,
+                                            initialDate: form.startTimeMoves,
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime.now())
+                                        .then((value) {
+                                      if (value != null) {
+                                        form.startTimeMoves =
+                                            FormatDate.startDay(value);
+                                        context
+                                            .read<MovementFileCubit>()
+                                            .load();
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.calendar_month,
+                                    color: ColorPalette.lightItems10,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Fecha final',
+                        style: Typo.labelDark,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            decoration: BoxDecoration(
+                              color: ColorPalette.filled,
+                              border:
+                                  Border.all(color: ColorPalette.lightItems10),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8)),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Center(
+                                  child: Text(FormatDate.dmy(form.endTimeMoves),
+                                      style: Typo.bodyDark),
+                                )),
+                                IconButton(
+                                  onPressed: () {
+                                    showDatePicker(
+                                            context: context,
+                                            initialDate: form.endTimeMoves,
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime.now())
+                                        .then((value) {
+                                      if (value != null) {
+                                        form.endTimeMoves =
+                                            FormatDate.endDay(value);
+                                        context
+                                            .read<MovementFileCubit>()
+                                            .load();
                                       }
                                     });
                                   },

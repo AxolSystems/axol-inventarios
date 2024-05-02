@@ -18,29 +18,46 @@ import '../../repository/movement_files_repo.dart';
 import '../../repository/movement_repo.dart';
 import 'movement_pdf_state.dart';
 
-class MovementPdfCubit extends Cubit<MovementPdfState> {
-  MovementPdfCubit() : super(InitialMovePdfState());
+class MovementFileCubit extends Cubit<MovementPdfState> {
+  MovementFileCubit() : super(InitialMovePdfState());
+
+  Future<void> initLoad(MovementFileFormModel form) async {
+    try {
+      emit(InitialMovePdfState());
+      emit(LoadingMoveFileState());
+      List<WarehouseModel> warehouseList;
+
+      warehouseList = await WarehousesRepo().fetchAllWarehouses();
+      warehouseList.sort((a, b) => a.id.compareTo(b.id));
+      form.warehouseList = warehouseList;
+
+      emit(LoadedMoveFileState());
+    } catch (e) {
+      emit(InitialMovePdfState());
+      emit(ErrorMoveFileState(error: e.toString()));
+    }
+  }
 
   Future<void> load() async {
     try {
       emit(InitialMovePdfState());
-      emit(LoadingMovePdfState());
+      emit(LoadingMoveFileState());
 
-      emit(LoadedMovePdfState());
+      emit(LoadedMoveFileState());
     } catch (e) {
       emit(InitialMovePdfState());
-      emit(ErrorMovePdfState(error: e.toString()));
+      emit(ErrorMoveFileState(error: e.toString()));
     }
   }
 
   Future<void> downloadPdf(List<MovementModel> movementList) async {
     try {
       emit(InitialMovePdfState());
-      emit(LoadingMovePdfState());
+      emit(LoadingMoveFileState());
       await MovementPdfRepo.movementPdfSave(movementList);
-      emit(LoadedMovePdfState());
+      emit(LoadedMoveFileState());
     } catch (e) {
-      emit(ErrorMovePdfState(error: e.toString()));
+      emit(ErrorMoveFileState(error: e.toString()));
     }
   }
 
@@ -50,7 +67,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
 
     try {
       emit(InitialMovePdfState());
-      emit(LoadingMovePdfState());
+      emit(LoadingMoveFileState());
 
       MovementResponseModel movementResponse;
       List<int> warehouseIdList = [];
@@ -154,12 +171,12 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
         await InventoryPdfRepo.singleMove(dataReport);
       }
 
-      emit(LoadedMovePdfState());
+      emit(LoadedMoveFileState());
     } catch (e) {
-      emit(ErrorMovePdfState(error: e.toString()));
+      emit(ErrorMoveFileState(error: e.toString()));
     } finally {
       if (isError == true) {
-        emit(ErrorMovePdfState(error: messangeError));
+        emit(ErrorMoveFileState(error: messangeError));
       }
     }
   }
@@ -176,7 +193,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
 
     try {
       emit(InitialMovePdfState());
-      emit(LoadingMovePdfState());
+      emit(LoadingMoveFileState());
 
       MovementResponseModel movementResponse;
       List<int> warehouseIdList = [];
@@ -209,7 +226,7 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
         ),
         rangeMin: 0,
         rangeMax: 1000,
-        isFilterConcept: isFilterConcept, 
+        isFilterConcept: isFilterConcept,
       );
 
       if (movementResponse.count <= 0) {
@@ -304,17 +321,17 @@ class MovementPdfCubit extends Cubit<MovementPdfState> {
       //Descarga pdf
       InventoryPdfRepo.multiMove(dataReport);
 
-      emit(LoadedMovePdfState());
+      emit(LoadedMoveFileState());
     } catch (e) {
-      emit(ErrorMovePdfState(error: e.toString()));
+      emit(ErrorMoveFileState(error: e.toString()));
     } finally {
       if (isError == true) {
-        emit(ErrorMovePdfState(error: messangeError));
+        emit(ErrorMoveFileState(error: messangeError));
       }
     }
   }
 }
 
-class MovementPdfForm extends Cubit<MovementPdfFormModel> {
-  MovementPdfForm() : super(MovementPdfFormModel.empty());
+class MovementFileForm extends Cubit<MovementFileFormModel> {
+  MovementFileForm() : super(MovementFileFormModel.empty());
 }
