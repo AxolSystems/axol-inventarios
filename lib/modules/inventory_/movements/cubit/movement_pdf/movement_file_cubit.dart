@@ -16,7 +16,7 @@ import '../../model/movement_pdf_form_model.dart';
 import '../../model/movement_response_model.dart';
 import '../../repository/movement_files_repo.dart';
 import '../../repository/movement_repo.dart';
-import 'movement_pdf_state.dart';
+import 'movement_file_state.dart';
 
 class MovementFileCubit extends Cubit<MovementPdfState> {
   MovementFileCubit() : super(InitialMovePdfState());
@@ -328,6 +328,49 @@ class MovementFileCubit extends Cubit<MovementPdfState> {
       if (isError == true) {
         emit(ErrorMoveFileState(error: messangeError));
       }
+    }
+  }
+
+  Future<void> csvMove(MovementFileFormModel form) async {
+    try {
+      emit(InitialMovePdfState());
+      emit(LoadingMoveFileState());
+      MovementResponseModel movementResponse;
+      List<MovementModel> movementList = [];
+      MovementModel movement;
+
+      movementResponse = await MovementRepo().fetchMoveToDown(
+        warehouseId: form.warehouseSelect,
+        factorize: form.factorize,
+        input: form.input,
+        output: form.output,
+        startTime: form.startTimeMoves,
+        endTime: form.endTimeMoves,
+      );
+      if (form.factorize == true) {
+        for (int i = 0; i < movementResponse.movementList.length; i++) {
+          final move = movementResponse.movementList[i];
+          if (movementList.where((x) => x.code == move.code).isEmpty) {
+            movementList.add(move);
+          } else {
+            final qty = movementList.firstWhere((x) => x.code == move.code).quantity;
+            final iSet = movementList.indexWhere((x) => x.code == move.code);
+            movement =
+                MovementModel.setQuantity(quantity: qty + move.quantity, move: move);
+            movementList[iSet] = movement;
+          }
+          
+        }
+      } else {
+        movementList = movementResponse.movementList;
+      }
+
+      await MovementCsvRepo.movementCsvSave(movementList);
+
+      emit(LoadedMoveFileState());
+    } catch (e) {
+      emit(InitialMovePdfState());
+      emit(ErrorMoveFileState(error: e.toString()));
     }
   }
 }

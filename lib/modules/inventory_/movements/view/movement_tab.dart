@@ -175,7 +175,7 @@ class MovementTabBuild extends StatelessWidget {
                 );
               },
               icon: const Icon(
-                Icons.picture_as_pdf,
+                Icons.download,
                 color: ColorPalette.darkItems,
                 size: 30,
               ),

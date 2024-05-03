@@ -25,7 +25,7 @@ class MovementPdfRepo {
   }
 }
 
-class MovementCsv {
+class MovementCsvRepo {
   static Future<void> movementCsvSave(List<MovementModel> movementList) async {
     const String titleFile = 'movimientos.csv';
     List<String> rowHeader = [

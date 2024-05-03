@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/modules/inventory_/movements/cubit/movement_pdf/movement_pdf_state.dart';
+import 'package:axol_inventarios/modules/inventory_/movements/cubit/movement_pdf/movement_file_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +9,7 @@ import '../../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
-import '../cubit/movement_pdf/movement_pdf_cubit.dart';
+import '../cubit/movement_pdf/movement_file_cubit.dart';
 import '../model/movement_model.dart';
 import '../model/movement_pdf_form_model.dart';
 
@@ -553,7 +553,9 @@ class MovementDrawerFileBuild extends StatelessWidget {
                           Icons.download,
                           color: ColorPalette.lightItems10,
                         ),
-                        onPressed: isLoading ? null : () {},
+                        onPressed: isLoading ? null : () {
+                          context.read<MovementFileCubit>().csvMove(form);
+                        },
                       ),
                     ),
                   ],
@@ -570,13 +572,24 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       ),
                       DropdownButtonFormField(
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          filled: true,
+                          fillColor: ColorPalette.filled,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: ColorPalette.lightItems10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: ColorPalette.primary),
+                          ),
                           constraints:
                               BoxConstraints.tight(const Size.fromHeight(40)),
                         ),
                         items: items,
                         value: form.warehouseSelect,
+                        style: Typo.bodyDark,
                         onChanged: (value) {
                           if (value != null) {
                             form.warehouseSelect = value;
@@ -694,44 +707,6 @@ class MovementDrawerFileBuild extends StatelessWidget {
                                 SizedBox(height: 4),
                                 Text(
                                   'Junta todos los movimientos con la misma clave',
-                                  style: Typo.smallLabelDark,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Switch(
-                                activeColor: ColorPalette.primary,
-                                value: form.filterDateMoves,
-                                onChanged: (value) {
-                                  form.filterDateMoves = value;
-                                  context.read<MovementFileCubit>().load();
-                                },
-                              ),
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Filtrar fecha', style: Typo.labelDark),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Filtra las fechas que se encuentren dentro del rango indicado por Fecha Inicial y Fecha Final',
                                   style: Typo.smallLabelDark,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,

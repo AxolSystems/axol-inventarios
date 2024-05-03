@@ -103,4 +103,19 @@ class MovementModel {
         user = userName,
         stock = newStock,
         folio = folioAvailable; //Modificar
+
+  MovementModel.setQuantity({required this.quantity, required MovementModel move}) : 
+  code = move.code,
+  concept = move.concept,
+  conceptName = move.conceptName,
+  conceptType = move.conceptType,
+  description = move.description,
+  document = move.document,
+  folio = move.folio,
+  id = move.id,
+  stock = move.stock,
+  time = move.time,
+  user = move.user,
+  warehouseId = move.warehouseId,
+  warehouseName = move.warehouseName;
 }
