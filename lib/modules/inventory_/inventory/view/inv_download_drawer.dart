@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/inventory_/inventory/model/warehouse_model.dart';
+import 'package:axol_inventarios/utilities/format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,7 +41,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
   Widget build(BuildContext context) {
     InvDownloadFormModel form = context.read<InvDownloadForm>().state;
     return BlocConsumer<InvDownloadDrawerCubit, InvDownloadDrawerState>(
-      bloc: context.read<InvDownloadDrawerCubit>()..load(),
+      bloc: context.read<InvDownloadDrawerCubit>()..initLoad(form),
       builder: (context, state) {
         if (state is LoadingInvDownloadDrawerState) {
           return invDownloadDrawer(
@@ -71,7 +72,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
       InvDownloadFormModel form,
       List<InventoryRowModel> inventoryRowList,
       WarehouseModel warehouse) {
-        final widthScreen = MediaQuery.of(context).size.width;
+    final widthScreen = MediaQuery.of(context).size.width;
     return DrawerBox(
       width: widthScreen >= 600 ? 0.5 : 0.95,
       header: const Text(
@@ -125,7 +126,8 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                                 : () {
                                     context
                                         .read<InvDownloadDrawerCubit>()
-                                        .csvSubSale(form.controller.text, inventoryRowList);
+                                        .csvSubSale(form.controller.text,
+                                            inventoryRowList);
                                   },
                           ),
                         ),
@@ -200,11 +202,92 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                               Text(
                                 'Descarga en archivo csv el inventario del almacén actual.',
                                 style: Typo.smallLabelDark,
-                              )
+                              ),
                             ],
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Estado de inventario a fecha determinada',
+                      style: Typo.labelDark,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 56,
+                          height: 36,
+                          child: SecondaryButtonDialog(
+                            text: '',
+                            border: const BorderSide(
+                                color: ColorPalette.lightItems10),
+                            icon: const Icon(
+                              Icons.download,
+                              color: ColorPalette.lightItems10,
+                            ),
+                            onPressed: isLoading
+                                ? null
+                                : () {
+                                    context
+                                        .read<InvDownloadDrawerCubit>()
+                                        .csvInvToDate(
+                                            warehouse, form.timeInventory);
+                                  },
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: ColorPalette.lightItems10,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                backgroundColor: ColorPalette.filled,
+                              ),
+                              onPressed: () {
+                                showDatePicker(
+                                        context: context,
+                                        initialDate: form.timeInventory,
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime.now())
+                                    .then((value) {
+                                  if (value != null) {
+                                    form.timeInventory =
+                                        FormatDate.startDay(value);
+                                    context
+                                        .read<InvDownloadDrawerCubit>()
+                                        .load();
+                                  }
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Center(
+                                    child: Text(
+                                        FormatDate.dmy(form.timeInventory),
+                                        style: Typo.bodyDark),
+                                  )),
+                                  const Icon(
+                                    Icons.calendar_month,
+                                    color: ColorPalette.lightItems10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Seleccione la fecha del estado de inventario que desea descargar. La fecha seleccionada es considerada al principio del dia.',
+                      style: Typo.smallLabelDark,
                     ),
                   ],
                 ),

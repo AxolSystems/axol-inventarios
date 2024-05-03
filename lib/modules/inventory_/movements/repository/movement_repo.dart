@@ -213,6 +213,67 @@ class MovementRepo {
     return movementResponse;
   }
 
+  Future<MovementResponseModel> fetchMoveInRangeTime({
+    required DateTime startTime,
+    required DateTime endTime,
+    required int warehouseId,
+  }) async {
+    List<MovementModel> movements = [];
+    final MovementResponseModel movementResponse;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    MovementModel move;
+    int initDateInt = startTime.millisecondsSinceEpoch;
+    int endDateInt = endTime.millisecondsSinceEpoch;
+    List<Map<String, dynamic>> movementsDB = [];
+
+    if (warehouseId == -2) {
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.estimated))
+          .lte(_time, endDateInt)
+          .gte(_time, initDateInt)
+          .order(_time, ascending: false);
+    } else {
+      postgrestResponse = await _supabase
+          .from(_table)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.estimated))
+          .eq(_warehouseId, warehouseId)
+          .lte(_time, endDateInt)
+          .gte(_time, initDateInt)
+          .order(_time, ascending: false);
+    }
+
+    movementsDB = postgrestResponse.data ?? [];
+
+    if (movementsDB.isNotEmpty) {
+      for (var element in movementsDB) {
+        move = MovementModel(
+            id: element[_id].toString(),
+            code: element[_code].toString(),
+            concept: element[_concept] ?? -1,
+            conceptType: element[_conceptType] ?? -1,
+            conceptName: element[_conceptName] ?? '',
+            description: element[_description] ?? '',
+            document: element[_document] ?? '',
+            quantity: element[_quantity] ?? -1,
+            time: DateTime.fromMillisecondsSinceEpoch(element[_time]),
+            warehouseName: element[_warehouseName] ?? '',
+            warehouseId: element[_warehouseId] ?? -1,
+            user: element[_user] ?? '',
+            stock: element[_stock] ?? -1,
+            folio: element[_folio] ?? -1);
+
+        movements.add(move);
+      }
+    }
+
+    movementResponse = MovementResponseModel(
+        movementList: movements, count: postgrestResponse.count ?? 0);
+    return movementResponse;
+  }
+
   Future<int> fetchAvailableFolio() async {
     List<Map<String, dynamic>> movementDB = [];
     int newFolio = -1;
