@@ -197,7 +197,9 @@ class CustomerTabBuild extends StatelessWidget {
                             builder: (context) =>
                                 CustomerDrawerDetails(customer: customer, user: form.user,),
                           ).then((value) {
-                            context.read<CustomerTabCubit>().load(form, true);
+                            if (value == true) {
+                              context.read<CustomerTabCubit>().load(form, true);
+                            }
                           });
                         },
                       ),

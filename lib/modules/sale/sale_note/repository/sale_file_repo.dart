@@ -1,7 +1,6 @@
-// ignore: avoid_web_libraries_in_flutter
 import 'dart:convert';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
-import 'package:axol_inventarios/modules/inventory_/product/model/product_model.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart';
 

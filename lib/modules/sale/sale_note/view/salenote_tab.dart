@@ -287,10 +287,11 @@ class SaleNoteTabBuild extends StatelessWidget {
                                           saleType: saleType,
                                           user: form.user,
                                         )).then((value) {
-                                  form.finder = TextfieldModel.empty();
-                                  context
-                                      .read<SaleNoteTabCubit>()
-                                      .load(saleType, form, true);
+                                  if (value == true) {
+                                    context
+                                        .read<SaleNoteTabCubit>()
+                                        .load(saleType, form, false);
+                                  }
                                 });
                               },
                               child: Row(

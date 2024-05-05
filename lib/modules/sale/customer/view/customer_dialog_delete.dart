@@ -19,7 +19,7 @@ class CustomerDialogDelete extends StatelessWidget {
       listener: (context, state) {
         if (state is CloseCustomerDeleteState) {
           Navigator.pop(context);
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }
       },
       builder: (context, state) {

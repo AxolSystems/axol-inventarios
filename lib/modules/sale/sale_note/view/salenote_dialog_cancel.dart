@@ -40,7 +40,7 @@ class SaleNoteDialogCancelBuild extends StatelessWidget {
       listener: (context, state) {
         if (state is CloseSaleNoteCancelState) {
           Navigator.pop(context);
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }
       },
       builder: (context, state) {
