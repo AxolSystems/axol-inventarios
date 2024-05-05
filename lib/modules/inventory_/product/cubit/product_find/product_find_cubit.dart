@@ -22,7 +22,7 @@ class ProductFindCubit extends Cubit<DrawerFindState> {
     final int rangeMin;
     final int rangeMax;
     final int limit = TableViewFormModel.rows50;
-    final String find = form.textfield.controller.text;
+    final String find = form.tfFind.controller.text;
     try {
       emit(InitialDrawerFindState());
       emit(LoadingDrawerFindState());

@@ -175,7 +175,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
             children: [
               Expanded(
                 child: TextField(
-                  controller: form.textfield.controller,
+                  controller: form.tfFind.controller,
                   autofocus: true,
                   decoration: TextFieldDecoration.inputForm(lblText: lblText),
                   cursorColor: ColorPalette.primary,
@@ -187,18 +187,12 @@ class ProductDrawerFindBuild extends StatelessWidget {
                               .load(form, warehouse, currentPage: 1);
                         }
                       : null,
-                  onChanged: (value) {
-                    form.textfield.controller.value = TextEditingValue(
-                      text: value,
-                      selection: TextSelection.collapsed(offset: value.length),
-                    );
-                  },
                 ),
               ),
               IconButton(
                 onPressed: isLoading == false
                     ? () {
-                      form.textfield.controller.value = TextEditingValue.empty;
+                      form.tfFind.controller.value = TextEditingValue.empty;
                         context.read<ProductFindCubit>().load(form, warehouse, currentPage: 1);
                       }
                     : null,

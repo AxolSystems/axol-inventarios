@@ -92,10 +92,12 @@ class InventoryMoveAddBuild extends StatelessWidget {
           value: concept.id, label: '${concept.id} - ${concept.text}');
       entryConceptList.add(entry);
     }
-    for (var warehouse in form.warehouseList) {
-      entry = DropdownMenuEntry(
-          value: warehouse.id, label: '${warehouse.id} - ${warehouse.name}');
-      entryWarehouseList.add(entry);
+    for (var element in form.warehouseList) {
+      if (element.id != warehouse.id) {
+        entry = DropdownMenuEntry(
+            value: element.id, label: '${element.id} - ${element.name}');
+        entryWarehouseList.add(entry);
+      }
     }
     for (var move in form.moveList) {
       totalWeight = move.weightTotal + totalWeight;
