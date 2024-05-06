@@ -300,6 +300,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
   Future<void> save(SaleNoteAddFormModel form, int saleType) async {
     bool validSave = true;
     String errorMessage = '';
+    int finalId = -1;
     ValidationFormModel validationForm;
     try {
       emit(InitialSaleNoteAddState());
@@ -362,84 +363,92 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
       emit(InitialSaleNoteAddState());
       emit(ErrorSaleNoteAddState(error: e.toString()));
     } finally {
-      SaleNoteModel saleNote = SaleNoteModel(
-        id: form.id,
-        customer: form.customer,
-        date: form.dateTime,
-        total: form.total,
-        warehouse: form.warehouse,
-        vendor: form.vendor,
-        note: form.note,
-        status: 1,
-        saleProduct: SaleProductModel.rowToSale(form.productList),
-      );
-      List<InventoryModel> inventoryList = [];
-      InventoryModel inventory;
-      InventoryModel? inventoryDB;
-      double stock;
-      Map<String, double> inventoryMap = {};
-      List<MovementModel> movementList = [];
-      MovementModel movement;
+      try {
+        SaleNoteModel saleNote = SaleNoteModel(
+          id: form.id,
+          customer: form.customer,
+          date: form.dateTime,
+          total: form.total,
+          warehouse: form.warehouse,
+          vendor: form.vendor,
+          note: form.note,
+          status: 1,
+          saleProduct: SaleProductModel.rowToSale(form.productList),
+        );
+        List<InventoryModel> inventoryList = [];
+        InventoryModel inventory;
+        InventoryModel? inventoryDB;
+        double stock;
+        Map<String, double> inventoryMap = {};
+        List<MovementModel> movementList = [];
+        MovementModel movement;
 
-      if (validSave) {
-        for (var row in form.productList) {
-          inventoryDB = await InventoryRepo()
-              .fetchRowByCode(row.product.code, form.warehouse.name);
+        if (validSave) {
+          for (var row in form.productList) {
+            inventoryDB = await InventoryRepo()
+                .fetchRowByCode(row.product.code, form.warehouse.name);
 
-          if (inventoryDB != null) {
-            final stockRow = double.tryParse(row.quantity.value) ?? 0;
-            final stockMap = inventoryMap[row.product.code] ?? 0;
-            inventoryMap[row.product.code] = stockMap + stockRow;
-            stock = inventoryDB.stock - inventoryMap[row.product.code]!;
-            if (stock < 0) {
+            if (inventoryDB != null) {
+              final stockRow = double.tryParse(row.quantity.value) ?? 0;
+              final stockMap = inventoryMap[row.product.code] ?? 0;
+              inventoryMap[row.product.code] = stockMap + stockRow;
+              stock = inventoryDB.stock - inventoryMap[row.product.code]!;
+              if (stock < 0) {
+                throw Exception('Stock no puede ser menor a cero');
+              }
+
+              inventory = InventoryModel(
+                code: row.product.code,
+                id: const Uuid().v4(),
+                name: form.warehouse.name,
+                retailManager: form.warehouse.retailManager,
+                stock: stock,
+              );
+              inventoryList.add(inventory);
+
+              if (saleType == 0) {
+                finalId = await SaleNoteRepo().insert(saleNote);
+              }
+              if (saleType == 1) {
+                finalId = await SaleReferralRepo().insert(saleNote);
+              }
+
+              final user = await LocalUser().getLocalUser();
+              final int folio = await MovementRepo().fetchAvailableFolio();
+              
+              movement = MovementModel(
+                id: const Uuid().v4(),
+                code: row.product.code,
+                concept: 51,
+                conceptType: 1,
+                description: row.product.description,
+                document: finalId == -1 ? form.id.toString() : finalId.toString(),
+                quantity: stockRow,
+                time: form.dateTime,
+                warehouseName: form.warehouse.name,
+                user: user.name,
+                stock: stock,
+                folio: folio,
+                conceptName: ConceptMoveModel.sale,
+                warehouseId: form.warehouse.id,
+              );
+              movementList.add(movement);
+            } else {
               throw Exception('Stock no puede ser menor a cero');
             }
-
-            inventory = InventoryModel(
-              code: row.product.code,
-              id: const Uuid().v4(),
-              name: form.warehouse.name,
-              retailManager: form.warehouse.retailManager,
-              stock: stock,
-            );
-            inventoryList.add(inventory);
-
-            final user = await LocalUser().getLocalUser();
-            final int folio = await MovementRepo().fetchAvailableFolio();
-
-            movement = MovementModel(
-              id: const Uuid().v4(),
-              code: row.product.code,
-              concept: 51,
-              conceptType: 1,
-              description: row.product.description,
-              document: form.id.toString(),
-              quantity: stockRow,
-              time: form.dateTime,
-              warehouseName: form.warehouse.name,
-              user: user.name,
-              stock: stock,
-              folio: folio,
-              conceptName: ConceptMoveModel.sale,
-              warehouseId: form.warehouse.id,
-            );
-            movementList.add(movement);
-          } else {
-            throw Exception('Stock no puede ser menor a cero');
           }
-        }
-        await InventoryRepo().updateInventory(inventoryList);
-        await MovementRepo().insertMovemets(movementList);
-        if (saleType == 0) {
-          await SaleNoteRepo().insert(saleNote);
-        }
-        if (saleType == 1) {
-          await SaleReferralRepo().insert(saleNote);
-        }
 
-        emit(SavedNoteAddState(saleNote, saleNote.saleProduct, saleType));
-      } else {
-        emit(ErrorSaleNoteAddState(error: errorMessage));
+          await InventoryRepo().updateInventory(inventoryList);
+          await MovementRepo().insertMovemets(movementList);
+
+          emit(SavedNoteAddState(
+              saleNote, saleNote.saleProduct, saleType, finalId));
+        } else {
+          emit(ErrorSaleNoteAddState(error: errorMessage));
+        }
+      } catch (e) {
+        emit(InitialSaleNoteAddState());
+        emit(ErrorSaleNoteAddState(error: e.toString()));
       }
     }
   }

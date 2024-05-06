@@ -13,11 +13,14 @@ class SaleNoteDialogSave extends StatelessWidget {
   final SaleNoteModel saleNote;
   final List<SaleProductModel> productList;
   final int saleType;
-  const SaleNoteDialogSave(
-      {super.key,
-      required this.saleNote,
-      required this.productList,
-      required this.saleType});
+  final int? idChanged;
+  const SaleNoteDialogSave({
+    super.key,
+    required this.saleNote,
+    required this.productList,
+    required this.saleType,
+    this.idChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +39,14 @@ class SaleNoteDialogSaveBuild extends StatelessWidget {
   final SaleNoteModel saleNote;
   final List<SaleProductModel> productList;
   final int saleType;
-  const SaleNoteDialogSaveBuild(
-      {super.key,
-      required this.saleNote,
-      required this.productList,
-      required this.saleType});
+  final int? idChanged;
+  const SaleNoteDialogSaveBuild({
+    super.key,
+    required this.saleNote,
+    required this.productList,
+    required this.saleType,
+    this.idChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +61,13 @@ class SaleNoteDialogSaveBuild extends StatelessWidget {
           return saleNoteDialogSave(context, false);
         }
       },
-      listener: (context, state) {
-        
-      },
+      listener: (context, state) {},
     );
   }
 
   Widget saleNoteDialogSave(BuildContext context, bool isLoading) {
     return AlertDialogAxol(
-      text: 'Guardado correctamente',
+      text: idChanged == null ? 'Guardado correctamente' : 'Guardado correctamente. \n El documento se cambió a $idChanged',
       icon: Icons.check_circle,
       iconColor: Colors.green,
       actions: [
@@ -84,7 +88,9 @@ class SaleNoteDialogSaveBuild extends StatelessWidget {
           enabled: isLoading,
           text: 'Descargar PDF',
           onPressed: () async {
-            context.read<SaleDialogSaveCubit>().downloadPdf(saleNote, productList, saleType);
+            context
+                .read<SaleDialogSaveCubit>()
+                .downloadPdf(saleNote, productList, saleType);
           },
         )
       ],

@@ -87,6 +87,7 @@ class SaleNoteAddBuild extends StatelessWidget {
               saleNote: state.saleNote,
               productList: state.productsList,
               saleType: state.saleType,
+              idChanged: state.finalId == -1 ? null : state.finalId,
             ),
           ).then((value) {
             Navigator.pop(context);

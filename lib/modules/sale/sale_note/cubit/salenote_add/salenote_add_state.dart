@@ -27,9 +27,10 @@ class SavedNoteAddState extends SaleNoteAddState {
   final SaleNoteModel saleNote;
   final List<SaleProductModel> productsList;
   final int saleType;
-  const SavedNoteAddState(this.saleNote, this.productsList, this.saleType);
+  final int finalId;
+  const SavedNoteAddState(this.saleNote, this.productsList, this.saleType, this.finalId);
   @override
-  List<Object?> get props => [saleNote, productsList, saleType];
+  List<Object?> get props => [saleNote, productsList, saleType, finalId];
 }
 
 class ErrorSaleNoteAddState extends SaleNoteAddState {

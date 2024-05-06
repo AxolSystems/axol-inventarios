@@ -2,6 +2,10 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.12] - 2024-05-06
+### Corregido
+- Error que no guardaba notas de venta al guardar más de una al mismo tiempo.
+
 ## [1.0.11] - 2024-05-05
 ### Añadido
 - Descarga CSV de estado de inventario hasta una fecha determinada (limitada hasta una consulta de 1000 registros).

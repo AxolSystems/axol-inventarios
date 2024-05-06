@@ -164,7 +164,7 @@ class SaleReferralRepo {
     return newId;
   }
 
-  Future<void> insert(SaleNoteModel saleNote) async {
+  Future<int> insert(SaleNoteModel saleNote) async {
     final Map<String, dynamic> customerMap = {
       saleNote.customer.tId: saleNote.customer.id,
       saleNote.customer.tName: saleNote.customer.name,
@@ -197,8 +197,9 @@ class SaleReferralRepo {
         row.tNote: row.note,
       };
     }
+    final int id = await fetchAvailableId();
     await _supabase.from(_table).insert({
-      _id: saleNote.id,
+      _id: id,
       _customer: customerMap,
       _time: saleNote.date.millisecondsSinceEpoch,
       _subtotal: saleNote.subtotal,
@@ -210,6 +211,11 @@ class SaleReferralRepo {
       _status: saleNote.status,
       _products: productsMap,
     });
+    if (id == saleNote.id) {
+      return -1;
+    } else {
+      return id;
+    }
   }
 
   Future<void> delete(SaleNoteModel saleNote) async {
