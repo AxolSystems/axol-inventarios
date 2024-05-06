@@ -2,6 +2,15 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.11] - 2024-05-05
+### Añadido
+- Descarga CSV de estado de inventario hasta una fecha determinada (limitada hasta una consulta de 1000 registros).
+- Descarga CSV de movimientos de un rango de fecha determinado.
+### Corregido
+- Error que reiniciaba las vistas de notas de ventas y clientes cuando se salía de una ventana de detalles.
+- Error en campo de texto de ventana de búsquedas de productos que movía el cursor al final de la linea cuando se intentaba editar en otra posición.
+- En el formulario de traspasos, se elimino de la lista de almacenes destino el almacén de origen, para así evitar hacer traspasos al mismo almacén por error.
+
 ## [1.0.10] - 2024-05-01
 ### Añadido
 - Filtro por clave en notas de ventas y remisiones. Al escribir en el buscador "clave:" y luego el número de la nota, se filtrara dicha nota; puede filtrar una lista de notas en especifico escribiendo cada número de nota separado por una coma; también puede filtrar un rango escribiendo un guión entre dos números de notas.
