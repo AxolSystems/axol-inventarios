@@ -337,33 +337,15 @@ class MovementFileCubit extends Cubit<MovementPdfState> {
       emit(LoadingMoveFileState());
       MovementResponseModel movementResponse;
       List<MovementModel> movementList = [];
-      MovementModel movement;
 
       movementResponse = await MovementRepo().fetchMoveToDown(
         warehouseId: form.warehouseSelect,
-        factorize: form.factorize,
         input: form.input,
         output: form.output,
         startTime: form.startTimeMoves,
         endTime: form.endTimeMoves,
       );
-      if (form.factorize == true) {
-        for (int i = 0; i < movementResponse.movementList.length; i++) {
-          final move = movementResponse.movementList[i];
-          if (movementList.where((x) => x.code == move.code).isEmpty) {
-            movementList.add(move);
-          } else {
-            final qty = movementList.firstWhere((x) => x.code == move.code).quantity;
-            final iSet = movementList.indexWhere((x) => x.code == move.code);
-            movement =
-                MovementModel.setQuantity(quantity: qty + move.quantity, move: move);
-            movementList[iSet] = movement;
-          }
-          
-        }
-      } else {
-        movementList = movementResponse.movementList;
-      }
+      movementList = movementResponse.movementList;
 
       await MovementCsvRepo.movementCsvSave(movementList);
 

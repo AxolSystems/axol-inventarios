@@ -135,7 +135,6 @@ class MovementRepo {
     required int warehouseId,
     required bool input,
     required bool output,
-    required bool factorize,
     required DateTime startTime,
     required DateTime endTime,
   }) async {

@@ -678,44 +678,6 @@ class MovementDrawerFileBuild extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Switch(
-                                activeColor: ColorPalette.primary,
-                                value: form.factorize,
-                                onChanged: (value) {
-                                  form.factorize = value;
-                                  context.read<MovementFileCubit>().load();
-                                },
-                              ),
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Factorizar movimientos',
-                                    style: Typo.labelDark),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Junta todos los movimientos con la misma clave',
-                                  style: Typo.smallLabelDark,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
                       const SizedBox(height: 16),
                       const Text(
                         'Fecha inicial',

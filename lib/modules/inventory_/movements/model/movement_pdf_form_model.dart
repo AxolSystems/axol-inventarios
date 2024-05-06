@@ -7,6 +7,7 @@ class MovementFileFormModel {
   TextEditingController document;
   TextEditingController folio;
   TextEditingController concept;
+  TextEditingController tfOmit;
   DateTime startTime;
   DateTime endTime;
   bool filterDate;
@@ -34,6 +35,7 @@ class MovementFileFormModel {
     required this.factorize,
     required this.output,
     required this.input,
+    required this.tfOmit,
   });
 
   MovementFileFormModel.empty()
@@ -50,5 +52,6 @@ class MovementFileFormModel {
         warehouseSelect = -2,
         factorize = false,
         output = true,
-        input = true;       
+        input = true,
+        tfOmit = TextEditingController();       
 }

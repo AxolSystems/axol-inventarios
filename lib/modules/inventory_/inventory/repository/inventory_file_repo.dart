@@ -212,6 +212,11 @@ class InventoryCsv {
       'EMPAQUE',
       'TIPO',
       'GAL',
+      'MEDIDA',
+      'CALIBRE',
+      'PRESENTACION',
+      'PESO',
+      'IMPORTE/KG',
       'DESCRIPCION',
       'STOCK',
     ]);
@@ -224,6 +229,11 @@ class InventoryCsv {
         dataRow.add(data.product.packing ?? '');
         dataRow.add(data.product.type ?? '');
         dataRow.add(data.product.capacity ?? '');
+        dataRow.add(data.product.measure ?? '');
+        dataRow.add('${data.product.gauge ?? ''}');
+        dataRow.add(data.product.pieces ?? '');
+        dataRow.add('${data.product.weight ?? ''}');
+        dataRow.add(data.product.price.toString());
         dataRow.add(data.product.description);
         dataRow.add(data.stock.toString());
         body.add(dataRow);
