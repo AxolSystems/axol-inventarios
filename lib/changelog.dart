@@ -2,7 +2,7 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
-## [1.0.12] - 2024-05-06
+## [1.0.12+] - 2024-05-06
 ### Corregido
 - Error que no guardaba notas de venta al guardar más de una al mismo tiempo.
 

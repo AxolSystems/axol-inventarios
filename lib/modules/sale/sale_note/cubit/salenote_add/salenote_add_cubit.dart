@@ -384,6 +384,7 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         MovementModel movement;
 
         if (validSave) {
+
           for (var row in form.productList) {
             inventoryDB = await InventoryRepo()
                 .fetchRowByCode(row.product.code, form.warehouse.name);
@@ -406,23 +407,17 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               );
               inventoryList.add(inventory);
 
-              if (saleType == 0) {
-                finalId = await SaleNoteRepo().insert(saleNote);
-              }
-              if (saleType == 1) {
-                finalId = await SaleReferralRepo().insert(saleNote);
-              }
-
               final user = await LocalUser().getLocalUser();
               final int folio = await MovementRepo().fetchAvailableFolio();
-              
+
               movement = MovementModel(
                 id: const Uuid().v4(),
                 code: row.product.code,
                 concept: 51,
                 conceptType: 1,
                 description: row.product.description,
-                document: finalId == -1 ? form.id.toString() : finalId.toString(),
+                document:
+                    finalId == -1 ? form.id.toString() : finalId.toString(),
                 quantity: stockRow,
                 time: form.dateTime,
                 warehouseName: form.warehouse.name,
@@ -438,6 +433,13 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
             }
           }
 
+          if (saleType == 0) {
+            finalId = await SaleNoteRepo().insert(saleNote);
+          }
+          if (saleType == 1) {
+            finalId = await SaleReferralRepo().insert(saleNote);
+          }
+          
           await InventoryRepo().updateInventory(inventoryList);
           await MovementRepo().insertMovemets(movementList);
 
