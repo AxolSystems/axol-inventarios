@@ -97,7 +97,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
             children: [
               const Expanded(
                 flex: 1,
-                child: Text('CSV', style: Typo.subtitleDark),
+                child: Text('Inventario', style: Typo.subtitleDark),
               ),
               Expanded(
                 flex: 2,
@@ -126,7 +126,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                                 : () {
                                     context
                                         .read<InvDownloadDrawerCubit>()
-                                        .csvSubSale(form.controller.text,
+                                        .csvSubSale(form.tfSubstract.text,
                                             inventoryRowList);
                                   },
                           ),
@@ -134,7 +134,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                             child: TextField(
-                          controller: form.controller,
+                          controller: form.tfSubstract,
                           enabled: !isLoading,
                           /*inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d*$')),
@@ -208,35 +208,58 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        const Divider(color: ColorPalette.lightItems20),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+               Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Estado de inventario', style: Typo.subtitleDark),
+                      SizedBox(
+                        width: 84,
+                        height: 36,
+                        child: SecondaryButtonDialog(
+                          text: 'CSV',
+                          border: const BorderSide(
+                              color: ColorPalette.lightItems10),
+                          icon: const Icon(
+                            Icons.download,
+                            color: ColorPalette.lightItems10,
+                          ),
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  context
+                                      .read<InvDownloadDrawerCubit>()
+                                      .csvInvToDate(warehouse, form);
+                                },
+                        ),
+                      ),
+                    ],
+                  )),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Text(
-                      'Estado de inventario a fecha determinada',
+                      'Fecha',
                       style: Typo.labelDark,
                     ),
                     Row(
                       children: [
-                        SizedBox(
-                          width: 56,
-                          height: 36,
-                          child: SecondaryButtonDialog(
-                            text: '',
-                            border: const BorderSide(
-                                color: ColorPalette.lightItems10),
-                            icon: const Icon(
-                              Icons.download,
-                              color: ColorPalette.lightItems10,
-                            ),
-                            onPressed: isLoading
-                                ? null
-                                : () {
-                                    context
-                                        .read<InvDownloadDrawerCubit>()
-                                        .csvInvToDate(
-                                            warehouse, form.timeInventory);
-                                  },
-                          ),
-                        ),
-                        const SizedBox(width: 8),
                         Expanded(
                           child: SizedBox(
                             height: 40,
@@ -289,13 +312,45 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                       'Seleccione la fecha del estado de inventario que desea descargar. La fecha seleccionada es considerada al principio del dia.',
                       style: Typo.smallLabelDark,
                     ),
+                    const SizedBox(height: 16),
+                    const Text(
+                        'Omitir',
+                        style: Typo.labelDark,
+                      ),
+                      TextField(
+                        controller: form.tfOmit,
+                        enabled: !isLoading,
+                        style: Typo.bodyDark,
+                        decoration: InputDecoration(
+                          filled: true,
+                          isDense: true,
+                          fillColor: ColorPalette.filled,
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: ColorPalette.lightItems10),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          constraints:
+                              BoxConstraints.tight(const Size.fromHeight(40)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: ColorPalette.primary),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Escriba los folios que quiera omitir en el descuento de movimientos para calcular el estado de inventario.',
+                        style: Typo.smallLabelDark,
+                      ),
                   ],
                 ),
               )
             ],
           ),
         ),
-        const Divider(color: ColorPalette.lightItems20),
       ],
     );
   }

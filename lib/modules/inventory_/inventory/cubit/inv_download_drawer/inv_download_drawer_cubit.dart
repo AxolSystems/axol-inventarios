@@ -2,6 +2,7 @@ import 'package:axol_inventarios/models/data_response_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/inventory_row_model.dart';
+import '../../../../../utilities/format.dart';
 import '../../../../sale_report/model/salereport_model.dart';
 import '../../../../sale_report/repository/salereport_repo.dart';
 import '../../../movements/model/movement_model.dart';
@@ -86,22 +87,34 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
     }
   }
 
-  Future<void> csvInvToDate(WarehouseModel warehouse, DateTime time) async {
+  Future<void> csvInvToDate(WarehouseModel warehouse, InvDownloadFormModel form) async {
     try {
       emit(InitialInvDownloadDrawerState());
       emit(LoadingInvDownloadDrawerState());
       List<InventoryRowModel> inventoryList;
       List<MovementModel> moveList;
+      List<String> omitList;
       MovementResponseModel movementResponse;
       DataResponseModel dataResponse;
 
+      //Toma la lista de elementos a omitir del controlador.
+      omitList = form.tfOmit.text.split(',');
+
       //Descargar movimientos entre la fecha seleccionada y la fehca actual
       movementResponse = await MovementRepo().fetchMoveInRangeTime(
-        startTime: time,
+        startTime: FormatDate.startDay(form.timeInventory),
         endTime: DateTime.now(),
         warehouseId: warehouse.id,
       );
       moveList = movementResponse.movementList;
+
+      //Elimina de la lista de movimientos los folios de la ista a omitir.
+      print(moveList.length);
+      for (var element in omitList) {
+        final folio = int.tryParse(element) ?? -1;
+        moveList.removeWhere((x) => x.folio == folio);
+        print(moveList.length);
+      }
 
       //Descargar inventario
       dataResponse =

@@ -1,12 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 class InvDownloadFormModel {
-  TextEditingController controller;
+  TextEditingController tfSubstract;
+  TextEditingController tfOmit;
   DateTime timeInventory;
-  
-  InvDownloadFormModel({required this.controller, required this.timeInventory});
 
-  InvDownloadFormModel.empty() : 
-  controller = TextEditingController(),
-  timeInventory = DateTime(0);
+  InvDownloadFormModel(
+      {required this.tfSubstract,
+      required this.tfOmit,
+      required this.timeInventory});
+
+  InvDownloadFormModel.empty()
+      : tfSubstract = TextEditingController(),
+        tfOmit = TextEditingController(),
+        timeInventory = DateTime(0);
 }
