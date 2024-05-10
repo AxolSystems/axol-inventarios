@@ -2,6 +2,12 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.13] - 2024-05-09
+### Modificado
+- Descarga de estado de inventario a determinada fecha omitiendo folio de movimiento seleccionado.
+### Corregido
+- Error en descarga de archivo de nota de venta cuando más de una persona crea una nueva nota de venta a la vez.
+
 ## [1.0.12+] - 2024-05-06
 ### Corregido
 - Error que no guardaba notas de venta al guardar más de una al mismo tiempo.

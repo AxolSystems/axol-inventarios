@@ -67,4 +67,16 @@ class SaleNoteModel {
     vendor = saleNote.vendor,
     note = saleNote.note,
     status = saleNote.status;
+
+  SaleNoteModel.setId({required this.id, required SaleNoteModel saleNote}) : 
+  customer = saleNote.customer,
+  date = saleNote.date,
+  iva = saleNote.iva,
+  note = saleNote.note,
+  saleProduct = saleNote.saleProduct,
+  status = saleNote.status,
+  subtotal = saleNote.subtotal,
+  total = saleNote.total,
+  vendor = saleNote.vendor,
+  warehouse = saleNote.warehouse;
 }

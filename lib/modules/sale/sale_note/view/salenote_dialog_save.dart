@@ -66,8 +66,13 @@ class SaleNoteDialogSaveBuild extends StatelessWidget {
   }
 
   Widget saleNoteDialogSave(BuildContext context, bool isLoading) {
+    final salenote = idChanged != null
+        ? SaleNoteModel.setId(id: idChanged!, saleNote: saleNote)
+        : saleNote;
     return AlertDialogAxol(
-      text: idChanged == null ? 'Guardado correctamente' : 'Guardado correctamente. \n El documento se cambió a $idChanged',
+      text: idChanged == null
+          ? 'Guardado correctamente'
+          : 'Guardado correctamente. \n El documento se cambió a $idChanged',
       icon: Icons.check_circle,
       iconColor: Colors.green,
       actions: [
@@ -90,7 +95,7 @@ class SaleNoteDialogSaveBuild extends StatelessWidget {
           onPressed: () async {
             context
                 .read<SaleDialogSaveCubit>()
-                .downloadPdf(saleNote, productList, saleType);
+                .downloadPdf(salenote, productList, saleType);
           },
         )
       ],

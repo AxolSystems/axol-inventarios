@@ -19,7 +19,7 @@ class MovementModel {
   final String user;
   final double stock;
   final int folio;
-  
+
   static String get lblId => 'Id';
   static String get lblTime => 'Fecha';
   static String get lblCode => 'Clave';
@@ -66,8 +66,13 @@ class MovementModel {
         stock = 0,
         folio = -1;
 
-  MovementModel.fromRowOfDoc(InventoryMoveModel doc, InventoryMoveRowModel row,
-      WarehouseModel warehouse, String userName, double newStock, int folioAvailable)
+  MovementModel.fromRowOfDoc(
+      InventoryMoveModel doc,
+      InventoryMoveRowModel row,
+      WarehouseModel warehouse,
+      String userName,
+      double newStock,
+      int folioAvailable)
       : id = const Uuid().v4(),
         code = row.codeTf.text,
         concept = doc.concept.id,
@@ -88,7 +93,8 @@ class MovementModel {
       InventoryMoveRowModel row,
       WarehouseModel warehouseDestiny,
       String userName,
-      double newStock, int folioAvailable)
+      double newStock,
+      int folioAvailable)
       : id = const Uuid().v4(),
         code = row.codeTf.text,
         concept = 7,
@@ -104,18 +110,48 @@ class MovementModel {
         stock = newStock,
         folio = folioAvailable; //Modificar
 
-  MovementModel.setQuantity({required this.quantity, required MovementModel move}) : 
-  code = move.code,
-  concept = move.concept,
-  conceptName = move.conceptName,
-  conceptType = move.conceptType,
-  description = move.description,
-  document = move.document,
-  folio = move.folio,
-  id = move.id,
-  stock = move.stock,
-  time = move.time,
-  user = move.user,
-  warehouseId = move.warehouseId,
-  warehouseName = move.warehouseName;
+  MovementModel.setQuantity(
+      {required this.quantity, required MovementModel move})
+      : code = move.code,
+        concept = move.concept,
+        conceptName = move.conceptName,
+        conceptType = move.conceptType,
+        description = move.description,
+        document = move.document,
+        folio = move.folio,
+        id = move.id,
+        stock = move.stock,
+        time = move.time,
+        user = move.user,
+        warehouseId = move.warehouseId,
+        warehouseName = move.warehouseName;
+
+  MovementModel.setDocument(
+      {required MovementModel move, required this.document})
+      : code = move.code,
+        concept = move.concept,
+        conceptName = move.conceptName,
+        conceptType = move.conceptType,
+        description = move.description,
+        quantity = move.quantity,
+        folio = move.folio,
+        id = move.id,
+        stock = move.stock,
+        time = move.time,
+        user = move.user,
+        warehouseId = move.warehouseId,
+        warehouseName = move.warehouseName;
+
+  static List<MovementModel> setDocAllMovements(
+      {required List<MovementModel> movementList, required String doc}) {
+    MovementModel movement;
+    List<MovementModel> upMovementList = [];
+
+    for (var element in movementList) {
+      movement = MovementModel.setDocument(move: element, document: doc);
+      upMovementList.add(movement);
+    }
+
+    return upMovementList;
+  }
 }

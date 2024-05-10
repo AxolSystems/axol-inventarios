@@ -68,9 +68,7 @@ class InventoryRepo {
     if (filter != '') {
       for (var element in inventoryList) {
         if (element.product.code.contains(filter) ||
-            element.product.description
-                .toString()
-                .contains(filter)) {
+            element.product.description.toString().contains(filter)) {
           finalInventoryList.add(element);
         }
       }
@@ -298,7 +296,8 @@ class InventoryRepo {
           code: inventoryList.first[_code].toString(),
           id: inventoryList.first[_id].toString(),
           name: inventoryList.first[_name].toString(),
-          retailManager: int.tryParse(inventoryList.first[_manager].toString()) ?? -1,
+          retailManager:
+              int.tryParse(inventoryList.first[_manager].toString()) ?? -1,
           stock: inventoryList.first[_stock]);
     } else {
       inventoryRow = null;

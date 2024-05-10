@@ -382,9 +382,9 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
         Map<String, double> inventoryMap = {};
         List<MovementModel> movementList = [];
         MovementModel movement;
+        SaleNoteModel upSaleNote = saleNote;
 
         if (validSave) {
-
           for (var row in form.productList) {
             inventoryDB = await InventoryRepo()
                 .fetchRowByCode(row.product.code, form.warehouse.name);
@@ -432,19 +432,25 @@ class SaleNoteAddCubit extends Cubit<SaleNoteAddState> {
               throw Exception('Stock no puede ser menor a cero');
             }
           }
-
+          
           if (saleType == 0) {
-            finalId = await SaleNoteRepo().insert(saleNote);
+            final int id = await SaleNoteRepo().fetchAvailableId();
+            upSaleNote = SaleNoteModel.setId(id: id, saleNote: saleNote);
+            await SaleNoteRepo().insert(upSaleNote);
           }
           if (saleType == 1) {
-            finalId = await SaleReferralRepo().insert(saleNote);
+            final int id = await SaleReferralRepo().fetchAvailableId();
+            upSaleNote = SaleNoteModel.setId(id: id, saleNote: saleNote);
+            await SaleReferralRepo().insert(upSaleNote);
           }
+
+          final upMovementList = MovementModel.setDocAllMovements(doc: upSaleNote.id.toString(), movementList: movementList);
           
           await InventoryRepo().updateInventory(inventoryList);
-          await MovementRepo().insertMovemets(movementList);
+          await MovementRepo().insertMovemets(upMovementList);
 
           emit(SavedNoteAddState(
-              saleNote, saleNote.saleProduct, saleType, finalId));
+              upSaleNote, upSaleNote.saleProduct, saleType, finalId));
         } else {
           emit(ErrorSaleNoteAddState(error: errorMessage));
         }
