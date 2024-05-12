@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/modules_/view/experimental_view.dart';
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import 'package:flutter/material.dart';
@@ -83,8 +84,8 @@ class HomeViewBuild extends StatelessWidget {
       navigationRail = const NavigationRailAxolMain.vendor(
           view: NavigationRailAxolView.home);
     } else if (user_.rol == UserModel.rolSup) {
-      navigationRail = const NavigationRailAxolMain.sup(
-          view: NavigationRailAxolView.home);
+      navigationRail =
+          const NavigationRailAxolMain.sup(view: NavigationRailAxolView.home);
     } else {
       navigationRail = const SizedBox();
     }
@@ -134,6 +135,15 @@ class HomeViewBuild extends StatelessWidget {
                         : widthScreen - 16,
                 child: Column(
                   children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExperimentalView()));
+                        },
+                        child: const Text('Experimental View')),
                     Expanded(
                         child: ListView(
                       children: [
