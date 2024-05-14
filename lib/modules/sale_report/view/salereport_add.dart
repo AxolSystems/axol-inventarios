@@ -126,13 +126,13 @@ class SaleReportAddBuild extends StatelessWidget {
               child: Container(
                 decoration: const BoxDecoration(
                     border: Border(
-                        left: BorderSide(color: ColorPalette.darkItems))),
+                        left: BorderSide(color: ColorPalette.darkItems20))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
-                      color: ColorPalette.darkItems,
+                      color: ColorPalette.darkItems20,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -202,7 +202,7 @@ class SaleReportAddBuild extends StatelessWidget {
                                             border: Border(
                                               bottom: BorderSide(
                                                   color:
-                                                      ColorPalette.darkItems),
+                                                      ColorPalette.darkItems20),
                                             ),
                                           ),
                                           child: OutlinedButton(
@@ -301,7 +301,7 @@ class SaleReportAddBuild extends StatelessWidget {
                             visible: widthScreen >= 600,
                             child: HorizontalToolBar(
                               border: const Border(
-                                left: BorderSide(color: ColorPalette.darkItems),
+                                left: BorderSide(color: ColorPalette.darkItems20),
                               ),
                               children: [
                                 ButtonTool(

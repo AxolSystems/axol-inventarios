@@ -161,7 +161,7 @@ class MovementTabBuild extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.filter_alt,
-                color: ColorPalette.darkItems,
+                color: ColorPalette.darkItems20,
                 size: 30,
               ),
             ),
@@ -176,7 +176,7 @@ class MovementTabBuild extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.download,
-                color: ColorPalette.darkItems,
+                color: ColorPalette.darkItems20,
                 size: 30,
               ),
             ),
@@ -187,7 +187,7 @@ class MovementTabBuild extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.backup_table_rounded,
-                color: ColorPalette.darkItems,
+                color: ColorPalette.darkItems20,
                 size: 30,
               ),
             ),

@@ -142,7 +142,7 @@ class SaleNoteAddBuild extends StatelessWidget {
         children: [
           NavigationUtilities.emptyNavRailReturn(),
           const VerticalDivider(
-              thickness: 1, width: 1, color: ColorPalette.darkItems),
+              thickness: 1, width: 1, color: ColorPalette.darkItems20),
           Expanded(
             child: Column(
               children: [
@@ -233,7 +233,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                             ),
                           )),
                       const VerticalDivider(
-                        color: ColorPalette.darkItems,
+                        color: ColorPalette.darkItems20,
                         width: 1,
                         thickness: 1,
                       ),
@@ -518,7 +518,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     },
                                     borderColor: isQuantityFocus
                                         ? ColorPalette.primary
-                                        : ColorPalette.darkItems,
+                                        : ColorPalette.darkItems20,
                                     onFocusChange: (bool value) {},
                                   ),
                                   // --- Product code
@@ -563,7 +563,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     },
                                     borderColor: isProductFocus
                                         ? ColorPalette.primary
-                                        : ColorPalette.darkItems,
+                                        : ColorPalette.darkItems20,
                                     onFocusChange: (bool value) {},
                                   ),
                                   // --- Descriprtion
@@ -612,7 +612,7 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     },
                                     borderColor: isPriceFocus
                                         ? ColorPalette.primary
-                                        : ColorPalette.darkItems,
+                                        : ColorPalette.darkItems20,
                                     onFocusChange: (bool value) {},
                                   ),
                                   // --- Subtotal
@@ -684,8 +684,8 @@ class SaleNoteAddBuild extends StatelessWidget {
                     )),
                     HorizontalToolBar(
                       border: const Border(
-                        left: BorderSide(color: ColorPalette.darkItems),
-                        top: BorderSide(color: ColorPalette.darkItems),
+                        left: BorderSide(color: ColorPalette.darkItems20),
+                        top: BorderSide(color: ColorPalette.darkItems20),
                       ),
                       children: [
                         ButtonTool(

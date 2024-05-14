@@ -100,7 +100,7 @@ class WbListDetailsDrawerBuild extends StatelessWidget {
             children: [
               Visibility(
                 visible: widthScreen < 600,
-                child: const LeadingReturn(color: ColorPalette.darkItems),
+                child: const LeadingReturn(color: ColorPalette.darkItems20),
               ),
               Expanded(
                 child: Column(

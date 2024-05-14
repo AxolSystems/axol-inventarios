@@ -19,7 +19,7 @@ class NavRailAxol extends StatelessWidget {
         children: [
           Expanded(child: navRailMain),
           const Divider(
-            color: ColorPalette.darkItems,
+            color: ColorPalette.darkItems20,
             height: 0,
           ),
           Material(

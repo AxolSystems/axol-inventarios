@@ -108,7 +108,7 @@ class WbAddListBuild extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
-                border: Border(left: BorderSide(color: ColorPalette.darkItems)),
+                border: Border(left: BorderSide(color: ColorPalette.darkItems20)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -127,7 +127,7 @@ class WbAddListBuild extends StatelessWidget {
                             child: Column(
                           children: [
                             Container(
-                              color: ColorPalette.darkItems,
+                              color: ColorPalette.darkItems20,
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 4),
@@ -171,7 +171,7 @@ class WbAddListBuild extends StatelessWidget {
                                       decoration: const BoxDecoration(
                                         border: Border(
                                           bottom: BorderSide(
-                                              color: ColorPalette.darkItems),
+                                              color: ColorPalette.darkItems20),
                                         ),
                                       ),
                                       child: OutlinedButton(
@@ -369,8 +369,8 @@ class WbAddListBuild extends StatelessWidget {
                           visible: widthScreen >= 600,
                           child: HorizontalToolBar(
                             border: const Border(
-                              top: BorderSide(color: ColorPalette.darkItems),
-                              left: BorderSide(color: ColorPalette.darkItems),
+                              top: BorderSide(color: ColorPalette.darkItems20),
+                              left: BorderSide(color: ColorPalette.darkItems20),
                             ),
                             children: [
                               ButtonTool(

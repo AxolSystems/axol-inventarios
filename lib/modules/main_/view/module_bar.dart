@@ -5,7 +5,8 @@ import '../model/modul_model.dart';
 
 class ModuleBar extends StatelessWidget {
   final List<ModuleModel> moduleList;
-  const ModuleBar({super.key, required this.moduleList});
+  final int select;
+  const ModuleBar({super.key, required this.moduleList, required this.select});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +24,19 @@ class ModuleBar extends StatelessWidget {
                 return SizedBox(
                   child: OutlinedButton(
                       style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all(ColorPalette.darkItems),
-                        foregroundColor: MaterialStateProperty.resolveWith((Set states){
-                          if (states.contains(MaterialState.hovered)) {
+                        overlayColor: select == index
+                            ? MaterialStateProperty.all(
+                                ColorPalette.darkItems10)
+                            : MaterialStateProperty.all(
+                                ColorPalette.darkItems20),
+                        backgroundColor: select == index
+                            ? MaterialStateProperty.all(
+                                ColorPalette.darkItems10)
+                            : null,
+                        foregroundColor:
+                            MaterialStateProperty.resolveWith((Set states) {
+                          if (states.contains(MaterialState.hovered) ||
+                              select == index) {
                             return ColorPalette.lightText;
                           } else {
                             return ColorPalette.lightItems10;
@@ -34,7 +45,7 @@ class ModuleBar extends StatelessWidget {
                         textStyle: MaterialStateProperty.all(Typo.labelLight),
                         splashFactory: NoSplash.splashFactory,
                       ),
-                      onPressed: () {},
+                      onPressed: module.onPressed,
                       child: Column(
                         children: [
                           Icon(

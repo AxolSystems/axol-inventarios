@@ -96,7 +96,7 @@ class WbAddDrawerBuild extends StatelessWidget {
           ? Row(
               children: [
                 LeadingReturn(
-                  color: ColorPalette.darkItems,
+                  color: ColorPalette.darkItems20,
                   onPressed: () {
                     Navigator.pop(context);
                   },

@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/modules/modules_/view/experimental_view.dart';
+import 'package:axol_inventarios/modules/main_/view/main_view.dart';
 import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
 import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +125,7 @@ class HomeViewBuild extends StatelessWidget {
               child: NavRailAxol(navRailMain: navigationRail),
             ),
             const VerticalDivider(
-                thickness: 1, width: 1, color: ColorPalette.darkItems),
+                thickness: 1, width: 1, color: ColorPalette.darkItems20),
             const Expanded(child: SizedBox()),
             SizedBox(
                 width: widthScreen > 790
@@ -141,7 +141,7 @@ class HomeViewBuild extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const ExperimentalView()));
+                                      const MainView()));
                         },
                         child: const Text('Experimental View')),
                     Expanded(

@@ -104,7 +104,7 @@ class InventoryListBuild extends StatelessWidget {
           Expanded(
               child: Container(
             decoration: const BoxDecoration(
-              border: Border(left: BorderSide(color: ColorPalette.darkItems)),
+              border: Border(left: BorderSide(color: ColorPalette.darkItems20)),
             ),
             child: Column(
               children: [
@@ -161,7 +161,7 @@ class InventoryListBuild extends StatelessWidget {
                           },
                           icon: const Icon(
                             Icons.download,
-                            color: ColorPalette.darkItems,
+                            color: ColorPalette.darkItems20,
                             size: 30,
                           ),
                         ),
@@ -183,7 +183,7 @@ class InventoryListBuild extends StatelessWidget {
                             },
                             icon: const Icon(
                               Icons.add_outlined,
-                              color: ColorPalette.darkItems,
+                              color: ColorPalette.darkItems20,
                               size: 30,
                             ),
                           ),
@@ -225,7 +225,7 @@ class InventoryListBuild extends StatelessWidget {
                         decoration: const BoxDecoration(
                           border: Border(
                               bottom:
-                                  BorderSide(color: ColorPalette.darkItems)),
+                                  BorderSide(color: ColorPalette.darkItems20)),
                         ),
                         child: ButtonRowTable(
                             onPressed: () {

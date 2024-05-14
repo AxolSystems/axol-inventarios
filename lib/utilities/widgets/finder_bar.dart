@@ -80,7 +80,7 @@ class FinderBar extends StatelessWidget {
                 iconSize: heightBar,
                 icon: const Icon(
                   Icons.close,
-                  color: ColorPalette.darkItems,
+                  color: ColorPalette.darkItems20,
                 ),
               )
             ],

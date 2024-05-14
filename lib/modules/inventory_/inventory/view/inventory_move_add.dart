@@ -115,7 +115,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
-                border: Border(left: BorderSide(color: ColorPalette.darkItems)),
+                border: Border(left: BorderSide(color: ColorPalette.darkItems20)),
               ),
               child: Column(
                 children: [
@@ -349,7 +349,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                             errorMessage: form.moveList[index]
                                                 .codeState.message),
                                         onFocusChange: (value) {},
-                                        borderColor: ColorPalette.darkItems,
+                                        borderColor: ColorPalette.darkItems20,
                                         suffixIcon: Icons.search,
                                         onChanged: (value) {
                                           form.moveList[index].codeTf.value =
@@ -440,7 +440,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                               .quantityState.message,
                                         ),
                                         onFocusChange: (value) {},
-                                        borderColor: ColorPalette.darkItems,
+                                        borderColor: ColorPalette.darkItems20,
                                         onChanged: (value) {
                                           form.moveList[index].quantityTf
                                               .value = TextEditingValue(
@@ -487,7 +487,7 @@ class InventoryMoveAddBuild extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                color: ColorPalette.darkItems,
+                                color: ColorPalette.darkItems20,
                                 child: Row(
                                   children: [
                                     const Expanded(child: SizedBox()),
@@ -503,8 +503,8 @@ class InventoryMoveAddBuild extends StatelessWidget {
                         ),
                         HorizontalToolBar(
                           border: const Border(
-                            top: BorderSide(color: ColorPalette.darkItems),
-                            left: BorderSide(color: ColorPalette.darkItems),
+                            top: BorderSide(color: ColorPalette.darkItems20),
+                            left: BorderSide(color: ColorPalette.darkItems20),
                           ),
                           children: [
                             ButtonTool(

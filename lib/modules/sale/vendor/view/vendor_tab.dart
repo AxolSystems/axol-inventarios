@@ -117,7 +117,7 @@ class VendorTab extends StatelessWidget {
                       },
                       icon: const Icon(
                         Icons.add_outlined,
-                        color: ColorPalette.darkItems,
+                        color: ColorPalette.darkItems20,
                         size: 30,
                       ),
                     ),

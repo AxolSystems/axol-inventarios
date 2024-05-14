@@ -106,7 +106,7 @@ class ListViewTable extends TableView {
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: ColorPalette.darkItems),
+                      bottom: BorderSide(color: ColorPalette.darkItems20),
                     ),
                   ),
                   child: Row(
@@ -156,7 +156,7 @@ class NavigateBarTable extends TableView {
     return Container(
       height: 30,
       decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: ColorPalette.darkItems))),
+          border: Border(top: BorderSide(color: ColorPalette.darkItems20))),
       child: Row(
         children: [
           SystemButton(
@@ -169,7 +169,7 @@ class NavigateBarTable extends TableView {
             ),
           ),
           const VerticalDivider(
-            color: ColorPalette.darkItems,
+            color: ColorPalette.darkItems20,
             thickness: 1,
             width: 1,
           ),
@@ -181,7 +181,7 @@ class NavigateBarTable extends TableView {
             ),
           ),
           const VerticalDivider(
-            color: ColorPalette.darkItems,
+            color: ColorPalette.darkItems20,
             thickness: 1,
             width: 1,
           ),
@@ -195,7 +195,7 @@ class NavigateBarTable extends TableView {
             ),
           ),
           const VerticalDivider(
-            color: ColorPalette.darkItems,
+            color: ColorPalette.darkItems20,
             thickness: 1,
             width: 1,
           ),

@@ -170,7 +170,7 @@ class LabelCell extends InputCell {
         child: Container(
           height: 30,
           decoration:
-              BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
+              BoxDecoration(border: Border.all(color: ColorPalette.darkItems20)),
           child: Row(
             children: [
               const SizedBox(width: 4),
@@ -228,7 +228,7 @@ class ButtonCell extends InputCell {
         child: Container(
           height: 30,
           decoration:
-              BoxDecoration(border: Border.all(color: ColorPalette.darkItems)),
+              BoxDecoration(border: Border.all(color: ColorPalette.darkItems20)),
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
               side: BorderSide.none,
@@ -259,7 +259,7 @@ class MenuCell extends InputCell {
         child: Container(
             height: 30,
             decoration: BoxDecoration(
-                border: Border.all(color: ColorPalette.darkItems)),
+                border: Border.all(color: ColorPalette.darkItems20)),
             child: MenuAnchor(
               builder: (context, controller, child) {
                 return IconButton(

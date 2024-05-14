@@ -113,7 +113,7 @@ class WbAddRowDrawerBuild extends StatelessWidget {
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
-                  color: ColorPalette.darkItems,
+                  color: ColorPalette.darkItems20,
                 )),
           ],
         ),

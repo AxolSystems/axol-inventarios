@@ -22,7 +22,7 @@ class TextFieldDecoration {
       borderSide: BorderSide(color: ColorPalette.caution),
     ),
     disabledBorder: const UnderlineInputBorder(
-      borderSide: BorderSide(color: ColorPalette.darkItems),
+      borderSide: BorderSide(color: ColorPalette.darkItems20),
     ),
     errorText: errorText,
   );

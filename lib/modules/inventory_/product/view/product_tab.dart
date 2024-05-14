@@ -119,7 +119,7 @@ class ProductTabBuild extends StatelessWidget {
                 onPressed: () {},
                 icon: const Icon(
                   Icons.add_outlined,
-                  color: ColorPalette.darkItems,
+                  color: ColorPalette.darkItems20,
                   size: 30,
                 ),
               ),
@@ -198,7 +198,7 @@ class ProductTabBuild extends StatelessWidget {
                       width: double.infinity,
                       decoration: const BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: ColorPalette.darkItems),
+                          bottom: BorderSide(color: ColorPalette.darkItems20),
                         ),
                       ),
                       child: Row(

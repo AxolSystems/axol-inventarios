@@ -97,7 +97,7 @@ class WbWarehouseTabBuild extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   decoration: const BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: ColorPalette.darkItems),
+                      bottom: BorderSide(color: ColorPalette.darkItems20),
                     ),
                   ),
                   child: Row(

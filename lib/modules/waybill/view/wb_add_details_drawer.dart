@@ -30,7 +30,7 @@ class WbAddDetailsDrawer extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       header: widthScreen < 600
           ? const Row(
-              children: [LeadingReturn(color: ColorPalette.darkItems)],
+              children: [LeadingReturn(color: ColorPalette.darkItems20)],
             )
           : null,
       actions: widthScreen >= 600

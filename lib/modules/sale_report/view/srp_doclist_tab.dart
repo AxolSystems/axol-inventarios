@@ -90,7 +90,7 @@ class SrpDoclistTabBuild extends StatelessWidget {
             return Container(
                 decoration: const BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: ColorPalette.darkItems),
+                    bottom: BorderSide(color: ColorPalette.darkItems20),
                   ),
                 ),
                 child: OutlinedButton(

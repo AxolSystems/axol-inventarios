@@ -252,7 +252,7 @@ class _SystemButton extends State<SystemButton> {
     final double? height = widget.height;
     final double? width = widget.width;
     final BorderSide side = widget.side ??
-        const BorderSide(color: ColorPalette.darkItems, width: 1);
+        const BorderSide(color: ColorPalette.darkItems20, width: 1);
     final Function() fOnPressed = widget.onPressed ?? () {};
     final bool isLoading_ = widget.isLoading ?? false;
     return SizedBox(

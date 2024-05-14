@@ -159,7 +159,7 @@ class InventoryViewBuild extends StatelessWidget {
                       child: NavRailAxol(navRailMain: navigationRail),
                     ),
                     const VerticalDivider(
-                        thickness: 1, width: 1, color: ColorPalette.darkItems),
+                        thickness: 1, width: 1, color: ColorPalette.darkItems20),
                     Expanded(
                         child: Column(
                       children: [

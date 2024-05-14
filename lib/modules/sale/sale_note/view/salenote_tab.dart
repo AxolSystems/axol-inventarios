@@ -128,7 +128,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                           },
                           icon: const Icon(
                             Icons.download,
-                            color: ColorPalette.darkItems,
+                            color: ColorPalette.darkItems20,
                           )),
                       IconButton(
                         padding: EdgeInsets.zero,
@@ -147,7 +147,7 @@ class SaleNoteTabBuild extends StatelessWidget {
                         },
                         icon: const Icon(
                           Icons.add_outlined,
-                          color: ColorPalette.darkItems,
+                          color: ColorPalette.darkItems20,
                           size: 30,
                         ),
                       ),

@@ -18,7 +18,7 @@ class AppBarAxol {
               border: Border(
                   bottom: BorderSide(
             width: 1,
-            color: ColorPalette.darkItems,
+            color: ColorPalette.darkItems20,
           ))),
           child: Column(
             children: [

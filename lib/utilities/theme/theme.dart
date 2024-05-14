@@ -13,7 +13,8 @@ class ColorPalette {
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
   static const caution = Color.fromARGB(255, 180, 32, 22);
   static const correct = Color.fromARGB(255, 68, 228, 108);
-  static const darkItems = Color.fromARGB(255, 78, 78, 78);
+  static const darkItems20 = Color.fromARGB(255, 78, 78, 78);
+  static const darkItems10 = Color.fromARGB(255, 100, 100, 100);
   static const lightItems10 = Color.fromARGB(255, 167, 167, 167);
   static const lightItems20 = Color.fromARGB(255, 226, 226, 226);
   static const filled = Color.fromARGB(10, 0, 0, 0);
@@ -130,17 +131,17 @@ class Typo {
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
       fontSize: 12,
-      color: ColorPalette.darkItems);
+      color: ColorPalette.darkItems20);
   static const labelDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
       fontSize: 14,
-      color: ColorPalette.darkItems);
+      color: ColorPalette.darkItems20);
   static const boldLabelDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.bold,
       fontSize: 16,
-      color: ColorPalette.darkItems);
+      color: ColorPalette.darkItems20);
   static const bigLabelLight = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
@@ -187,17 +188,17 @@ class Typo {
 
 class BoxDecorationTheme {
   static BoxDecoration headerTable() => const BoxDecoration(
-      color: ColorPalette.darkItems,
+      color: ColorPalette.darkItems20,
       border: Border(
           bottom: BorderSide(
         width: 1,
-        color: ColorPalette.darkItems,
+        color: ColorPalette.darkItems20,
       )));
 
   static BoxDecoration rowTable() => const BoxDecoration(
           border: Border(
               bottom: BorderSide(
         width: 1,
-        color: ColorPalette.darkItems,
+        color: ColorPalette.darkItems20,
       )));
 }
