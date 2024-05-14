@@ -8,6 +8,8 @@ import '../../../../sale_report/repository/salereport_repo.dart';
 import '../../../movements/model/movement_model.dart';
 import '../../../movements/model/movement_response_model.dart';
 import '../../../movements/repository/movement_repo.dart';
+import '../../../product/model/product_model.dart';
+import '../../../product/repository/product_repo.dart';
 import '../../model/inv_download_form_model.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/inventory_file_repo.dart';
@@ -87,7 +89,8 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
     }
   }
 
-  Future<void> csvInvToDate(WarehouseModel warehouse, InvDownloadFormModel form) async {
+  Future<void> csvInvToDate(
+      WarehouseModel warehouse, InvDownloadFormModel form) async {
     try {
       emit(InitialInvDownloadDrawerState());
       emit(LoadingInvDownloadDrawerState());
@@ -96,6 +99,8 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
       List<String> omitList;
       MovementResponseModel movementResponse;
       DataResponseModel dataResponse;
+      Map<String, double> mapToAdd = {};
+      List<ProductModel> productList;
 
       //Toma la lista de elementos a omitir del controlador.
       omitList = form.tfOmit.text.split(',');
@@ -125,7 +130,8 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
       for (int i = 0; i < moveList.length; i++) {
         final MovementModel move = moveList[i];
         final double qty;
-        final int iSet = inventoryList.indexWhere((x) => x.product.code == move.code);
+        final int iSet =
+            inventoryList.indexWhere((x) => x.product.code == move.code);
         if (iSet != -1) {
           if (move.conceptType == 1) {
             qty = move.quantity;
@@ -134,8 +140,30 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
           } else {
             qty = 0;
           }
-          inventoryList[iSet] = InventoryRowModel.setStock(inventoryRow: inventoryList[iSet], stock: inventoryList[iSet].stock + qty);
+          inventoryList[iSet] = InventoryRowModel.setStock(
+              inventoryRow: inventoryList[iSet],
+              stock: inventoryList[iSet].stock + qty);
+        } else {
+          if (move.conceptType == 1) {
+            if (mapToAdd.containsKey(move.code)) {
+              mapToAdd[move.code] = mapToAdd[move.code]! + move.quantity;
+            } else {
+              mapToAdd[move.code] = move.quantity;
+            }
+          }
         }
+      }
+
+      productList =
+          await ProductRepo().fetchProductListCode(mapToAdd.keys.toList());
+      for (String element in mapToAdd.keys) {
+        final ProductModel product =
+            productList.firstWhere((x) => x.code == element);
+        final inventoryRow = InventoryRowModel(
+            product: product,
+            stock: mapToAdd[element]!,
+            warehouseName: warehouse.name);
+        inventoryList.add(inventoryRow);
       }
 
       //Descarga archivo csv
