@@ -13,7 +13,7 @@ class ModuleBar extends StatelessWidget {
     return Container(
       color: ColorPalette.darkBackground,
       height: double.infinity,
-      width: 80,
+      width: 200,
       child: Column(
         children: [
           Expanded(
@@ -24,6 +24,7 @@ class ModuleBar extends StatelessWidget {
                 return SizedBox(
                   child: OutlinedButton(
                       style: ButtonStyle(
+                        padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
                         overlayColor: select == index
                             ? MaterialStateProperty.all(
                                 ColorPalette.darkItems10)
@@ -42,21 +43,26 @@ class ModuleBar extends StatelessWidget {
                             return ColorPalette.lightItems10;
                           }
                         }),
-                        textStyle: MaterialStateProperty.all(Typo.labelLight),
+                        textStyle: MaterialStateProperty.all(Typo.labelDark),
                         splashFactory: NoSplash.splashFactory,
                       ),
                       onPressed: module.onPressed,
-                      child: Column(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
                             module.icon,
-                            //color: ColorPalette.lightItems10,
+                            size: 20,
                           ),
-                          Text(
+                          const SizedBox(width: 8),
+                          SizedBox(
+                            width: 156,
+                            child: Text(
                             module.text,
-                            textAlign: TextAlign.center,
-                            //style: Typo.labelLight,
+                            textAlign: TextAlign.start,
                           ),
+                          )
+                          
                         ],
                       )),
                 );

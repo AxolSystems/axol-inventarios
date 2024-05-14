@@ -53,20 +53,46 @@ class MainViewBuild extends StatelessWidget {
 
   Widget mainView(
       BuildContext context, bool isLoading, MainViewFormModel form) {
-    return Scaffold(
-      body: Row(
-        children: [
-          ModuleBar(
-            select: form.moduleSelect,
-            moduleList: form.moduleList,
+    return Material(
+        child: Column(
+      children: [
+        Container(
+          //width: double.infinity,
+          height: 60,
+          decoration: const BoxDecoration(color: ColorPalette.darkBackground),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.light_mode_rounded,
+                  color: ColorPalette.lightItems10,
+                  size: 30,
+                ),
+              ),
+              const Text(
+                'AXOL',
+                style: Typo.titleLightH2,
+              )
+            ],
           ),
-          form.body ??
-              Expanded(
-                  child: Container(
-                color: ColorPalette.darkBackground,
-              )),
-        ],
-      ),
-    );
+        ),
+        Expanded(
+            child: Row(
+          children: [
+            ModuleBar(
+              select: form.moduleSelect,
+              moduleList: form.moduleList,
+            ),
+            form.body ??
+                Expanded(
+                    child: Container(
+                  color: ColorPalette.darkBackground,
+                )),
+          ],
+        ))
+      ],
+    ));
   }
 }
