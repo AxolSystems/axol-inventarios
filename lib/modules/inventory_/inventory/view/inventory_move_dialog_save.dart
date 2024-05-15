@@ -53,13 +53,11 @@ class InventoryMoveDialogSaveBuild extends StatelessWidget {
       iconColor: ColorPalette.correct,
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pop(context);
       },
       actions: [
         PrimaryButtonDialog(
           text: 'Aceptar',
           onPressed: () {
-            Navigator.pop(context);
             Navigator.pop(context);
           },
         ),

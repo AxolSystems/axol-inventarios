@@ -73,9 +73,12 @@ class InventoryMoveAddBuild extends StatelessWidget {
         }
         if (state is SavedInventoryMoveState) {
           showDialog(
-              context: context,
-              builder: (context) =>
-                  InventoryMoveDialogSave(reportData: state.reportData));
+                  context: context,
+                  builder: (context) =>
+                      InventoryMoveDialogSave(reportData: state.reportData))
+              .then((value) {
+            Navigator.pop(context);
+          });
         }
       },
     );

@@ -627,24 +627,29 @@ class SaleNoteAddBuild extends StatelessWidget {
                                     ),
                                     menuChildren: [
                                       MenuItemButton(
+                                        onPressed: isLoading
+                                            ? null
+                                            : () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      SaleNoteNote(row: row),
+                                                ).then((value) {
+                                                  if (value
+                                                      is SaleNoteRowFormModel) {
+                                                    form.productList[index] =
+                                                        value;
+                                                    context
+                                                        .read<
+                                                            SaleNoteAddCubit>()
+                                                        .load();
+                                                  }
+                                                });
+                                              },
                                         child: const Text(
                                           'Nota',
                                           style: Typo.bodyDark,
                                         ),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                SaleNoteNote(row: row),
-                                          ).then((value) {
-                                            if (value is SaleNoteRowFormModel) {
-                                              form.productList[index] = value;
-                                              context
-                                                  .read<SaleNoteAddCubit>()
-                                                  .load();
-                                            }
-                                          });
-                                        },
                                       ),
                                       MenuItemButton(
                                         child: const Text(
@@ -693,21 +698,26 @@ class SaleNoteAddBuild extends StatelessWidget {
                           height: 50,
                           iconColor: ColorPalette.lightItems10,
                           iconSize: 30,
-                          onPressed: () {
-                            form.productList.add(SaleNoteRowFormModel.empty());
-                            context.read<SaleNoteAddCubit>().load();
-                          },
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  form.productList
+                                      .add(SaleNoteRowFormModel.empty());
+                                  context.read<SaleNoteAddCubit>().load();
+                                },
                         ),
                         ButtonTool(
                           icon: Icons.save,
                           height: 50,
                           iconColor: ColorPalette.lightItems10,
                           iconSize: 30,
-                          onPressed: () {
-                            context
-                                .read<SaleNoteAddCubit>()
-                                .save(form, saleType);
-                          },
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  context
+                                      .read<SaleNoteAddCubit>()
+                                      .save(form, saleType);
+                                },
                         ),
                         /*SizedBox(
                           height: 50,
