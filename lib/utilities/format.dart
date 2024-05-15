@@ -35,6 +35,27 @@ class FormatDate {
     return dateText;
   }
 
+  static String ddMonthYearTest(DateTime dateTime) {
+    String dateText;
+    Map<int, String> month = {
+      0: '',
+      1: 'enero',
+      2: 'febrero',
+      3: 'marzo',
+      4: 'abril',
+      5: 'mayo',
+      6: 'junio',
+      7: 'julio',
+      8: 'agosto',
+      9: 'septiembre',
+      10: 'octubre',
+      11: 'noviembre',
+      12: 'diciembre',
+    };
+    dateText = '${dateTime.day} de ${month[dateTime.month]} de ${dateTime.year}';
+    return dateText;
+  }
+
   static DateTime startDay(DateTime dateTime) =>
       DateTime(dateTime.year, dateTime.month, dateTime.day);
 

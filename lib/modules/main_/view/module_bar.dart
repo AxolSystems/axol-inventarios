@@ -101,7 +101,7 @@ class ModuleBar extends StatelessWidget {
                 ),
                 onPressed: () {
                   final heightScreen = MediaQuery.of(context).size.height;
-                  showMenu(
+                  /*showMenu(
                     popUpAnimationStyle:
                         AnimationStyle(duration: const Duration()),
                     color: ColorPalette.darkBackground,
@@ -129,7 +129,7 @@ class ModuleBar extends StatelessWidget {
                         child: Text("Cerrar sesión", style: Typo.labelLight),
                       ),
                     ],
-                  );
+                  );*/
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
