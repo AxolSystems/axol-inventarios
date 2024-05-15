@@ -26,6 +26,7 @@ class MainViewCubit extends Cubit<MainViewState> {
             if (form.moduleSelect != 0) {
               form.moduleSelect = 0;
               form.body = const TextAW(text: 'Modulo 1');
+              form.title = 'Modulo de prueba';
               context.read<MainViewCubit>().load();
             }
           },
@@ -42,11 +43,17 @@ class MainViewCubit extends Cubit<MainViewState> {
             if (form.moduleSelect != 1) {
               form.moduleSelect = 1;
               form.body = const TextAW(text: 'Modulo 2');
+              form.title = 'Modulo 2';
               context.read<MainViewCubit>().load();
             }
           },
         )
       ];
+      if (form.moduleList.isNotEmpty) {
+        form.moduleSelect = 0;
+        form.body = form.moduleList.first.widget;
+        form.title = form.moduleList.first.text;
+      }
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());

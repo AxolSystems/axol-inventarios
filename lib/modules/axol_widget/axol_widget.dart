@@ -13,10 +13,13 @@ class TextAW extends AxolWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Center(
-      child: Text(
-        text,
-        style: Typo.boldLabelDark,
+        child: Container(
+          color: ColorPalette.darkBackground,
+      child: Center(
+        child: Text(
+          text,
+          style: Typo.bodyLight,
+        ),
       ),
     ));
   }

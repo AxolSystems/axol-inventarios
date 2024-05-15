@@ -6,14 +6,21 @@ class MainViewFormModel {
   Widget? body;
   int moduleSelect;
   List<ModuleModel> moduleList;
+  bool moduleBarVisible;
+  String title;
 
   MainViewFormModel(
       {required this.body,
       required this.moduleSelect,
-      required this.moduleList});
+      required this.moduleList,
+      required this.moduleBarVisible,
+      required this.title,
+      });
 
   MainViewFormModel.empty()
       : body = null,
         moduleSelect = 0,
-        moduleList = [];
+        moduleList = [],
+        moduleBarVisible = true,
+        title = '';
 }

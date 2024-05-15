@@ -1,10 +1,8 @@
-import 'package:axol_inventarios/modules/main_/model/modul_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
-import '../../axol_widget/axol_widget.dart';
 import '../cubit/mainview_cubit.dart';
 import '../cubit/mainview_state.dart';
 import '../model/main_view_form_model.dart';
@@ -57,23 +55,48 @@ class MainViewBuild extends StatelessWidget {
         child: Column(
       children: [
         Container(
-          //width: double.infinity,
           height: 60,
-          decoration: const BoxDecoration(color: ColorPalette.darkBackground),
+          decoration: const BoxDecoration(
+              color: ColorPalette.darkBackground,
+              border:
+                  Border(bottom: BorderSide(color: ColorPalette.darkItems20))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.light_mode_rounded,
-                  color: ColorPalette.lightItems10,
-                  size: 30,
+              SizedBox.square(
+                dimension: 60,
+                child: Material(
+                  color: Colors.transparent,
+                  type: MaterialType.circle,
+                  child: IconButton(
+                    splashRadius: 24,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      form.moduleBarVisible = !form.moduleBarVisible;
+                      context.read<MainViewCubit>().load();
+                    },
+                    icon: const Icon(
+                      Icons.menu,
+                      color: ColorPalette.lightItems10,
+                      size: 30,
+                    ),
+                  ),
                 ),
               ),
-              const Text(
-                'AXOL',
+              Text(
+                form.title,
                 style: Typo.titleLightH2,
+              ),
+              const Expanded(child: SizedBox()),
+              Visibility(
+                visible: isLoading,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               )
             ],
           ),
@@ -81,9 +104,12 @@ class MainViewBuild extends StatelessWidget {
         Expanded(
             child: Row(
           children: [
-            ModuleBar(
-              select: form.moduleSelect,
-              moduleList: form.moduleList,
+            Visibility(
+              visible: form.moduleBarVisible,
+              child: ModuleBar(
+                select: form.moduleSelect,
+                moduleList: form.moduleList,
+              ),
             ),
             form.body ??
                 Expanded(
