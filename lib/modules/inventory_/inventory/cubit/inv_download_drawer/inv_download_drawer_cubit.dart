@@ -150,6 +150,12 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
             } else {
               mapToAdd[move.code] = move.quantity;
             }
+          } else if (move.conceptType == 0) {
+            if (mapToAdd.containsKey(move.code)) {
+              mapToAdd[move.code] = mapToAdd[move.code]! - move.quantity;
+            } else {
+              mapToAdd[move.code] = move.quantity;
+            }
           }
         }
       }
