@@ -2,6 +2,12 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.14] - 2024-05-16
+### Corregido
+- Error en descarga de estado de inventario a un tiempo determinado. En el calculo no agregaba los productos que al inicio del calculo se encontraban con stock cero. 
+- Error en ventana emergente de confirmación de guardado en nuevo movimiento.
+- Error que mantenía habilitado el botón de guardado cuando se encontraba una pantalla de carga en formulario de notas de ventas.
+
 ## [1.0.13] - 2024-05-09
 ### Modificado
 - Descarga de estado de inventario a determinada fecha omitiendo folio de movimiento seleccionado.
