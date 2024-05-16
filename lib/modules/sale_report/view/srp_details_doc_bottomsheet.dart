@@ -238,11 +238,11 @@ class SrpDetailsDocBottomSheetBuild extends StatelessWidget {
                   },
                 ),
                 const SizedBox(width: 8),
-                const Text('Total: ', style: Typo.labelDark),
+                const Text('Total: ', style: Typo.systemDark),
                 const Expanded(child: SizedBox()),
                 Text(
                   '\$ ${FormatNumber.format2dec(total)}',
-                  style: Typo.labelDark,
+                  style: Typo.systemDark,
                 ),
               ],
             ),

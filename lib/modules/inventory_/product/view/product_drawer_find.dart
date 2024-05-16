@@ -140,7 +140,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
                   child: Text(
                     'Inventario almacén actual',
                     style: form.productListFind == ProductListFind.inventory
-                        ? Typo.labelDark
+                        ? Typo.systemDark
                         : Typo.labelLight,
                   ),
                 ),
@@ -165,7 +165,7 @@ class ProductDrawerFindBuild extends StatelessWidget {
                 child: Text(
                   'Todos los productos',
                   style: form.productListFind == ProductListFind.product
-                      ? Typo.labelDark
+                      ? Typo.systemDark
                       : Typo.labelLight,
                 ),
               )),

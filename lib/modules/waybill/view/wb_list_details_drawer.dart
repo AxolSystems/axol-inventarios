@@ -178,21 +178,21 @@ class WbListDetailsDrawerBuild extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Text('Valor total: ', style: Typo.labelDark),
+                          const Text('Valor total: ', style: Typo.systemDark),
                           const Expanded(child: SizedBox()),
                           Text(
                             '\$ ${FormatNumber.format2dec(totalPrice)}',
-                            style: Typo.labelDark,
+                            style: Typo.systemDark,
                           ),
                         ],
                       ),
                       Row(
                         children: [
-                          const Text('Peso total: ', style: Typo.labelDark),
+                          const Text('Peso total: ', style: Typo.systemDark),
                           const Expanded(child: SizedBox()),
                           Text(
                             '${FormatNumber.format2dec(totalWeight)} KG',
-                            style: Typo.labelDark,
+                            style: Typo.systemDark,
                           ),
                         ],
                       ),

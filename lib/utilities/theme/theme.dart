@@ -162,6 +162,16 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.caution);
+  static const systemDark = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.normal,
+      fontSize: 14,
+      color: ColorPalette.lightItems10);
+  static const systemLight = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.normal,
+      fontSize: 14,
+      color: ColorPalette.lightText);
 
   //Button mobile
   static const mobileLigth20 = TextStyle(
@@ -174,7 +184,7 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: ColorPalette.darkText);
-      static const mobileLigth18 = TextStyle(
+  static const mobileLigth18 = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 18,

@@ -134,7 +134,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Nombre', style: Typo.labelDark),
+                            const Text('Nombre', style: Typo.systemDark),
                             DropdownMenu(
                               width: elementWidth,
                               controller: form.tfWarehose.controller,
@@ -226,7 +226,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text('Filtrar fecha',
-                                          style: Typo.labelDark),
+                                          style: Typo.systemDark),
                                       SizedBox(height: 8),
                                       Text(
                                         'Filtra las fechas que se encuentren dentro del rango indicado por Fecha Inicial y Fecha Final',
@@ -242,7 +242,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                             const SizedBox(height: 16),
                             const Text(
                               'Fecha inicial',
-                              style: Typo.labelDark,
+                              style: Typo.systemDark,
                             ),
                             Row(
                               children: [
@@ -292,7 +292,7 @@ class MovementDrawerFilterBuild extends StatelessWidget {
                             const SizedBox(height: 16),
                             const Text(
                               'Fecha final',
-                              style: Typo.labelDark,
+                              style: Typo.systemDark,
                             ),
                             Row(
                               children: [

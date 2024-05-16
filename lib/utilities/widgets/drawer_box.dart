@@ -121,7 +121,7 @@ class DrawerBox extends StatelessWidget {
             flex: 1,
             child: Text(
               key,
-              style: Typo.labelDark,
+              style: Typo.systemDark,
             ),
           ),
           Expanded(

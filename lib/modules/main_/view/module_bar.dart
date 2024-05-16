@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../utilities/theme/theme.dart';
+import '../../../utilities/widgets/popup_menu_btn_axol.dart';
 import '../model/modul_model.dart';
 
 class ModuleBar extends StatelessWidget {
@@ -25,50 +26,12 @@ class ModuleBar extends StatelessWidget {
               itemBuilder: (context, index) {
                 final module = moduleList[index];
                 return Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: OutlinedButton(
-                      style: ButtonStyle(
-                        padding:
-                            MaterialStateProperty.all(const EdgeInsets.all(8)),
-                        overlayColor: select == index
-                            ? MaterialStateProperty.all(
-                                ColorPalette.darkItems10)
-                            : MaterialStateProperty.all(
-                                ColorPalette.darkItems20),
-                        backgroundColor: select == index
-                            ? MaterialStateProperty.all(
-                                ColorPalette.darkItems10)
-                            : null,
-                        foregroundColor:
-                            MaterialStateProperty.resolveWith((Set states) {
-                          if (states.contains(MaterialState.hovered) ||
-                              select == index) {
-                            return ColorPalette.lightText;
-                          } else {
-                            return ColorPalette.lightItems10;
-                          }
-                        }),
-                        textStyle: MaterialStateProperty.all(Typo.labelDark),
-                        splashFactory: NoSplash.splashFactory,
-                      ),
-                      onPressed: module.onPressed,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            module.icon,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          SizedBox(
-                            width: 147,
-                            child: Text(
-                              module.text,
-                              textAlign: TextAlign.start,
-                            ),
-                          )
-                        ],
-                      )),
+                  padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                  child: button(
+                      icon: module.icon,
+                      isHover: select == index,
+                      text: module.text,
+                      onPressed: module.onPressed),
                 );
               },
             ),
@@ -78,79 +41,88 @@ class ModuleBar extends StatelessWidget {
             height: 4,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-            child: OutlinedButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                  overlayColor:
-                      MaterialStateProperty.all(ColorPalette.darkItems20),
-                  /*backgroundColor: select == index
-                            ? MaterialStateProperty.all(
-                                ColorPalette.darkItems10)
-                            : null,*/
-                  foregroundColor:
-                      MaterialStateProperty.resolveWith((Set states) {
-                    if (states.contains(MaterialState.hovered)) {
-                      return ColorPalette.lightText;
-                    } else {
-                      return ColorPalette.lightItems10;
-                    }
-                  }),
-                  textStyle: MaterialStateProperty.all(Typo.labelDark),
-                  splashFactory: NoSplash.splashFactory,
-                ),
-                onPressed: () {
-                  final heightScreen = MediaQuery.of(context).size.height;
-                  /*showMenu(
-                    popUpAnimationStyle:
-                        AnimationStyle(duration: const Duration()),
-                    color: ColorPalette.darkBackground,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    context: context,
-                    position:
-                        RelativeRect.fromLTRB(0, heightScreen - 170, 0, 0),
-                    items: <PopupMenuEntry<int>>[
-                      const PopupMenuItem(
-                        value: 0,
-                        enabled: false,
-                        child: SizedBox(
-                          width: 100,
-                          child: Text(
-                            "Usuario",
-                            style: Typo.labelLight,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      const PopupMenuDivider(),
-                      const PopupMenuItem(
-                        value: 1,
-                        child: Text("Cerrar sesión", style: Typo.labelLight),
-                      ),
-                    ],
-                  );*/
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.person,
-                      size: 20,
+            padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+            child: button(
+                icon: Icons.settings, onPressed: () {}, text: 'Configuración'),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(4),
+            child: PopupMenuBtnAxol(
+              icon: Icons.person,
+              text: 'Usuario',
+              entryList: <PopupMenuEntry<int>>[
+                PopupMenuItem(
+                  value: 0,
+                  enabled: false,
+                  child: SizedBox(
+                    width: 100,
+                    child: Text(
+                      "Usuario",
+                      style: Typo.labelLight,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(width: 8),
-                    SizedBox(
-                      width: 147,
-                      child: Text(
-                        'Usuario',
-                        textAlign: TextAlign.start,
-                      ),
-                    )
-                  ],
-                )),
+                  ),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: 1,
+                  child: Text("Cerrar sesión", style: Typo.labelLight),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget button(
+      {bool? isHover, Function()? onPressed, IconData? icon, String? text}) {
+    return SizedBox(
+      height: 24,
+      child: OutlinedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)))),
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            //overlayColor: select == index
+            overlayColor: isHover ?? false
+                ? MaterialStateProperty.all(ColorPalette.darkItems10)
+                : MaterialStateProperty.all(ColorPalette.darkItems20),
+            //backgroundColor: select == index
+            backgroundColor: isHover ?? false
+                ? MaterialStateProperty.all(ColorPalette.darkItems10)
+                : null,
+            foregroundColor: MaterialStateProperty.resolveWith((Set states) {
+              if (states.contains(MaterialState.hovered) ||
+                  (isHover ?? false)) {
+                return ColorPalette.lightText;
+              } else {
+                return ColorPalette.lightItems10;
+              }
+            }),
+            textStyle: MaterialStateProperty.all(Typo.systemDark),
+            splashFactory: NoSplash.splashFactory,
+          ),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 8),
+              Icon(
+                icon,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 147,
+                child: Text(
+                  text ?? '',
+                  textAlign: TextAlign.start,
+                ),
+              )
+            ],
+          )),
     );
   }
 }

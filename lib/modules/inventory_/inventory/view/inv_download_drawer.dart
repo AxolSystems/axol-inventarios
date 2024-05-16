@@ -106,7 +106,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                   children: [
                     const Text(
                       'Descuento de reporte de ventas',
-                      style: Typo.labelDark,
+                      style: Typo.systemDark,
                     ),
                     Row(
                       children: [
@@ -198,7 +198,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Inventario actual', style: Typo.labelDark),
+                              Text('Inventario actual', style: Typo.systemDark),
                               Text(
                                 'Descarga en archivo csv el inventario del almacén actual.',
                                 style: Typo.smallLabelDark,
@@ -256,7 +256,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                   children: [
                     const Text(
                       'Fecha',
-                      style: Typo.labelDark,
+                      style: Typo.systemDark,
                     ),
                     Row(
                       children: [
@@ -315,7 +315,7 @@ class InvDownloadDrawerBuild extends StatelessWidget {
                     const SizedBox(height: 16),
                     const Text(
                         'Omitir',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       TextField(
                         controller: form.tfOmit,

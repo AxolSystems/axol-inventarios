@@ -131,7 +131,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                         width: widthScreen >= 600 ? 120 : 56,
                         child: SecondaryButtonDialog(
                           text: widthScreen >= 600 ? 'Descargar' : '',
-                          textStyle: Typo.labelDark,
+                          textStyle: Typo.systemDark,
                           border: const BorderSide(
                               color: ColorPalette.lightItems10),
                           icon: const Icon(
@@ -183,7 +183,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       width: widthScreen >= 600 ? 120 : 56,
                       child: SecondaryButtonDialog(
                         text: widthScreen >= 600 ? 'Descargar' : '',
-                        textStyle: Typo.labelDark,
+                        textStyle: Typo.systemDark,
                         border:
                             const BorderSide(color: ColorPalette.lightItems10),
                         icon: const Icon(
@@ -219,7 +219,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                     children: [
                       const Text(
                         'Folio',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       TextField(
                         controller: form.folio,
@@ -283,7 +283,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       width: widthScreen >= 600 ? 120 : 56,
                       child: SecondaryButtonDialog(
                         text: widthScreen >= 600 ? 'Descargar' : '',
-                        textStyle: Typo.labelDark,
+                        textStyle: Typo.systemDark,
                         border:
                             const BorderSide(color: ColorPalette.lightItems10),
                         icon: const Icon(
@@ -315,7 +315,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                     children: [
                       const Text(
                         'Documento',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       TextField(
                         controller: form.document,
@@ -348,7 +348,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       const SizedBox(height: 8),
                       const Text(
                         'Concepto',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       TextField(
                         controller: form.concept,
@@ -403,7 +403,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Filtrar fecha', style: Typo.labelDark),
+                                Text('Filtrar fecha', style: Typo.systemDark),
                                 SizedBox(height: 4),
                                 Text(
                                   'Filtra las fechas que se encuentren dentro del rango indicado por Fecha Inicial y Fecha Final',
@@ -419,7 +419,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       const SizedBox(height: 16),
                       const Text(
                         'Fecha inicial',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       Row(
                         children: [
@@ -469,7 +469,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       const SizedBox(height: 16),
                       const Text(
                         'Fecha final',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       Row(
                         children: [
@@ -546,7 +546,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       width: widthScreen >= 600 ? 80 : 56,
                       child: SecondaryButtonDialog(
                         text: widthScreen >= 600 ? 'CSV' : '',
-                        textStyle: Typo.labelDark,
+                        textStyle: Typo.systemDark,
                         border:
                             const BorderSide(color: ColorPalette.lightItems10),
                         icon: const Icon(
@@ -568,7 +568,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                     children: [
                       const Text(
                         'Almacén',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       DropdownButtonFormField(
                         decoration: InputDecoration(
@@ -626,7 +626,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Entradas', style: Typo.labelDark),
+                                Text('Entradas', style: Typo.systemDark),
                                 SizedBox(height: 4),
                                 Text(
                                   'Toma los movimientos que son entradas al inventario.',
@@ -664,7 +664,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Salidas', style: Typo.labelDark),
+                                Text('Salidas', style: Typo.systemDark),
                                 SizedBox(height: 4),
                                 Text(
                                   'Toma los movimientos que son salidas al inventario',
@@ -681,7 +681,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       const SizedBox(height: 16),
                       const Text(
                         'Fecha inicial',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       Row(
                         children: [
@@ -732,7 +732,7 @@ class MovementDrawerFileBuild extends StatelessWidget {
                       const SizedBox(height: 16),
                       const Text(
                         'Fecha final',
-                        style: Typo.labelDark,
+                        style: Typo.systemDark,
                       ),
                       Row(
                         children: [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../axol_widget/axol_widget.dart';
-import '../model/main_view_form_model.dart';
-import '../model/modul_model.dart';
+import '../../../axol_widget/axol_widget.dart';
+import '../../model/main_view_form_model.dart';
+import '../../model/modul_model.dart';
 import 'mainview_state.dart';
 
 class MainViewCubit extends Cubit<MainViewState> {

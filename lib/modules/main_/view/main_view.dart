@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
-import '../cubit/mainview_cubit.dart';
-import '../cubit/mainview_state.dart';
+import '../cubit/main_view/mainview_cubit.dart';
+import '../cubit/main_view/mainview_state.dart';
 import '../model/main_view_form_model.dart';
 import 'module_bar.dart';
 

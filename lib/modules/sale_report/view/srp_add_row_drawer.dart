@@ -127,10 +127,10 @@ class WbAddRowDrawerBuild extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Subtotal: ', style: Typo.labelDark),
+                    const Text('Subtotal: ', style: Typo.systemDark),
                     Text(
                       '\$ ${FormatNumber.format2dec(subTotal)}',
-                      style: Typo.labelDark,
+                      style: Typo.systemDark,
                     ),
                   ],
                 ),
