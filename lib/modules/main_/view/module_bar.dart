@@ -41,7 +41,7 @@ class ModuleBar extends StatelessWidget {
             color: ColorPalette.darkItems20,
             height: 4,
           ),
-          PopoverButton(),
+          const PopoverButton(),
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
             child: button(
@@ -89,26 +89,26 @@ class ModuleBar extends StatelessWidget {
       height: 24,
       child: OutlinedButton(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+            shape: WidgetStateProperty.all(const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12)))),
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
             //overlayColor: select == index
             overlayColor: isHover ?? false
-                ? MaterialStateProperty.all(ColorPalette.darkItems10)
-                : MaterialStateProperty.all(ColorPalette.darkItems20),
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                : WidgetStateProperty.all(ColorPalette.darkItems20),
             //backgroundColor: select == index
             backgroundColor: isHover ?? false
-                ? MaterialStateProperty.all(ColorPalette.darkItems10)
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
                 : null,
-            foregroundColor: MaterialStateProperty.resolveWith((Set states) {
-              if (states.contains(MaterialState.hovered) ||
+            foregroundColor: WidgetStateProperty.resolveWith((Set states) {
+              if (states.contains(WidgetState.hovered) ||
                   (isHover ?? false)) {
                 return ColorPalette.lightText;
               } else {
                 return ColorPalette.lightItems10;
               }
             }),
-            textStyle: MaterialStateProperty.all(Typo.systemDark),
+            textStyle: WidgetStateProperty.all(Typo.systemDark),
             splashFactory: NoSplash.splashFactory,
           ),
           onPressed: onPressed,
@@ -148,38 +148,39 @@ class PopoverButton extends StatelessWidget {
       height: 24,
       child: OutlinedButton(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+            shape: WidgetStateProperty.all(const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12)))),
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
             //overlayColor: select == index
             overlayColor: isHover ?? false
-                ? MaterialStateProperty.all(ColorPalette.darkItems10)
-                : MaterialStateProperty.all(ColorPalette.darkItems20),
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                : WidgetStateProperty.all(ColorPalette.darkItems20),
             //backgroundColor: select == index
             backgroundColor: isHover ?? false
-                ? MaterialStateProperty.all(ColorPalette.darkItems10)
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
                 : null,
-            foregroundColor: MaterialStateProperty.resolveWith((Set states) {
-              if (states.contains(MaterialState.hovered) ||
+            foregroundColor: WidgetStateProperty.resolveWith((Set states) {
+              if (states.contains(WidgetState.hovered) ||
                   (isHover ?? false)) {
                 return ColorPalette.lightText;
               } else {
                 return ColorPalette.lightItems10;
               }
             }),
-            textStyle: MaterialStateProperty.all(Typo.systemDark),
+            textStyle: WidgetStateProperty.all(Typo.systemDark),
             splashFactory: NoSplash.splashFactory,
           ),
           onPressed: () {
             showPopover(
               context: context,
               bodyBuilder: (context) => const Text('Prueba'),
-              onPop: () => print('Popover was popped!'),
               direction: PopoverDirection.right,
+              backgroundColor: ColorPalette.darkBackground,
+              barrierColor: Colors.transparent,
               width: 200,
               height: 400,
-              arrowHeight: 15,
-              arrowWidth: 30,
+              arrowHeight: 10,
+              arrowWidth: 10,
             );
           },
           child: Row(
