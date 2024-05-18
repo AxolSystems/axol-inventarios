@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:popover/popover.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
@@ -40,10 +41,16 @@ class ModuleBar extends StatelessWidget {
             color: ColorPalette.darkItems20,
             height: 4,
           ),
+          PopoverButton(),
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
             child: button(
-                icon: Icons.settings, onPressed: () {}, text: 'Configuración'),
+              icon: Icons.settings,
+              onPressed: () {
+                
+              },
+              text: 'Configuración',
+            ),
           ),
           const Padding(
             padding: EdgeInsets.all(4),
@@ -105,6 +112,76 @@ class ModuleBar extends StatelessWidget {
             splashFactory: NoSplash.splashFactory,
           ),
           onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 8),
+              Icon(
+                icon,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 147,
+                child: Text(
+                  text ?? '',
+                  textAlign: TextAlign.start,
+                ),
+              )
+            ],
+          )),
+    );
+  }
+}
+
+class PopoverButton extends StatelessWidget {
+  final bool? isHover;
+  final Function()? onPressed;
+  final IconData? icon;
+  final String? text;
+  const PopoverButton(
+      {super.key, this.isHover, this.onPressed, this.icon, this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 24,
+      child: OutlinedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)))),
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            //overlayColor: select == index
+            overlayColor: isHover ?? false
+                ? MaterialStateProperty.all(ColorPalette.darkItems10)
+                : MaterialStateProperty.all(ColorPalette.darkItems20),
+            //backgroundColor: select == index
+            backgroundColor: isHover ?? false
+                ? MaterialStateProperty.all(ColorPalette.darkItems10)
+                : null,
+            foregroundColor: MaterialStateProperty.resolveWith((Set states) {
+              if (states.contains(MaterialState.hovered) ||
+                  (isHover ?? false)) {
+                return ColorPalette.lightText;
+              } else {
+                return ColorPalette.lightItems10;
+              }
+            }),
+            textStyle: MaterialStateProperty.all(Typo.systemDark),
+            splashFactory: NoSplash.splashFactory,
+          ),
+          onPressed: () {
+            showPopover(
+              context: context,
+              bodyBuilder: (context) => const Text('Prueba'),
+              onPop: () => print('Popover was popped!'),
+              direction: PopoverDirection.right,
+              width: 200,
+              height: 400,
+              arrowHeight: 15,
+              arrowWidth: 30,
+            );
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
