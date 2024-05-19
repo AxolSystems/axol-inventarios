@@ -7,6 +7,7 @@ class MainViewFormModel {
   int moduleSelect;
   List<ModuleModel> moduleList;
   bool moduleBarVisible;
+  bool menuVisible;
   String title;
 
   MainViewFormModel(
@@ -15,6 +16,7 @@ class MainViewFormModel {
       required this.moduleList,
       required this.moduleBarVisible,
       required this.title,
+      required this.menuVisible,
       });
 
   MainViewFormModel.empty()
@@ -22,5 +24,6 @@ class MainViewFormModel {
         moduleSelect = 0,
         moduleList = [],
         moduleBarVisible = true,
+        menuVisible = true,
         title = '';
 }

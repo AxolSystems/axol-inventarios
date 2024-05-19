@@ -109,6 +109,15 @@ class MainViewBuild extends StatelessWidget {
               child: ModuleBar(
                 select: form.moduleSelect,
                 moduleList: form.moduleList,
+                menuVisible: form.menuVisible,
+                onPressedSetting: () {
+                  if (form.moduleSelect == -1) {
+                    form.menuVisible = !form.menuVisible;
+                  }
+                  form.moduleSelect = -1;
+                  form.title = 'Configuración';
+                  context.read<MainViewCubit>().load();
+                },
               ),
             ),
             form.body ??

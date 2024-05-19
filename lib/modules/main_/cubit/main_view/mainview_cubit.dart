@@ -27,8 +27,10 @@ class MainViewCubit extends Cubit<MainViewState> {
               form.moduleSelect = 0;
               form.body = const TextAW(text: 'Modulo 1');
               form.title = 'Modulo de prueba';
-              context.read<MainViewCubit>().load();
+            } else {
+              form.menuVisible = !form.menuVisible;
             }
+            context.read<MainViewCubit>().load();
           },
         ),
         ModuleModel(
@@ -44,8 +46,10 @@ class MainViewCubit extends Cubit<MainViewState> {
               form.moduleSelect = 1;
               form.body = const TextAW(text: 'Modulo 2');
               form.title = 'Modulo 2';
-              context.read<MainViewCubit>().load();
+            } else {
+              form.menuVisible = !form.menuVisible;
             }
+            context.read<MainViewCubit>().load();
           },
         )
       ];
