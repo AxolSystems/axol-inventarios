@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
+import '../model/entry_menu_model.dart';
 import '../model/modul_model.dart';
 
 class ModuleBar extends StatelessWidget {
@@ -18,6 +19,17 @@ class ModuleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<EntryMenuModel> entryList;
+    if (select >= 0) {
+      entryList = moduleList[select].menu;
+    } else if (select == -1) {
+      entryList = [
+        EntryMenuModel(text: 'Entrada_0', value: 0),
+        EntryMenuModel(text: 'Entrada_1', value: 1),
+      ];
+    } else {
+      entryList = [];
+    }
     return Row(
       children: [
         Container(
@@ -95,8 +107,20 @@ class ModuleBar extends StatelessWidget {
                 color: ColorPalette.darkBackground,
                 border:
                     Border(right: BorderSide(color: ColorPalette.darkItems20))),
-            child: const Column(
-              children: [Expanded(child: SizedBox())],
+            child: Column(
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: entryList.length,
+                  itemBuilder: (context, index) {
+                    final EntryMenuModel entry = entryList[index];
+                    return button(
+                      text: entry.text,
+                      isHover: true,
+                    );
+                  },
+                ))
+              ],
             ),
           ),
         ),
@@ -153,7 +177,7 @@ class ModuleBar extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Visibility(
-                  replacement: const SizedBox(width: 10),
+                    replacement: const SizedBox(width: 10),
                     visible: isHover ?? false,
                     child: menuVisible
                         ? const Icon(

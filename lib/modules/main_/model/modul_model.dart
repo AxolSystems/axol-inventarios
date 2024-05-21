@@ -23,4 +23,14 @@ class ModuleModel {
     required this.widget,
     this.onPressed,
   });
+
+  ModuleModel.empty()
+      : id = '',
+        text = '',
+        icon = Icons.square,
+        position = -1,
+        menu = [],
+        permissions = {},
+        widget = const TextAW(text: ''),
+        onPressed = null;
 }
