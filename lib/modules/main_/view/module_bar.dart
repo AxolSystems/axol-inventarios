@@ -24,8 +24,8 @@ class ModuleBar extends StatelessWidget {
       entryList = moduleList[select].menu;
     } else if (select == -1) {
       entryList = [
-        EntryMenuModel(text: 'Entrada_0', value: 0),
-        EntryMenuModel(text: 'Entrada_1', value: 1),
+        EntryMenuModel(text: 'Bloques', value: 0),
+        EntryMenuModel(text: 'Modulos', value: 1),
       ];
     } else {
       entryList = [];
@@ -114,10 +114,12 @@ class ModuleBar extends StatelessWidget {
                   itemCount: entryList.length,
                   itemBuilder: (context, index) {
                     final EntryMenuModel entry = entryList[index];
-                    return button(
-                      text: entry.text,
-                      isHover: true,
-                    );
+                    return Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                        child: button(
+                            text: entry.text,
+                            isHover: false,
+                            onPressed: () {}));
                   },
                 ))
               ],
@@ -161,11 +163,17 @@ class ModuleBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 8),
-              Icon(
-                icon,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
+              Visibility(
+                  visible: icon != null,
+                  child: Column(
+                    children: [
+                      Icon(
+                        icon,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  )),
               SizedBox(
                 width: 129,
                 child: Text(
