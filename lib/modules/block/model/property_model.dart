@@ -6,4 +6,14 @@ class PropertyModel {
 
   PropertyModel({required this.name, required this.propertyType});
 
+  PropertyModel.empty() : 
+  name = '',
+  propertyType = Prop.text;
+
+  static List<PropertyModel> mapToProperty(Map<String,dynamic> map) {
+    List<PropertyModel> propertyList = [];
+    
+    return propertyList;
+  }
+
 }
