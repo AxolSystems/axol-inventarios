@@ -1,12 +1,16 @@
+import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
+import 'package:axol_inventarios/modules/main_/model/entry_menu_model.dart';
+import 'package:axol_inventarios/modules/main_/model/modul_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/popup_menu_btn_axol.dart';
+import '../../block/view/setblock_widget.dart';
 import '../cubit/main_view/mainview_cubit.dart';
 import '../cubit/main_view/mainview_state.dart';
 import '../model/main_view_form_model.dart';
-import 'module_bar.dart';
 
 class MainView extends StatelessWidget {
   const MainView({super.key});
@@ -18,7 +22,7 @@ class MainView extends StatelessWidget {
         BlocProvider(create: (_) => MainViewCubit()),
         BlocProvider(create: (_) => MainViewForm()),
       ],
-      child: MainViewBuild(),
+      child: const MainViewBuild(),
     );
   }
 }
@@ -106,7 +110,9 @@ class MainViewBuild extends StatelessWidget {
           children: [
             Visibility(
               visible: form.moduleBarVisible,
-              child: ModuleBar(
+              child: moduleBar(
+                context: context,
+                form: form,
                 select: form.moduleSelect,
                 moduleList: form.moduleList,
                 menuVisible: form.menuVisible,
@@ -130,4 +136,246 @@ class MainViewBuild extends StatelessWidget {
       ],
     ));
   }
+
+  Widget moduleBar({
+    required BuildContext context,
+    required MainViewFormModel form,
+    required List<ModuleModel> moduleList,
+    required int select,
+    required bool menuVisible,
+    Function()? onPressedSetting,
+  }) {
+    final List<EntryMenuModel> entryList;
+    if (select >= 0) {
+      entryList = moduleList[select].menu;
+    } else if (select == -1) {
+      entryList = [
+        EntryMenuModel(
+          text: 'Bloques',
+          value: 0,
+          onPressed: () {
+            form.body = const SetBlockWidget();
+            form.menuSelect = 0;
+            context.read<MainViewCubit>().load();
+          },
+        ),
+        EntryMenuModel(
+          text: 'Modulos',
+          value: 1,
+          onPressed: () {
+            form.body = const TextAW(text: 'Modules');
+            form.menuSelect = 1;
+            context.read<MainViewCubit>().load();
+          },
+        ),
+      ];
+    } else {
+      entryList = [];
+    }
+    return Row(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: ColorPalette.darkBackground,
+            border: Border(right: BorderSide(color: ColorPalette.darkItems20)),
+          ),
+          height: double.infinity,
+          width: 200,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: moduleList.length,
+                  itemBuilder: (context, index) {
+                    final module = moduleList[index];
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                      child: button(
+                        icon: module.icon,
+                        isHover: select == index,
+                        text: module.text,
+                        onPressed: module.onPressed,
+                        menuVisible: menuVisible,
+                        isModule: true,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const Divider(
+                color: ColorPalette.darkItems20,
+                height: 4,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                child: button(
+                  icon: Icons.settings,
+                  isHover: select == -1,
+                  onPressed: onPressedSetting,
+                  text: 'Configuración',
+                  menuVisible: menuVisible,
+                  isModule: true,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(4),
+                child: PopupMenuBtnAxol(
+                  icon: Icons.person,
+                  text: 'Cuenta',
+                  entryList: <PopupMenuEntry<int>>[
+                    PopupMenuItem(
+                      value: 0,
+                      enabled: false,
+                      child: SizedBox(
+                        width: 100,
+                        child: Text(
+                          "Usuario",
+                          style: Typo.labelLight,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    PopupMenuDivider(),
+                    PopupMenuItem(
+                      value: 1,
+                      child: Text("Cerrar sesión", style: Typo.labelLight),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: menuVisible,
+          child: Container(
+            width: 200,
+            decoration: const BoxDecoration(
+                color: ColorPalette.darkBackground,
+                border:
+                    Border(right: BorderSide(color: ColorPalette.darkItems20))),
+            child: Column(
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: entryList.length,
+                  itemBuilder: (context, index) {
+                    final EntryMenuModel entry = entryList[index];
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                      child: button(
+                        text: entry.text,
+                        isHover: form.menuSelect == index,
+                        onPressed: entry.onPressed,
+                        menuVisible: menuVisible,
+                      ),
+                    );
+                  },
+                ))
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget button(
+      {bool? isHover,
+      Function()? onPressed,
+      IconData? icon,
+      String? text,
+      bool? isModule,
+      required bool menuVisible}) {
+    return SizedBox(
+      height: 24,
+      child: OutlinedButton(
+          style: ButtonStyle(
+            side: WidgetStateProperty.all(BorderSide.none),
+            shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)))),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            //overlayColor: select == index
+            overlayColor: isHover ?? false
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                : WidgetStateProperty.all(ColorPalette.darkItems20),
+            //backgroundColor: select == index
+            backgroundColor: isHover ?? false
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                : null,
+            foregroundColor: WidgetStateProperty.resolveWith((Set states) {
+              if (states.contains(WidgetState.hovered) || (isHover ?? false)) {
+                return ColorPalette.lightText;
+              } else {
+                return ColorPalette.lightItems10;
+              }
+            }),
+            textStyle: WidgetStateProperty.all(Typo.systemDark),
+            splashFactory: NoSplash.splashFactory,
+          ),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 8),
+              Visibility(
+                  visible: icon != null,
+                  child: Column(
+                    children: [
+                      Icon(
+                        icon,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  )),
+              SizedBox(
+                width: 129,
+                child: Text(
+                  text ?? '',
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Visibility(
+                    replacement: const SizedBox(width: 10),
+                    visible: (isHover ?? false) && (isModule ?? false),
+                    child: menuVisible
+                        ? const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: ColorPalette.lightText,
+                            size: 10,
+                          )
+                        : const Icon(
+                            Icons.arrow_forward_ios,
+                            color: ColorPalette.lightText,
+                            size: 10,
+                          )),
+              )
+            ],
+          )),
+    );
+  }
 }
+
+/*class ModuleBar extends StatelessWidget {
+  final List<ModuleModel> moduleList;
+  final int select;
+  final bool menuVisible;
+  final Function()? onPressedSetting;
+  const ModuleBar(
+      {super.key,
+      required this.moduleList,
+      required this.select,
+      this.onPressedSetting,
+      required this.menuVisible});
+  @override
+  Widget build(BuildContext context) {
+    
+    return 
+  }
+
+  
+}*/

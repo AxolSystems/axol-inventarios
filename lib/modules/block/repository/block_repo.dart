@@ -9,13 +9,12 @@ class BlockRepo {
   static const String _tableName = 'table_name';
   static const String _blockName = 'block_name';
   static const String _property = 'property';
-  final _supabase = Supabase.instance.client;
+  static final _supabase = Supabase.instance.client;
 
-  Future<void> fetchAllBlocks() async {
+  static Future<List<BlockModel>> fetchAllBlocks() async {
     List<Map<String, dynamic>> blocksDB = [];
-    List<BlockModel> blockList;
+    List<BlockModel> blockList = [];
     BlockModel block;
-
     blocksDB =
         await _supabase.from(_table).select<List<Map<String, dynamic>>>('*');
 
@@ -23,11 +22,14 @@ class BlockRepo {
       for (var element in blocksDB) {
         block = BlockModel(
           blockName: element[_blockName] ?? '',
-          propertyList: PropertyModel.mapToProperty(element[_property]),
+          propertyList: PropertyModel.mapToProperty(element[_property] ?? {}),
           tableName: element[_tableName] ?? '',
           uuid: element[_id].toString(),
         );
+        blockList.add(block);
       }
     }
+
+    return blockList;
   }
 }

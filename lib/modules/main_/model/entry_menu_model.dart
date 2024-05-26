@@ -1,10 +1,16 @@
 class EntryMenuModel {
   int value;
   String text;
+  Function() onPressed;
 
-  EntryMenuModel({required this.text, required this.value});
+  EntryMenuModel(
+      {required this.text, required this.value, required this.onPressed});
 
-  EntryMenuModel.empty()
-      : text = '',
-        value = -1;
+  static EntryMenuModel empty() {
+    return EntryMenuModel(
+      text: '',
+      value: -1,
+      onPressed: () {},
+    );
+  }
 }
