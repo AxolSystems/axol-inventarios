@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/button.dart';
 import '../cubit/setblock_cubit.dart';
 import '../cubit/setblock_state.dart';
 import '../model/block_model.dart';
@@ -33,10 +34,20 @@ class SetBlockWidgetBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SetBlockFormModel form = context.read<SetBlockForm>().state;
-    BlockModel? cBlock = form.select >= 0 ? form.blockList[form.select] : null;
+
     return BlocConsumer<SetBlockCubit, SetBlockState>(
       bloc: context.read<SetBlockCubit>()..initLoad(form),
       builder: (context, state) {
+        BlockModel? cBlock =
+            form.select >= 0 ? form.blockList[form.select] : null;
+        if (form.blockList.isNotEmpty && form.select == -1) {
+          form.select = 0;
+          context.read<SetBlockCubit>().load();
+        }
+        if (cBlock != null && cBlock.blockName == '') {
+          cBlock = BlockModel.setName(
+              cBlock, 'Bloque ${cBlock.tableName.split('table_').last}');
+        }
         return Expanded(
             child: Container(
           color: ColorPalette.darkBackground,
@@ -64,13 +75,18 @@ class SetBlockWidgetBuild extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final block = form.blockList[index];
                         final blockName = block.blockName == ''
-                            ? block.tableName
+                            ? 'Bloque ${block.tableName.split('table_').last}'
                             : block.blockName;
                         return Padding(
                             padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                            child: OutlinedButton(
-                              onPressed: () {},
-                              child: Text(blockName),
+                            child: PrimaryButton(
+                              onPressed: () {
+                                form.select = index;
+                                context.read<SetBlockCubit>().load();
+                              },
+                              text: blockName,
+                              menuVisible: false,
+                              isHover: form.select == index,
                             ));
                       },
                     ))
@@ -81,7 +97,11 @@ class SetBlockWidgetBuild extends StatelessWidget {
                   child: Column(
                 children: [
                   Text(
-                    cBlock?.blockName ?? '',
+                    cBlock != null
+                        ? (cBlock.blockName == ''
+                            ? cBlock.tableName
+                            : cBlock.blockName)
+                        : '',
                     style: Typo.subtitleLight,
                   ),
                   //const TextField(),
@@ -98,31 +118,32 @@ class SetBlockWidgetBuild extends StatelessWidget {
                       ),
                     ],
                   ),
-                  /*Expanded(
-                          child: ListView.builder(
-                        itemCount: cBlock.propertyList.length,
-                        itemBuilder: (context, index) {
-                          final property = cBlock.propertyList[index];
-                          List<DropdownMenuItem<Prop>> itemList = [];
-                          DropdownMenuItem<Prop> item;
-                          for (Prop prop in Prop.values) {
-                            item = DropdownMenuItem(
-                              value: prop,
-                              child: Text(PropertyModel.getTextToProp(prop)),
-                            );
-                            itemList.add(item);
-                          }
-                          return Row(
-                            children: [
-                              const TextField(),
-                              DropdownButton(
-                                items: itemList,
-                                onChanged: (value) {},
-                              ),
-                            ],
-                          );
-                        },
-                      ))*/
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: cBlock?.propertyList.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final property =
+                          cBlock?.propertyList[index] ?? PropertyModel.empty();
+                      List<DropdownMenuItem<Prop>> itemList = [];
+                      DropdownMenuItem<Prop> item;
+                      for (Prop prop in Prop.values) {
+                        item = DropdownMenuItem(
+                          value: prop,
+                          child: Text(PropertyModel.getTextToProp(prop)),
+                        );
+                        itemList.add(item);
+                      }
+                      return Row(
+                        children: [
+                          const TextField(),
+                          DropdownButton(
+                            items: itemList,
+                            onChanged: (value) {},
+                          ),
+                        ],
+                      );
+                    },
+                  ))
                 ],
               ))
             ],

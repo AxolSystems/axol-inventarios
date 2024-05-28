@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
 import '../../block/view/setblock_widget.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -190,7 +191,7 @@ class MainViewBuild extends StatelessWidget {
                     final module = moduleList[index];
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                      child: button(
+                      child: PrimaryButton(
                         icon: module.icon,
                         isHover: select == index,
                         text: module.text,
@@ -208,7 +209,7 @@ class MainViewBuild extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                child: button(
+                child: PrimaryButton(
                   icon: Icons.settings,
                   isHover: select == -1,
                   onPressed: onPressedSetting,
@@ -263,7 +264,7 @@ class MainViewBuild extends StatelessWidget {
                     final EntryMenuModel entry = entryList[index];
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                      child: button(
+                      child: PrimaryButton(
                         text: entry.text,
                         isHover: form.menuSelect == index,
                         onPressed: entry.onPressed,
@@ -279,103 +280,4 @@ class MainViewBuild extends StatelessWidget {
       ],
     );
   }
-
-  Widget button(
-      {bool? isHover,
-      Function()? onPressed,
-      IconData? icon,
-      String? text,
-      bool? isModule,
-      required bool menuVisible}) {
-    return SizedBox(
-      height: 24,
-      child: OutlinedButton(
-          style: ButtonStyle(
-            side: WidgetStateProperty.all(BorderSide.none),
-            shape: WidgetStateProperty.all(const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)))),
-            padding: WidgetStateProperty.all(EdgeInsets.zero),
-            //overlayColor: select == index
-            overlayColor: isHover ?? false
-                ? WidgetStateProperty.all(ColorPalette.darkItems10)
-                : WidgetStateProperty.all(ColorPalette.darkItems20),
-            //backgroundColor: select == index
-            backgroundColor: isHover ?? false
-                ? WidgetStateProperty.all(ColorPalette.darkItems10)
-                : null,
-            foregroundColor: WidgetStateProperty.resolveWith((Set states) {
-              if (states.contains(WidgetState.hovered) || (isHover ?? false)) {
-                return ColorPalette.lightText;
-              } else {
-                return ColorPalette.lightItems10;
-              }
-            }),
-            textStyle: WidgetStateProperty.all(Typo.systemDark),
-            splashFactory: NoSplash.splashFactory,
-          ),
-          onPressed: onPressed,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 8),
-              Visibility(
-                  visible: icon != null,
-                  child: Column(
-                    children: [
-                      Icon(
-                        icon,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                  )),
-              SizedBox(
-                width: 129,
-                child: Text(
-                  text ?? '',
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Visibility(
-                    replacement: const SizedBox(width: 10),
-                    visible: (isHover ?? false) && (isModule ?? false),
-                    child: menuVisible
-                        ? const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: ColorPalette.lightText,
-                            size: 10,
-                          )
-                        : const Icon(
-                            Icons.arrow_forward_ios,
-                            color: ColorPalette.lightText,
-                            size: 10,
-                          )),
-              )
-            ],
-          )),
-    );
-  }
 }
-
-/*class ModuleBar extends StatelessWidget {
-  final List<ModuleModel> moduleList;
-  final int select;
-  final bool menuVisible;
-  final Function()? onPressedSetting;
-  const ModuleBar(
-      {super.key,
-      required this.moduleList,
-      required this.select,
-      this.onPressedSetting,
-      required this.menuVisible});
-  @override
-  Widget build(BuildContext context) {
-    
-    return 
-  }
-
-  
-}*/

@@ -10,15 +10,15 @@ class PrimaryButtonDialog extends StatefulWidget {
   final Icon? icon;
   final TextStyle? textStyle;
 
-  const PrimaryButtonDialog({
-    Key? key,
-    this.onPressed,
-    this.text,
-    this.enabled,
-    this.textStyle,
-    this.loading,
-    this.icon
-  }) : super(key: key);
+  const PrimaryButtonDialog(
+      {Key? key,
+      this.onPressed,
+      this.text,
+      this.enabled,
+      this.textStyle,
+      this.loading,
+      this.icon})
+      : super(key: key);
 
   @override
   State createState() => _PrimaryButtonDialog();
@@ -48,8 +48,8 @@ class _PrimaryButtonDialog extends State<PrimaryButtonDialog> {
             )
           : loading == true
               ? const SizedBox(
-                width: 20,
-                height: 20,
+                  width: 20,
+                  height: 20,
                   child: CircularProgressIndicator(
                     color: ColorPalette.lightItems10,
                   ),
@@ -109,8 +109,8 @@ class _SecondaryButtonDialog extends State<SecondaryButtonDialog> {
             )
           : loading == true
               ? const SizedBox(
-                width: 20,
-                height: 20,
+                  width: 20,
+                  height: 20,
                   child: CircularProgressIndicator(
                     color: ColorPalette.lightItems10,
                   ),
@@ -268,6 +268,98 @@ class _SystemButton extends State<SystemButton> {
             shape: const ContinuousRectangleBorder()),
         child: child,
       ),
+    );
+  }
+}
+
+class PrimaryButton extends StatelessWidget {
+  final bool? isHover;
+  final Function()? onPressed;
+  final IconData? icon;
+  final String? text;
+  final bool? isModule;
+  final bool menuVisible;
+  const PrimaryButton({
+    super.key,
+    this.isHover,
+    this.onPressed,
+    this.icon,
+    this.text,
+    this.isModule,
+    required this.menuVisible,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 24,
+      child: OutlinedButton(
+          style: ButtonStyle(
+            side: WidgetStateProperty.all(BorderSide.none),
+            shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)))),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            //overlayColor: select == index
+            overlayColor: isHover ?? false
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                : WidgetStateProperty.all(ColorPalette.darkItems20),
+            //backgroundColor: select == index
+            backgroundColor: isHover ?? false
+                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                : null,
+            foregroundColor: WidgetStateProperty.resolveWith((Set states) {
+              if (states.contains(WidgetState.hovered) || (isHover ?? false)) {
+                return ColorPalette.lightText;
+              } else {
+                return ColorPalette.lightItems10;
+              }
+            }),
+            textStyle: WidgetStateProperty.all(Typo.systemDark),
+            splashFactory: NoSplash.splashFactory,
+          ),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 8),
+              Visibility(
+                  visible: icon != null,
+                  child: Column(
+                    children: [
+                      Icon(
+                        icon,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  )),
+              SizedBox(
+                width: 129,
+                child: Text(
+                  text ?? '',
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Visibility(
+                    replacement: const SizedBox(width: 10),
+                    visible: (isHover ?? false) && (isModule ?? false),
+                    child: menuVisible
+                        ? const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: ColorPalette.lightText,
+                            size: 10,
+                          )
+                        : const Icon(
+                            Icons.arrow_forward_ios,
+                            color: ColorPalette.lightText,
+                            size: 10,
+                          )),
+              )
+            ],
+          )),
     );
   }
 }

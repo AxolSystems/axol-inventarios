@@ -11,4 +11,9 @@ class BlockModel {
       required this.propertyList,
       required this.tableName,
       required this.uuid});
+
+  BlockModel.setName(BlockModel block, this.blockName)
+      : uuid = block.uuid,
+        tableName = block.tableName,
+        propertyList = block.propertyList;
 }
