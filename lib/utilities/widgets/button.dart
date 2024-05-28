@@ -272,14 +272,14 @@ class _SystemButton extends State<SystemButton> {
   }
 }
 
-class PrimaryButton extends StatelessWidget {
+class MainNavButton extends StatelessWidget {
   final bool? isHover;
   final Function()? onPressed;
   final IconData? icon;
   final String? text;
   final bool? isModule;
   final bool menuVisible;
-  const PrimaryButton({
+  const MainNavButton({
     super.key,
     this.isHover,
     this.onPressed,
@@ -358,6 +358,66 @@ class PrimaryButton extends StatelessWidget {
                             size: 10,
                           )),
               )
+            ],
+          )),
+    );
+  }
+}
+
+class PrimaryButton extends StatelessWidget {
+  final bool? isHover;
+  final Function()? onPressed;
+  final IconData? icon;
+  final String? text;
+  const PrimaryButton({
+    super.key,
+    this.isHover,
+    this.onPressed,
+    this.icon,
+    this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 24,
+      child: OutlinedButton(
+          style: ButtonStyle(
+            side: WidgetStateProperty.all(
+                const BorderSide(color: ColorPalette.primary)),
+            shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)))),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            //overlayColor: select == index
+            overlayColor: isHover ?? false
+                ? WidgetStateProperty.all(ColorPalette.primary)
+                : WidgetStateProperty.all(ColorPalette.secondary),
+            //backgroundColor: select == index
+            backgroundColor: isHover ?? false
+                ? WidgetStateProperty.all(ColorPalette.secondary)
+                : null,
+            foregroundColor: WidgetStateProperty.all(ColorPalette.lightText),
+            textStyle: WidgetStateProperty.all(Typo.systemDark),
+            splashFactory: NoSplash.splashFactory,
+          ),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 8),
+              Visibility(
+                  visible: icon != null,
+                  child: Icon(
+                    icon,
+                    size: 20,
+                  )),
+              SizedBox(
+                width: 129,
+                child: Text(
+                  text ?? '',
+                  textAlign: TextAlign.start,
+                ),
+              ),
             ],
           )),
     );

@@ -146,7 +146,16 @@ class MainViewBuild extends StatelessWidget {
     required bool menuVisible,
     Function()? onPressedSetting,
   }) {
+    double widthMenu = 0;
     final List<EntryMenuModel> entryList;
+
+    if (form.moduleBarVisible) {
+      widthMenu = 200;
+      if (form.menuVisible) {
+        widthMenu = 400;
+      }
+    }
+
     if (select >= 0) {
       entryList = moduleList[select].menu;
     } else if (select == -1) {
@@ -173,6 +182,7 @@ class MainViewBuild extends StatelessWidget {
     } else {
       entryList = [];
     }
+
     return Row(
       children: [
         Container(
@@ -191,7 +201,7 @@ class MainViewBuild extends StatelessWidget {
                     final module = moduleList[index];
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                      child: PrimaryButton(
+                      child: MainNavButton(
                         icon: module.icon,
                         isHover: select == index,
                         text: module.text,
@@ -209,7 +219,7 @@ class MainViewBuild extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                child: PrimaryButton(
+                child: MainNavButton(
                   icon: Icons.settings,
                   isHover: select == -1,
                   onPressed: onPressedSetting,
@@ -264,7 +274,7 @@ class MainViewBuild extends StatelessWidget {
                     final EntryMenuModel entry = entryList[index];
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                      child: PrimaryButton(
+                      child: MainNavButton(
                         text: entry.text,
                         isHover: form.menuSelect == index,
                         onPressed: entry.onPressed,
