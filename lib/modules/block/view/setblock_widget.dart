@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/alert_dialog_axol.dart';
 import '../../../utilities/widgets/button.dart';
+import '../../../utilities/widgets/textfield.dart';
 import '../cubit/setblock_cubit.dart';
 import '../cubit/setblock_state.dart';
 import '../model/block_model.dart';
@@ -33,20 +34,9 @@ class SetBlockWidgetBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SetBlockFormModel form = context.read<SetBlockForm>().state;
-    //double widthScreen = MediaQuery.of(context).size.width;
     return BlocConsumer<SetBlockCubit, SetBlockState>(
       bloc: context.read<SetBlockCubit>()..initLoad(form),
       builder: (context, state) {
-        BlockModel? cBlock =
-            form.select >= 0 ? form.blockList[form.select] : null;
-        if (form.blockList.isNotEmpty && form.select == -1) {
-          form.select = 0;
-          context.read<SetBlockCubit>().load();
-        }
-        if (cBlock != null && cBlock.blockName == '') {
-          cBlock = BlockModel.setName(
-              cBlock, 'Bloque ${cBlock.tableName.split('table_').last}');
-        }
         ScrollController scrollController = ScrollController();
         return Expanded(
             child: Container(
@@ -89,6 +79,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                               child: MainNavButton(
                                 onPressed: () {
                                   form.select = index;
+                                  form.cBlock = form.blockList[form.select];
                                   context.read<SetBlockCubit>().load();
                                 },
                                 text: blockName,
@@ -101,18 +92,18 @@ class SetBlockWidgetBuild extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                    width: 400,
+                    width: 500,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
                           child: Text(
-                            cBlock != null
-                                ? (cBlock.blockName == ''
-                                    ? cBlock.tableName
-                                    : cBlock.blockName)
-                                : '',
+                            form.cBlock != null
+                                ? (form.cBlock!.blockName == ''
+                                    ? form.cBlock!.tableName
+                                    : form.cBlock!.blockName)
+                                : 'Loading...',
                             style: Typo.subtitleLight,
                           ),
                         ),
@@ -120,24 +111,8 @@ class SetBlockWidgetBuild extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                           height: 40,
                           width: 300,
-                          child: TextField(
+                          child: PrimaryTextField(
                             controller: form.ctrlBlockName,
-                            style: Typo.bodyLight,
-                            decoration: const InputDecoration(
-                              isDense: false,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 0),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  borderSide: BorderSide(
-                                      color: ColorPalette.darkItems10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  borderSide:
-                                      BorderSide(color: ColorPalette.primary)),
-                            ),
                           ),
                         ),
                         Row(
@@ -148,32 +123,83 @@ class SetBlockWidgetBuild extends StatelessWidget {
                               style: Typo.labelLight,
                             ),
                             PrimaryButton(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 12, 0),
+                              text: 'Agregar',
                               icon: Icons.add,
-                              onPressed: () {},
-                            )
+                              onPressed: () {
+                                form.properties.add(SetBlockPropModel.empty());
+                                context.read<SetBlockCubit>().load();
+                              },
+                            ),
                           ],
                         ),
+                        const SizedBox(height: 8),
                         Expanded(
                             child: ListView.builder(
-                          itemCount: cBlock?.propertyList.length ?? 0,
+                          itemCount: form.properties.length,
                           itemBuilder: (context, index) {
-                            final property = cBlock?.propertyList[index] ??
-                                PropertyModel.empty();
+                            final SetBlockPropModel property =
+                                form.properties[index];
                             List<DropdownMenuItem<Prop>> itemList = [];
                             DropdownMenuItem<Prop> item;
                             for (Prop prop in Prop.values) {
                               item = DropdownMenuItem(
                                 value: prop,
-                                child: Text(PropertyModel.getTextToProp(prop)),
+                                child: Text(
+                                  PropertyModel.getTextToProp(prop),
+                                  style: Typo.bodyLight,
+                                ),
                               );
                               itemList.add(item);
                             }
                             return Row(
                               children: [
-                                const TextField(),
-                                DropdownButton(
-                                  items: itemList,
-                                  onChanged: (value) {},
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                  width: 200,
+                                  height: 40,
+                                  child: PrimaryTextField(
+                                    controller: property.ctrlProp,
+                                  ),
+                                ),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 8, 8),
+                                  width: 160,
+                                  height: 40,
+                                  child: DropdownButtonFormField(
+                                    icon: const SizedBox(),
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.zero,
+                                      prefixIcon: Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: ColorPalette.lightText,
+                                        size: 15,
+                                      ),
+                                      filled: true,
+                                      fillColor: ColorPalette.filledLight,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(6)),
+                                          borderSide: BorderSide(
+                                              color: ColorPalette.darkItems10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8)),
+                                          borderSide: BorderSide(
+                                              color:
+                                                  ColorPalette.lightItems10)),
+                                    ),
+                                    items: itemList,
+                                    value: form.properties[index].property,
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        form.properties[index].property = value;
+                                        context.read<SetBlockCubit>().load();
+                                      }
+                                    },
+                                  ),
                                 ),
                               ],
                             );

@@ -17,6 +17,18 @@ class SetBlockCubit extends Cubit<SetBlockState> {
       blocksDB = await BlockRepo.fetchAllBlocks();
       form.blockList = blocksDB;
 
+      form.cBlock = form.select >= 0 ? form.blockList[form.select] : null;
+      if (form.blockList.isNotEmpty && form.select == -1) {
+        form.select = 0;
+        form.cBlock = form.blockList[0];
+      }
+      if (form.cBlock != null && form.cBlock!.blockName == '') {
+        form.cBlock = BlockModel.setName(form.cBlock!,
+            'Bloque ${form.cBlock!.tableName.split('table_').last}');
+        form.properties =
+            SetBlockPropModel.propListToForm(form.cBlock!.propertyList);
+      }
+
       emit(LoadedSetBlockState());
     } catch (e) {
       emit(InitialSetBlockState());
@@ -28,7 +40,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     try {
       emit(InitialSetBlockState());
       emit(LoadingSetBlockState());
-      
+
       emit(LoadedSetBlockState());
     } catch (e) {
       emit(InitialSetBlockState());

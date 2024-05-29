@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class ColorPalette {
   static const primary = Color.fromARGB(255, 132, 114, 242);
+  static const primaryDark10 = Color.fromARGB(255, 98, 83, 197);
+  static const primaryDark20 = Color.fromARGB(255, 82, 69, 163);
   static const secondary = Color(0xFF4649a8);
   static const tertiary = Color(0xFFffa532);
   static const alternate = Color(0xFFed7098);
-  static const darkBackground = Color.fromARGB(255, 52, 52, 53);
+  static const darkBackground = Color.fromARGB(255, 32, 32, 32);
   static const lightBackground = Color(0xFFfefefe);
   static const lightText = Color(0xFFf7fefe);
   static const darkText = Color(0xFF282828);
@@ -13,11 +15,12 @@ class ColorPalette {
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
   static const caution = Color.fromARGB(255, 180, 32, 22);
   static const correct = Color.fromARGB(255, 68, 228, 108);
-  static const darkItems20 = Color.fromARGB(255, 78, 78, 78);
-  static const darkItems10 = Color.fromARGB(255, 100, 100, 100);
-  static const lightItems10 = Color.fromARGB(255, 167, 167, 167);
+  static const darkItems20 = Color.fromARGB(255, 66, 66, 66);
+  static const darkItems10 = Color.fromARGB(255, 106, 106, 106);
+  static const lightItems10 = Color.fromARGB(255, 146, 146, 146);
   static const lightItems20 = Color.fromARGB(255, 226, 226, 226);
   static const filled = Color.fromARGB(10, 0, 0, 0);
+  static const filledLight = Color.fromARGB(10, 255, 255, 255);
 }
 
 class Typo {
