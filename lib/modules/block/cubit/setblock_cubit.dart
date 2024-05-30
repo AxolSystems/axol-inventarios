@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/block/model/setblock_form_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../model/property_model.dart';
 import '../repository/block_repo.dart';
 import 'setblock_state.dart';
 
@@ -36,10 +37,50 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
-  Future<void> load() async {
+  Future<void> load(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
       emit(LoadingSetBlockState());
+
+      form.cBlock = form.select >= 0 ? form.blockList[form.select] : null;
+      if (form.blockList.isNotEmpty && form.select == -1) {
+        form.select = 0;
+        form.cBlock = form.blockList[0];
+      }
+      if (form.cBlock != null && form.cBlock!.blockName == '') {
+        form.cBlock = BlockModel.setName(form.cBlock!,
+            'Bloque ${form.cBlock!.tableName.split('table_').last}');
+        form.properties =
+            SetBlockPropModel.propListToForm(form.cBlock!.propertyList);
+      }
+
+      emit(LoadedSetBlockState());
+    } catch (e) {
+      emit(InitialSetBlockState());
+      emit(ErrorSetBlockState(error: e.toString()));
+    }
+  }
+
+  Future<void> addProprty(SetBlockFormModel form) async {
+    try {
+      emit(InitialSetBlockState());
+      emit(LoadingSetBlockState());
+
+      form.properties.add(SetBlockPropModel.empty());
+
+      emit(LoadedSetBlockState());
+    } catch (e) {
+      emit(InitialSetBlockState());
+      emit(ErrorSetBlockState(error: e.toString()));
+    }
+  }
+
+  Future<void> selectProp(SetBlockFormModel form, int index, Prop prop,) async {
+    try {
+      emit(InitialSetBlockState());
+      emit(LoadingSetBlockState());
+
+      form.properties[index].property = prop;
 
       emit(LoadedSetBlockState());
     } catch (e) {

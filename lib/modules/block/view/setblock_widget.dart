@@ -38,178 +38,204 @@ class SetBlockWidgetBuild extends StatelessWidget {
       bloc: context.read<SetBlockCubit>()..initLoad(form),
       builder: (context, state) {
         ScrollController scrollController = ScrollController();
-        return Expanded(
-            child: Container(
-          color: ColorPalette.darkBackground,
-          child: RawScrollbar(
+        return Expanded(child: LayoutBuilder(
+          builder: (context, constraints) {
+            print(constraints);
+            return Container(
+              color: ColorPalette.darkBackground,
+              child: /*RawScrollbar(
             controller: scrollController,
             thumbVisibility: true,
             radius: const Radius.circular(8),
             thickness: 12,
-            child: ListView(
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              children: [
-                Container(
-                  width: 250,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          right: BorderSide(
-                    color: ColorPalette.darkItems20,
-                  ))),
-                  child: Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Text(
-                          'Bloques disponibles',
-                          style: Typo.subtitleLight,
-                        ),
-                      ),
-                      Expanded(
-                          child: ListView.builder(
-                        itemCount: form.blockList.length,
-                        itemBuilder: (context, index) {
-                          final block = form.blockList[index];
-                          final blockName = block.blockName == ''
-                              ? 'Bloque ${block.tableName.split('table_').last}'
-                              : block.blockName;
-                          return Padding(
-                              padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                              child: MainNavButton(
-                                onPressed: () {
-                                  form.select = index;
-                                  form.cBlock = form.blockList[form.select];
-                                  context.read<SetBlockCubit>().load();
-                                },
-                                text: blockName,
-                                menuVisible: false,
-                                isHover: form.select == index,
-                              ));
-                        },
-                      ))
-                    ],
-                  ),
-                ),
-                SizedBox(
-                    width: 500,
+            child:*/
+                  Row(
+                //Cambio de ListView a Row:
+                //controller: scrollController,
+                //scrollDirection: Axis.horizontal,
+                children: [
+                  Container(
+                    width: 250,
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            right: BorderSide(
+                      color: ColorPalette.darkItems20,
+                    ))),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+                        const Padding(
+                          padding: EdgeInsets.all(4),
                           child: Text(
-                            form.cBlock != null
-                                ? (form.cBlock!.blockName == ''
-                                    ? form.cBlock!.tableName
-                                    : form.cBlock!.blockName)
-                                : 'Loading...',
+                            'Bloques disponibles',
                             style: Typo.subtitleLight,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                          height: 40,
-                          width: 300,
-                          child: PrimaryTextField(
-                            controller: form.ctrlBlockName,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            const Text(
-                              'Propiedades',
-                              style: Typo.labelLight,
-                            ),
-                            PrimaryButton(
-                              padding: const EdgeInsets.fromLTRB(8, 0, 12, 0),
-                              text: 'Agregar',
-                              icon: Icons.add,
-                              onPressed: () {
-                                form.properties.add(SetBlockPropModel.empty());
-                                context.read<SetBlockCubit>().load();
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
                         Expanded(
                             child: ListView.builder(
-                          itemCount: form.properties.length,
+                          itemCount: form.blockList.length,
                           itemBuilder: (context, index) {
-                            final SetBlockPropModel property =
-                                form.properties[index];
-                            List<DropdownMenuItem<Prop>> itemList = [];
-                            DropdownMenuItem<Prop> item;
-                            for (Prop prop in Prop.values) {
-                              item = DropdownMenuItem(
-                                value: prop,
-                                child: Text(
-                                  PropertyModel.getTextToProp(prop),
-                                  style: Typo.bodyLight,
-                                ),
-                              );
-                              itemList.add(item);
-                            }
-                            return Row(
-                              children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                  width: 200,
-                                  height: 40,
-                                  child: PrimaryTextField(
-                                    controller: property.ctrlProp,
-                                  ),
-                                ),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 8, 8),
-                                  width: 160,
-                                  height: 40,
-                                  child: DropdownButtonFormField(
-                                    icon: const SizedBox(),
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.zero,
-                                      prefixIcon: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: ColorPalette.lightText,
-                                        size: 15,
-                                      ),
-                                      filled: true,
-                                      fillColor: ColorPalette.filledLight,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6)),
-                                          borderSide: BorderSide(
-                                              color: ColorPalette.darkItems10)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8)),
-                                          borderSide: BorderSide(
-                                              color:
-                                                  ColorPalette.lightItems10)),
-                                    ),
-                                    items: itemList,
-                                    value: form.properties[index].property,
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        form.properties[index].property = value;
-                                        context.read<SetBlockCubit>().load();
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            );
+                            final block = form.blockList[index];
+                            final blockName = block.blockName == ''
+                                ? 'Bloque ${block.tableName.split('table_').last}'
+                                : block.blockName;
+                            return Padding(
+                                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                                child: MainNavButton(
+                                  onPressed: () {
+                                    form.select = index;
+                                    form.cBlock = form.blockList[form.select];
+                                    context.read<SetBlockCubit>().load(form);
+                                  },
+                                  text: blockName,
+                                  menuVisible: false,
+                                  isHover: form.select == index,
+                                ));
                           },
                         ))
                       ],
-                    ))
-              ],
-            ),
-          ),
+                    ),
+                  ),
+                  Flexible(
+                      fit: FlexFit.tight,
+                      //width: ,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6)),
+                                color: ColorPalette.darkItems10,
+                              ),
+                              child: Row(
+                                children: [Text('Prueba .......')],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+                            child: Text(
+                              form.cBlock != null
+                                  ? (form.cBlock!.blockName == ''
+                                      ? form.cBlock!.tableName
+                                      : form.cBlock!.blockName)
+                                  : 'Loading...',
+                              style: Typo.subtitleLight,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                            height: 40,
+                            width: 300,
+                            child: PrimaryTextField(
+                              controller: form.ctrlBlockName,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Text(
+                                'Propiedades',
+                                style: Typo.labelLight,
+                              ),
+                              PrimaryButton(
+                                padding: const EdgeInsets.fromLTRB(8, 0, 12, 0),
+                                text: 'Agregar',
+                                icon: Icons.add,
+                                onPressed: () {
+                                  context
+                                      .read<SetBlockCubit>()
+                                      .addProprty(form);
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                              child: ListView.builder(
+                            itemCount: form.properties.length,
+                            itemBuilder: (context, index) {
+                              final SetBlockPropModel property =
+                                  form.properties[index];
+                              List<DropdownMenuItem<Prop>> itemList = [];
+                              DropdownMenuItem<Prop> item;
+                              for (Prop prop in Prop.values) {
+                                item = DropdownMenuItem(
+                                  value: prop,
+                                  child: Text(
+                                    PropertyModel.getTextToProp(prop),
+                                  ),
+                                );
+                                itemList.add(item);
+                              }
+                              return Row(
+                                children: [
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                    width: 200,
+                                    height: 40,
+                                    child: PrimaryTextField(
+                                      controller: property.ctrlProp,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 8, 8),
+                                    width: 160,
+                                    height: 40,
+                                    child: DropdownButtonFormField(
+                                      dropdownColor:
+                                          ColorPalette.darkBackground,
+                                      icon: const SizedBox(),
+                                      style: Typo.systemLight,
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.zero,
+                                        prefixIcon: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: ColorPalette.lightText,
+                                          size: 15,
+                                        ),
+                                        filled: true,
+                                        fillColor: ColorPalette.filledLight,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(6)),
+                                            borderSide: BorderSide(
+                                                color:
+                                                    ColorPalette.darkItems10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            borderSide: BorderSide(
+                                                color:
+                                                    ColorPalette.lightItems10)),
+                                      ),
+                                      items: itemList,
+                                      value: form.properties[index].property,
+                                      onChanged: (value) {
+                                        if (value != null) {
+                                          context
+                                              .read<SetBlockCubit>()
+                                              .selectProp(form, index, value);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ))
+                        ],
+                      ))
+                ],
+              ),
+              //), //RawScrollBar
+            );
+          },
         ));
       },
       listener: (context, state) {

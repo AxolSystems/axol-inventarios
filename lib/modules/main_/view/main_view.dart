@@ -36,6 +36,7 @@ class MainViewBuild extends StatelessWidget {
     return BlocConsumer<MainViewCubit, MainViewState>(
       bloc: context.read<MainViewCubit>()..initLoad(context, form),
       builder: (context, state) {
+        print(form.menuVisible);
         if (state is LoadingMainViewState) {
           return mainView(context, true, form);
         } else if (state is LoadedMainViewState) {
