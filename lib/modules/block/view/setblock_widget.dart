@@ -37,203 +37,229 @@ class SetBlockWidgetBuild extends StatelessWidget {
     return BlocConsumer<SetBlockCubit, SetBlockState>(
       bloc: context.read<SetBlockCubit>()..initLoad(form),
       builder: (context, state) {
+        const double widthMenuBlock = 250;
         ScrollController scrollController = ScrollController();
         return Expanded(child: LayoutBuilder(
           builder: (context, constraints) {
-            print(constraints);
+            final double paddingBox;
+            final double p2;
+            if (constraints.maxWidth > 1450) {
+              paddingBox = 130;
+              p2 = constraints.maxWidth - 800;
+            } else if (constraints.maxWidth > 1190) {
+              paddingBox = 110;
+              p2 = constraints.maxWidth - 650;
+            } else if (constraints.maxWidth > 940) {
+              paddingBox = 50;
+              p2 = constraints.maxWidth - 500;
+            } else {
+              paddingBox = 16;
+              p2 = 200;
+            }
+            print('max: ${constraints.maxWidth}');
             return Container(
               color: ColorPalette.darkBackground,
-              child: /*RawScrollbar(
-            controller: scrollController,
-            thumbVisibility: true,
-            radius: const Radius.circular(8),
-            thickness: 12,
-            child:*/
-                  Row(
-                //Cambio de ListView a Row:
-                //controller: scrollController,
-                //scrollDirection: Axis.horizontal,
-                children: [
-                  Container(
-                    width: 250,
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            right: BorderSide(
-                      color: ColorPalette.darkItems20,
-                    ))),
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(4),
-                          child: Text(
-                            'Bloques disponibles',
-                            style: Typo.subtitleLight,
-                          ),
-                        ),
-                        Expanded(
-                            child: ListView.builder(
-                          itemCount: form.blockList.length,
-                          itemBuilder: (context, index) {
-                            final block = form.blockList[index];
-                            final blockName = block.blockName == ''
-                                ? 'Bloque ${block.tableName.split('table_').last}'
-                                : block.blockName;
-                            return Padding(
-                                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                                child: MainNavButton(
-                                  onPressed: () {
-                                    form.select = index;
-                                    form.cBlock = form.blockList[form.select];
-                                    context.read<SetBlockCubit>().load(form);
-                                  },
-                                  text: blockName,
-                                  menuVisible: false,
-                                  isHover: form.select == index,
-                                ));
-                          },
-                        ))
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                      fit: FlexFit.tight,
-                      //width: ,
+              child: RawScrollbar(
+                controller: scrollController,
+                thumbVisibility: true,
+                radius: const Radius.circular(8),
+                thickness: 12,
+                child: ListView(
+                  //Cambio de ListView a Row:
+                  controller: scrollController,
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Container(
+                      width: widthMenuBlock,
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              right: BorderSide(
+                        color: ColorPalette.darkItems20,
+                      ))),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6)),
-                                color: ColorPalette.darkItems10,
-                              ),
-                              child: Row(
-                                children: [Text('Prueba .......')],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+                          const Padding(
+                            padding: EdgeInsets.all(4),
                             child: Text(
-                              form.cBlock != null
-                                  ? (form.cBlock!.blockName == ''
-                                      ? form.cBlock!.tableName
-                                      : form.cBlock!.blockName)
-                                  : 'Loading...',
+                              'Bloques disponibles',
                               style: Typo.subtitleLight,
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                            height: 40,
-                            width: 300,
-                            child: PrimaryTextField(
-                              controller: form.ctrlBlockName,
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Text(
-                                'Propiedades',
-                                style: Typo.labelLight,
-                              ),
-                              PrimaryButton(
-                                padding: const EdgeInsets.fromLTRB(8, 0, 12, 0),
-                                text: 'Agregar',
-                                icon: Icons.add,
-                                onPressed: () {
-                                  context
-                                      .read<SetBlockCubit>()
-                                      .addProprty(form);
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
                           Expanded(
                               child: ListView.builder(
-                            itemCount: form.properties.length,
+                            itemCount: form.blockList.length,
                             itemBuilder: (context, index) {
-                              final SetBlockPropModel property =
-                                  form.properties[index];
-                              List<DropdownMenuItem<Prop>> itemList = [];
-                              DropdownMenuItem<Prop> item;
-                              for (Prop prop in Prop.values) {
-                                item = DropdownMenuItem(
-                                  value: prop,
-                                  child: Text(
-                                    PropertyModel.getTextToProp(prop),
-                                  ),
-                                );
-                                itemList.add(item);
-                              }
-                              return Row(
-                                children: [
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                    width: 200,
-                                    height: 40,
-                                    child: PrimaryTextField(
-                                      controller: property.ctrlProp,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 8, 8),
-                                    width: 160,
-                                    height: 40,
-                                    child: DropdownButtonFormField(
-                                      dropdownColor:
-                                          ColorPalette.darkBackground,
-                                      icon: const SizedBox(),
-                                      style: Typo.systemLight,
-                                      decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.zero,
-                                        prefixIcon: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: ColorPalette.lightText,
-                                          size: 15,
-                                        ),
-                                        filled: true,
-                                        fillColor: ColorPalette.filledLight,
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6)),
-                                            borderSide: BorderSide(
-                                                color:
-                                                    ColorPalette.darkItems10)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                            borderSide: BorderSide(
-                                                color:
-                                                    ColorPalette.lightItems10)),
-                                      ),
-                                      items: itemList,
-                                      value: form.properties[index].property,
-                                      onChanged: (value) {
-                                        if (value != null) {
-                                          context
-                                              .read<SetBlockCubit>()
-                                              .selectProp(form, index, value);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
+                              final block = form.blockList[index];
+                              final blockName = block.blockName == ''
+                                  ? 'Bloque ${block.tableName.split('table_').last}'
+                                  : block.blockName;
+                              return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                                  child: MainNavButton(
+                                    onPressed: () {
+                                      form.select = index;
+                                      form.cBlock = form.blockList[form.select];
+                                      context.read<SetBlockCubit>().load(form);
+                                    },
+                                    text: blockName,
+                                    menuVisible: false,
+                                    isHover: form.select == index,
+                                  ));
                             },
                           ))
                         ],
-                      ))
-                ],
-              ),
-              //), //RawScrollBar
+                      ),
+                    ),
+                    SizedBox(
+                        width: constraints.maxWidth > 450
+                            ? constraints.maxWidth - widthMenuBlock
+                            : 200,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  paddingBox, 16, paddingBox, 8),
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: ColorPalette.darkItems10),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(6)),
+                                  color: ColorPalette.darkItems20,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          12, 8, 8, 8),
+                                      child: Text(
+                                        form.cBlock != null
+                                            ? (form.cBlock!.blockName == ''
+                                                ? form.cBlock!.tableName
+                                                : form.cBlock!.blockName)
+                                            : 'Loading...',
+                                        style: Typo.subtitleLight,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 4, 8, 4),
+                                      height: 40,
+                                      width: p2,
+                                      child: PrimaryTextField(
+                                        controller: form.ctrlBlockName,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                const Text(
+                                  'Propiedades',
+                                  style: Typo.labelLight,
+                                ),
+                                PrimaryButton(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 12, 0),
+                                  text: 'Agregar',
+                                  icon: Icons.add,
+                                  onPressed: () {
+                                    context
+                                        .read<SetBlockCubit>()
+                                        .addProprty(form);
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Expanded(
+                                child: ListView.builder(
+                              itemCount: form.properties.length,
+                              itemBuilder: (context, index) {
+                                final SetBlockPropModel property =
+                                    form.properties[index];
+                                List<DropdownMenuItem<Prop>> itemList = [];
+                                DropdownMenuItem<Prop> item;
+                                for (Prop prop in Prop.values) {
+                                  item = DropdownMenuItem(
+                                    value: prop,
+                                    child: Text(
+                                      PropertyModel.getTextToProp(prop),
+                                    ),
+                                  );
+                                  itemList.add(item);
+                                }
+                                return Row(
+                                  children: [
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                      width: 200,
+                                      height: 40,
+                                      child: PrimaryTextField(
+                                        controller: property.ctrlProp,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 8, 8),
+                                      width: 160,
+                                      height: 40,
+                                      child: DropdownButtonFormField(
+                                        dropdownColor:
+                                            ColorPalette.darkBackground,
+                                        icon: const SizedBox(),
+                                        style: Typo.systemLight,
+                                        decoration: const InputDecoration(
+                                          contentPadding: EdgeInsets.zero,
+                                          prefixIcon: Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: ColorPalette.lightText,
+                                            size: 15,
+                                          ),
+                                          filled: true,
+                                          fillColor: ColorPalette.filledLight,
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(6)),
+                                              borderSide: BorderSide(
+                                                  color: ColorPalette
+                                                      .darkItems10)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8)),
+                                              borderSide: BorderSide(
+                                                  color: ColorPalette
+                                                      .lightItems10)),
+                                        ),
+                                        items: itemList,
+                                        value: form.properties[index].property,
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            context
+                                                .read<SetBlockCubit>()
+                                                .selectProp(form, index, value);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ))
+                          ],
+                        ))
+                  ],
+                ),
+              ), //RawScrollBar
             );
           },
         ));
