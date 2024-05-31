@@ -281,7 +281,7 @@ class WbAddRowDrawerBuild extends StatelessWidget {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
             ],
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               label: const Text('Cantidad', style: Typo.bodyDark),
               border: const OutlineInputBorder(),
@@ -302,7 +302,7 @@ class WbAddRowDrawerBuild extends StatelessWidget {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
             ],
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               label: const Text('Precio unitario', style: Typo.bodyDark),
               border: const OutlineInputBorder(),

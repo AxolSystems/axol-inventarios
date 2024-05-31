@@ -2,7 +2,7 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
-## [1.0.14] - 2024-05-16
+## [1.0.14] - 2024-05-16.
 ### Corregido
 - Error en descarga de estado de inventario a un tiempo determinado. En el calculo no agregaba los productos que al inicio del calculo se encontraban con stock cero. 
 - Error en ventana emergente de confirmación de guardado en nuevo movimiento.

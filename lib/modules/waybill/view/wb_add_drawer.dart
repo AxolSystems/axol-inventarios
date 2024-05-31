@@ -244,7 +244,7 @@ class WbAddDrawerBuild extends StatelessWidget {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
             ],
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               hintText: 'Cantidad',
