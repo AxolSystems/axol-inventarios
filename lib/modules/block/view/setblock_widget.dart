@@ -122,7 +122,12 @@ class SetBlockWidgetBuild extends StatelessWidget {
                               padding: EdgeInsets.fromLTRB(
                                   paddingBox, 16, paddingBox, 8),
                               child: Container(
-                                padding: EdgeInsets.all(12),
+                                width: constraints.maxWidth > 450
+                                    ? constraints.maxWidth -
+                                        widthMenuBlock -
+                                        (paddingBox * 2)
+                                    : 200,
+                                padding: const EdgeInsets.fromLTRB(12, 12, 24, 12),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: ColorPalette.darkItems10),
@@ -131,7 +136,8 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                   color: ColorPalette.darkItems20,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
@@ -146,15 +152,23 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(width: 8),
-                                    Container(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 4, 8, 4),
-                                      height: 40,
-                                      width: p2,
+                                    //Container(
+                                    //padding:
+                                    //    const EdgeInsets.fromLTRB(0, 4, 8, 4),
+                                    //height: 40,
+                                    //width: p2,
+                                    //child:
+                                    const Expanded(
+                                      flex: 1,
+                                      child: SizedBox(),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
                                       child: PrimaryTextField(
                                         controller: form.ctrlBlockName,
                                       ),
                                     ),
+                                    //),
                                   ],
                                 ),
                               ),
