@@ -42,19 +42,21 @@ class SetBlockWidgetBuild extends StatelessWidget {
         return Expanded(child: LayoutBuilder(
           builder: (context, constraints) {
             final double paddingBox;
-            final double p2;
+            final double heightBox;
+            bool isBoxNarrow = false;
             if (constraints.maxWidth > 1450) {
               paddingBox = 130;
-              p2 = constraints.maxWidth - 800;
+              heightBox = 100;
             } else if (constraints.maxWidth > 1190) {
               paddingBox = 110;
-              p2 = constraints.maxWidth - 650;
+              heightBox = 100;
             } else if (constraints.maxWidth > 940) {
               paddingBox = 50;
-              p2 = constraints.maxWidth - 500;
+              heightBox = 100;
             } else {
               paddingBox = 16;
-              p2 = 200;
+              heightBox = 150;
+              isBoxNarrow = true;
             }
             print('max: ${constraints.maxWidth}');
             return Container(
@@ -127,50 +129,32 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                         widthMenuBlock -
                                         (paddingBox * 2)
                                     : 200,
-                                padding: const EdgeInsets.fromLTRB(12, 12, 24, 12),
+                                height: heightBox,
+                                padding: const EdgeInsets.all(24),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: ColorPalette.darkItems10),
+                                      color: ColorPalette.darkItems20),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(6)),
-                                  color: ColorPalette.darkItems20,
+                                  color: ColorPalette.darkItems30,
                                 ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          12, 8, 8, 8),
-                                      child: Text(
-                                        form.cBlock != null
-                                            ? (form.cBlock!.blockName == ''
-                                                ? form.cBlock!.tableName
-                                                : form.cBlock!.blockName)
-                                            : 'Loading...',
-                                        style: Typo.subtitleLight,
+                                child: constraints.maxWidth > 940
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children:
+                                            generalSettings(form, isBoxNarrow),
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children:
+                                            generalSettings(form, isBoxNarrow),
                                       ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    //Container(
-                                    //padding:
-                                    //    const EdgeInsets.fromLTRB(0, 4, 8, 4),
-                                    //height: 40,
-                                    //width: p2,
-                                    //child:
-                                    const Expanded(
-                                      flex: 1,
-                                      child: SizedBox(),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: PrimaryTextField(
-                                        controller: form.ctrlBlockName,
-                                      ),
-                                    ),
-                                    //),
-                                  ],
-                                ),
                               ),
                             ),
                             Row(
@@ -290,4 +274,47 @@ class SetBlockWidgetBuild extends StatelessWidget {
       },
     );
   }
+
+  List<Widget> generalSettings(SetBlockFormModel form, bool isBoxNarrow) => [
+        SizedBox(
+          width: 150,
+          child: Text(
+            form.cBlock != null
+                ? (form.cBlock!.blockName == ''
+                    ? form.cBlock!.tableName
+                    : form.cBlock!.blockName)
+                : 'Loading...',
+            style: Typo.subtitleLight,
+          ),
+        ),
+        //Container(
+        //padding:
+        //    const EdgeInsets.fromLTRB(0, 4, 8, 4),
+        //height: 40,
+        //width: p2,
+        //child:
+        Visibility(
+          visible: isBoxNarrow == false,
+          replacement: const SizedBox(height: 16),
+          child: const Expanded(
+            flex: 1,
+            child: SizedBox(),
+          ),
+        ),
+
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Nombre del bloque', style: Typo.labelLight),
+               const SizedBox(height: 4),
+              PrimaryTextField(
+                controller: form.ctrlBlockName,
+              )
+            ],
+          ),
+        ),
+        //),
+      ];
 }

@@ -15,6 +15,7 @@ class ColorPalette {
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
   static const caution = Color.fromARGB(255, 180, 32, 22);
   static const correct = Color.fromARGB(255, 68, 228, 108);
+  static const darkItems30 = Color.fromARGB(255, 46, 46, 46);
   static const darkItems20 = Color.fromARGB(255, 66, 66, 66);
   static const darkItems10 = Color.fromARGB(255, 106, 106, 106);
   static const lightItems10 = Color.fromARGB(255, 146, 146, 146);
