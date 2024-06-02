@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../models/data_find.dart';
 import '../../../../utilities/theme/textfield_decoration.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/drawer_find.dart';

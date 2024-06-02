@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/dialog.dart';
 import '../model/wb_bottomsheet_find_form_model.dart';
 
 class WbAddBottomsheetFind extends StatelessWidget {

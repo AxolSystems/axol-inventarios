@@ -32,4 +32,11 @@ class BlockRepo {
 
     return blockList;
   }
+
+  static Future<void> update(BlockModel block) async {
+    await _supabase.from(_table).update({
+      _blockName: block.blockName,
+      _property: BlockModel.propsToMap(block.propertyList),
+    }).eq(_id, block.uuid);
+  }
 }

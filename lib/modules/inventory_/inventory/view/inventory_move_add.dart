@@ -11,7 +11,7 @@ import '../../../../utilities/data_state.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_utilities.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';

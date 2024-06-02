@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../utilities/widgets/table_view/table_view.dart';
 import '../cubit/add/srp_add_state.dart';

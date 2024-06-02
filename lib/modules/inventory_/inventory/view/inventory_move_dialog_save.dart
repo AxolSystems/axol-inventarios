@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../cubit/inventory_dialog_save/inventory_dialog_save_cubit.dart';
 import '../cubit/inventory_dialog_save/inventory_dialog_save_state.dart';

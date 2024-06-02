@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../modules/user/repository/user_repo.dart';
 import '../../theme/theme.dart';
-import '../alert_dialog_axol.dart';
+import '../dialog.dart';
 
 class NavRailAxol extends StatelessWidget {
   final Widget navRailMain;

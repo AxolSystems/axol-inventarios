@@ -385,16 +385,19 @@ class PrimaryButton extends StatelessWidget {
       height: 28,
       child: OutlinedButton(
           style: ButtonStyle(
-            side: WidgetStateProperty.all(
-                const BorderSide(color: ColorPalette.primary)),
+            side: WidgetStateProperty.all(onPressed != null
+                ? const BorderSide(color: ColorPalette.primary)
+                : const BorderSide(color: ColorPalette.primaryDark10)),
             shape: WidgetStateProperty.all(const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(6)))),
             padding: WidgetStateProperty.all(EdgeInsets.zero),
-            //overlayColor: select == index
             overlayColor: WidgetStateProperty.all(ColorPalette.primaryDark20),
-            backgroundColor:
-                WidgetStateProperty.all(ColorPalette.primaryDark10),
-            foregroundColor: WidgetStateProperty.all(ColorPalette.lightText),
+            backgroundColor: onPressed != null
+                ? WidgetStateProperty.all(ColorPalette.primaryDark10)
+                : WidgetStateProperty.all(ColorPalette.primaryDark20),
+            foregroundColor: onPressed != null
+                ? WidgetStateProperty.all(ColorPalette.lightText)
+                : WidgetStateProperty.all(ColorPalette.lightItems10),
             textStyle: WidgetStateProperty.all(Typo.systemDark),
             splashFactory: NoSplash.splashFactory,
           ),

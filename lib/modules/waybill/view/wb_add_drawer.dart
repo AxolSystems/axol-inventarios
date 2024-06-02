@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/inventory_row_model.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/drawer_box.dart';
 import '../cubit/wb_add/wb_add_bottomsheet_cubit.dart';

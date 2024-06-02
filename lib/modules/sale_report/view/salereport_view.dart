@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';

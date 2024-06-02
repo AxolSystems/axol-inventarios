@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
+import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

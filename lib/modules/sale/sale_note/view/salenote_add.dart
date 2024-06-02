@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/inventory_row_model.dart';
 import '../../../../utilities/format.dart';
-import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../models/data_find.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_utilities.dart';

@@ -1,6 +1,6 @@
 import 'package:axol_inventarios/modules/inventory_/product/view/product_drawer_details.dart';
 import 'package:axol_inventarios/utilities/widgets/table_view/tableview_form.dart';
-import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
+import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -9,6 +9,8 @@ class SetBlockFormModel {
   int select;
   TextEditingController ctrlBlockName;
   List<SetBlockPropModel> properties;
+  double heightBoxProp;
+  bool isChanged;
 
   SetBlockFormModel({
     required this.blockList,
@@ -16,13 +18,17 @@ class SetBlockFormModel {
     required this.ctrlBlockName,
     required this.properties,
     this.cBlock,
+    required this.heightBoxProp,
+    required this.isChanged,
   });
 
   SetBlockFormModel.empty()
       : blockList = [],
         select = -1,
         ctrlBlockName = TextEditingController(),
-        properties = [];
+        properties = [],
+        heightBoxProp = 0,
+        isChanged = false;
 }
 
 class SetBlockPropModel {

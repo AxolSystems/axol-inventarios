@@ -3,7 +3,7 @@ import 'package:axol_inventarios/modules/sale_report/model/srp_add_row_form_mode
 import 'package:axol_inventarios/modules/sale_report/view/srp_find_bottomsheet.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 import 'package:axol_inventarios/utilities/theme/theme.dart';
-import 'package:axol_inventarios/utilities/widgets/alert_dialog_axol.dart';
+import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -23,11 +23,15 @@ class SetBlockCubit extends Cubit<SetBlockState> {
         form.select = 0;
         form.cBlock = form.blockList[0];
       }
-      if (form.cBlock != null && form.cBlock!.blockName == '') {
-        form.cBlock = BlockModel.setName(form.cBlock!,
-            'Bloque ${form.cBlock!.tableName.split('table_').last}');
+      if (form.cBlock != null) {
+        if (form.cBlock!.blockName == '') {
+          form.cBlock = BlockModel.setName(form.cBlock!,
+              'Bloque ${form.cBlock!.tableName.split('table_').last}');
+        }
         form.properties =
             SetBlockPropModel.propListToForm(form.cBlock!.propertyList);
+        form.ctrlBlockName.text = form.cBlock?.blockName ?? '';
+        form.heightBoxProp = form.properties.length * 52;
       }
 
       emit(LoadedSetBlockState());
@@ -37,7 +41,19 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
-  Future<void> load(SetBlockFormModel form) async {
+  Future<void> load() async {
+    try {
+      emit(InitialSetBlockState());
+      emit(LoadingSetBlockState());
+
+      emit(LoadedSetBlockState());
+    } catch (e) {
+      emit(InitialSetBlockState());
+      emit(ErrorSetBlockState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeForm(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
       emit(LoadingSetBlockState());
@@ -47,11 +63,15 @@ class SetBlockCubit extends Cubit<SetBlockState> {
         form.select = 0;
         form.cBlock = form.blockList[0];
       }
-      if (form.cBlock != null && form.cBlock!.blockName == '') {
-        form.cBlock = BlockModel.setName(form.cBlock!,
-            'Bloque ${form.cBlock!.tableName.split('table_').last}');
+      if (form.cBlock != null) {
+        if (form.cBlock!.blockName == '') {
+          form.cBlock = BlockModel.setName(form.cBlock!,
+              'Bloque ${form.cBlock!.tableName.split('table_').last}');
+        }
         form.properties =
             SetBlockPropModel.propListToForm(form.cBlock!.propertyList);
+        form.ctrlBlockName.text = form.cBlock?.blockName ?? '';
+        form.heightBoxProp = form.properties.length * 52;
       }
 
       emit(LoadedSetBlockState());
@@ -67,6 +87,8 @@ class SetBlockCubit extends Cubit<SetBlockState> {
       emit(LoadingSetBlockState());
 
       form.properties.add(SetBlockPropModel.empty());
+      form.heightBoxProp = form.heightBoxProp + 52;
+      form.isChanged = true;
 
       emit(LoadedSetBlockState());
     } catch (e) {
@@ -75,13 +97,67 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
-  Future<void> selectProp(SetBlockFormModel form, int index, Prop prop,) async {
+  Future<void> selectProp(
+    SetBlockFormModel form,
+    int index,
+    Prop prop,
+  ) async {
     try {
       emit(InitialSetBlockState());
       emit(LoadingSetBlockState());
 
       form.properties[index].property = prop;
 
+      emit(LoadedSetBlockState());
+    } catch (e) {
+      emit(InitialSetBlockState());
+      emit(ErrorSetBlockState(error: e.toString()));
+    }
+  }
+
+  Future<void> save(SetBlockFormModel form) async {
+    try {
+      emit(InitialSetBlockState());
+      emit(SavingSetBlockState());
+      final BlockModel block;
+      List<BlockModel> blocksDB;
+      List<PropertyModel> propList = [];
+      PropertyModel prop;
+
+      for (var element in form.properties) {
+        prop = PropertyModel(
+            name: element.ctrlProp.text, propertyType: element.property);
+        propList.add(prop);
+      }
+
+      if (form.cBlock != null) {
+        block = BlockModel(
+          blockName: form.ctrlBlockName.text,
+          propertyList: propList,
+          tableName: form.cBlock!.tableName,
+          uuid: form.cBlock!.uuid,
+        );
+
+        await BlockRepo.update(block);
+
+        blocksDB = await BlockRepo.fetchAllBlocks();
+        form.blockList = blocksDB;
+
+        form.cBlock = form.select >= 0 ? form.blockList[form.select] : null;
+        if (form.blockList.isNotEmpty && form.select == -1) {
+          form.select = 0;
+          form.cBlock = form.blockList[0];
+        }
+        if (form.cBlock != null && form.cBlock!.blockName == '') {
+          form.cBlock = BlockModel.setName(form.cBlock!,
+              'Bloque ${form.cBlock!.tableName.split('table_').last}');
+          form.properties =
+              SetBlockPropModel.propListToForm(form.cBlock!.propertyList);
+          form.ctrlBlockName.text = form.cBlock?.blockName ?? '';
+        }
+      }
+
+      emit(SavedSetBlockState());
       emit(LoadedSetBlockState());
     } catch (e) {
       emit(InitialSetBlockState());

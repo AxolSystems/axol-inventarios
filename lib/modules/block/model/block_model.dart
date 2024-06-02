@@ -16,4 +16,16 @@ class BlockModel {
       : uuid = block.uuid,
         tableName = block.tableName,
         propertyList = block.propertyList;
+
+  static Map<String, dynamic> propsToMap(List<PropertyModel> props) {
+    Map<String, dynamic> map = {};
+    if (props.isNotEmpty) {
+      for (PropertyModel prop in props) {
+        map[prop.name] =
+            '${prop.name}~${PropertyModel.getTextToProp(prop.propertyType)}';
+      }
+    }
+
+    return map;
+  }
 }

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class PrimaryTextField extends StatelessWidget {
   final TextEditingController? controller;
-  const PrimaryTextField({super.key, this.controller});
+  final Function(String value)? onChanged;
+  const PrimaryTextField({super.key, this.controller, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class PrimaryTextField extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(8)),
             borderSide: BorderSide(color: ColorPalette.lightItems10)),
       ),
+      onChanged: onChanged,
     );
   }
 }

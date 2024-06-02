@@ -19,6 +19,16 @@ class LoadedSetBlockState extends SetBlockState {
   List<Object?> get props => [];
 }
 
+class SavingSetBlockState extends SetBlockState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SavedSetBlockState extends SetBlockState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorSetBlockState extends SetBlockState {
   final String error;
   const ErrorSetBlockState({required this.error});

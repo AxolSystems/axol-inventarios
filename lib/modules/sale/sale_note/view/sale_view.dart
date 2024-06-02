@@ -3,7 +3,7 @@ import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';

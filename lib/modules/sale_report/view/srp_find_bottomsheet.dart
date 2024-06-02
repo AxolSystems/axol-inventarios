@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/inventory_row_model.dart';
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../utilities/widgets/dialog.dart';
 import '../cubit/add/srp_find_bottomsheet_cubit.dart';
 import '../model/srp_find_bottomsheet_form_model.dart';
 
