@@ -59,13 +59,20 @@ class LoadingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      icon: const SizedBox.square(
-        dimension: 32,
-        child: CircularProgressIndicator(),
+      backgroundColor: ColorPalette.darkBackground,
+      icon: const Center(
+        child: SizedBox.square(
+          dimension: 30,
+          child: CircularProgressIndicator(color: ColorPalette.primary),
+        ),
       ),
-      content: Text(
-        text ?? 'Cargando...',
-        style: Typo.bodyDark,
+      content: Row( mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            text ?? 'Cargando...',
+            style: Typo.bodyLight,
+          )
+        ],
       ),
     );
   }

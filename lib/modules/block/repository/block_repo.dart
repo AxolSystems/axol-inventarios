@@ -15,8 +15,10 @@ class BlockRepo {
     List<Map<String, dynamic>> blocksDB = [];
     List<BlockModel> blockList = [];
     BlockModel block;
-    blocksDB =
-        await _supabase.from(_table).select<List<Map<String, dynamic>>>('*');
+    blocksDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>('*')
+        .order(_tableName, ascending: true);
 
     if (blocksDB.isNotEmpty) {
       for (var element in blocksDB) {

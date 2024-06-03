@@ -53,7 +53,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
-  Future<void> changeForm(SetBlockFormModel form) async {
+  Future<void> switchBlock(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
       emit(LoadingSetBlockState());
@@ -72,6 +72,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
             SetBlockPropModel.propListToForm(form.cBlock!.propertyList);
         form.ctrlBlockName.text = form.cBlock?.blockName ?? '';
         form.heightBoxProp = form.properties.length * 52;
+        form.isChanged = false;
       }
 
       emit(LoadedSetBlockState());
@@ -107,6 +108,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
       emit(LoadingSetBlockState());
 
       form.properties[index].property = prop;
+      form.isChanged = true;
 
       emit(LoadedSetBlockState());
     } catch (e) {
@@ -118,7 +120,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
   Future<void> save(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
-      emit(SavingSetBlockState());
+
       final BlockModel block;
       List<BlockModel> blocksDB;
       List<PropertyModel> propList = [];
@@ -127,8 +129,27 @@ class SetBlockCubit extends Cubit<SetBlockState> {
       for (var element in form.properties) {
         prop = PropertyModel(
             name: element.ctrlProp.text, propertyType: element.property);
-        propList.add(prop);
+        if (prop.name.contains('~') ||
+            prop.name.contains('\\') ||
+            prop.name.contains('/')) {
+          emit(LoadedSetBlockState());
+          emit(const ErrorSetBlockState(
+              error:
+                  'No utilice los siguientes símbolos en los nombres de las propiedades:\n \\ / ~'));
+          return;
+        }
+        if (propList.indexWhere((x) => x.name == prop.name) < 0) {
+          propList.add(prop);
+        } else {
+          emit(LoadedSetBlockState());
+          emit(const ErrorSetBlockState(
+              error:
+                  'No puede repetir nombres de propiedes en un mismo bloque'));
+          return;
+        }
       }
+
+      emit(SavingSetBlockState());
 
       if (form.cBlock != null) {
         block = BlockModel(

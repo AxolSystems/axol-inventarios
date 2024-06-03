@@ -22,7 +22,7 @@ class BlockModel {
     if (props.isNotEmpty) {
       for (PropertyModel prop in props) {
         map[prop.name] =
-            '${prop.name}~${PropertyModel.getTextToProp(prop.propertyType)}';
+            '${prop.name}~${PropertyModel.getIntToProp(prop.propertyType)}';
       }
     }
 
