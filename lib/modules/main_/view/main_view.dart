@@ -36,7 +36,6 @@ class MainViewBuild extends StatelessWidget {
     return BlocConsumer<MainViewCubit, MainViewState>(
       bloc: context.read<MainViewCubit>()..initLoad(context, form),
       builder: (context, state) {
-        print(form.menuVisible);
         if (state is LoadingMainViewState) {
           return mainView(context, true, form);
         } else if (state is LoadedMainViewState) {
@@ -249,7 +248,20 @@ class MainViewBuild extends StatelessWidget {
                     ),
                     PopupMenuDivider(),
                     PopupMenuItem(
+                      enabled: false,
+                      child: Text("Tema", style: Typo.labelLight),
+                    ),
+                    PopupMenuItem(
                       value: 1,
+                      child: Text("Oscuro", style: Typo.labelLight),
+                    ),
+                    PopupMenuItem(
+                      value: 2,
+                      child: Text("Claro", style: Typo.labelLight),
+                    ),
+                    PopupMenuDivider(),
+                    PopupMenuItem(
+                      value: 3,
                       child: Text("Cerrar sesión", style: Typo.labelLight),
                     ),
                   ],

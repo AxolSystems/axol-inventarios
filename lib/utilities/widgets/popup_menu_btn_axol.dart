@@ -113,7 +113,7 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
         height: 24,
         child: PopupMenuButton(
             tooltip: '',
-            color: ColorPalette.darkBackground,
+            color: ColorPalette.darkItems30,
             itemBuilder: (context) => entryList ?? [],
             child: MouseRegion(
               onEnter: (event) {
