@@ -77,16 +77,14 @@ class CustomerRepo {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-            '*', const FetchOptions(count: CountOption.estimated)
-          )
+              '*', const FetchOptions(count: CountOption.estimated))
           .order(_id, ascending: true)
           .range(rangeMin_, rangeMax_);
     } else {
       postgrestResponse = await _supabase
           .from(_table)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-            '*', const FetchOptions(count: CountOption.estimated)
-          )
+              '*', const FetchOptions(count: CountOption.estimated))
           .or(textOr)
           .order(_id, ascending: true)
           .range(rangeMin_, rangeMax_);
@@ -165,6 +163,21 @@ class CustomerRepo {
       _street: customer.street,
       _town: customer.town,
     });
+  }
+
+  Future<void> update(CustomerModel customer) async {
+    await _supabase.from(_table).update({
+      _name: customer.name,
+      _phoneNumber: customer.phoneNumber,
+      _country: customer.country,
+      _hood: customer.hood,
+      _intNumber: customer.intNumber,
+      _outNumber: customer.outNumber,
+      _postalCode: customer.postalCode,
+      _rfc: customer.rfc,
+      _street: customer.street,
+      _town: customer.town,
+    }).eq(_id, customer.id);
   }
 
   Future<void> delete(CustomerModel customer) async {

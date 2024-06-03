@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/textfield_form_model.dart';
@@ -7,17 +9,33 @@ import '../../model/customer_model.dart';
 import '../../repository/customer_repo.dart';
 import 'customer_add_state.dart';
 
-class CustomerAddCubit extends Cubit<CustomerAddState> {
-  CustomerAddCubit() : super(InitialCustomerAddState());
+class CustomerSetCubit extends Cubit<CustomerAddState> {
+  CustomerSetCubit() : super(InitialCustomerAddState());
 
-  Future<void> loadAvailableId(CustomerAddFormModel form) async {
+  Future<void> initLoad(
+      CustomerAddFormModel form, CustomerModel? customerEdit) async {
     CustomerAddFormModel upForm = form;
     int availableId = -1;
     try {
       emit(InitialCustomerAddState());
       emit(LoadingCustomerAddState());
-      availableId = await CustomerRepo().fetchAvailableId();
-      upForm.id.value = availableId.toString();
+
+      if (customerEdit != null) {
+        form.country.value = customerEdit.country ?? '';
+        form.hood.value = customerEdit.hood ?? '';
+        form.id.value = customerEdit.id.toString();
+        form.intNumber.value = customerEdit.intNumber ?? '';
+        form.name.value = customerEdit.name;
+        form.outNumber.value = customerEdit.outNumber ?? '';
+        form.phoneNumber.value = customerEdit.phoneNumber ?? '';
+        form.postalCode.value = customerEdit.postalCode ?? '';
+        form.rfc.value = customerEdit.rfc ?? '';
+        form.street.value = customerEdit.street ?? '';
+        form.town.value = customerEdit.town ?? '';
+      } else {
+        availableId = await CustomerRepo().fetchAvailableId();
+        upForm.id.value = availableId.toString();
+      }
       emit(LoadedCustomerAddState(form: upForm, focusIndex: -1));
     } catch (e) {
       emit(InitialCustomerAddState());
@@ -168,7 +186,8 @@ class CustomerAddCubit extends Cubit<CustomerAddState> {
     }
   }
 
-  Future<void> save(form) async {
+  Future<void> save(
+      CustomerAddFormModel form, CustomerModel? customerEdit) async {
     CustomerAddFormModel upForm = form;
     bool idExist = true;
     bool isValid = true;
@@ -181,7 +200,7 @@ class CustomerAddCubit extends Cubit<CustomerAddState> {
       emit(LoadingCustomerAddState());
       id = int.tryParse(form.id.value) ?? -1;
       idExist = await CustomerRepo().existId(id);
-      if (idExist) {
+      if (idExist && customerEdit == null) {
         upForm.id.validation = ValidationFormModel(
           isValid: false,
           errorMessage: form.emIdInvalid,
@@ -209,7 +228,11 @@ class CustomerAddCubit extends Cubit<CustomerAddState> {
         }
       }
       if (isValid) {
-        await CustomerRepo().insertCustomer(customer);
+        if (customerEdit != null) {
+          await CustomerRepo().update(customer);
+        } else {
+          await CustomerRepo().insertCustomer(customer);
+        }
         emit(SavedCustomerAddState());
       } else {
         emit(LoadedCustomerAddState(form: upForm, focusIndex: -1));

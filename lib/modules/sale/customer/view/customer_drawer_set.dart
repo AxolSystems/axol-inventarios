@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/sale/customer/model/customer_model.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,20 +10,21 @@ import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart'
 import '../../../../utilities/widgets/textfield_input_form.dart';
 import '../../../../models/textfield_form_model.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../cubit/customer_add/customer_add_cubit.dart';
+import '../cubit/customer_add/customer_set_cubit.dart';
 import '../cubit/customer_add/customer_add_form.dart';
 import '../cubit/customer_add/customer_add_state.dart';
 import '../model/customer_add_form_model.dart';
 
-class CustomerDrawerAdd extends StatelessWidget {
-  const CustomerDrawerAdd({super.key});
+class CustomerDrawerSet extends StatelessWidget {
+  final CustomerModel? customerEdit;
+  const CustomerDrawerSet({super.key, this.customerEdit});
 
   @override
   Widget build(BuildContext context) {
     CustomerAddFormModel form = context.read<CustomerAddForm>().state;
 
-    return BlocConsumer<CustomerAddCubit, CustomerAddState>(
-      bloc: context.read<CustomerAddCubit>()..loadAvailableId(form),
+    return BlocConsumer<CustomerSetCubit, CustomerAddState>(
+      bloc: context.read<CustomerSetCubit>()..initLoad(form, customerEdit),
       listener: (context, state) {
         if (state is ErrorCustomerAddState) {
           showDialog(
@@ -37,18 +39,19 @@ class CustomerDrawerAdd extends StatelessWidget {
       builder: (context, state) {
         form = context.read<CustomerAddForm>().state;
         if (state is LoadedCustomerAddState) {
-          return loadDrawerBox(state.form, context, false, state.focusIndex);
+          return loadDrawerBox(
+              state.form, context, false, state.focusIndex, customerEdit);
         } else if (state is LoadingCustomerAddState) {
-          return loadDrawerBox(form, context, true, -1);
+          return loadDrawerBox(form, context, true, -1, customerEdit);
         } else {
-          return loadDrawerBox(form, context, false, -1);
+          return loadDrawerBox(form, context, false, -1, customerEdit);
         }
       },
     );
   }
 
   DrawerBox loadDrawerBox(CustomerAddFormModel form, BuildContext context,
-      bool isLoading, int focusIndex) {
+      bool isLoading, int focusIndex, CustomerModel? customerEdit) {
     CustomerAddFormModel upForm = form;
     List<TextfieldFormModel> listForm = CustomerAddFormModel.formToList(form);
     List<Widget> listWidget = [];
@@ -90,7 +93,7 @@ class CustomerDrawerAdd extends StatelessWidget {
           upForm = CustomerAddFormModel.listToForm(listForm);
           final nextFocus = i + 1;
           context
-              .read<CustomerAddCubit>()
+              .read<CustomerSetCubit>()
               .loadSingleValidationEnter(upForm, element.key, nextFocus);
         },
       ));
@@ -100,8 +103,8 @@ class CustomerDrawerAdd extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
       header: Column(
         children: [
-          const Text(
-            'Nuevo Cliente',
+          Text(
+            customerEdit != null ? 'Editar cliente' : 'Nuevo Cliente',
             style: Typo.subtitleDark,
           ),
           Visibility(
@@ -122,7 +125,7 @@ class CustomerDrawerAdd extends StatelessWidget {
         PrimaryButtonDialog(
           enabled: isLoading,
           onPressed: () {
-            context.read<CustomerAddCubit>().save(form);
+            context.read<CustomerSetCubit>().save(form, customerEdit);
           },
         ),
       ],
