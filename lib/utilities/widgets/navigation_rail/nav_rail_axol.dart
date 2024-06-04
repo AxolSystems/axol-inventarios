@@ -37,7 +37,7 @@ class NavRailAxol extends StatelessWidget {
                             PrimaryButtonDialog(
                               text: 'Aceptar',
                               onPressed: () {
-                                LocalUser().setLocalUser('', '', -1);
+                                LocalUser().setLocalUser('', '', -1, 0);
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(

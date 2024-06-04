@@ -1,7 +1,9 @@
+import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../axol_widget/axol_widget.dart';
+import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
 import '../../model/modul_model.dart';
 import 'mainview_state.dart';
@@ -13,6 +15,7 @@ class MainViewCubit extends Cubit<MainViewState> {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
+
       form.moduleList = [
         ModuleModel(
           text: 'Modulo de prueba',
@@ -58,6 +61,7 @@ class MainViewCubit extends Cubit<MainViewState> {
         form.body = form.moduleList.first.widget;
         form.title = form.moduleList.first.text;
       }
+      form.user = await LocalUser().getLocalUser();
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());
@@ -70,6 +74,20 @@ class MainViewCubit extends Cubit<MainViewState> {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
 
+      emit(LoadedMainViewState());
+    } catch (e) {
+      emit(InitialMainViewState());
+      emit(ErrorMainViewState(error: e.toString()));
+    }
+  }
+
+  Future<void> setTheme(UserModel user, int theme, MainViewFormModel form) async {
+    try {
+      emit(InitialMainViewState());
+      emit(LoadingMainViewState());
+      await DatabaseUser().updateTheme(user.id, theme);
+      await LocalUser().setTheme(theme);
+      form.user = await LocalUser().getLocalUser();
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());

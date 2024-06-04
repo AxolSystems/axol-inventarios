@@ -279,6 +279,7 @@ class MainNavButton extends StatelessWidget {
   final String? text;
   final bool? isModule;
   final bool menuVisible;
+  final int theme;
   const MainNavButton({
     super.key,
     this.isHover,
@@ -287,6 +288,7 @@ class MainNavButton extends StatelessWidget {
     this.text,
     this.isModule,
     required this.menuVisible,
+    required this.theme,
   });
 
   @override
@@ -301,17 +303,17 @@ class MainNavButton extends StatelessWidget {
             padding: WidgetStateProperty.all(EdgeInsets.zero),
             //overlayColor: select == index
             overlayColor: isHover ?? false
-                ? WidgetStateProperty.all(ColorPalette.darkItems10)
-                : WidgetStateProperty.all(ColorPalette.darkItems20),
+                ? WidgetStateProperty.all(ColorTheme.item30(theme))
+                : WidgetStateProperty.all(ColorTheme.item40(theme)),
             //backgroundColor: select == index
             backgroundColor: isHover ?? false
-                ? WidgetStateProperty.all(ColorPalette.darkItems10)
+                ? WidgetStateProperty.all(ColorTheme.item30(theme))
                 : null,
             foregroundColor: WidgetStateProperty.resolveWith((Set states) {
               if (states.contains(WidgetState.hovered) || (isHover ?? false)) {
-                return ColorPalette.lightText;
+                return ColorTheme.text(theme);
               } else {
-                return ColorPalette.lightItems10;
+                return ColorPalette.midleItems;
               }
             }),
             textStyle: WidgetStateProperty.all(Typo.systemDark),
@@ -323,16 +325,12 @@ class MainNavButton extends StatelessWidget {
             children: [
               const SizedBox(width: 8),
               Visibility(
-                  visible: icon != null,
-                  child: Column(
-                    children: [
-                      Icon(
-                        icon,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                  )),
+                visible: icon != null,
+                child: Icon(
+                  icon,
+                  size: 20,
+                ),
+              ),
               SizedBox(
                 width: 129,
                 child: Text(
@@ -347,14 +345,14 @@ class MainNavButton extends StatelessWidget {
                     replacement: const SizedBox(width: 10),
                     visible: (isHover ?? false) && (isModule ?? false),
                     child: menuVisible
-                        ? const Icon(
+                        ? Icon(
                             Icons.arrow_back_ios_new,
-                            color: ColorPalette.lightText,
+                            color: ColorTheme.text(theme),
                             size: 10,
                           )
-                        : const Icon(
+                        : Icon(
                             Icons.arrow_forward_ios,
-                            color: ColorPalette.lightText,
+                            color: ColorTheme.text(theme),
                             size: 10,
                           )),
               )

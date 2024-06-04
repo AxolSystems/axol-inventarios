@@ -1,5 +1,7 @@
+import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../user/model/user_mdoel.dart';
 import 'modul_model.dart';
 
 class MainViewFormModel {
@@ -10,16 +12,18 @@ class MainViewFormModel {
   bool moduleBarVisible;
   bool menuVisible;
   String title;
+  UserModel user;
 
-  MainViewFormModel(
-      {required this.body,
-      required this.moduleSelect,
-      required this.moduleList,
-      required this.moduleBarVisible,
-      required this.title,
-      required this.menuVisible,
-      required this.menuSelect,
-      });
+  MainViewFormModel({
+    required this.body,
+    required this.moduleSelect,
+    required this.moduleList,
+    required this.moduleBarVisible,
+    required this.title,
+    required this.menuVisible,
+    required this.menuSelect,
+    required this.user,
+  });
 
   MainViewFormModel.empty()
       : body = null,
@@ -28,5 +32,6 @@ class MainViewFormModel {
         moduleList = [],
         moduleBarVisible = true,
         menuVisible = true,
-        title = '';
+        title = '',
+        user = UserModel.empty();
 }

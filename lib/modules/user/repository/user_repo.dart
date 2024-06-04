@@ -9,6 +9,7 @@ abstract class UserRepo {
   static const String _id = 'id';
   static const String _rol = 'rol';
   static const String _password = 'password';
+  static const String _theme = 'theme';
 }
 
 class DatabaseUser extends UserRepo {
@@ -26,6 +27,7 @@ class DatabaseUser extends UserRepo {
         id: userData.first[UserRepo._id],
         rol: userData.first[UserRepo._rol],
         password: userData.first[UserRepo._password],
+        theme: userData.first[UserRepo._theme] ?? 0,
       );
     } else {
       user = null;
@@ -46,11 +48,18 @@ class DatabaseUser extends UserRepo {
             name: element[UserRepo._user],
             id: element[UserRepo._id],
             rol: UserRepo._rol,
-            password: UserRepo._password);
+            password: UserRepo._password,
+            theme: element[UserRepo._theme] ?? 0);
         users.add(user);
       }
     }
     return (users);
+  }
+
+  Future<void> updateTheme(int id, int theme) async {
+    await supabase
+        .from(UserRepo._table)
+        .update({UserRepo._theme: theme}).eq(UserRepo._id, id);
   }
 }
 
@@ -61,18 +70,42 @@ class LocalUser extends UserRepo {
     final String? localUser = pref.getString(UserRepo._user);
     final String? localRol = pref.getString(UserRepo._rol);
     final int localId = pref.getInt(UserRepo._id) ?? -1;
+    final int localThem = pref.getInt(UserRepo._theme) ?? 0;
     if (localUser != null && localRol != null) {
-      user = UserModel(name: localUser, id: localId, rol: localRol, password: '');
+      user = UserModel(
+        name: localUser,
+        id: localId,
+        rol: localRol,
+        password: '',
+        theme: localThem,
+      );
     } else {
-      user = const UserModel(name: '', id: -1, rol: '', password: '');
+      user = const UserModel(
+        name: '',
+        id: -1,
+        rol: '',
+        password: '',
+        theme: 0,
+      );
     }
     return user;
   }
 
-  Future<void> setLocalUser(String newLocalUser, String newLocalRol, int id) async {
+  Future<void> setLocalUser(
+    String newLocalUser,
+    String newLocalRol,
+    int id,
+    int theme,
+  ) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setString(UserRepo._user, newLocalUser);
     await pref.setString(UserRepo._rol, newLocalRol);
     await pref.setInt(UserRepo._id, id);
+    await pref.setInt(UserRepo._theme, theme);
+  }
+
+  Future<void> setTheme(int theme) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setInt(UserRepo._theme, theme);
   }
 }

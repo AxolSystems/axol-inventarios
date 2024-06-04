@@ -150,6 +150,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                 text: blockName,
                                 menuVisible: false,
                                 isHover: form.select == index,
+                                theme: 0,
                               ));
                         },
                       ))
@@ -350,7 +351,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                                             icon:
                                                                 const SizedBox(),
                                                             style: Typo
-                                                                .systemLight,
+                                                                .system(0),
                                                             decoration:
                                                                 const InputDecoration(
                                                               contentPadding:

@@ -61,10 +61,11 @@ class MainViewBuild extends StatelessWidget {
       children: [
         Container(
           height: 60,
-          decoration: const BoxDecoration(
-              color: ColorPalette.darkBackground,
-              border:
-                  Border(bottom: BorderSide(color: ColorPalette.darkItems20))),
+          decoration: BoxDecoration(
+              color: ColorTheme.background(form.user.theme),
+              border: Border(
+                  bottom:
+                      BorderSide(color: ColorTheme.item30(form.user.theme)))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -82,7 +83,7 @@ class MainViewBuild extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.menu,
-                      color: ColorPalette.lightItems10,
+                      color: ColorPalette.midleItems,
                       size: 30,
                     ),
                   ),
@@ -127,11 +128,14 @@ class MainViewBuild extends StatelessWidget {
                 },
               ),
             ),
-            form.body ??
-                Expanded(
-                    child: Container(
-                  color: ColorPalette.darkBackground,
-                )),
+            BlocBuilder<MainViewForm, MainViewFormModel>(
+              builder: (context, state) =>
+                  form.body ??
+                  Expanded(
+                      child: Container(
+                    color: ColorTheme.background(form.user.theme),
+                  )),
+            ),
           ],
         ))
       ],
@@ -146,15 +150,7 @@ class MainViewBuild extends StatelessWidget {
     required bool menuVisible,
     Function()? onPressedSetting,
   }) {
-    double widthMenu = 0;
     final List<EntryMenuModel> entryList;
-
-    if (form.moduleBarVisible) {
-      widthMenu = 200;
-      if (form.menuVisible) {
-        widthMenu = 400;
-      }
-    }
 
     if (select >= 0) {
       entryList = moduleList[select].menu;
@@ -173,7 +169,7 @@ class MainViewBuild extends StatelessWidget {
           text: 'Modulos',
           value: 1,
           onPressed: () {
-            form.body = const TextAW(text: 'Modules');
+            form.body = TextAW.textTest(form.user.theme, 'Prueba');
             form.menuSelect = 1;
             context.read<MainViewCubit>().load();
           },
@@ -186,9 +182,10 @@ class MainViewBuild extends StatelessWidget {
     return Row(
       children: [
         Container(
-          decoration: const BoxDecoration(
-            color: ColorPalette.darkBackground,
-            border: Border(right: BorderSide(color: ColorPalette.darkItems20)),
+          decoration: BoxDecoration(
+            color: ColorTheme.background(form.user.theme),
+            border: Border(
+                right: BorderSide(color: ColorTheme.item30(form.user.theme))),
           ),
           height: double.infinity,
           width: 200,
@@ -208,14 +205,14 @@ class MainViewBuild extends StatelessWidget {
                         onPressed: module.onPressed,
                         menuVisible: menuVisible,
                         isModule: true,
+                        theme: form.user.theme,
                       ),
                     );
                   },
                 ),
               ),
-              const Divider(
-                color: ColorPalette.darkItems20,
-                height: 4,
+              Divider(
+                color: ColorTheme.item30(form.user.theme),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
@@ -226,11 +223,13 @@ class MainViewBuild extends StatelessWidget {
                   text: 'Configuración',
                   menuVisible: menuVisible,
                   isModule: true,
+                  theme: form.user.theme,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(4),
+              Padding(
+                padding: const EdgeInsets.all(4),
                 child: PopupMenuBtnAxol(
+                  theme: form.user.theme,
                   icon: Icons.person,
                   text: 'Cuenta',
                   entryList: <PopupMenuEntry<int>>[
@@ -241,28 +240,40 @@ class MainViewBuild extends StatelessWidget {
                         width: 100,
                         child: Text(
                           "Usuario",
-                          style: Typo.labelLight,
+                          style: Typo.system(form.user.theme),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
-                    PopupMenuDivider(),
+                    const PopupMenuDivider(),
                     PopupMenuItem(
                       enabled: false,
-                      child: Text("Tema", style: Typo.labelLight),
+                      child: Text("Tema", style: Typo.system(form.user.theme)),
                     ),
                     PopupMenuItem(
                       value: 1,
-                      child: Text("Oscuro", style: Typo.labelLight),
+                      child:
+                          Text("Oscuro", style: Typo.system(form.user.theme)),
+                      onTap: () {
+                        context
+                            .read<MainViewCubit>()
+                            .setTheme(form.user, 0, form);
+                      },
                     ),
                     PopupMenuItem(
                       value: 2,
-                      child: Text("Claro", style: Typo.labelLight),
+                      child: Text("Claro", style: Typo.system(form.user.theme)),
+                      onTap: () {
+                        context
+                            .read<MainViewCubit>()
+                            .setTheme(form.user, 1, form);
+                      },
                     ),
-                    PopupMenuDivider(),
+                    const PopupMenuDivider(height: 16),
                     PopupMenuItem(
                       value: 3,
-                      child: Text("Cerrar sesión", style: Typo.labelLight),
+                      child: Text("Cerrar sesión",
+                          style: Typo.system(form.user.theme)),
                     ),
                   ],
                 ),
@@ -274,10 +285,10 @@ class MainViewBuild extends StatelessWidget {
           visible: menuVisible,
           child: Container(
             width: 200,
-            decoration: const BoxDecoration(
-                color: ColorPalette.darkBackground,
-                border:
-                    Border(right: BorderSide(color: ColorPalette.darkItems20))),
+            decoration: BoxDecoration(
+                color: ColorTheme.background(form.user.theme),
+                border: const Border(
+                    right: BorderSide(color: ColorPalette.darkItems20))),
             child: Column(
               children: [
                 Expanded(
@@ -292,6 +303,7 @@ class MainViewBuild extends StatelessWidget {
                         isHover: form.menuSelect == index,
                         onPressed: entry.onPressed,
                         menuVisible: menuVisible,
+                        theme: form.user.theme,
                       ),
                     );
                   },

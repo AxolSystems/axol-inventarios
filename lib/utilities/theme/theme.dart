@@ -8,20 +8,95 @@ class ColorPalette {
   static const tertiary = Color(0xFFffa532);
   static const alternate = Color(0xFFed7098);
   static const darkBackground = Color.fromARGB(255, 32, 32, 32);
-  static const lightBackground = Color(0xFFfefefe);
+  static const lightBackground = Color.fromARGB(255, 248, 248, 248);
   static const lightText = Color(0xFFf7fefe);
   static const darkText = Color(0xFF282828);
   static final secondaryText2 = const Color(0xFF282828).withOpacity(0.5);
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
   static const caution = Color.fromARGB(255, 180, 32, 22);
   static const correct = Color.fromARGB(255, 68, 228, 108);
-  static const darkItems30 = Color.fromARGB(255, 46, 46, 46);
-  static const darkItems20 = Color.fromARGB(255, 66, 66, 66);
-  static const darkItems10 = Color.fromARGB(255, 106, 106, 106);
-  static const lightItems10 = Color.fromARGB(255, 146, 146, 146);
-  static const lightItems20 = Color.fromARGB(255, 226, 226, 226);
+  static const darkItems40 = Color.fromARGB(255, 46, 46, 46);
+  static const darkItems30 = Color.fromARGB(255, 69, 69, 69);
+  static const darkItems20 = Color.fromARGB(255, 92, 92, 92);
+  static const darkItems10 = Color.fromARGB(255, 115, 115, 115);
+  static const midleItems = Color.fromARGB(255, 141, 141, 141);
+  static const lightItems10 = Color.fromARGB(255, 167, 167, 167);
+  static const lightItems20 = Color.fromARGB(255, 190, 190, 190);
+  static const lightItems30 = Color.fromARGB(255, 213, 213, 213);
+  static const lightItems40 = Color.fromARGB(255, 236, 236, 236);
   static const filled = Color.fromARGB(10, 0, 0, 0);
   static const filledLight = Color.fromARGB(10, 255, 255, 255);
+}
+
+class ColorTheme {
+  //Theme
+  //0: Oscuro
+  //1: Claro
+  static Color background(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.darkBackground;
+      case 1:
+        return ColorPalette.lightBackground;
+      default:
+        return ColorPalette.darkBackground;
+    }
+  }
+
+  static Color item10(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.darkItems10;
+      case 1:
+        return ColorPalette.lightItems10;
+      default:
+        return ColorPalette.darkItems10;
+    }
+  }
+
+  static Color item20(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.darkItems20;
+      case 1:
+        return ColorPalette.lightItems20;
+      default:
+        return ColorPalette.darkItems20;
+    }
+  }
+
+  static Color item30(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.darkItems30;
+      case 1:
+        return ColorPalette.lightItems30;
+      default:
+        return ColorPalette.darkItems30;
+    }
+  }
+
+  static Color item40(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.darkItems40;
+      case 1:
+        return ColorPalette.lightItems40;
+      default:
+        return ColorPalette.darkItems40;
+    }
+  }
+
+  static Color text(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.lightText;
+      case 1:
+        return ColorPalette.darkText;
+      default:
+        return ColorPalette.lightText;
+    }
+  }
 }
 
 class Typo {
@@ -171,11 +246,16 @@ class Typo {
       fontWeight: FontWeight.normal,
       fontSize: 14,
       color: ColorPalette.lightItems10);
-  static const systemLight = TextStyle(
+  static TextStyle system(int theme) => TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
       fontSize: 14,
-      color: ColorPalette.lightText);
+      color: ColorTheme.text(theme));
+  static const systemMidle = TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.normal,
+      fontSize: 14,
+      color: ColorPalette.midleItems);
 
   //Button mobile
   static const mobileLigth20 = TextStyle(

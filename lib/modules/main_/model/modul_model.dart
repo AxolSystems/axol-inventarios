@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../axol_widget/axol_widget.dart';
 import 'entry_menu_model.dart';
+import 'main_view_form_model.dart';
 
 class ModuleModel {
   String id;

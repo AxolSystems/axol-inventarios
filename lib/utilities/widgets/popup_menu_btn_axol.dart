@@ -77,7 +77,9 @@ class PopupMenuBtnAxol extends StatelessWidget {
   final IconData? icon;
   final String? text;
   final List<PopupMenuEntry<int>>? entryList;
-  const PopupMenuBtnAxol({super.key, this.icon, this.text, this.entryList});
+  final int theme;
+  const PopupMenuBtnAxol(
+      {super.key, this.icon, this.text, this.entryList, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,7 @@ class PopupMenuBtnAxol extends StatelessWidget {
         icon: icon,
         text: text,
         entryList: entryList,
+        theme: theme,
       ),
     );
   }
@@ -96,8 +99,9 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
   final IconData? icon;
   final String? text;
   final List<PopupMenuEntry<int>>? entryList;
+  final int theme;
   const PopupMenuBtnAxolBuild(
-      {super.key, this.icon, this.text, this.entryList});
+      {super.key, this.icon, this.text, this.entryList, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +117,7 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
         height: 24,
         child: PopupMenuButton(
             tooltip: '',
-            color: ColorPalette.darkItems30,
+            color: ColorTheme.item40(theme),
             itemBuilder: (context) => entryList ?? [],
             child: MouseRegion(
               onEnter: (event) {
@@ -125,8 +129,8 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                     color: isHover
-                        ? ColorPalette.darkItems20
-                        : ColorPalette.darkBackground,
+                        ? ColorTheme.item30(theme)
+                        : ColorTheme.background(theme),
                     borderRadius: const BorderRadius.all(Radius.circular(12))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -138,8 +142,8 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
                         Icons.person,
                         size: 20,
                         color: isHover
-                            ? ColorPalette.lightText
-                            : ColorPalette.lightItems10,
+                            ? ColorTheme.text(theme)
+                            : ColorPalette.midleItems,
                       ),
                     ),
                     Visibility(
@@ -153,7 +157,7 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
                           child: Text(
                             text ?? '',
                             textAlign: TextAlign.start,
-                            style: isHover ? Typo.systemLight : Typo.systemDark,
+                            style: isHover ? Typo.system(theme) : Typo.systemMidle,
                           ),
                         ))
                   ],
