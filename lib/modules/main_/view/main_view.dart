@@ -160,7 +160,7 @@ class MainViewBuild extends StatelessWidget {
           text: 'Bloques',
           value: 0,
           onPressed: () {
-            form.body = const SetBlockWidget();
+            form.body = SetBlockWidget(theme: form.user.theme);
             form.menuSelect = 0;
             context.read<MainViewCubit>().load();
           },
@@ -287,8 +287,9 @@ class MainViewBuild extends StatelessWidget {
             width: 200,
             decoration: BoxDecoration(
                 color: ColorTheme.background(form.user.theme),
-                border: const Border(
-                    right: BorderSide(color: ColorPalette.darkItems20))),
+                border: Border(
+                    right:
+                        BorderSide(color: ColorTheme.item30(form.user.theme)))),
             child: Column(
               children: [
                 Expanded(

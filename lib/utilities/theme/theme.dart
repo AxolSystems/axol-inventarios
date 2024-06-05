@@ -97,6 +97,17 @@ class ColorTheme {
         return ColorPalette.lightText;
     }
   }
+
+  static Color fill(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.filledLight;
+      case 1:
+        return ColorPalette.filled;
+      default:
+        return ColorPalette.filledLight;
+    }
+  }
 }
 
 class Typo {
@@ -196,6 +207,11 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 16,
       color: ColorPalette.lightText);
+  static TextStyle subtitle(int theme) => TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+      color: ColorTheme.text(theme));
   static const bodyDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
@@ -206,6 +222,11 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.lightText);
+  static TextStyle body(int theme) => TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: ColorTheme.text(theme));
   static const smallLabelDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
@@ -236,6 +257,11 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 12,
       color: ColorPalette.lightItems10);
+  static TextStyle label(int theme) => TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 14,
+      color: ColorTheme.item10(theme));
   static const bodyCaution = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,

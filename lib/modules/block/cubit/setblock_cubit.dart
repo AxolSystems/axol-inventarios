@@ -9,9 +9,10 @@ import 'setblock_state.dart';
 class SetBlockCubit extends Cubit<SetBlockState> {
   SetBlockCubit() : super(InitialSetBlockState());
 
-  Future<void> initLoad(SetBlockFormModel form) async {
+  Future<void> initLoad(SetBlockFormModel form, int theme) async {
     try {
       emit(InitialSetBlockState());
+      form.theme = theme;
       emit(LoadingSetBlockState());
       List<BlockModel> blocksDB;
 

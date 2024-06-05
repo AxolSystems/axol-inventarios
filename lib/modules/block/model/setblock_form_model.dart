@@ -11,6 +11,7 @@ class SetBlockFormModel {
   List<SetBlockPropModel> properties;
   double heightBoxProp;
   bool isChanged;
+  int theme;
 
   SetBlockFormModel({
     required this.blockList,
@@ -20,6 +21,7 @@ class SetBlockFormModel {
     this.cBlock,
     required this.heightBoxProp,
     required this.isChanged,
+    required this.theme,
   });
 
   SetBlockFormModel.empty()
@@ -28,7 +30,8 @@ class SetBlockFormModel {
         ctrlBlockName = TextEditingController(),
         properties = [],
         heightBoxProp = 0,
-        isChanged = false;
+        isChanged = false,
+        theme = 0;
 }
 
 class SetBlockPropModel {

@@ -88,6 +88,7 @@ class MainViewCubit extends Cubit<MainViewState> {
       await DatabaseUser().updateTheme(user.id, theme);
       await LocalUser().setTheme(theme);
       form.user = await LocalUser().getLocalUser();
+      emit(SetThemeMainViewState(theme: theme));
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());
@@ -95,6 +96,8 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 }
+
+
 
 class MainViewForm extends Cubit<MainViewFormModel> {
   MainViewForm() : super(MainViewFormModel.empty());

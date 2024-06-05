@@ -1,6 +1,4 @@
-import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
-import 'package:axol_inventarios/modules/main_/model/main_view_form_model.dart';
 import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,13 +7,15 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/textfield.dart';
+import '../../main_/cubit/main_view/mainview_cubit.dart';
+import '../../main_/cubit/main_view/mainview_state.dart';
 import '../cubit/setblock_cubit.dart';
 import '../cubit/setblock_state.dart';
-import '../model/block_model.dart';
 import '../model/setblock_form_model.dart';
 
 class SetBlockWidget extends StatelessWidget {
-  const SetBlockWidget({super.key});
+  final int theme;
+  const SetBlockWidget({super.key, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -24,459 +24,370 @@ class SetBlockWidget extends StatelessWidget {
         BlocProvider(create: (_) => SetBlockCubit()),
         BlocProvider(create: (_) => SetBlockForm()),
       ],
-      child: const SetBlockWidgetBuild(),
+      child: SetBlockWidgetBuild(theme: theme),
     );
   }
 }
 
 class SetBlockWidgetBuild extends StatelessWidget {
-  const SetBlockWidgetBuild({super.key});
+  final int theme;
+  const SetBlockWidgetBuild({super.key, required this.theme});
 
   @override
   Widget build(BuildContext context) {
     SetBlockFormModel form = context.read<SetBlockForm>().state;
-    return BlocConsumer<SetBlockCubit, SetBlockState>(
-      bloc: context.read<SetBlockCubit>()..initLoad(form),
+    return BlocListener<MainViewCubit, MainViewState>(
       listener: (context, state) {
-        if (state is ErrorSetBlockState) {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialogAxol(
-              text: state.error,
-            ),
-          );
-        }
-        if (state is SavingSetBlockState) {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => const LoadingDialog(text: 'Guardando...'));
-        }
-        if (state is SavedSetBlockState) {
-          form.isChanged = false;
-          Navigator.pop(context);
+        if (state is SetThemeMainViewState) {
+          form.theme = state.theme;
+          context.read<SetBlockCubit>().load();
         }
       },
-      builder: (context, state) {
-        if (state is LoadingSetBlockState) {
-          return Expanded(
-              child: Container(
-            color: ColorPalette.darkBackground,
+      child: BlocConsumer<SetBlockCubit, SetBlockState>(
+        bloc: context.read<SetBlockCubit>()..initLoad(form, theme),
+        listener: (context, state) {
+          if (state is ErrorSetBlockState) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialogAxol(
+                text: state.error,
+              ),
+            );
+          }
+          if (state is SavingSetBlockState) {
+            showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) =>
+                    const LoadingDialog(text: 'Guardando...'));
+          }
+          if (state is SavedSetBlockState) {
+            form.isChanged = false;
+            Navigator.pop(context);
+          }
+        },
+        builder: (context, state) {
+          if (state is LoadingSetBlockState) {
+            return setBlockWidgetBuild(context, form, true);
+          } else if (state is LoadedSetBlockState) {
+            return setBlockWidgetBuild(context, form, false);
+          } else {
+            return setBlockWidgetBuild(context, form, false);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget setBlockWidgetBuild(
+      BuildContext context, SetBlockFormModel form, bool isLoading) {
+    const double widthMenuBlock = 250;
+    ScrollController scrollController = ScrollController();
+    ScrollController scrollController2 = ScrollController();
+
+    return isLoading
+        ? Expanded(
+            child: Container(
+            color: ColorTheme.background(form.theme),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [LinearProgressIndicatorAxol()],
             ),
-          ));
-        } else if (state is LoadedSetBlockState) {
-          return setBlockWidgetBuild(context, form);
-        } else {
-          return setBlockWidgetBuild(context, form);
-        }
-      },
-    );
-  }
-
-  Widget setBlockWidgetBuild(BuildContext context, SetBlockFormModel form) {
-    const double widthMenuBlock = 250;
-    ScrollController scrollController = ScrollController();
-    ScrollController scrollController2 = ScrollController();
-    return Expanded(child: LayoutBuilder(
-      builder: (context, constraints) {
-        final double paddingBox;
-        final double heightBox;
-        bool isBoxNarrow = false;
-        if (constraints.maxWidth > 1450) {
-          paddingBox = 130;
-          heightBox = 108;
-        } else if (constraints.maxWidth > 1190) {
-          paddingBox = 110;
-          heightBox = 108;
-        } else if (constraints.maxWidth > 940) {
-          paddingBox = 50;
-          heightBox = 108;
-        } else {
-          paddingBox = 16;
-          heightBox = 150;
-          isBoxNarrow = true;
-        }
-        //print('max: ${constraints.maxWidth}');
-        return Container(
-          color: ColorPalette.darkBackground,
-          child: RawScrollbar(
-            controller: scrollController,
-            thumbVisibility: true,
-            radius: const Radius.circular(8),
-            thickness: 12,
-            child: ListView(
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              children: [
-                Container(
-                  width: widthMenuBlock,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          right: BorderSide(
-                    color: ColorPalette.darkItems20,
-                  ))),
-                  child: Column(
+          ))
+        : Expanded(child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double paddingBox;
+              final double heightBox;
+              bool isBoxNarrow = false;
+              if (constraints.maxWidth > 1450) {
+                paddingBox = 130;
+                heightBox = 108;
+              } else if (constraints.maxWidth > 1190) {
+                paddingBox = 110;
+                heightBox = 108;
+              } else if (constraints.maxWidth > 940) {
+                paddingBox = 50;
+                heightBox = 108;
+              } else {
+                paddingBox = 16;
+                heightBox = 150;
+                isBoxNarrow = true;
+              }
+              //print('max: ${constraints.maxWidth}');
+              return Container(
+                color: ColorTheme.background(form.theme),
+                child: RawScrollbar(
+                  controller: scrollController,
+                  thumbVisibility: true,
+                  radius: const Radius.circular(8),
+                  thickness: 12,
+                  child: ListView(
+                    controller: scrollController,
+                    scrollDirection: Axis.horizontal,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Text(
-                          'Bloques disponibles',
-                          style: Typo.subtitleLight,
+                      Container(
+                        width: widthMenuBlock,
+                        decoration: BoxDecoration(
+                            border: Border(
+                                right: BorderSide(
+                          color: ColorTheme.item30(form.theme),
+                        ))),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Text(
+                                'Bloques disponibles',
+                                style: Typo.subtitle(form.theme),
+                              ),
+                            ),
+                            Expanded(
+                                child: ListView.builder(
+                              itemCount: form.blockList.length,
+                              itemBuilder: (context, index) {
+                                final block = form.blockList[index];
+                                final blockName = block.blockName == ''
+                                    ? 'Bloque ${block.tableName.split('table_').last}'
+                                    : block.blockName;
+                                return Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                                    child: MainNavButton(
+                                      onPressed: () {
+                                        if (index != form.select) {
+                                          form.select = index;
+                                          form.cBlock =
+                                              form.blockList[form.select];
+                                          context
+                                              .read<SetBlockCubit>()
+                                              .switchBlock(form);
+                                        }
+                                      },
+                                      text: blockName,
+                                      menuVisible: false,
+                                      isHover: form.select == index,
+                                      theme: form.theme,
+                                    ));
+                              },
+                            ))
+                          ],
                         ),
                       ),
-                      Expanded(
-                          child: ListView.builder(
-                        itemCount: form.blockList.length,
-                        itemBuilder: (context, index) {
-                          final block = form.blockList[index];
-                          final blockName = block.blockName == ''
-                              ? 'Bloque ${block.tableName.split('table_').last}'
-                              : block.blockName;
-                          return Padding(
-                              padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                              child: MainNavButton(
-                                onPressed: () {
-                                  if (index != form.select) {
-                                    form.select = index;
-                                    form.cBlock = form.blockList[form.select];
-                                    context
-                                        .read<SetBlockCubit>()
-                                        .switchBlock(form);
-                                  }
-                                },
-                                text: blockName,
-                                menuVisible: false,
-                                isHover: form.select == index,
-                                theme: 0,
-                              ));
-                        },
-                      ))
-                    ],
-                  ),
-                ),
-                SizedBox(
-                    width: constraints.maxWidth > 750
-                        ? constraints.maxWidth - widthMenuBlock
-                        : 500,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: RawScrollbar(
-                                controller: scrollController2,
-                                thumbVisibility: true,
-                                radius: const Radius.circular(8),
-                                thickness: 12,
-                                child: SingleChildScrollView(
-                                  controller: scrollController2,
-                                  scrollDirection: Axis.vertical,
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            paddingBox, 16, paddingBox, 24),
-                                        child: Container(
-                                          width: constraints.maxWidth > 750
-                                              ? constraints.maxWidth -
-                                                  widthMenuBlock -
-                                                  (paddingBox * 2)
-                                              : 500,
-                                          height: heightBox,
-                                          padding: const EdgeInsets.all(24),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color:
-                                                    ColorPalette.darkItems20),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(6)),
-                                            color: ColorPalette.darkItems30,
-                                          ),
-                                          child: constraints.maxWidth > 940
-                                              ? Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: generalSettings(
-                                                      context,
-                                                      form,
-                                                      isBoxNarrow),
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: generalSettings(
-                                                      context,
-                                                      form,
-                                                      isBoxNarrow),
-                                                ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: paddingBox),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                      SizedBox(
+                          width: constraints.maxWidth > 750
+                              ? constraints.maxWidth - widthMenuBlock
+                              : 500,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  child: RawScrollbar(
+                                      controller: scrollController2,
+                                      thumbVisibility: true,
+                                      radius: const Radius.circular(8),
+                                      thickness: 12,
+                                      child: SingleChildScrollView(
+                                        controller: scrollController2,
+                                        scrollDirection: Axis.vertical,
+                                        child: Column(
                                           children: [
-                                            const Text(
-                                              'Propiedades',
-                                              style: Typo.subtitleLight,
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  paddingBox,
+                                                  16,
+                                                  paddingBox,
+                                                  24),
+                                              child: Container(
+                                                width:
+                                                    constraints.maxWidth > 750
+                                                        ? constraints.maxWidth -
+                                                            widthMenuBlock -
+                                                            (paddingBox * 2)
+                                                        : 500,
+                                                height: heightBox,
+                                                padding:
+                                                    const EdgeInsets.all(24),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: ColorTheme.item30(
+                                                          form.theme)),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(6)),
+                                                  color: ColorTheme.item40(
+                                                      form.theme),
+                                                ),
+                                                child:
+                                                    constraints.maxWidth > 940
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children:
+                                                                generalSettings(
+                                                                    context,
+                                                                    form,
+                                                                    isBoxNarrow),
+                                                          )
+                                                        : Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children:
+                                                                generalSettings(
+                                                                    context,
+                                                                    form,
+                                                                    isBoxNarrow),
+                                                          ),
+                                              ),
                                             ),
-                                            PrimaryButton(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      8, 0, 12, 0),
-                                              text: 'Agregar',
-                                              icon: Icons.add,
-                                              onPressed: () {
-                                                context
-                                                    .read<SetBlockCubit>()
-                                                    .addProprty(form);
-                                              },
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: paddingBox),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    'Propiedades',
+                                                    style: Typo.subtitle(
+                                                        form.theme),
+                                                  ),
+                                                  PrimaryButton(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(8, 0, 12, 0),
+                                                    text: 'Agregar',
+                                                    icon: Icons.add,
+                                                    onPressed: () {
+                                                      context
+                                                          .read<SetBlockCubit>()
+                                                          .addProprty(form);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: (paddingBox)),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        24, 16, 24, 8),
+                                                decoration: BoxDecoration(
+                                                  color: ColorTheme.item40(
+                                                      form.theme),
+                                                  border: Border(
+                                                    top: BorderSide(
+                                                        color:
+                                                            ColorTheme.item30(
+                                                                form.theme)),
+                                                    left: BorderSide(
+                                                        color:
+                                                            ColorTheme.item30(
+                                                                form.theme)),
+                                                    right: BorderSide(
+                                                        color:
+                                                            ColorTheme.item30(
+                                                                form.theme)),
+                                                  ),
+                                                  borderRadius:
+                                                      const BorderRadius
+                                                          .vertical(
+                                                          top: Radius.circular(
+                                                              6)),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        flex: 2,
+                                                        child: Text('Nombre',
+                                                            style: Typo.label(
+                                                                form.theme))),
+                                                    const SizedBox(width: 16),
+                                                    Expanded(
+                                                        flex: 1,
+                                                        child: Text('Propiedad',
+                                                            style: Typo.label(
+                                                                form.theme))),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            propertySetting(form, paddingBox),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  paddingBox,
+                                                  0,
+                                                  paddingBox,
+                                                  16),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                decoration: BoxDecoration(
+                                                    color: ColorTheme.item40(
+                                                        form.theme),
+                                                    border: Border.all(
+                                                        color:
+                                                            ColorTheme.item30(
+                                                                form.theme)),
+                                                    borderRadius:
+                                                        const BorderRadius
+                                                            .vertical(
+                                                            bottom:
+                                                                Radius.circular(
+                                                                    6))),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    PrimaryButton(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8),
+                                                      text: 'Guardar',
+                                                      onPressed: form.isChanged
+                                                          ? () {
+                                                              context
+                                                                  .read<
+                                                                      SetBlockCubit>()
+                                                                  .save(form);
+                                                            }
+                                                          : null,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: (paddingBox)),
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              24, 16, 24, 8),
-                                          decoration: const BoxDecoration(
-                                            color: ColorPalette.darkItems30,
-                                            border: Border(
-                                              top: BorderSide(
-                                                  color:
-                                                      ColorPalette.darkItems20),
-                                              left: BorderSide(
-                                                  color:
-                                                      ColorPalette.darkItems20),
-                                              right: BorderSide(
-                                                  color:
-                                                      ColorPalette.darkItems20),
-                                            ),
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(6)),
-                                          ),
-                                          child: const Row(
-                                            children: [
-                                              Expanded(
-                                                  flex: 2,
-                                                  child: Text('Nombre',
-                                                      style: Typo.labelLight)),
-                                              SizedBox(width: 16),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text('Propiedad',
-                                                      style: Typo.labelLight)),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxHeight: form.heightBoxProp),
-                                        child: ListView.builder(
-                                          itemCount: form.properties.length,
-                                          itemBuilder: (context, index) {
-                                            final SetBlockPropModel property =
-                                                form.properties[index];
-                                            List<DropdownMenuItem<Prop>>
-                                                itemList = [];
-                                            DropdownMenuItem<Prop> item;
-                                            for (Prop prop in Prop.values) {
-                                              item = DropdownMenuItem(
-                                                value: prop,
-                                                child: Text(
-                                                  PropertyModel.getTextToProp(
-                                                      prop),
-                                                ),
-                                              );
-                                              itemList.add(item);
-                                            }
-                                            return Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: paddingBox),
-                                              child: Container(
-                                                decoration: const BoxDecoration(
-                                                  color:
-                                                      ColorPalette.darkItems30,
-                                                  border: Border.symmetric(
-                                                    vertical: BorderSide(
-                                                        color: ColorPalette
-                                                            .darkItems20),
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          16, 0, 16, 16),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 2,
-                                                        child: PrimaryTextField(
-                                                          controller:
-                                                              property.ctrlProp,
-                                                          onChanged: (value) {
-                                                            form.isChanged =
-                                                                true;
-                                                            context
-                                                                .read<
-                                                                    SetBlockCubit>()
-                                                                .load();
-                                                          },
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 16),
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: SizedBox(
-                                                          height: 36,
-                                                          child:
-                                                              DropdownButtonFormField(
-                                                            dropdownColor:
-                                                                ColorPalette
-                                                                    .darkBackground,
-                                                            icon:
-                                                                const SizedBox(),
-                                                            style: Typo
-                                                                .system(0),
-                                                            decoration:
-                                                                const InputDecoration(
-                                                              contentPadding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              prefixIcon: Icon(
-                                                                Icons
-                                                                    .keyboard_arrow_down,
-                                                                color: ColorPalette
-                                                                    .lightText,
-                                                                size: 15,
-                                                              ),
-                                                              filled: true,
-                                                              fillColor:
-                                                                  ColorPalette
-                                                                      .filledLight,
-                                                              enabledBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              6)),
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                          color:
-                                                                              ColorPalette.darkItems10)),
-                                                              focusedBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              8)),
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                          color:
-                                                                              ColorPalette.lightItems10)),
-                                                            ),
-                                                            items: itemList,
-                                                            value: form
-                                                                .properties[
-                                                                    index]
-                                                                .property,
-                                                            onChanged: (value) {
-                                                              if (value !=
-                                                                  null) {
-                                                                context
-                                                                    .read<
-                                                                        SetBlockCubit>()
-                                                                    .selectProp(
-                                                                        form,
-                                                                        index,
-                                                                        value);
-                                                              }
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            paddingBox, 0, paddingBox, 16),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                              color: ColorPalette.darkItems30,
-                                              border: Border.all(
-                                                  color:
-                                                      ColorPalette.darkItems20),
-                                              borderRadius:
-                                                  const BorderRadius.vertical(
-                                                      bottom:
-                                                          Radius.circular(6))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              PrimaryButton(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8),
-                                                text: 'Guardar',
-                                                onPressed: form.isChanged
-                                                    ? () {
-                                                        context
-                                                            .read<
-                                                                SetBlockCubit>()
-                                                            .save(form);
-                                                      }
-                                                    : null,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ))),
-                      ],
-                    ))
-              ],
-            ),
-          ),
-        );
-      },
-    ));
+                                      ))),
+                            ],
+                          ))
+                    ],
+                  ),
+                ),
+              );
+            },
+          ));
   }
 
   List<Widget> generalSettings(
       BuildContext context, SetBlockFormModel form, bool isBoxNarrow) {
-    /*final String blockName = form.cBlock != null
-              ? (form.cBlock!.blockName == ''
-                  ? form.cBlock!.tableName
-                  : form.cBlock!.blockName)
-              : 'Loading...';*/
     return [
-      const SizedBox(
+      SizedBox(
         width: 150,
         child: Text(
           'Ajustes generales',
-          style: Typo.subtitleLight,
+          style: Typo.subtitle(form.theme),
         ),
       ),
       Visibility(
@@ -492,9 +403,10 @@ class SetBlockWidgetBuild extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Nombre del bloque', style: Typo.labelLight),
+            Text('Nombre del bloque', style: Typo.label(form.theme)),
             const SizedBox(height: 4),
             PrimaryTextField(
+              theme: form.theme,
               onChanged: (value) {
                 form.isChanged = true;
                 context.read<SetBlockCubit>().load();
@@ -506,4 +418,96 @@ class SetBlockWidgetBuild extends StatelessWidget {
       ),
     ];
   }
+
+  Widget propertySetting(SetBlockFormModel form, double paddingBox) =>
+      ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: form.heightBoxProp),
+        child: ListView.builder(
+          itemCount: form.properties.length,
+          itemBuilder: (context, index) {
+            final SetBlockPropModel property = form.properties[index];
+            List<DropdownMenuItem<Prop>> itemList = [];
+            DropdownMenuItem<Prop> item;
+            for (Prop prop in Prop.values) {
+              item = DropdownMenuItem(
+                value: prop,
+                child: Text(
+                  PropertyModel.getTextToProp(prop),
+                ),
+              );
+              itemList.add(item);
+            }
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: paddingBox),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: ColorTheme.item40(form.theme),
+                  border: Border.symmetric(
+                    vertical: BorderSide(color: ColorTheme.item30(form.theme)),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: PrimaryTextField(
+                          controller: property.ctrlProp,
+                          theme: form.theme,
+                          onChanged: (value) {
+                            form.isChanged = true;
+                            context.read<SetBlockCubit>().load();
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 36,
+                          child: DropdownButtonFormField(
+                            dropdownColor: ColorTheme.background(form.theme),
+                            icon: const SizedBox(),
+                            style: Typo.system(form.theme),
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              prefixIcon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: ColorTheme.text(form.theme),
+                                size: 15,
+                              ),
+                              filled: true,
+                              fillColor: ColorTheme.fill(form.theme),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(6)),
+                                  borderSide: BorderSide(
+                                      color: ColorTheme.item20(form.theme))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8)),
+                                  borderSide: BorderSide(
+                                      color: ColorTheme.item10(form.theme))),
+                            ),
+                            items: itemList,
+                            value: form.properties[index].property,
+                            onChanged: (value) {
+                              if (value != null) {
+                                context
+                                    .read<SetBlockCubit>()
+                                    .selectProp(form, index, value);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
 }
