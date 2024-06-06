@@ -261,6 +261,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                                         form.theme),
                                                   ),
                                                   PrimaryButton(
+                                                    theme: form.theme,
                                                     padding: const EdgeInsets
                                                         .fromLTRB(8, 0, 12, 0),
                                                     text: 'Agregar',
@@ -350,6 +351,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     PrimaryButton(
+                                                      theme: form.theme,
                                                       padding: const EdgeInsets
                                                           .symmetric(
                                                           horizontal: 8),

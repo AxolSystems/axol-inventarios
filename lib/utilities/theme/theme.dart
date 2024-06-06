@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class ColorPalette {
   static const primary = Color.fromARGB(255, 132, 114, 242);
-  static const primaryDark10 = Color.fromARGB(255, 98, 83, 197);
-  static const primaryDark20 = Color.fromARGB(255, 82, 69, 163);
-  static const secondary = Color(0xFF4649a8);
+  static const secondary = Color.fromARGB(255, 98, 83, 197);
+  static const secondaryDark = Color.fromARGB(255, 82, 69, 163);
+  //static const primaryLight10 = Color.fromARGB(255, 98, 83, 197);
+  static const secondaryLight = Color.fromARGB(255, 133, 121, 214);
+  //static const secondary = Color(0xFF4649a8);
   static const tertiary = Color(0xFFffa532);
   static const alternate = Color(0xFFed7098);
   static const darkBackground = Color.fromARGB(255, 32, 32, 32);
@@ -106,6 +108,28 @@ class ColorTheme {
         return ColorPalette.filled;
       default:
         return ColorPalette.filledLight;
+    }
+  }
+
+  static Color secondaryTheme(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.secondaryDark;
+      case 1:
+        return ColorPalette.secondaryLight;
+      default:
+        return ColorPalette.secondaryDark;
+    }
+  }
+
+  static Color eneabledButton(int theme) {
+    switch (theme) {
+      case 0:
+        return const Color.fromARGB(125, 0, 0, 0);
+      case 1:
+        return const Color.fromARGB(124, 255, 255, 255);
+      default:
+        return const Color.fromARGB(125, 0, 0, 0);
     }
   }
 }
