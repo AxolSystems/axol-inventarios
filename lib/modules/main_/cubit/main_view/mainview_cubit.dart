@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../axol_widget/axol_widget.dart';
+import '../../../axol_widget/table/model/table_cell_model.dart';
+import '../../../axol_widget/table/model/table_model.dart';
+import '../../../axol_widget/table/view/table_view.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
 import '../../model/modul_model.dart';
@@ -24,11 +27,45 @@ class MainViewCubit extends Cubit<MainViewState> {
           position: 0,
           menu: [],
           permissions: {},
-          widget: const TextAW(text: 'Modulo 1'),
+          widget: Expanded(
+              child: TableView(
+            table: TableModel(header: [
+              'Columna 0',
+              'Columna 1',
+              'Columna 2',
+              'Columna 3',
+            ], rowList: [
+              {
+                'Columna 0': CellText(text: 'test0'),
+                'Columna 3': CellText(text: 'test1'),
+              },
+              {
+                'Columna 1': CellText(text: 'test2'),
+                'Columna 2': CellText(text: 'test3'),
+              }
+            ]),
+          )),
           onPressed: () {
             if (form.moduleSelect != 0) {
               form.moduleSelect = 0;
-              form.body = const TextAW(text: 'Modulo 1');
+              form.body = Expanded(
+                  child: TableView(
+                table: TableModel(header: [
+                  'Clumna 0',
+                  'Columna 1',
+                  'Columna 2',
+                  'Columna 3',
+                ], rowList: [
+                  {
+                    'Clumna 0': CellText(text: 'test0'),
+                    'Clumna 3': CellText(text: 'test1'),
+                  },
+                  {
+                    'Clumna 1': CellText(text: 'test2'),
+                    'Clumna 2': CellText(text: 'test3'),
+                  }
+                ]),
+              ));
               form.title = 'Modulo de prueba';
             } else {
               form.menuVisible = !form.menuVisible;
@@ -81,7 +118,8 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
-  Future<void> setTheme(UserModel user, int theme, MainViewFormModel form) async {
+  Future<void> setTheme(
+      UserModel user, int theme, MainViewFormModel form) async {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
@@ -96,8 +134,6 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 }
-
-
 
 class MainViewForm extends Cubit<MainViewFormModel> {
   MainViewForm() : super(MainViewFormModel.empty());

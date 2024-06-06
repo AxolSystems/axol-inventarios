@@ -11,7 +11,7 @@ class ModuleModel {
   int position;
   List<EntryMenuModel> menu;
   Map permissions;
-  AxolWidget widget;
+  Widget widget;
   Function()? onPressed;
 
   ModuleModel({
