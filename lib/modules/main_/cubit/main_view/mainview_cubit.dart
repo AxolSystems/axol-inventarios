@@ -1,3 +1,5 @@
+import 'package:axol_inventarios/modules/block/model/block_model.dart';
+import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,7 @@ import '../../../axol_widget/axol_widget.dart';
 import '../../../axol_widget/table/model/table_cell_model.dart';
 import '../../../axol_widget/table/model/table_model.dart';
 import '../../../axol_widget/table/view/table_view.dart';
+import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
 import '../../model/modul_model.dart';
@@ -24,7 +27,6 @@ class MainViewCubit extends Cubit<MainViewState> {
           text: 'Modulo de prueba',
           id: '0',
           icon: Icons.home,
-          position: 0,
           menu: [],
           permissions: {},
           widget: Expanded(
@@ -77,7 +79,6 @@ class MainViewCubit extends Cubit<MainViewState> {
           text: 'Modulo 2',
           id: '1',
           icon: Icons.home,
-          position: 1,
           menu: [],
           permissions: {},
           widget: const TextAW(text: 'Modulo 2'),
@@ -99,6 +100,14 @@ class MainViewCubit extends Cubit<MainViewState> {
         form.title = form.moduleList.first.text;
       }
       form.user = await LocalUser().getLocalUser();
+      final List<ObjectModel> objList = await ObjectRepo.fetchObject(
+        BlockModel(
+            blockName: '', propertyList: [], tableName: 'table_1', uuid: ''),
+        [],
+      );
+      print(objList.first.id);
+      print(objList.first.map);
+      print(DateTime.parse(objList.first.dateTime).toLocal());
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());
