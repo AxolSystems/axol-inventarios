@@ -1,16 +1,15 @@
-class EntryMenuModel {
-  int value;
-  String text;
-  Function() onPressed;
+import '../../object/model/filter_obj_model.dart';
 
-  EntryMenuModel(
-      {required this.text, required this.value, required this.onPressed});
+class EntryMenuModel {
+  String text;
+  List<FilterObjModel> filterList;
+
+  EntryMenuModel({required this.text, required this.filterList});
 
   static EntryMenuModel empty() {
     return EntryMenuModel(
       text: '',
-      value: -1,
-      onPressed: () {},
+      filterList: [],
     );
   }
 }

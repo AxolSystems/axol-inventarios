@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 
 import '../../axol_widget/axol_widget.dart';
-import 'entry_menu_model.dart';
+import '../../widget_link/model/widgetlink_model.dart';
 
 class ModuleModel {
   String id;
-  String text;
+  String name;
   IconData icon;
-  List<EntryMenuModel> menu;
+  List<WidgetLinkModel> widgetLinks;
   Map permissions;
-  Widget widget;
   Function()? onPressed;
 
   ModuleModel({
-    required this.text,
+    required this.name,
     required this.id,
     required this.icon,
-    required this.menu,
+    required this.widgetLinks,
     required this.permissions,
-    required this.widget,
     this.onPressed,
   });
 
   ModuleModel.empty()
       : id = '',
-        text = '',
+        name = '',
         icon = Icons.square,
-        menu = [],
+        widgetLinks = [],
         permissions = {},
-        widget = const TextAW(text: ''),
         onPressed = null;
 }

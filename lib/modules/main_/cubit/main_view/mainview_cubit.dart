@@ -24,10 +24,10 @@ class MainViewCubit extends Cubit<MainViewState> {
 
       form.moduleList = [
         ModuleModel(
-          text: 'Modulo de prueba',
+          name: 'Modulo de prueba',
           id: '0',
           icon: Icons.home,
-          menu: [],
+          widgetLinks: [],
           permissions: {},
           widget: Expanded(
               child: TableView(
@@ -76,10 +76,10 @@ class MainViewCubit extends Cubit<MainViewState> {
           },
         ),
         ModuleModel(
-          text: 'Modulo 2',
+          name: 'Modulo 2',
           id: '1',
           icon: Icons.home,
-          menu: [],
+          widgetLinks: [],
           permissions: {},
           widget: const TextAW(text: 'Modulo 2'),
           onPressed: () {
@@ -97,7 +97,7 @@ class MainViewCubit extends Cubit<MainViewState> {
       if (form.moduleList.isNotEmpty) {
         form.moduleSelect = 0;
         form.body = form.moduleList.first.widget;
-        form.title = form.moduleList.first.text;
+        form.title = form.moduleList.first.name;
       }
       form.user = await LocalUser().getLocalUser();
       final List<ObjectModel> objList = await ObjectRepo.fetchObject(
@@ -107,7 +107,7 @@ class MainViewCubit extends Cubit<MainViewState> {
       );
       print(objList.first.id);
       print(objList.first.map);
-      print(DateTime.parse(objList.first.dateTime).toLocal());
+      print(DateTime.parse(objList.first.createAt).toLocal());
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());

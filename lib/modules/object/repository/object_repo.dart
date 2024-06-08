@@ -19,7 +19,7 @@ class ObjectRepo {
 
     if (filterList.isNotEmpty) {
       for (var flt in filterList) {
-        if (flt.filter == FilterObj.eq) {
+        if (flt.filter == FilterOperator.eq) {
           matchMap[flt.property.name] = flt.value;
         }
       }
@@ -38,7 +38,7 @@ class ObjectRepo {
         obj = ObjectModel(
           id: objDB[_id],
           map: objDB[_object],
-          dateTime: objDB[_createAt],
+          createAt: objDB[_createAt],
         );
         objList.add(obj);
       }

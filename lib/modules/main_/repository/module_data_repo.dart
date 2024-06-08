@@ -10,7 +10,7 @@ class DBModule {
  static String get menu => 'menu';
 }
 
-class IconsModel {
+class IconsModule {
   static IconData getIcon(int value) {
     switch (value) {
       case 0:

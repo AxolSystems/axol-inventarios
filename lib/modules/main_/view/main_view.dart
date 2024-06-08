@@ -8,7 +8,10 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
+import '../../axol_widget/widget_index.dart';
 import '../../block/view/setblock_widget.dart';
+import '../../widget_link/model/widget_view_model.dart';
+import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
 import '../cubit/main_view/mainview_state.dart';
 import '../model/main_view_form_model.dart';
@@ -153,7 +156,7 @@ class MainViewBuild extends StatelessWidget {
     final List<EntryMenuModel> entryList;
 
     if (select >= 0) {
-      entryList = moduleList[select].menu;
+      entryList = moduleList[select].widgetLinks;
     } else if (select == -1) {
       entryList = [
         EntryMenuModel(
@@ -201,7 +204,7 @@ class MainViewBuild extends StatelessWidget {
                       child: MainNavButton(
                         icon: module.icon,
                         isHover: select == index,
-                        text: module.text,
+                        text: module.name,
                         onPressed: module.onPressed,
                         menuVisible: menuVisible,
                         isModule: true,
@@ -314,6 +317,57 @@ class MainViewBuild extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget listMenu(List<WidgetLinkModel> widgetLinks, MainViewFormModel form) {
+    ScrollController scrollController = ScrollController();
+
+    return RawScrollbar(
+      controller: scrollController,
+      child: ListView.builder(
+        controller: scrollController,
+        itemCount: widgetLinks.length,
+        itemBuilder: (context, index) {
+          final WidgetLinkModel wl = widgetLinks[index];
+          return SizedBox(
+            child: Column(
+              children: [
+                SizedBox(
+                  child: Text(wl.block.blockName,
+                      style: Typo.system(form.user.theme)),
+                ),
+                ListView.builder(
+                  itemCount: wl.views.length,
+                  itemBuilder: (context, subIndex) {
+                    final WidgetViewModel view = wl.views[subIndex];
+                    return SizedBox(
+                      child: MainNavButton(
+                        text: view.name,
+                        theme: form.user.theme,
+                        menuVisible: form.menuVisible,
+                        isHover: form.menuSelect == subIndex,
+                        onPressed: () {
+                          /// Seguir aquí <<<<<----------
+                          if (form.moduleSelect != index) {
+                            form.moduleSelect = index;
+                            form.body = WidgetIndex.widget(wl.widget, WidgetIndex.data(wl.widget, objects, block));
+                            form.title = view.name;
+                          } else {
+                            form.menuVisible = !form.menuVisible;
+                          }
+                        },
+
+                        ///Que poner en onPressed <<<<-------
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

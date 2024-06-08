@@ -1,8 +1,11 @@
+import '../../block/model/block_model.dart';
+import 'widget_view_model.dart';
+
 class WidgetLinkModel {
   final String id;
-  final String block;
+  final BlockModel block;
   final int widget;
-  final Map<String, dynamic> views;
+  final List<WidgetViewModel> views;
 
   WidgetLinkModel({
     required this.id,
