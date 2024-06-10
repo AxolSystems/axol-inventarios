@@ -1,11 +1,10 @@
 import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
-import 'package:flutter/material.dart';
 
 import '../../user/model/user_mdoel.dart';
 import 'modul_model.dart';
 
 class MainViewFormModel {
-  Widget? body;
+  AxolWidget? body;
   int moduleSelect;
   int menuSelect;
   List<ModuleModel> moduleList;

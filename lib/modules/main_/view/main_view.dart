@@ -8,8 +8,6 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
-import '../../axol_widget/widget_index.dart';
-import '../../block/view/setblock_widget.dart';
 import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -59,90 +57,94 @@ class MainViewBuild extends StatelessWidget {
 
   Widget mainView(
       BuildContext context, bool isLoading, MainViewFormModel form) {
-    return Material(
-        child: Column(
-      children: [
-        Container(
-          height: 60,
-          decoration: BoxDecoration(
-              color: ColorTheme.background(form.user.theme),
-              border: Border(
-                  bottom:
-                      BorderSide(color: ColorTheme.item30(form.user.theme)))),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+    return isLoading == true
+        ? const Material(
+            child: SizedBox(),
+          )
+        : Material(
+            child: Column(
             children: [
-              SizedBox.square(
-                dimension: 60,
-                child: Material(
-                  color: Colors.transparent,
-                  type: MaterialType.circle,
-                  child: IconButton(
-                    splashRadius: 24,
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      form.moduleBarVisible = !form.moduleBarVisible;
-                      context.read<MainViewCubit>().load();
-                    },
-                    icon: const Icon(
-                      Icons.menu,
-                      color: ColorPalette.midleItems,
-                      size: 30,
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                    color: ColorTheme.background(form.user.theme),
+                    border: Border(
+                        bottom: BorderSide(
+                            color: ColorTheme.item30(form.user.theme)))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox.square(
+                      dimension: 60,
+                      child: Material(
+                        color: Colors.transparent,
+                        type: MaterialType.circle,
+                        child: IconButton(
+                          splashRadius: 24,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            form.moduleBarVisible = !form.moduleBarVisible;
+                            context.read<MainViewCubit>().load();
+                          },
+                          icon: const Icon(
+                            Icons.menu,
+                            color: ColorPalette.midleItems,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      form.title,
+                      style: Typo.titleLightH2,
+                    ),
+                    const Expanded(child: SizedBox()),
+                    Visibility(
+                      visible: isLoading,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox.square(
+                          dimension: 20,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                  child: Row(
+                children: [
+                  Visibility(
+                    visible: form.moduleBarVisible,
+                    child: moduleBar(
+                      context: context,
+                      form: form,
+                      select: form.moduleSelect,
+                      moduleList: form.moduleList,
+                      menuVisible: form.menuVisible,
+                      onPressedSetting: () {
+                        if (form.moduleSelect == -1) {
+                          form.menuVisible = !form.menuVisible;
+                        }
+                        form.moduleSelect = -1;
+                        form.title = 'Configuración';
+                        context.read<MainViewCubit>().load();
+                      },
                     ),
                   ),
-                ),
-              ),
-              Text(
-                form.title,
-                style: Typo.titleLightH2,
-              ),
-              const Expanded(child: SizedBox()),
-              Visibility(
-                visible: isLoading,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SizedBox.square(
-                    dimension: 20,
-                    child: CircularProgressIndicator(),
+                  BlocBuilder<MainViewForm, MainViewFormModel>(
+                    builder: (context, state) =>
+                        form.body ??
+                        Expanded(
+                            child: Container(
+                          color: ColorTheme.background(form.user.theme),
+                        )),
                   ),
-                ),
-              )
+                ],
+              ))
             ],
-          ),
-        ),
-        Expanded(
-            child: Row(
-          children: [
-            Visibility(
-              visible: form.moduleBarVisible,
-              child: moduleBar(
-                context: context,
-                form: form,
-                select: form.moduleSelect,
-                moduleList: form.moduleList,
-                menuVisible: form.menuVisible,
-                onPressedSetting: () {
-                  if (form.moduleSelect == -1) {
-                    form.menuVisible = !form.menuVisible;
-                  }
-                  form.moduleSelect = -1;
-                  form.title = 'Configuración';
-                  context.read<MainViewCubit>().load();
-                },
-              ),
-            ),
-            BlocBuilder<MainViewForm, MainViewFormModel>(
-              builder: (context, state) =>
-                  form.body ??
-                  Expanded(
-                      child: Container(
-                    color: ColorTheme.background(form.user.theme),
-                  )),
-            ),
-          ],
-        ))
-      ],
-    ));
+          ));
   }
 
   Widget moduleBar({
@@ -153,12 +155,13 @@ class MainViewBuild extends StatelessWidget {
     required bool menuVisible,
     Function()? onPressedSetting,
   }) {
-    final List<EntryMenuModel> entryList;
+    List<WidgetLinkModel> widgetLinks = [];
 
     if (select >= 0) {
-      entryList = moduleList[select].widgetLinks;
+      //entryList = moduleList[select].widgetLinks;
+      widgetLinks = moduleList[select].widgetLinks;
     } else if (select == -1) {
-      entryList = [
+      /*entryList = [
         EntryMenuModel(
           text: 'Bloques',
           value: 0,
@@ -177,9 +180,9 @@ class MainViewBuild extends StatelessWidget {
             context.read<MainViewCubit>().load();
           },
         ),
-      ];
+      ];*/
     } else {
-      entryList = [];
+      widgetLinks = [];
     }
 
     return Row(
@@ -295,23 +298,24 @@ class MainViewBuild extends StatelessWidget {
                         BorderSide(color: ColorTheme.item30(form.user.theme)))),
             child: Column(
               children: [
-                Expanded(
-                    child: ListView.builder(
-                  itemCount: entryList.length,
-                  itemBuilder: (context, index) {
-                    final EntryMenuModel entry = entryList[index];
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                      child: MainNavButton(
-                        text: entry.text,
-                        isHover: form.menuSelect == index,
-                        onPressed: entry.onPressed,
-                        menuVisible: menuVisible,
-                        theme: form.user.theme,
-                      ),
-                    );
-                  },
-                ))
+                Expanded(child: listMenu(widgetLinks, form)
+                    /*ListView.builder(
+                    itemCount: entryList.length,
+                    itemBuilder: (context, index) {
+                      final EntryMenuModel entry = entryList[index];
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                        child: MainNavButton(
+                          text: entry.text,
+                          isHover: form.menuSelect == index,
+                          onPressed: entry.onPressed,
+                          menuVisible: menuVisible,
+                          theme: form.user.theme,
+                        ),
+                      );
+                    },
+                  ),*/
+                    )
               ],
             ),
           ),
@@ -348,17 +352,10 @@ class MainViewBuild extends StatelessWidget {
                         menuVisible: form.menuVisible,
                         isHover: form.menuSelect == subIndex,
                         onPressed: () {
-                          /// Seguir aquí <<<<<----------
-                          if (form.moduleSelect != index) {
-                            form.moduleSelect = index;
-                            form.body = WidgetIndex.widget(wl.widget, WidgetIndex.data(wl.widget, objects, block));
-                            form.title = view.name;
-                          } else {
-                            form.menuVisible = !form.menuVisible;
-                          }
+                          context
+                              .read<MainViewCubit>()
+                              .setWidgetLink(form, index, wl, view);
                         },
-
-                        ///Que poner en onPressed <<<<-------
                       ),
                     );
                   },

@@ -19,6 +19,7 @@ class ModuleRepo {
     List<ModuleModel> moduleList = [];
     ModuleModel module;
     List<String> wlList = [];
+    List<String> carryList = [];
     List<WidgetLinkModel> widgetLinks;
     List<WidgetLinkModel> widgetLinksEntry;
     Map<String, List<String>> mapWlId = {};
@@ -32,18 +33,23 @@ class ModuleRepo {
     // con sus respectivos modulos.
     if (modulesDB.isNotEmpty) {
       for (var mDB in modulesDB) {
-        final Map<String, String> map = mDB[_widgetLink];
-        mapWlId[mDB[_id]] = map.values.toList();
+        final Map<String, dynamic> map = mDB[_widgetLink];
+        for (var value in map.values) {
+          if (value is String) {
+            carryList.add(value);
+          }
+        }
+        mapWlId[mDB[_id]] = carryList;
         for (String value in map.values) {
           if (wlList.indexWhere((x) => x == value) < 0) {
             wlList.add(value);
           }
         }
       }
-
+      print('flag0');
       // Obtiene todos los widgetlist enliastados.
       widgetLinks = await WidgetLinkRepo.fetchWidgetLik(wlList);
-
+      print('flag1');
       // Pasa los valores de los id de widgetLinks a modelos de datos de
       // widgetLinks en un nuevo map.
       for (String key in mapWlId.keys) {

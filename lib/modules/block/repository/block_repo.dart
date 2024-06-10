@@ -4,11 +4,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../model/block_model.dart';
 
 class BlockRepo {
-  static const String _table = 'block';
-  static const String _id = 'id';
-  static const String _tableName = 'table_name';
-  static const String _blockName = 'block_name';
-  static const String _property = 'property';
+  static const String table = 'block';
+  static const String id = 'id';
+  static const String tableName = 'table_name';
+  static const String blockName = 'block_name';
+  static const String property = 'property';
   static final _supabase = Supabase.instance.client;
 
   static Future<List<BlockModel>> fetchAllBlocks() async {
@@ -16,17 +16,17 @@ class BlockRepo {
     List<BlockModel> blockList = [];
     BlockModel block;
     blocksDB = await _supabase
-        .from(_table)
+        .from(table)
         .select<List<Map<String, dynamic>>>('*')
-        .order(_tableName, ascending: true);
+        .order(tableName, ascending: true);
 
     if (blocksDB.isNotEmpty) {
       for (var element in blocksDB) {
         block = BlockModel(
-          blockName: element[_blockName] ?? '',
-          propertyList: PropertyModel.mapToProperty(element[_property] ?? {}),
-          tableName: element[_tableName] ?? '',
-          uuid: element[_id].toString(),
+          blockName: element[blockName] ?? '',
+          propertyList: PropertyModel.mapToProperty(element[property] ?? {}),
+          tableName: element[tableName] ?? '',
+          uuid: element[id].toString(),
         );
         blockList.add(block);
       }
@@ -36,9 +36,9 @@ class BlockRepo {
   }
 
   static Future<void> update(BlockModel block) async {
-    await _supabase.from(_table).update({
-      _blockName: block.blockName,
-      _property: BlockModel.propsToMap(block.propertyList),
-    }).eq(_id, block.uuid);
+    await _supabase.from(table).update({
+      blockName: block.blockName,
+      property: BlockModel.propsToMap(block.propertyList),
+    }).eq(id, block.uuid);
   }
 }

@@ -12,4 +12,16 @@ class FilterObjModel {
     required this.value,
     required this.filter,
   });
+
+  static String get tProperty => 'property';
+  static String get tValue => 'value';
+  static String get tFilter => 'filter';
+
+  static List<FilterObjModel> mapToFilters(Map<String,dynamic> map) {
+    for (var value in map.values) {
+      if (value is Map<String,dynamic>) {
+        /// Seguir aquí <<<<-----
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
+import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../utilities/theme/theme.dart';
 
-class TableView extends StatelessWidget {
+class TableView extends AxolWidget {
   final Color? color;
   final TableModel table;
-  final int? theme;
-  const TableView({super.key, this.color, required this.table, this.theme});
+  const TableView({super.key, super.theme, this.color, required this.table});
 
   @override
   Widget build(BuildContext context) {

@@ -24,14 +24,19 @@ class TextAW extends AxolWidget {
       ),
     ));
   }
+}
 
-  static Widget textTest(int theme, String text) {
+class EmptyWidget extends AxolWidget {
+  const EmptyWidget({super.key, super.theme});
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
         child: Container(
-      color: ColorTheme.background(theme),
-      child: Center(
+      color: ColorTheme.background(theme ?? 0),
+      child: const Center(
         child: Text(
-          text,
+          'Widgen no detectado',
           style: Typo.bodyLight,
         ),
       ),

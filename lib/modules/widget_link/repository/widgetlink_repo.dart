@@ -1,5 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../block/model/block_model.dart';
+import '../../block/model/property_model.dart';
+import '../../block/repository/block_repo.dart';
 import '../model/widgetlink_model.dart';
 
 class WidgetLinkRepo {
@@ -15,16 +18,28 @@ class WidgetLinkRepo {
     List<Map<String, dynamic>> wlsDB;
     List<WidgetLinkModel> wlList = [];
     WidgetLinkModel wl;
+    BlockModel block = BlockModel.empty();
 
     wlsDB = await _supabase
         .from(_table)
-        .select<List<Map<String, dynamic>>>('*')
+        .select<List<Map<String, dynamic>>>('*, block:block(*)')
         .in_(_id, idList);
 
     if (wlsDB.isNotEmpty) {
       for (var wlDB in wlsDB) {
+        final dynamicBlock = wlDB[_block];
+        if (dynamicBlock is Map<String, dynamic> && dynamicBlock.isNotEmpty) {
+          print('flag0.1: ${dynamicBlock[BlockRepo.blockName].runtimeType}');
+          block = BlockModel(
+            blockName: dynamicBlock[BlockRepo.blockName].toString(),
+            propertyList: PropertyModel.mapToProperty(
+                dynamicBlock[BlockRepo.property] ?? {}),
+            tableName: dynamicBlock[BlockRepo.tableName],
+            uuid: dynamicBlock[BlockRepo.id],
+          );
+        }
         wl = WidgetLinkModel(
-          block: wlDB[_block],
+          block: block,
           id: wlDB[_id],
           widget: wlDB[_widget],
           views: wlDB[_views],
@@ -32,7 +47,7 @@ class WidgetLinkRepo {
         wlList.add(wl);
       }
     }
-
+    print('flag0.2');
     return wlList;
   }
 }

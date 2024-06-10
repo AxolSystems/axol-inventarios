@@ -1,17 +1,18 @@
+import 'package:axol_inventarios/modules/axol_widget/widget_index.dart';
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
+import 'package:axol_inventarios/modules/widget_link/model/widget_view_model.dart';
+import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../axol_widget/axol_widget.dart';
-import '../../../axol_widget/table/model/table_cell_model.dart';
-import '../../../axol_widget/table/model/table_model.dart';
-import '../../../axol_widget/table/view/table_view.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
 import '../../model/modul_model.dart';
+import '../../repository/module_repo.dart';
 import 'mainview_state.dart';
 
 class MainViewCubit extends Cubit<MainViewState> {
@@ -21,8 +22,14 @@ class MainViewCubit extends Cubit<MainViewState> {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
+      final List<ModuleModel> moduleList;
+      final ModuleModel module;
+      final AxolWidget axolWidget;
+      final List<ObjectModel> objects;
+      final WidgetLinkModel link;
+      final WidgetViewModel view;
 
-      form.moduleList = [
+      /*form.moduleList = [
         ModuleModel(
           name: 'Modulo de prueba',
           id: '0',
@@ -93,11 +100,25 @@ class MainViewCubit extends Cubit<MainViewState> {
             context.read<MainViewCubit>().load();
           },
         )
-      ];
-      if (form.moduleList.isNotEmpty) {
+      ];*/
+
+      moduleList = await ModuleRepo.fetchModuleList();
+
+      if (moduleList.isNotEmpty) {
+        module = moduleList[0];
+        if (module.widgetLinks.isNotEmpty) {
+          link = module.widgetLinks[0];
+          view = link.views[0];
+          objects = await ObjectRepo.fetchObject(link.block, view.filterList);
+          axolWidget = WidgetIndex.widget(
+              link.widget, WidgetIndex.data(link.widget, objects, link.block));
+          form.title = form.moduleList.first.name;
+        } else {
+          axolWidget = const EmptyWidget();
+        }
+        form.moduleList = moduleList;
         form.moduleSelect = 0;
-        form.body = form.moduleList.first.widget;
-        form.title = form.moduleList.first.name;
+        form.body = axolWidget;
       }
       form.user = await LocalUser().getLocalUser();
       final List<ObjectModel> objList = await ObjectRepo.fetchObject(
@@ -107,7 +128,7 @@ class MainViewCubit extends Cubit<MainViewState> {
       );
       print(objList.first.id);
       print(objList.first.map);
-      print(DateTime.parse(objList.first.createAt).toLocal());
+      //print(DateTime.parse(objList.first.createAt).toLocal());
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());
@@ -120,6 +141,30 @@ class MainViewCubit extends Cubit<MainViewState> {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
 
+      emit(LoadedMainViewState());
+    } catch (e) {
+      emit(InitialMainViewState());
+      emit(ErrorMainViewState(error: e.toString()));
+    }
+  }
+
+  Future<void> setWidgetLink(MainViewFormModel form, int index,
+      WidgetLinkModel link, WidgetViewModel view) async {
+    try {
+      emit(InitialMainViewState());
+      emit(LoadingMainViewState());
+      final List<ObjectModel> objects;
+
+      objects = await ObjectRepo.fetchObject(link.block, view.filterList);
+
+      if (form.moduleSelect != index) {
+        form.moduleSelect = index;
+        form.body = WidgetIndex.widget(
+            link.widget, WidgetIndex.data(link.widget, objects, link.block));
+        form.title = view.name;
+      } else {
+        form.menuVisible = !form.menuVisible;
+      }
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());

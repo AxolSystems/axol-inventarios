@@ -12,6 +12,12 @@ class BlockModel {
       required this.tableName,
       required this.uuid});
 
+  BlockModel.empty()
+      : uuid = '',
+        tableName = '',
+        blockName = '',
+        propertyList = [];
+
   BlockModel.setName(BlockModel block, this.blockName)
       : uuid = block.uuid,
         tableName = block.tableName,
@@ -25,7 +31,6 @@ class BlockModel {
             '${prop.name}~${PropertyModel.getIntToProp(prop.propertyType)}';
       }
     }
-
     return map;
   }
 }

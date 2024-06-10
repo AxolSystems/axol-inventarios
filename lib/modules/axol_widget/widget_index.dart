@@ -3,13 +3,14 @@ import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:flutter/widgets.dart';
 
+import 'axol_widget.dart';
 import 'table/model/table_model.dart';
 import 'table/view/table_view.dart';
 
 class WidgetIndex {
   static int get table => 0;
 
-  static Widget widget(int i, DataObject data) {
+  static AxolWidget widget(int i, DataObject data) {
     switch (i) {
       case 0:
         if (data is TableModel) {
@@ -18,7 +19,7 @@ class WidgetIndex {
           return TableView(table: TableModel.empty());
         }
       default:
-        return const SizedBox();
+        return const EmptyWidget();
     }
   }
 
