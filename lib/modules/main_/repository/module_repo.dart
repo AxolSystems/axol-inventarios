@@ -46,10 +46,8 @@ class ModuleRepo {
           }
         }
       }
-      print('flag0');
       // Obtiene todos los widgetlist enliastados.
       widgetLinks = await WidgetLinkRepo.fetchWidgetLik(wlList);
-      print('flag1');
       // Pasa los valores de los id de widgetLinks a modelos de datos de
       // widgetLinks en un nuevo map.
       for (String key in mapWlId.keys) {
@@ -71,7 +69,6 @@ class ModuleRepo {
         moduleList.add(module);
       }
     }
-
     return moduleList;
   }
 }

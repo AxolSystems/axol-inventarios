@@ -35,10 +35,11 @@ class ObjectRepo {
 
     if (objsDB.isNotEmpty) {
       for (var objDB in objsDB) {
+        print(objDB);
         obj = ObjectModel(
           id: objDB[_id],
           map: objDB[_object],
-          createAt: objDB[_createAt],
+          createAt: DateTime.parse(objDB[_createAt]),
         );
         objList.add(obj);
       }

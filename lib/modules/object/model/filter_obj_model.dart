@@ -17,11 +17,21 @@ class FilterObjModel {
   static String get tValue => 'value';
   static String get tFilter => 'filter';
 
-  static List<FilterObjModel> mapToFilters(Map<String,dynamic> map) {
+  static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {
+    /// Estrucutra map recibido:
+    /// {"n": {"property":int, "value":dynamic, "filter":int}}
+    List<FilterObjModel> filters = [];
+
     for (var value in map.values) {
-      if (value is Map<String,dynamic>) {
-        /// Seguir aquí <<<<-----
+      if (value is Map<String, dynamic>) {
+        filters.add(FilterObjModel(
+          property: value[tProperty],
+          value: value[tValue],
+          filter: value[tFilter],
+        ));
       }
     }
+
+    return filters;
   }
 }

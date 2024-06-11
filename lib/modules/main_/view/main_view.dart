@@ -208,7 +208,14 @@ class MainViewBuild extends StatelessWidget {
                         icon: module.icon,
                         isHover: select == index,
                         text: module.name,
-                        onPressed: module.onPressed,
+                        onPressed: () {
+                          if (form.moduleSelect == index) {
+                            form.menuVisible = !form.menuVisible;
+                          } else {
+                            form.moduleSelect = index;
+                          }
+                          context.read<MainViewCubit>().load();
+                        },
                         menuVisible: menuVisible,
                         isModule: true,
                         theme: form.user.theme,
@@ -330,35 +337,58 @@ class MainViewBuild extends StatelessWidget {
     return RawScrollbar(
       controller: scrollController,
       child: ListView.builder(
+        scrollDirection: Axis.vertical,
         controller: scrollController,
         itemCount: widgetLinks.length,
         itemBuilder: (context, index) {
           final WidgetLinkModel wl = widgetLinks[index];
-          return SizedBox(
+          final List<WidgetViewModel> viewList;
+          if (wl.views.isEmpty) {
+            viewList = [
+              WidgetViewModel(name: wl.block.blockName, filterList: [])
+            ];
+          } else {
+            viewList = wl.views;
+          }
+          /*if (form.linkSelect == -1) {
+            form.linkSelect = 0;
+          }*/
+
+          return Container(
+            color: Colors.amber,
+            height: (viewList.length * 30) + 30,
             child: Column(
               children: [
-                SizedBox(
+                Container(
+                  color: Colors.blue,
+                  height: 30,
                   child: Text(wl.block.blockName,
                       style: Typo.system(form.user.theme)),
                 ),
-                ListView.builder(
-                  itemCount: wl.views.length,
-                  itemBuilder: (context, subIndex) {
-                    final WidgetViewModel view = wl.views[subIndex];
-                    return SizedBox(
-                      child: MainNavButton(
-                        text: view.name,
-                        theme: form.user.theme,
-                        menuVisible: form.menuVisible,
-                        isHover: form.menuSelect == subIndex,
-                        onPressed: () {
-                          context
-                              .read<MainViewCubit>()
-                              .setWidgetLink(form, index, wl, view);
-                        },
-                      ),
-                    );
-                  },
+                Container(
+                  color: Colors.green,
+                  height: viewList.length * 30,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: viewList.length,
+                    itemBuilder: (context, subIndex) {
+                      final WidgetViewModel view = viewList[subIndex];
+                      return SizedBox(
+                        width: 30,
+                        child: MainNavButton(
+                          text: view.name,
+                          theme: form.user.theme,
+                          menuVisible: form.menuVisible,
+                          isHover: form.linkSelect == index && form.viewSelect == subIndex,
+                          onPressed: () {
+                            context
+                                .read<MainViewCubit>()
+                                .setWidgetLink(form, index, subIndex, wl, view);
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

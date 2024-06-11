@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../block/model/block_model.dart';
 import '../../block/model/property_model.dart';
 import '../../block/repository/block_repo.dart';
+import '../model/widget_view_model.dart';
 import '../model/widgetlink_model.dart';
 
 class WidgetLinkRepo {
@@ -29,7 +30,6 @@ class WidgetLinkRepo {
       for (var wlDB in wlsDB) {
         final dynamicBlock = wlDB[_block];
         if (dynamicBlock is Map<String, dynamic> && dynamicBlock.isNotEmpty) {
-          print('flag0.1: ${dynamicBlock[BlockRepo.blockName].runtimeType}');
           block = BlockModel(
             blockName: dynamicBlock[BlockRepo.blockName].toString(),
             propertyList: PropertyModel.mapToProperty(
@@ -42,12 +42,11 @@ class WidgetLinkRepo {
           block: block,
           id: wlDB[_id],
           widget: wlDB[_widget],
-          views: wlDB[_views],
+          views: WidgetViewModel.mapToViews(wlDB[_views]),
         );
         wlList.add(wl);
       }
     }
-    print('flag0.2');
     return wlList;
   }
 }

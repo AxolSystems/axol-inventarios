@@ -10,13 +10,16 @@ import 'table/view/table_view.dart';
 class WidgetIndex {
   static int get table => 0;
 
-  static AxolWidget widget(int i, DataObject data) {
+  static AxolWidget widget(int i, DataObject data, int theme) {
     switch (i) {
       case 0:
         if (data is TableModel) {
-          return TableView(table: data);
+          return TableView(table: data, theme: theme);
         } else {
-          return TableView(table: TableModel.empty());
+          return TableView(
+            table: TableModel.empty(),
+            theme: theme,
+          );
         }
       default:
         return const EmptyWidget();
@@ -26,9 +29,9 @@ class WidgetIndex {
   static DataObject data(int i, List<ObjectModel> objects, BlockModel block) {
     switch (i) {
       case 0:
-      return TableModel.dataObject(objects, block);
+        return TableModel.dataObject(objects, block);
       default:
-      return DefaultData();
+        return DefaultData();
     }
   }
 }

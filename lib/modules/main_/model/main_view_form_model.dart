@@ -6,7 +6,8 @@ import 'modul_model.dart';
 class MainViewFormModel {
   AxolWidget? body;
   int moduleSelect;
-  int menuSelect;
+  int linkSelect;
+  int viewSelect;
   List<ModuleModel> moduleList;
   bool moduleBarVisible;
   bool menuVisible;
@@ -20,14 +21,16 @@ class MainViewFormModel {
     required this.moduleBarVisible,
     required this.title,
     required this.menuVisible,
-    required this.menuSelect,
+    required this.linkSelect,
+    required this.viewSelect,
     required this.user,
   });
 
   MainViewFormModel.empty()
       : body = null,
         moduleSelect = 0,
-        menuSelect = -1,
+        linkSelect = 0,
+        viewSelect = 0,
         moduleList = [],
         moduleBarVisible = true,
         menuVisible = true,

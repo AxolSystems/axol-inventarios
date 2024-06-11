@@ -107,12 +107,19 @@ class MainViewCubit extends Cubit<MainViewState> {
       if (moduleList.isNotEmpty) {
         module = moduleList[0];
         if (module.widgetLinks.isNotEmpty) {
-          link = module.widgetLinks[0];
-          view = link.views[0];
+          link = module.widgetLinks.first;
+          if (link.views.isNotEmpty) {
+            view = link.views.first;
+          } else {
+            view = WidgetViewModel.empty();
+          }
+
           objects = await ObjectRepo.fetchObject(link.block, view.filterList);
           axolWidget = WidgetIndex.widget(
-              link.widget, WidgetIndex.data(link.widget, objects, link.block));
-          form.title = form.moduleList.first.name;
+              link.widget,
+              WidgetIndex.data(link.widget, objects, link.block),
+              form.user.theme);
+          form.title = moduleList.first.name;
         } else {
           axolWidget = const EmptyWidget();
         }
@@ -121,13 +128,14 @@ class MainViewCubit extends Cubit<MainViewState> {
         form.body = axolWidget;
       }
       form.user = await LocalUser().getLocalUser();
-      final List<ObjectModel> objList = await ObjectRepo.fetchObject(
+      /*final List<ObjectModel> objList = await ObjectRepo.fetchObject(
         BlockModel(
             blockName: '', propertyList: [], tableName: 'table_1', uuid: ''),
         [],
-      );
-      print(objList.first.id);
-      print(objList.first.map);
+      );*/
+
+      //print(objList.first.id);
+      //print(objList.first.map);
       //print(DateTime.parse(objList.first.createAt).toLocal());
       emit(LoadedMainViewState());
     } catch (e) {
@@ -148,7 +156,7 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
-  Future<void> setWidgetLink(MainViewFormModel form, int index,
+  Future<void> setWidgetLink(MainViewFormModel form, int index, int subIndex,
       WidgetLinkModel link, WidgetViewModel view) async {
     try {
       emit(InitialMainViewState());
@@ -156,14 +164,21 @@ class MainViewCubit extends Cubit<MainViewState> {
       final List<ObjectModel> objects;
 
       objects = await ObjectRepo.fetchObject(link.block, view.filterList);
-
-      if (form.moduleSelect != index) {
-        form.moduleSelect = index;
+      if (form.linkSelect != index) {
+        form.linkSelect = index;
         form.body = WidgetIndex.widget(
-            link.widget, WidgetIndex.data(link.widget, objects, link.block));
+            link.widget,
+            WidgetIndex.data(link.widget, objects, link.block),
+            form.user.theme);
         form.title = view.name;
-      } else {
-        form.menuVisible = !form.menuVisible;
+      }
+      if (form.viewSelect != subIndex) {
+        form.viewSelect = subIndex;
+        form.body = WidgetIndex.widget(
+            link.widget,
+            WidgetIndex.data(link.widget, objects, link.block),
+            form.user.theme);
+        form.title = view.name;
       }
       emit(LoadedMainViewState());
     } catch (e) {

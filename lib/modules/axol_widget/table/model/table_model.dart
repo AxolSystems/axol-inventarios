@@ -24,12 +24,12 @@ class TableModel extends DataObject {
     for (var prop in block.propertyList) {
       header.add(prop.name);
     }
-
     for (var obj in objects) {
       row = {};
+
       for (var key in obj.map.keys) {
         final Prop prop = block.propertyList
-            .firstWhere((x) => x.name == obj.map[key])
+            .firstWhere((x) => x.name == key)
             .propertyType;
         if (prop == Prop.text) {
           row[key] = CellText(text: obj.map[key]);
