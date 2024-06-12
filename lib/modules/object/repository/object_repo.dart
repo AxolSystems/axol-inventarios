@@ -10,6 +10,15 @@ class ObjectRepo {
   static const String _createAt = 'create_at';
   static final _supabase = Supabase.instance.client;
 
+  /// Obtiene una lista de objetos de la base de datos.
+  ///
+  /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filterList]. 
+  /// Si [filterList] no se enuectra vacía, realiza una busqueda filtrada; de lo contrario,
+  /// realiza una busqueda completa de la tabla referenciada. La tabla de la base de datos donde
+  /// se hará la busqueda es obtenida mediante [BlockModel.tableName].
+  /// 
+  /// Despues de la consulta convierte los datos obtenidos en una lista [ObjectModel].
+
   static Future<List<ObjectModel>> fetchObject(
       BlockModel block, List<FilterObjModel> filterList) async {
     List<Map<String, dynamic>> objsDB;
@@ -35,7 +44,6 @@ class ObjectRepo {
 
     if (objsDB.isNotEmpty) {
       for (var objDB in objsDB) {
-        print(objDB);
         obj = ObjectModel(
           id: objDB[_id],
           map: objDB[_object],
