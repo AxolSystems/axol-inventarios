@@ -14,19 +14,20 @@ class TableCubit extends Cubit<TableState> {
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
-      emit(ErrorSetBlockState(error: e.toString()));
+      emit(ErrorTableState(error: e.toString()));
     }
   }
 
   Future<void> initLoad(TableFormModel form, int theme) async {
     try {
       emit(InitialTableState());
-      emit(LoadingTableState());
       form.theme = theme;
+      emit(LoadingTableState());
+
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
-      emit(ErrorSetBlockState(error: e.toString()));
+      emit(ErrorTableState(error: e.toString()));
     }
   }
 }

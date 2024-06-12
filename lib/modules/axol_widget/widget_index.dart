@@ -14,11 +14,11 @@ class WidgetIndex {
     switch (i) {
       case 0:
         if (data is TableModel) {
-          return TableView(table: data, theme: theme);
+          return TableView(table: data, themes: theme);
         } else {
           return TableView(
             table: TableModel.empty(),
-            theme: theme,
+            themes: theme,
           );
         }
       default:

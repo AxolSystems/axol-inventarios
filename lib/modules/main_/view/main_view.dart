@@ -8,6 +8,8 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
+import '../../axol_widget/table/model/table_model.dart';
+import '../../axol_widget/table/view/table_view.dart';
 import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -379,7 +381,8 @@ class MainViewBuild extends StatelessWidget {
                           text: view.name,
                           theme: form.user.theme,
                           menuVisible: form.menuVisible,
-                          isHover: form.linkSelect == index && form.viewSelect == subIndex,
+                          isHover: form.linkSelect == index &&
+                              form.viewSelect == subIndex,
                           onPressed: () {
                             context
                                 .read<MainViewCubit>()

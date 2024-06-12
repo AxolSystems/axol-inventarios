@@ -14,7 +14,9 @@ import '../model/table_form_model.dart';
 class TableView extends AxolWidget {
   final Color? color;
   final TableModel table;
-  const TableView({super.key, super.theme, this.color, required this.table});
+  final int themes;
+  const TableView(
+      {super.key, required this.themes, this.color, required this.table});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,8 @@ class TableView extends AxolWidget {
       providers: [
         BlocProvider(create: (_) => TableCubit()),
         BlocProvider(create: (_) => TableForm()),
-        BlocProvider(create: (_) => MainViewCubit()),
       ],
-      child: TableViewBuild(table: table, color: color, theme: theme),
+      child: TableViewBuild(table: table, color: color, themes: themes),
     );
   }
 }
@@ -32,8 +33,9 @@ class TableView extends AxolWidget {
 class TableViewBuild extends AxolWidget {
   final Color? color;
   final TableModel table;
+  final int themes;
   const TableViewBuild(
-      {super.key, super.theme, this.color, required this.table});
+      {super.key, required this.themes, this.color, required this.table});
 
   @override
   Widget build(BuildContext context) {
@@ -42,35 +44,35 @@ class TableViewBuild extends AxolWidget {
       listener: (context, state) {
         if (state is SetThemeMainViewState) {
           form.theme = state.theme;
-          context.read<TableCubit>().load();
           print('state: ${state.theme}');
+          context.read<TableCubit>().load();
         }
+
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()..initLoad(form, theme ?? 0),
+        bloc: context.read<TableCubit>()..initLoad(form, themes),
         listener: (context, state) {},
         builder: (context, state) {
           if (state is LoadingTableState) {
-            return tableView(true, form.theme);
+            return tableView(context, true, form);
           } else if (state is LoadedTableState) {
-            return tableView(false, form.theme);
+            return tableView(context, false, form);
           } else {
-            return tableView(false, form.theme);
+            return tableView(context, false, form);
           }
         },
       ),
     );
   }
 
-  Widget tableView(bool isLoading, int theme_) {
-    print('Tema: $theme_');
+  Widget tableView(BuildContext context, isLoading, TableFormModel form) {
     return Expanded(
         child: Container(
       color: color ?? Colors.amber,
       child: Column(
         children: [
           Row(
-            children: headerWidget(table.header, theme_),
+            children: headerWidget(table.header, form),
           ),
           Expanded(
             child: ListView.builder(
@@ -79,7 +81,7 @@ class TableViewBuild extends AxolWidget {
               itemBuilder: (context, index) {
                 final row = table.rowList[index];
                 return Row(
-                  children: rowWidget(theme_, row, table.header),
+                  children: rowWidget(context, form, row, table.header),
                 );
               },
             ),
@@ -89,22 +91,22 @@ class TableViewBuild extends AxolWidget {
     ));
   }
 
-  List<Widget> headerWidget(List<String> headerTitles, int theme_) {
+  List<Widget> headerWidget(List<String> headerTitles, TableFormModel form) {
     List<Widget> widgetList = [];
     Widget widget;
     for (var element in headerTitles) {
       widget = SizedBox(
         height: 30,
         width: 100,
-        child: Text(element, style: Typo.subtitle(theme_)),
+        child: Text(element, style: Typo.subtitle(form.theme)),
       );
       widgetList.add(widget);
     }
     return widgetList;
   }
 
-  List<Widget> rowWidget(
-      int theme_, Map<String, TableCellModel> tableRow, List<String> header) {
+  List<Widget> rowWidget(BuildContext context, TableFormModel form,
+      Map<String, TableCellModel> tableRow, List<String> header) {
     List<Widget> widgetList = [];
     Widget widget;
 
@@ -115,7 +117,7 @@ class TableViewBuild extends AxolWidget {
           widget = SizedBox(
             height: 30,
             width: 100,
-            child: Text(cell.text, style: Typo.body(theme_)),
+            child: Text(cell.text, style: Typo.body(form.theme)),
           );
         } else {
           widget = const SizedBox(

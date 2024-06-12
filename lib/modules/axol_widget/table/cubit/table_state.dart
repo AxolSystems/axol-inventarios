@@ -19,9 +19,9 @@ class LoadedTableState extends TableState {
   List<Object?> get props => [];
 }
 
-class ErrorSetBlockState extends TableState {
+class ErrorTableState extends TableState {
   final String error;
-  const ErrorSetBlockState({required this.error});
+  const ErrorTableState({required this.error});
   @override
   String toString() => 'Error: $error';
   @override
