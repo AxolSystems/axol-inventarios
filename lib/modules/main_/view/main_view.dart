@@ -10,6 +10,7 @@ import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
 import '../../axol_widget/table/model/table_model.dart';
 import '../../axol_widget/table/view/table_view.dart';
+import '../../axol_widget/widget_index.dart';
 import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -39,6 +40,11 @@ class MainViewBuild extends StatelessWidget {
     return BlocConsumer<MainViewCubit, MainViewState>(
       bloc: context.read<MainViewCubit>()..initLoad(context, form),
       builder: (context, state) {
+        form.body = WidgetIndex.widget(
+            form.widgetLink.widget,
+            WidgetIndex.data(
+                form.widgetLink.widget, form.objects, form.widgetLink.block),
+            form.user.theme);
         if (state is LoadingMainViewState) {
           return mainView(context, true, form);
         } else if (state is LoadedMainViewState) {
@@ -59,6 +65,8 @@ class MainViewBuild extends StatelessWidget {
 
   Widget mainView(
       BuildContext context, bool isLoading, MainViewFormModel form) {
+    print(form.body.runtimeType);
+
     return isLoading == true
         ? const Material(
             child: SizedBox(),
@@ -135,14 +143,19 @@ class MainViewBuild extends StatelessWidget {
                       },
                     ),
                   ),
-                  BlocBuilder<MainViewForm, MainViewFormModel>(
+                  form.body ??
+                      Expanded(
+                          child: Container(
+                        color: ColorTheme.background(form.user.theme),
+                      )),
+                  /*BlocBuilder<MainViewForm, MainViewFormModel>(
                     builder: (context, state) =>
                         form.body ??
                         Expanded(
                             child: Container(
                           color: ColorTheme.background(form.user.theme),
                         )),
-                  ),
+                  ),*/
                 ],
               ))
             ],

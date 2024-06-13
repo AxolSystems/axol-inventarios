@@ -106,7 +106,10 @@ class MainViewCubit extends Cubit<MainViewState> {
 
       if (moduleList.isNotEmpty) {
         module = moduleList[0];
+        print(form.viewSelect);
+        print(form.linkSelect);
         if (module.widgetLinks.isNotEmpty) {
+          print('111');
           link = module.widgetLinks.first;
           if (link.views.isNotEmpty) {
             view = link.views.first;
@@ -115,17 +118,23 @@ class MainViewCubit extends Cubit<MainViewState> {
           }
 
           objects = await ObjectRepo.fetchObject(link.block, view.filterList);
-          axolWidget = WidgetIndex.widget(
+          /*axolWidget = WidgetIndex.widget(
               link.widget,
               WidgetIndex.data(link.widget, objects, link.block),
-              form.user.theme);
+              form.user.theme);*/
           form.title = moduleList.first.name;
         } else {
-          axolWidget = const EmptyWidget();
+          print('222');
+          //axolWidget = const EmptyWidget();
+          link = WidgetLinkModel.empty();
+          objects = [];
         }
         form.moduleList = moduleList;
         form.moduleSelect = 0;
-        form.body = axolWidget;
+        form.widgetLink = link;
+        form.objects = objects;
+
+        //form.body = axolWidget;
       }
       form.user = await LocalUser().getLocalUser();
       /*final List<ObjectModel> objList = await ObjectRepo.fetchObject(
@@ -166,18 +175,22 @@ class MainViewCubit extends Cubit<MainViewState> {
       objects = await ObjectRepo.fetchObject(link.block, view.filterList);
       if (form.linkSelect != index) {
         form.linkSelect = index;
-        form.body = WidgetIndex.widget(
+        form.widgetLink = link;
+        form.objects = objects;
+        /*form.body = WidgetIndex.widget(
             link.widget,
             WidgetIndex.data(link.widget, objects, link.block),
-            form.user.theme);
+            form.user.theme);*/
         form.title = view.name;
       }
       if (form.viewSelect != subIndex) {
         form.viewSelect = subIndex;
-        form.body = WidgetIndex.widget(
+        form.widgetLink = link;
+        form.objects = objects;
+        /*form.body = WidgetIndex.widget(
             link.widget,
             WidgetIndex.data(link.widget, objects, link.block),
-            form.user.theme);
+            form.user.theme);*/
         form.title = view.name;
       }
       emit(LoadedMainViewState());

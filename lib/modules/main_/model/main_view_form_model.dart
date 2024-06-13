@@ -1,5 +1,7 @@
 import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
+import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 
+import '../../object/model/object_model.dart';
 import '../../user/model/user_mdoel.dart';
 import 'modul_model.dart';
 
@@ -13,6 +15,8 @@ class MainViewFormModel {
   bool menuVisible;
   String title;
   UserModel user;
+  List<ObjectModel> objects;
+  WidgetLinkModel widgetLink;
 
   MainViewFormModel({
     required this.body,
@@ -24,6 +28,8 @@ class MainViewFormModel {
     required this.linkSelect,
     required this.viewSelect,
     required this.user,
+    required this.objects,
+    required this.widgetLink,
   });
 
   MainViewFormModel.empty()
@@ -35,5 +41,7 @@ class MainViewFormModel {
         moduleBarVisible = true,
         menuVisible = true,
         title = '',
-        user = UserModel.empty();
+        user = UserModel.empty(),
+        objects = [],
+        widgetLink = WidgetLinkModel.empty();
 }

@@ -13,4 +13,9 @@ class WidgetLinkModel {
     required this.widget,
     required this.views,
   });
+  WidgetLinkModel.empty()
+      : id = '',
+        block = BlockModel.empty(),
+        widget = -1,
+        views = [];
 }
