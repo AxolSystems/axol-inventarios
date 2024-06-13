@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
 import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,8 @@ import '../cubit/setblock_cubit.dart';
 import '../cubit/setblock_state.dart';
 import '../model/setblock_form_model.dart';
 
-class SetBlockWidget extends StatelessWidget {
-  final int theme;
-  const SetBlockWidget({super.key, required this.theme});
+class SetBlockWidget extends AxolWidget {
+  const SetBlockWidget({super.key, required super.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class SetBlockWidget extends StatelessWidget {
         BlocProvider(create: (_) => SetBlockCubit()),
         BlocProvider(create: (_) => SetBlockForm()),
       ],
-      child: SetBlockWidgetBuild(theme: theme),
+      child: SetBlockWidgetBuild(theme: theme ?? 0),
     );
   }
 }
@@ -37,12 +37,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
   Widget build(BuildContext context) {
     SetBlockFormModel form = context.read<SetBlockForm>().state;
     return BlocListener<MainViewCubit, MainViewState>(
-      listener: (context, state) {
-        if (state is SetThemeMainViewState) {
-          form.theme = state.theme;
-          context.read<SetBlockCubit>().load();
-        }
-      },
+      listener: (context, state) {},
       child: BlocConsumer<SetBlockCubit, SetBlockState>(
         bloc: context.read<SetBlockCubit>()..initLoad(form, theme),
         listener: (context, state) {
@@ -94,7 +89,15 @@ class SetBlockWidgetBuild extends StatelessWidget {
               children: [LinearProgressIndicatorAxol()],
             ),
           ))
-        : Expanded(child: LayoutBuilder(
+        : BlocListener<MainViewCubit, MainViewState>(
+            listener: (context, state) {
+              print('state: ${state.runtimeType}');
+            if (state is SetThemeMainViewState) {
+              form.theme = state.theme;
+              context.read<SetBlockCubit>().load();
+              print('( ͡❛ ͜ʖ ͡❛)');
+            }
+          }, child: Expanded(child: LayoutBuilder(
             builder: (context, constraints) {
               final double paddingBox;
               final double heightBox;
@@ -379,7 +382,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                 ),
               );
             },
-          ));
+          )));
   }
 
   List<Widget> generalSettings(
