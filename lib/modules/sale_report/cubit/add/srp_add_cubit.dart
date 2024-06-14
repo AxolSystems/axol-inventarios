@@ -5,7 +5,7 @@ import '../../../../models/data_response_model.dart';
 import '../../../../models/inventory_row_model.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../inventory_/inventory/repository/inventory_repo.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/salereport_model.dart';
 import '../../model/srp_add_form_model.dart';

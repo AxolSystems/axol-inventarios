@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/providers.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../model/customer_model.dart';
 
 class CustomerDrawerDetails extends StatelessWidget {

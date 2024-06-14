@@ -9,7 +9,7 @@ import '../../../../inventory_/movements/model/movement_model.dart';
 import '../../../../inventory_/movements/repository/movement_repo.dart';
 import '../../../../inventory_/product/model/product_model.dart';
 import '../../../../inventory_/product/repository/product_repo.dart';
-import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/model/user_model.dart';
 import '../../../../user/repository/user_repo.dart';
 import '../../model/sale_note_model.dart';
 import '../../repository/sale_note_repo.dart';

@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../inventory_/inventory/model/warehouse_model.dart';
 import '../../../inventory_/inventory/repository/warehouses_repo.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../../user/repository/user_repo.dart';
 import 'srp_warehouse_tab_state.dart';
 

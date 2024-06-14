@@ -13,7 +13,7 @@ import '../../../../models/textfield_model.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../cubit/customer_tab/customer_tab_cubit.dart';
 import '../cubit/customer_tab/customer_tab_state.dart';
 import '../model/customer_model.dart';

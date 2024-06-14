@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../models/data_response_model.dart';
 import '../../../../../models/inventory_row_model.dart';
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
-import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/model/user_model.dart';
 import '../../../../user/repository/user_repo.dart';
 import '../../model/warehouse_model.dart';
 import '../../repository/inventory_repo.dart';

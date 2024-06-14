@@ -1,7 +1,7 @@
 import 'package:axol_inventarios/modules/sale/vendor/model/vendor_model.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/model/user_model.dart';
 
 abstract class VendorTabState extends Equatable {
   const VendorTabState();

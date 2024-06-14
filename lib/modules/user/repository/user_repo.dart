@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../model/user_mdoel.dart';
+import '../model/user_model.dart';
 
 abstract class UserRepo {
   static const String _table = 'users';

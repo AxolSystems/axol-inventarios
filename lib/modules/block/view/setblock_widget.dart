@@ -91,11 +91,9 @@ class SetBlockWidgetBuild extends StatelessWidget {
           ))
         : BlocListener<MainViewCubit, MainViewState>(
             listener: (context, state) {
-              print('state: ${state.runtimeType}');
             if (state is SetThemeMainViewState) {
               form.theme = state.theme;
               context.read<SetBlockCubit>().load();
-              print('( ͡❛ ͜ʖ ͡❛)');
             }
           }, child: Expanded(child: LayoutBuilder(
             builder: (context, constraints) {

@@ -7,7 +7,7 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/loading_indicator/shimmer_indicator.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../customer/model/customer_model.dart';
 import '../cubit/salenote_details/salenote_details_cubit.dart';
 import '../cubit/salenote_details/salenote_details_state.dart';

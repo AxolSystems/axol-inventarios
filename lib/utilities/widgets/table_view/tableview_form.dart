@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/textfield_model.dart';
-import '../../../modules/user/model/user_mdoel.dart';
+import '../../../modules/user/model/user_model.dart';
 
 class TableViewFormModel {
   TextfieldModel finder;

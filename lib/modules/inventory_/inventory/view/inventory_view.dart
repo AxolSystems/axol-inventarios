@@ -7,7 +7,7 @@ import '../../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../movements/cubit/movements_view/movements_cubit.dart';
 import '../../movements/view/movement_tab.dart';
 import '../../product/cubit/product_tab/product_tab_cubit.dart';

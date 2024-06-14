@@ -4,7 +4,7 @@ import 'package:axol_inventarios/modules/sale/customer/repository/customer_repo.
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/widgets/table_view/tableview_form.dart';
-import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/model/user_model.dart';
 import '../../../../user/repository/user_repo.dart';
 import 'customer_tab_state.dart';
 

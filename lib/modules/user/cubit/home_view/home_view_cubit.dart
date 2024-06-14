@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../model/user_mdoel.dart';
+import '../../model/user_model.dart';
 import '../../repository/user_repo.dart';
 import 'home_view_state.dart';
 

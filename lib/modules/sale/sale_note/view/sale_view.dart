@@ -8,7 +8,7 @@ import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../customer/view/customer_tab.dart';
 import '../cubit/sale_view/sale_view_cubit.dart';
 import '../cubit/sale_view/sale_view_state.dart';

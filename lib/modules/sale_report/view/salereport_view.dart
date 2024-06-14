@@ -7,7 +7,7 @@ import '../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../utilities/widgets/appbar_axol/leading_appbar_axol.dart';
 import '../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
-import '../../user/model/user_mdoel.dart';
+import '../../user/model/user_model.dart';
 import '../cubit/salereport_view/salereport_view_cubit.dart';
 import '../cubit/salereport_view/salereport_view_state.dart';
 import 'srp_doclist_tab.dart';

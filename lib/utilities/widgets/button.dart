@@ -313,7 +313,7 @@ class MainNavButton extends StatelessWidget {
               if (states.contains(WidgetState.hovered) || (isHover ?? false)) {
                 return ColorTheme.text(theme);
               } else {
-                return ColorPalette.midleItems;
+                return ColorPalette.middleItems;
               }
             }),
             textStyle: WidgetStateProperty.all(Typo.systemDark),

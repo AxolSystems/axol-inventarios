@@ -13,7 +13,7 @@ import '../../../../inventory_/inventory/repository/warehouses_repo.dart';
 import '../../../../inventory_/movements/model/movement_model.dart';
 import '../../../../inventory_/movements/repository/movement_repo.dart';
 import '../../../../inventory_/product/model/product_model.dart';
-import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/model/user_model.dart';
 import '../../../../user/repository/user_repo.dart';
 import '../../../customer/model/customer_model.dart';
 import '../../../customer/repository/customer_repo.dart';

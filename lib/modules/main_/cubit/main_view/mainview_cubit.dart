@@ -1,7 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/widget_index.dart';
-import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
-import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
+import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widget_view_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +11,21 @@ import '../../../block/view/setblock_widget.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
-import '../../model/modul_model.dart';
+import '../../model/module_model.dart';
 import '../../repository/module_repo.dart';
 import 'mainview_state.dart';
 
 class MainViewCubit extends Cubit<MainViewState> {
   MainViewCubit() : super(InitialMainViewState());
 
+  /// Lógica inicial al construir MainView.
+  /// 
+  /// 1. Obtiene datos locales del usuario y guarda [MainViewFormModel.user].
+  /// 2. Busca en [ModuleRepo] lista de módulos.
+  /// 3. Si lista de módulos no se encuentra vacía, y contiene links y views,
+  /// selecciona primer view de la lista para mostrar su widget. 
+  /// 4. Busca objetos relacionados a widgetLink.
+  /// 5. Guarda y actualiza datos obtenidos en [form].
   Future<void> initLoad(BuildContext context, MainViewFormModel form) async {
     try {
       emit(InitialMainViewState());
@@ -29,6 +36,8 @@ class MainViewCubit extends Cubit<MainViewState> {
       final List<ObjectModel> objects;
       final WidgetLinkModel link;
       final WidgetViewModel view;
+
+      form.user = await LocalUser().getLocalUser();
 
       moduleList = await ModuleRepo.fetchModuleList();
 
@@ -55,12 +64,8 @@ class MainViewCubit extends Cubit<MainViewState> {
         }
         form.moduleList = moduleList;
         form.moduleSelect = 0;
-        //form.widgetLink = link;
-        //form.objects = objects;
-
         form.body = axolWidget;
       }
-      form.user = await LocalUser().getLocalUser();
 
       emit(LoadedMainViewState());
     } catch (e) {
@@ -69,6 +74,7 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
+  /// Función para recargar MainView. 
   Future<void> load() async {
     try {
       emit(InitialMainViewState());
@@ -81,6 +87,11 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
+  /// Lógica para cambio de widgetLink.
+  /// 
+  /// 1. Busca objetos mediante view seleccionado.
+  /// 2. Si widgetLink o widgetView anterior son diferentes al actual seleccionado,
+  /// actualiza widget y titulo. 
   Future<void> setWidgetLink(
       MainViewFormModel form, int indexLink, int indexView) async {
     try {
@@ -118,6 +129,11 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
+  /// Lógica de cambio de módulos.
+  /// 
+  /// 1. Obtiene link y view de [form] según el modulo seleccionado.
+  /// 2. Busca en [ObjectRepo] los objetos indicados por link y view.
+  /// 3. Actualiza datos de [form]. 
   Future<void> setModule(MainViewFormModel form, int indexModule) async {
     try {
       emit(InitialMainViewState());
@@ -131,21 +147,19 @@ class MainViewCubit extends Cubit<MainViewState> {
         form.moduleSelect = indexModule;
         module = form.moduleList[indexModule];
         if (module.widgetLinks.isNotEmpty) {
-          link = module.widgetLinks[indexLink];
+          link = module.widgetLinks.first;
           if (link.views.isNotEmpty) {
-            view = link.views[indexView];
+            view = link.views.first;
           } else {
             view = WidgetViewModel.empty();
           }
           objects = await ObjectRepo.fetchObject(link.block, view.filterList);
-          if (form.linkSelect != indexLink || form.viewSelect != indexView) {
-            form.linkSelect = indexLink;
-            form.viewSelect = indexView;
-            form.body = WidgetIndex.widget(
-                link.widget,
-                WidgetIndex.data(link.widget, objects, link.block),
-                form.user.theme);
-          }
+          form.linkSelect = 0;
+          form.viewSelect = 0;
+          form.body = WidgetIndex.widget(
+              link.widget,
+              WidgetIndex.data(link.widget, objects, link.block),
+              form.user.theme);
           form.title = module.name;
         }
       }
@@ -157,6 +171,7 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
+  /// Carga el widget para configurar bloques desde [SetBlockWidget].
   Future<void> setSetting(MainViewFormModel form, int linkSelect) async {
     try {
       emit(InitialMainViewState());
@@ -171,16 +186,17 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
+  /// Actualiza el tema seleccionado. 
   Future<void> setTheme(
       UserModel user, int theme, MainViewFormModel form) async {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
-      UserModel userx;
+      
       await DatabaseUser().updateTheme(user.id, theme);
       await LocalUser().setTheme(theme);
-      userx = await LocalUser().getLocalUser();
-      form.user = userx;
+      form.user = await LocalUser().getLocalUser();
+
       emit(LoadedMainViewState());
       emit(SetThemeMainViewState(theme: theme));
       emit(LoadedMainViewState());

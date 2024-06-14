@@ -21,7 +21,7 @@ class ColorPalette {
   static const darkItems30 = Color.fromARGB(255, 69, 69, 69);
   static const darkItems20 = Color.fromARGB(255, 92, 92, 92);
   static const darkItems10 = Color.fromARGB(255, 115, 115, 115);
-  static const midleItems = Color.fromARGB(255, 141, 141, 141);
+  static const middleItems = Color.fromARGB(255, 141, 141, 141);
   static const lightItems10 = Color.fromARGB(255, 167, 167, 167);
   static const lightItems20 = Color.fromARGB(255, 190, 190, 190);
   static const lightItems30 = Color.fromARGB(255, 213, 213, 213);
@@ -305,7 +305,7 @@ class Typo {
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
       fontSize: 14,
-      color: ColorPalette.midleItems);
+      color: ColorPalette.middleItems);
 
   //Button mobile
   static const mobileLigth20 = TextStyle(

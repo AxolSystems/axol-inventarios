@@ -11,7 +11,7 @@ import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../cubit/product_tab/product_tab_cubit.dart';
 import '../cubit/product_tab/product_tab_state.dart';
 import '../model/product_model.dart';

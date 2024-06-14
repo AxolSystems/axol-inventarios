@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/drawer_box.dart';
-import '../../user/model/user_mdoel.dart';
+import '../../user/model/user_model.dart';
 import '../cubit/list_details/wb_list_details_cubit.dart';
 import '../cubit/list_details/wb_list_details_state.dart';
 import '../cubit/wb_add/wb_add_state.dart';

@@ -8,7 +8,7 @@ import '../../../../models/inventory_row_model.dart';
 import '../../../../utilities/format.dart';
 import '../../../sale_report/model/salereport_model.dart';
 import '../../../sale_report/model/salereport_row_model.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../../user/repository/user_repo.dart';
 import '../model/report_inventory_move_model.dart';
 import '../model/report_multimove/report_multimove_model.dart';

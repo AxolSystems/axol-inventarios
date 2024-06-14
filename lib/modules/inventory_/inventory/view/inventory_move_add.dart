@@ -16,7 +16,7 @@ import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
 import '../../../../utilities/widgets/input_table.dart';
 import '../../../../utilities/widgets/table_view/table_view.dart';
 import '../../../../utilities/widgets/toolbar.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../product/model/product_model.dart';
 import '../../product/view/product_drawer_details.dart';
 import '../../product/view/product_drawer_find.dart';

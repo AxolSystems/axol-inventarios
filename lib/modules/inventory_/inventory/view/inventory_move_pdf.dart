@@ -3,7 +3,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../../../utilities/format.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../model/inventory_move/concept_move_model.dart';
 import '../model/report_inventory_move_model.dart';
 import '../model/report_multimove/report_multimove_model.dart';

@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../widget_link/model/widgetlink_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
-import '../model/modul_model.dart';
+import '../model/module_model.dart';
 import 'module_data_repo.dart';
 
 class ModuleRepo {

@@ -1,5 +1,5 @@
 import 'package:axol_inventarios/models/data_response_model.dart';
-import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
+import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/modules/user/repository/user_repo.dart';
 import 'package:axol_inventarios/utilities/widgets/table_view/tableview_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

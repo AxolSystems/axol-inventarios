@@ -2,7 +2,7 @@ import 'package:axol_inventarios/modules/inventory_/route_customers/model/rc_for
 import 'package:axol_inventarios/modules/inventory_/route_customers/model/routcustomer_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../user/model/user_mdoel.dart';
+import '../../../../user/model/user_model.dart';
 import '../../../../user/repository/user_repo.dart';
 import '../../repository/routecustomer_repo.dart';
 import 'rc_drawer_state.dart';

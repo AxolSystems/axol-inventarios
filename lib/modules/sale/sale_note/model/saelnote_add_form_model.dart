@@ -1,6 +1,6 @@
 import '../../../../models/textfield_form_model.dart';
 import '../../../inventory_/inventory/model/warehouse_model.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../customer/model/customer_model.dart';
 import '../../vendor/model/vendor_model.dart';
 import 'salenote_row_form_model.dart';

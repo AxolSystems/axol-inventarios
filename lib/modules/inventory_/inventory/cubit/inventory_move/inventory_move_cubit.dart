@@ -2,7 +2,7 @@ import 'package:axol_inventarios/modules/inventory_/inventory/model/inventory_mo
 import 'package:axol_inventarios/modules/inventory_/inventory/repository/inventory_repo.dart';
 import 'package:axol_inventarios/modules/inventory_/product/model/product_model.dart';
 import 'package:axol_inventarios/modules/inventory_/product/repository/product_repo.dart';
-import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
+import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/modules/user/repository/user_repo.dart';
 import 'package:axol_inventarios/utilities/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../model/waybill_list_model.dart';
 
 abstract class WbListState extends Equatable {

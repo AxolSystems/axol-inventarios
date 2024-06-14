@@ -1,7 +1,4 @@
-import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
-import 'package:axol_inventarios/modules/block/view/setblock_widget.dart';
-import 'package:axol_inventarios/modules/main_/model/entry_menu_model.dart';
-import 'package:axol_inventarios/modules/main_/model/modul_model.dart';
+import 'package:axol_inventarios/modules/main_/model/module_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,9 +6,6 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
-import '../../axol_widget/table/model/table_model.dart';
-import '../../axol_widget/table/view/table_view.dart';
-import '../../axol_widget/widget_index.dart';
 import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -35,6 +29,13 @@ class MainView extends StatelessWidget {
 
 class MainViewBuild extends StatelessWidget {
   const MainViewBuild({super.key});
+
+  /// Construye [MainView] según el estado actual.
+  ///
+  /// ### Estados
+  /// - Loading: muestra ciertos elementos en estado de carga.
+  /// - Loaded: vista con todos los elementos cargados.
+  /// - Error: muestra una ventana emergente con el error.
   @override
   Widget build(BuildContext context) {
     MainViewFormModel form = context.read<MainViewForm>().state;
@@ -59,6 +60,7 @@ class MainViewBuild extends StatelessWidget {
     );
   }
 
+  /// Contiene la vista general de programa.
   Widget mainView(
       BuildContext context, bool isLoading, MainViewFormModel form) {
     return Material(
@@ -88,7 +90,7 @@ class MainViewBuild extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.menu,
-                      color: ColorPalette.midleItems,
+                      color: ColorPalette.middleItems,
                       size: 30,
                     ),
                   ),
@@ -131,19 +133,26 @@ class MainViewBuild extends StatelessWidget {
                     child: Container(
                   color: ColorTheme.background(form.user.theme),
                 )),
-            /*BlocBuilder<MainViewForm, MainViewFormModel>(
-                    builder: (context, state) =>
-                        form.body ??
-                        Expanded(
-                            child: Container(
-                          color: ColorTheme.background(form.user.theme),
-                        )),
-                  ),*/
           ],
         ))
       ],
     ));
   }
+
+  /// Contiene barra de módulos.
+  /// 
+  /// Antes de devolver el widget, obtiene de [ModuleModel.widgetLinks] el los widgetLinks 
+  /// que le pertenecen al modulo actual.
+  /// 
+  /// - En fila:
+  ///   - En Columna:
+  ///     - ListView con módulos obtenidos de [MainViewFormModel.moduleList].
+  ///     - Divider
+  ///     - [MainNavButton] de configuración.
+  ///     - [PopupMenuBtnAxol] de cuenta.
+  ///   - Lista de menu de links y views. Las listas pueden ser [listMenu] o [listMenuSetting].
+  /// 
+  /// TODO: Mover child de popUpMenu a una función aparte.
 
   Widget moduleBar({
     required BuildContext context,
@@ -154,17 +163,6 @@ class MainViewBuild extends StatelessWidget {
     required bool isLoading,
   }) {
     List<WidgetLinkModel> widgetLinks = [];
-    /*if (form.moduleSelect == -1) {
-      /*if (form.linkSelect == 0) {
-        form.body = SetBlockWidget(theme: form.user.theme);
-      }*/
-    } else {
-      form.body = WidgetIndex.widget(
-          form.widgetLink.widget,
-          WidgetIndex.data(
-              form.widgetLink.widget, form.objects, form.widgetLink.block),
-          form.user.theme);
-    }*/
     if (select >= 0 && isLoading == false) {
       widgetLinks = moduleList[select].widgetLinks;
     } else if (select == -1) {
@@ -203,11 +201,9 @@ class MainViewBuild extends StatelessWidget {
                               form.menuVisible = !form.menuVisible;
                               context.read<MainViewCubit>().load();
                             } else {
-                              form.moduleSelect = index;
                               context
                                   .read<MainViewCubit>()
-                                  .setWidgetLink(form, 0, 0);
-                              
+                                  .setModule(form, index);
                             }
                           },
                           menuVisible: menuVisible,
@@ -313,22 +309,6 @@ class MainViewBuild extends StatelessWidget {
                     child: form.moduleSelect == -1
                         ? listMenuSetting(context, form)
                         : listMenu(widgetLinks, form)
-                    /*ListView.builder(
-                    itemCount: entryList.length,
-                    itemBuilder: (context, index) {
-                      final EntryMenuModel entry = entryList[index];
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                        child: MainNavButton(
-                          text: entry.text,
-                          isHover: form.menuSelect == index,
-                          onPressed: entry.onPressed,
-                          menuVisible: menuVisible,
-                          theme: form.user.theme,
-                        ),
-                      );
-                    },
-                  ),*/
                     )
               ],
             ),
@@ -338,6 +318,11 @@ class MainViewBuild extends StatelessWidget {
     );
   }
 
+  /// Lista de menú de módulos.
+  /// - ListView de widgetLinks de módulo seleccionado.
+  ///   - Nombre del widgetLink
+  ///   - ListView de widgetViews de link. Contiene [MainNavButton] que abrirá
+  /// view del link.
   Widget listMenu(List<WidgetLinkModel> widgetLinks, MainViewFormModel form) {
     ScrollController scrollController = ScrollController();
 
@@ -357,9 +342,6 @@ class MainViewBuild extends StatelessWidget {
           } else {
             viewList = wl.views;
           }
-          /*if (form.linkSelect == -1) {
-            form.linkSelect = 0;
-          }*/
 
           return SizedBox(
             height: (viewList.length * 30) + 30,
@@ -406,6 +388,7 @@ class MainViewBuild extends StatelessWidget {
     );
   }
 
+  /// Lista con [MainNavButton] para cada widget de configuración del sistema.
   Widget listMenuSetting(BuildContext context, MainViewFormModel form) {
     ScrollController scrollController = ScrollController();
 

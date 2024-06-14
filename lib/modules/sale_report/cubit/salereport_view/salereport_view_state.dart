@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 
 abstract class SaleReportViewState extends Equatable {
   const SaleReportViewState();

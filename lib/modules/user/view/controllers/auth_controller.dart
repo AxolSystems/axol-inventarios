@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../model/user_mdoel.dart';
+import '../../model/user_model.dart';
 import '../views/home_view.dart';
 import '../views/login_view.dart';
 import '../views/splash_view.dart';

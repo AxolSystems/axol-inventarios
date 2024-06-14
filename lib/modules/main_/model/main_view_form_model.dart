@@ -2,8 +2,8 @@ import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 
 import '../../object/model/object_model.dart';
-import '../../user/model/user_mdoel.dart';
-import 'modul_model.dart';
+import '../../user/model/user_model.dart';
+import 'module_model.dart';
 
 class MainViewFormModel {
   AxolWidget? body;

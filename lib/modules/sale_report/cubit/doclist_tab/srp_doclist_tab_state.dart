@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/modules/user/model/user_mdoel.dart';
+import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../model/salereport_model.dart';

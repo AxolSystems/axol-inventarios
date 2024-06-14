@@ -8,7 +8,7 @@ import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/finder_bar.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../cubit/vendor_tab/vendor_tab_cubit.dart';
 import '../cubit/vendor_tab/vendor_tab_form.dart';
 import '../cubit/vendor_tab/vendor_tab_state.dart';

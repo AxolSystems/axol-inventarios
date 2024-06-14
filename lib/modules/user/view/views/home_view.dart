@@ -12,7 +12,7 @@ import '../../../../utilities/widgets/navigation_rail/nav_rail_axol.dart';
 import '../../../../utilities/widgets/navigation_rail/navigation_rail_axol.dart';
 import '../../cubit/home_view/home_view_cubit.dart';
 import '../../cubit/home_view/home_view_state.dart';
-import '../../model/user_mdoel.dart';
+import '../../model/user_model.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});

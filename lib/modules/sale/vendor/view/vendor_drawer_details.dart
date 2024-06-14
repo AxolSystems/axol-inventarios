@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/providers.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../model/vendor_model.dart';
 
 class VendorDrawerDetails extends StatelessWidget {

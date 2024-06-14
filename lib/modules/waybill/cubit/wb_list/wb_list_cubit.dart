@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/data_response_model.dart';
 import '../../../../models/inventory_row_model.dart';
-import '../../../user/model/user_mdoel.dart';
+import '../../../user/model/user_model.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/wb_list_form_model.dart';
 import '../../repository/waybill_file_repo.dart';

@@ -143,7 +143,7 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
                         size: 20,
                         color: isHover
                             ? ColorTheme.text(theme)
-                            : ColorPalette.midleItems,
+                            : ColorPalette.middleItems,
                       ),
                     ),
                     Visibility(

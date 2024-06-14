@@ -1,0 +1,44 @@
+{
+    "cSpell.language": "en,es-ES",
+    "cSpell.words": [
+        "axol",
+        "Axol",
+        "LTRB",
+        "mainview",
+        "setblock",
+        "tableview",
+        "widgetlink"
+    ],
+    "todo-tree.highlights.customHighlight": {
+        "BUG": {
+            "icon": "bug",
+            "foreground": "black",
+            "background": "red",
+            "iconColour": "red",
+        },
+        "HACK": {
+            "icon": "tools"
+        },
+        "FIXME": {
+            "icon": "flame",
+            "foreground": "black",
+            "background": "yellow",
+            "iconColour": "yellow",
+        },
+        "XXX": {
+            "icon": "x"
+        },
+        "[ ]": {
+            "icon": "issue-draft",
+            "foreground": "black",
+            "background": "white",
+            "iconColour": "yellow",
+        },
+        "[x]": {
+            "icon": "issue-closed",
+            "foreground": "white",
+            "background": "green",
+            "iconColour": "green",
+        }
+    }
+}
