@@ -1,3 +1,9 @@
+/// Modelo de datos que contiene las propiedades del usuario.
+/// 
+/// TODO: Cambiar metodos por enums.
+/// TODO: Agregar theme a una propiedad de tipo Map o modelo de datos, 
+/// el cual contendrá todas las preferencias del usuario.m
+
 class UserModel {
   final String name;
   final int id;

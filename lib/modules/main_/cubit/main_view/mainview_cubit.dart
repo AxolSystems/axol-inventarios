@@ -26,7 +26,7 @@ class MainViewCubit extends Cubit<MainViewState> {
   /// selecciona primer view de la lista para mostrar su widget. 
   /// 4. Busca objetos relacionados a widgetLink.
   /// 5. Guarda y actualiza datos obtenidos en [form].
-  Future<void> initLoad(BuildContext context, MainViewFormModel form) async {
+  Future<void> initLoad(MainViewFormModel form) async {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());

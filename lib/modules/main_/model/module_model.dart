@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../axol_widget/axol_widget.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 
+/// Modelo de datos que representa a una módulo.
+/// 
+/// TODO: verificar si es necesaria la propiedad onPressed.
 class ModuleModel {
   String id;
   String name;
@@ -20,6 +22,7 @@ class ModuleModel {
     this.onPressed,
   });
 
+  /// Devuelve el estado inicial del modelo de datos.
   ModuleModel.empty()
       : id = '',
         name = '',

@@ -40,7 +40,7 @@ class MainViewBuild extends StatelessWidget {
   Widget build(BuildContext context) {
     MainViewFormModel form = context.read<MainViewForm>().state;
     return BlocConsumer<MainViewCubit, MainViewState>(
-      bloc: context.read<MainViewCubit>()..initLoad(context, form),
+      bloc: context.read<MainViewCubit>()..initLoad(form),
       builder: (context, state) {
         if (state is LoadingMainViewState) {
           return mainView(context, true, form);
