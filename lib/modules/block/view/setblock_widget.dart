@@ -270,7 +270,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
                                                     onPressed: () {
                                                       context
                                                           .read<SetBlockCubit>()
-                                                          .addProprty(form);
+                                                          .addProperty(form);
                                                     },
                                                   ),
                                                 ],

@@ -83,7 +83,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
-  Future<void> addProprty(SetBlockFormModel form) async {
+  Future<void> addProperty(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
       emit(LoadingSetBlockState());
