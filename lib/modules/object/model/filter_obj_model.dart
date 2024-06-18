@@ -17,8 +17,8 @@ class FilterObjModel {
   static String get tValue => 'value';
   static String get tFilter => 'filter';
 
-  static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {
-    /// Estrucutra map recibido:
+  static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {  
+    /// Estructura map recibido:
     /// {"n": {"property":int, "value":dynamic, "filter":int}}
     List<FilterObjModel> filters = [];
 

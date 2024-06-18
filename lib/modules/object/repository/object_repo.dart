@@ -13,12 +13,11 @@ class ObjectRepo {
   /// Obtiene una lista de objetos de la base de datos.
   ///
   /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filterList]. 
-  /// Si [filterList] no se enuectra vacía, realiza una busqueda filtrada; de lo contrario,
-  /// realiza una busqueda completa de la tabla referenciada. La tabla de la base de datos donde
-  /// se hará la busqueda es obtenida mediante [BlockModel.tableName].
+  /// Si [filterList] no se encuentra vacía, realiza una búsqueda filtrada; de lo contrario,
+  /// realiza una búsqueda completa de la tabla referenciada. La tabla de la base de datos donde
+  /// se hará la búsqueda es obtenida mediante [BlockModel.tableName].
   /// 
-  /// Despues de la consulta convierte los datos obtenidos en una lista [ObjectModel].
-
+  /// Después de la consulta convierte los datos obtenidos en una lista [ObjectModel].
   static Future<List<ObjectModel>> fetchObject(
       BlockModel block, List<FilterObjModel> filterList) async {
     List<Map<String, dynamic>> objsDB;

@@ -1,12 +1,12 @@
 import 'package:axol_inventarios/modules/axol_widget/data_object.dart';
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
-import 'package:flutter/widgets.dart';
 
 import 'axol_widget.dart';
 import 'table/model/table_model.dart';
 import 'table/view/table_view.dart';
 
+/// Clase con métodos para convertir los objetos en otros tipos de datos.
 class WidgetIndex {
   static int get table => 0;
 

@@ -12,7 +12,6 @@ class WidgetViewModel {
 
   /// Estructura view en base de datos:
   /// {"name": {"n":{"property":int, "value":dynamic, "filter":int}}}
-
   static List<WidgetViewModel> mapToViews(Map<String, dynamic> map) {
     List<WidgetViewModel> views = [];
 
