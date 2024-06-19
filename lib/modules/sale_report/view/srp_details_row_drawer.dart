@@ -81,7 +81,7 @@ class SrpDetailsRowDrawer extends StatelessWidget {
                 height: 40,
                 child: AlertButtonDialog(
                   text: 'Eliminar',
-                  textStyle: Typo.mobileLigth18,
+                  textStyle: Typo.mobileLight18,
                   onPressed: () {
                     form.saleReportList.removeAt(index);
                     Navigator.pop(context);

@@ -427,7 +427,7 @@ class PrimaryButton extends StatelessWidget {
                 child: Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
-                        color: ColorTheme.eneabledButton(theme ?? 0),
+                        color: ColorTheme.enabledButton(theme ?? 0),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(6))),
                   ),

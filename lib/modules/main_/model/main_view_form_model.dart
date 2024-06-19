@@ -1,10 +1,22 @@
-import 'package:axol_inventarios/modules/axol_widget/axol_widget.dart';
+import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 
 import '../../object/model/object_model.dart';
 import '../../user/model/user_model.dart';
 import 'module_model.dart';
 
+/// Modelo de datos utilizado para mantener 
+/// los datos de MainView de forma paralela 
+/// a los cambios de la vista.
+/// 
+/// - [body] : Widget almacenado en esta propiedad es el que se 
+/// muestra en pantalla.
+/// - [moduleSelect] : Índice del modulo actual que se MainView.
+/// - [linkSelect] : Índice del widgetLink actual en el módulo 
+/// abierto en el momento.
+/// - [viewSelect] : Índice del widgetView actual.
+/// - [moduleList] : Lista con los módulos que se muestran MainView.
+/// - [moduleBarVisible] : 
 class MainViewFormModel {
   AxolWidget? body;
   int moduleSelect;

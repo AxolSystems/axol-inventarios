@@ -157,7 +157,7 @@ class PopupMenuBtnAxolBuild extends StatelessWidget {
                           child: Text(
                             text ?? '',
                             textAlign: TextAlign.start,
-                            style: isHover ? Typo.system(theme) : Typo.systemMidle,
+                            style: isHover ? Typo.system(theme) : Typo.systemMiddle,
                           ),
                         ))
                   ],

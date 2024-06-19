@@ -165,7 +165,7 @@ class WbAddRowDrawerBuild extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             'Guardar',
-                            style: Typo.mobileLigth20,
+                            style: Typo.mobileLight20,
                           ),
                         ),
                       ],

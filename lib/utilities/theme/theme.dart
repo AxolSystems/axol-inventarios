@@ -122,7 +122,7 @@ class ColorTheme {
     }
   }
 
-  static Color eneabledButton(int theme) {
+  static Color enabledButton(int theme) {
     switch (theme) {
       case 0:
         return const Color.fromARGB(125, 0, 0, 0);
@@ -134,6 +134,7 @@ class ColorTheme {
   }
 }
 
+/// TODO: Eliminar todas las fuentes sin usarse y documentar.
 class Typo {
   static const title1 = TextStyle(
       fontFamily: 'Poppins',
@@ -301,14 +302,14 @@ class Typo {
       fontWeight: FontWeight.normal,
       fontSize: 14,
       color: ColorTheme.text(theme));
-  static const systemMidle = TextStyle(
+  static const systemMiddle = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,
       fontSize: 14,
       color: ColorPalette.middleItems);
 
   //Button mobile
-  static const mobileLigth20 = TextStyle(
+  static const mobileLight20 = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w600,
       fontSize: 20,
@@ -318,7 +319,7 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: ColorPalette.darkText);
-  static const mobileLigth18 = TextStyle(
+  static const mobileLight18 = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 18,

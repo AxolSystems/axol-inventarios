@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/modules/axol_widget/widget_index.dart';
+import 'package:axol_inventarios/modules/axol_widget/generic/repository/widget_index.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widget_view_model.dart';
@@ -6,7 +6,7 @@ import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../axol_widget/axol_widget.dart';
+import '../../../axol_widget/generic/view/axol_widget.dart';
 import '../../../block/view/setblock_widget.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';

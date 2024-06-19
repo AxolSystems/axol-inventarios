@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utilities/theme/theme.dart';
+import '../../../../utilities/theme/theme.dart';
 
 /// Una clase abstracta de la cual heredan todos los widgets de Axol. 
 /// La función de los axolWidget es presentar los datos consultados 
@@ -36,6 +36,8 @@ class TextAW extends AxolWidget {
 class EmptyWidget extends AxolWidget {
   const EmptyWidget({super.key, super.theme});
 
+  /// Devuelve widget con texto indicando que no se encontró 
+  /// otro axolWidget.
   @override
   Widget build(BuildContext context) {
     return Expanded(

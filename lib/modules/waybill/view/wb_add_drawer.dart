@@ -111,7 +111,7 @@ class WbAddDrawerBuild extends StatelessWidget {
                 width: ((widthScreen * (0.95 - (widthDrawer ?? 0))) - 8),
                 child: PrimaryButtonDialog(
                   text: 'Guardar',
-                  textStyle: Typo.mobileLigth20,
+                  textStyle: Typo.mobileLight20,
                   onPressed: () {
                     context.read<WbAddDrawerCubit>().save(form);
                   },

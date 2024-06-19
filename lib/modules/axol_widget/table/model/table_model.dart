@@ -3,18 +3,21 @@ import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
 
 import '../../../object/model/object_model.dart';
-import '../../data_object.dart';
+import '../../generic/model/data_object.dart';
 
+/// Modelo que contiene los atributos de una tabla.
 class TableModel extends DataObject {
   final List<String> header;
   final List<Map<String, TableCellModel>> rowList;
 
   TableModel({required this.header, required this.rowList});
 
+  /// Devuelve el estado inicial de [TableModel].
   TableModel.empty()
       : header = [],
         rowList = [];
 
+  /// Devuelve un modelo de tabla a partir de una lista de objetos y un block.
   static TableModel dataObject(List<ObjectModel> objects, BlockModel block) {
     TableModel table;
     List<String> header = [];

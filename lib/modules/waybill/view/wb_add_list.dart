@@ -351,7 +351,7 @@ class WbAddListBuild extends StatelessWidget {
                                                 flex: 2,
                                                 child: Text(
                                                   'Agregar',
-                                                  style: Typo.mobileLigth20,
+                                                  style: Typo.mobileLight20,
                                                 ),
                                               ),
                                             ],
