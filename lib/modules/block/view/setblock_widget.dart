@@ -14,6 +14,7 @@ import '../cubit/setblock_cubit.dart';
 import '../cubit/setblock_state.dart';
 import '../model/setblock_form_model.dart';
 
+/// AxolWidget donde se muestran las opciones de configuración del sistema.
 class SetBlockWidget extends AxolWidget {
   const SetBlockWidget({super.key, required super.theme});
 
@@ -74,6 +75,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
     );
   }
 
+  /// Widget que contiene los elementos principales de la vista.
   Widget setBlockWidgetBuild(
       BuildContext context, SetBlockFormModel form, bool isLoading) {
     const double widthMenuBlock = 250;
@@ -383,6 +385,7 @@ class SetBlockWidgetBuild extends StatelessWidget {
           )));
   }
 
+  /// Sección que contiene los widgets de ajustes generales del bloque seleccionado.
   List<Widget> generalSettings(
       BuildContext context, SetBlockFormModel form, bool isBoxNarrow) {
     return [
@@ -422,6 +425,8 @@ class SetBlockWidgetBuild extends StatelessWidget {
     ];
   }
 
+  /// Sección que contiene los widgets y elementos del ajuste de propiedades 
+  /// del bloque seleccionado.
   Widget propertySetting(SetBlockFormModel form, double paddingBox) =>
       ConstrainedBox(
         constraints: BoxConstraints(maxHeight: form.heightBoxProp),

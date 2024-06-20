@@ -6,9 +6,12 @@ import '../model/property_model.dart';
 import '../repository/block_repo.dart';
 import 'setblock_state.dart';
 
+/// Clase con lógica del negocio de la vista de ajustes de bloque.
 class SetBlockCubit extends Cubit<SetBlockState> {
   SetBlockCubit() : super(InitialSetBlockState());
 
+  /// Obtiene todos los datos necesarios para iniciar la vista. 
+  /// Dichos datos son proporcionados a al form.
   Future<void> initLoad(SetBlockFormModel form, int theme) async {
     try {
       emit(InitialSetBlockState());
@@ -42,6 +45,9 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
+  /// Método utilizado para realizar una recarga de la vista sin 
+  /// necesidad de pasar por algún proceso. Suele utilizarse desde 
+  /// SetBlockWidget.
   Future<void> load() async {
     try {
       emit(InitialSetBlockState());
@@ -54,6 +60,8 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
+  /// Lógica utilizada para hacer el cambio de bloque en la barra de 
+  /// bloques disponibles.
   Future<void> switchBlock(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
@@ -83,6 +91,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
+  /// Agrega un nuevo espacio en la tabla para crear una propiedad.
   Future<void> addProperty(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
@@ -99,6 +108,8 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
+  /// Lógica al seleccionar una nueva propiedad en el drop down 
+  /// de nueva propiedad.
   Future<void> selectProp(
     SetBlockFormModel form,
     int index,
@@ -118,6 +129,8 @@ class SetBlockCubit extends Cubit<SetBlockState> {
     }
   }
 
+  /// Proceso de guardado de un bloque en la base datos. Si hay cambios 
+  /// en el bloque seleccionado, actualiza sus objetos.
   Future<void> save(SetBlockFormModel form) async {
     try {
       emit(InitialSetBlockState());
@@ -145,7 +158,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
           emit(LoadedSetBlockState());
           emit(const ErrorSetBlockState(
               error:
-                  'No puede repetir nombres de propiedes en un mismo bloque'));
+                  'No puede repetir nombres de propiedades en un mismo bloque'));
           return;
         }
       }

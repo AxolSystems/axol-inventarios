@@ -16,7 +16,15 @@ import 'module_model.dart';
 /// abierto en el momento.
 /// - [viewSelect] : Índice del widgetView actual.
 /// - [moduleList] : Lista con los módulos que se muestran MainView.
-/// - [moduleBarVisible] : 
+/// - [moduleBarVisible] : Identifica si actualmente la barra de modulo
+/// se encuentra visible o no.
+/// - [menuVisible] : Identifica si actualmente la barra de vistas se 
+/// encuentra visible.
+/// - [title] : Mantiene el título del encabezado de MainView.
+/// - [user] : Datos del usuario con sesión iniciada.
+/// - [objects] : Datos consultados en la base datos que se muestran en 
+/// pantalla mediante el widget actual.
+/// - [widgetLink] : WidgetLink abierto actualmente en pantalla.
 class MainViewFormModel {
   AxolWidget? body;
   int moduleSelect;
@@ -44,6 +52,8 @@ class MainViewFormModel {
     required this.widgetLink,
   });
 
+  /// Not tiene parámetros, devuelve un MainViewFormModel en su 
+  /// estado inicial. 
   MainViewFormModel.empty()
       : body = null,
         moduleSelect = 0,
