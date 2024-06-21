@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'block_model.dart';
 import 'property_model.dart';
 
+/// Modelo de datos que contiene las propiedades 
+/// del bloque y varían según el cambio de estado.
 class SetBlockFormModel {
   List<BlockModel> blockList;
   BlockModel? cBlock;
