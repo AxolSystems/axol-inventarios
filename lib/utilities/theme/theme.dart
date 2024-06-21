@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Clase con constantes de todos los colores que se usan en la aplicación.
 class ColorPalette {
   static const primary = Color.fromARGB(255, 132, 114, 242);
   static const secondary = Color.fromARGB(255, 98, 83, 197);
   static const secondaryDark = Color.fromARGB(255, 82, 69, 163);
-  //static const primaryLight10 = Color.fromARGB(255, 98, 83, 197);
   static const secondaryLight = Color.fromARGB(255, 133, 121, 214);
-  //static const secondary = Color(0xFF4649a8);
   static const tertiary = Color(0xFFffa532);
   static const alternate = Color(0xFFed7098);
   static const darkBackground = Color.fromARGB(255, 32, 32, 32);
@@ -30,10 +29,15 @@ class ColorPalette {
   static const filledLight = Color.fromARGB(10, 255, 255, 255);
 }
 
+/// Clase que proporcionas los distintos colores de cada elemento 
+/// visual respecto al tema recibido mediante un entero numérico.
+/// 
+/// Temas respecto a índice recibido:
+/// - 0: oscuro.
+/// - 1: claro.
 class ColorTheme {
-  //Theme
-  //0: Oscuro
-  //1: Claro
+
+  ///Color de fondo.
   static Color background(int theme) {
     switch (theme) {
       case 0:
@@ -45,6 +49,7 @@ class ColorTheme {
     }
   }
 
+  /// Color para elementos con menor contraste.
   static Color item10(int theme) {
     switch (theme) {
       case 0:
@@ -56,6 +61,7 @@ class ColorTheme {
     }
   }
 
+  /// Color para elementos con segundo menor contraste.
   static Color item20(int theme) {
     switch (theme) {
       case 0:
@@ -67,6 +73,7 @@ class ColorTheme {
     }
   }
 
+  /// Color para elementos con segundo mayor contraste.
   static Color item30(int theme) {
     switch (theme) {
       case 0:
@@ -78,6 +85,7 @@ class ColorTheme {
     }
   }
 
+  /// Color para elementos con mayor contraste.
   static Color item40(int theme) {
     switch (theme) {
       case 0:
@@ -89,6 +97,7 @@ class ColorTheme {
     }
   }
 
+  /// Color para texto.
   static Color text(int theme) {
     switch (theme) {
       case 0:
@@ -100,6 +109,7 @@ class ColorTheme {
     }
   }
 
+  /// Color usado para el fondo de los campos de texto.
   static Color fill(int theme) {
     switch (theme) {
       case 0:
@@ -111,6 +121,9 @@ class ColorTheme {
     }
   }
 
+  /// Color para elementos que requieran de un cambio en el 
+  /// color secundario. Por ejemplo, cuando se pasa el cursor 
+  /// por encima de un botón.
   static Color secondaryTheme(int theme) {
     switch (theme) {
       case 0:
@@ -122,6 +135,7 @@ class ColorTheme {
     }
   }
 
+  /// Color de capa que se sobrepone cuando un elemento está inhabilitado.
   static Color enabledButton(int theme) {
     switch (theme) {
       case 0:

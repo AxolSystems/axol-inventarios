@@ -10,6 +10,8 @@ class DBModule {
  static String get menu => 'menu';
 }
 
+/// Clase que devuelve un icono para el módulo según 
+/// en índice numérico proporcionado.
 class IconsModule {
   static IconData getIcon(int value) {
     switch (value) {

@@ -272,6 +272,8 @@ class _SystemButton extends State<SystemButton> {
   }
 }
 
+/// Botón con estilo utilizado para barras de navegación 
+/// como de módulos o vistas de bloques.
 class MainNavButton extends StatelessWidget {
   final bool? isHover;
   final Function()? onPressed;
@@ -362,8 +364,9 @@ class MainNavButton extends StatelessWidget {
   }
 }
 
+/// Botón utilizado para acciones especificas del sistema, como 
+/// guardar, agregar un nuevo elemento, etc.
 class PrimaryButton extends StatelessWidget {
-  final bool? isHover;
   final Function()? onPressed;
   final IconData? icon;
   final String? text;
@@ -371,7 +374,6 @@ class PrimaryButton extends StatelessWidget {
   final int? theme;
   const PrimaryButton({
     super.key,
-    this.isHover,
     this.onPressed,
     this.icon,
     this.text,

@@ -6,6 +6,9 @@ import '../../block/repository/block_repo.dart';
 import '../model/widget_view_model.dart';
 import '../model/widgetlink_model.dart';
 
+/// Conexión a la base de datos para realizar consultas de widgetLinks. 
+/// Los widgetLinks contienen los datos necesarios para hacer la relación 
+/// entre módulos, bloques y axolWidgets.
 class WidgetLinkRepo {
   static const String _table = 'widget_link';
   static const String _id = 'id';
@@ -14,6 +17,8 @@ class WidgetLinkRepo {
   static const String _views = 'views';
   static final _supabase = Supabase.instance.client;
 
+  /// Mediante una lista de cadenas de texto, consulta y devuelve 
+  /// todos los widgetLinks que coincidan con su id.
   static Future<List<WidgetLinkModel>> fetchWidgetLik(
       List<String> idList) async {
     List<Map<String, dynamic>> wlsDB;

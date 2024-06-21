@@ -201,6 +201,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
   }
 }
 
+/// Cubit utilizado para mantener los cambios del form de *SetBlockFormModel*.
 class SetBlockForm extends Cubit<SetBlockFormModel> {
   SetBlockForm() : super(SetBlockFormModel.empty());
 }
