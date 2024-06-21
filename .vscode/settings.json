@@ -9,6 +9,7 @@
         "ilike",
         "LTRB",
         "mainview",
+        "modulebar",
         "objs",
         "setblock",
         "supabase",

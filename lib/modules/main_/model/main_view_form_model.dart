@@ -3,7 +3,7 @@ import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart
 
 import '../../object/model/object_model.dart';
 import '../../user/model/user_model.dart';
-import 'module_model.dart';
+import '../../module/model/module_model.dart';
 
 /// Modelo de datos utilizado para mantener 
 /// los datos de MainView de forma paralela 

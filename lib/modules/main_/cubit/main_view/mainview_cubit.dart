@@ -3,7 +3,6 @@ import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widget_view_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../axol_widget/generic/view/axol_widget.dart';
@@ -11,8 +10,8 @@ import '../../../block/view/setblock_widget.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
-import '../../model/module_model.dart';
-import '../../repository/module_repo.dart';
+import '../../../module/model/module_model.dart';
+import '../../../module/repository/module_repo.dart';
 import 'mainview_state.dart';
 
 class MainViewCubit extends Cubit<MainViewState> {
