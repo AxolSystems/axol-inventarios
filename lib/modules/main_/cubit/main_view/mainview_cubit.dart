@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../axol_widget/generic/view/axol_widget.dart';
 import '../../../block/view/setblock_widget.dart';
+import '../../../module/view/set_module_widget.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';
 import '../../model/main_view_form_model.dart';
@@ -18,11 +19,11 @@ class MainViewCubit extends Cubit<MainViewState> {
   MainViewCubit() : super(InitialMainViewState());
 
   /// Lógica inicial al construir MainView.
-  /// 
+  ///
   /// 1. Obtiene datos locales del usuario y guarda [MainViewFormModel.user].
   /// 2. Busca en [ModuleRepo] lista de módulos.
   /// 3. Si lista de módulos no se encuentra vacía, y contiene links y views,
-  /// selecciona primer view de la lista para mostrar su widget. 
+  /// selecciona primer view de la lista para mostrar su widget.
   /// 4. Busca objetos relacionados a widgetLink.
   /// 5. Guarda y actualiza datos obtenidos en [form].
   Future<void> initLoad(MainViewFormModel form) async {
@@ -73,7 +74,7 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
-  /// Función para recargar MainView. 
+  /// Función para recargar MainView.
   Future<void> load() async {
     try {
       emit(InitialMainViewState());
@@ -87,10 +88,10 @@ class MainViewCubit extends Cubit<MainViewState> {
   }
 
   /// Lógica para cambio de widgetLink.
-  /// 
+  ///
   /// 1. Busca objetos mediante view seleccionado.
   /// 2. Si widgetLink o widgetView anterior son diferentes al actual seleccionado,
-  /// actualiza widget y titulo. 
+  /// actualiza widget y titulo.
   Future<void> setWidgetLink(
       MainViewFormModel form, int indexLink, int indexView) async {
     try {
@@ -129,10 +130,10 @@ class MainViewCubit extends Cubit<MainViewState> {
   }
 
   /// Lógica de cambio de módulos.
-  /// 
+  ///
   /// 1. Obtiene link y view de [form] según el modulo seleccionado.
   /// 2. Busca en [ObjectRepo] los objetos indicados por link y view.
-  /// 3. Actualiza datos de [form]. 
+  /// 3. Actualiza datos de [form].
   Future<void> setModule(MainViewFormModel form, int indexModule) async {
     try {
       emit(InitialMainViewState());
@@ -176,7 +177,17 @@ class MainViewCubit extends Cubit<MainViewState> {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
 
-      form.body = SetBlockWidget(theme: form.user.theme);
+      if (linkSelect == 0) {
+        form.body = SetBlockWidget(theme: form.user.theme);
+        if (form.linkSelect != 0) {
+          form.linkSelect = 0;
+        }
+      } else if (linkSelect == 1) {
+        form.body = SetModuleWidget(theme: form.user.theme);
+        if (form.linkSelect != 1) {
+          form.linkSelect = 1;
+        }
+      }
 
       emit(LoadedMainViewState());
     } catch (e) {
@@ -185,13 +196,13 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
-  /// Actualiza el tema seleccionado. 
+  /// Actualiza el tema seleccionado.
   Future<void> setTheme(
       UserModel user, int theme, MainViewFormModel form) async {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
-      
+
       await DatabaseUser().updateTheme(user.id, theme);
       await LocalUser().setTheme(theme);
       form.user = await LocalUser().getLocalUser();

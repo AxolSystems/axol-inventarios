@@ -11,6 +11,7 @@
         "mainview",
         "modulebar",
         "objs",
+        "Overscroll",
         "setblock",
         "supabase",
         "tableview",

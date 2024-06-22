@@ -411,6 +411,18 @@ class MainViewBuild extends StatelessWidget {
                   },
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                child: MainNavButton(
+                  text: 'Módulos',
+                  theme: form.user.theme,
+                  menuVisible: form.menuVisible,
+                  isHover: form.linkSelect == 1,
+                  onPressed: () {
+                    context.read<MainViewCubit>().setSetting(form, 1);
+                  },
+                ),
+              ),
             ],
           ),
         ));

@@ -272,7 +272,7 @@ class _SystemButton extends State<SystemButton> {
   }
 }
 
-/// Botón con estilo utilizado para barras de navegación 
+/// Botón con estilo utilizado para barras de navegación
 /// como de módulos o vistas de bloques.
 class MainNavButton extends StatelessWidget {
   final bool? isHover;
@@ -364,7 +364,7 @@ class MainNavButton extends StatelessWidget {
   }
 }
 
-/// Botón utilizado para acciones especificas del sistema, como 
+/// Botón utilizado para acciones especificas del sistema, como
 /// guardar, agregar un nuevo elemento, etc.
 class PrimaryButton extends StatelessWidget {
   final Function()? onPressed;
@@ -400,6 +400,82 @@ class PrimaryButton extends StatelessWidget {
                       WidgetStateProperty.all(ColorPalette.secondary),
                   foregroundColor:
                       WidgetStateProperty.all(ColorPalette.lightText),
+                  textStyle: WidgetStateProperty.all(Typo.systemDark),
+                  splashFactory: NoSplash.splashFactory,
+                ),
+                onPressed: onPressed,
+                child: Padding(
+                  padding: padding ?? EdgeInsets.zero,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Visibility(
+                          visible: icon != null,
+                          child: Icon(
+                            icon,
+                            size: 15,
+                          )),
+                      Visibility(
+                        visible: icon != null && text != null,
+                        child: const SizedBox(width: 8),
+                      ),
+                      Visibility(child: Text(text ?? ''))
+                    ],
+                  ),
+                )),
+            Visibility(
+                visible: onPressed == null,
+                replacement: const SizedBox(),
+                child: Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: ColorTheme.enabledButton(theme ?? 0),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(6))),
+                  ),
+                )),
+          ],
+        ));
+  }
+}
+
+/// TODO: DOCUMENTAR.
+class SecondaryButton extends StatelessWidget {
+  final Function()? onPressed;
+  final IconData? icon;
+  final String? text;
+  final EdgeInsetsGeometry? padding;
+  final int? theme;
+  final double? width;
+  const SecondaryButton({
+    super.key,
+    this.onPressed,
+    this.icon,
+    this.text,
+    this.padding,
+    this.theme,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        height: 28,
+        width: width,
+        child: Stack(
+          children: [
+            OutlinedButton(
+                style: ButtonStyle(
+                  side: WidgetStateProperty.all(
+                      BorderSide(color: ColorTheme.item30(theme ?? 0))),
+                  shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6)))),
+                  padding: WidgetStateProperty.all(EdgeInsets.zero),
+                  overlayColor:
+                      WidgetStateProperty.all(ColorTheme.fill(theme ?? 0)),
+                  backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                  foregroundColor:
+                      WidgetStateProperty.all(ColorTheme.text(theme ?? 0)),
                   textStyle: WidgetStateProperty.all(Typo.systemDark),
                   splashFactory: NoSplash.splashFactory,
                 ),
