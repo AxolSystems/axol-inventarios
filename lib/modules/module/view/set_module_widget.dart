@@ -242,7 +242,9 @@ class SetModuleWidgetBuild extends AxolWidget {
                             theme: form.theme,
                             width: 60,
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<SetModuleCubit>().edit(context, form);
+                            },
                           ),
                         ),
                       ],

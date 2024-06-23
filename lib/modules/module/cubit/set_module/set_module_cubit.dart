@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/set_module_form_model.dart';
 import '../../repository/module_repo.dart';
+import '../../view/set_module_drawer.dart';
 import 'set_module_state.dart';
 
 /// TODO: DOCUMENTAR.
@@ -26,6 +28,21 @@ class SetModuleCubit extends Cubit<SetModuleState> {
     try {
       emit(InitialSetModuleState());
       emit(LoadingSetModuleState());
+      emit(LoadedSetModuleState());
+    } catch (e) {
+      emit(InitialSetModuleState());
+      emit(ErrorSetModuleState(error: e.toString()));
+    }
+  }
+
+  Future<void> edit(BuildContext context, SetModuleFormModel form) async {
+    try {
+      emit(InitialSetModuleState());
+      emit(LoadingSetModuleState());
+      showDialog(
+        context: context,
+        builder: (context) => SetModuleDrawer(theme: form.theme),
+      );
       emit(LoadedSetModuleState());
     } catch (e) {
       emit(InitialSetModuleState());

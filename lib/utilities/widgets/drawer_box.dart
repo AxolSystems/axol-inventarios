@@ -8,6 +8,7 @@ class DrawerBox extends StatelessWidget {
   final Widget? header;
   final Widget? child;
   final EdgeInsetsGeometry? padding;
+  final int? theme;
 
   const DrawerBox({
     super.key,
@@ -17,6 +18,7 @@ class DrawerBox extends StatelessWidget {
     this.actions,
     this.child,
     this.padding,
+    this.theme,
   });
 
   double drawerWidth(BuildContext context) {
@@ -66,7 +68,7 @@ class DrawerBox extends StatelessWidget {
           const Expanded(child: SizedBox()),
           Material(
             child: Container(
-              color: ColorPalette.lightBackground,
+              color: ColorTheme.background(theme ?? 0),
               width: drawerWidth,
               height: screenHeight,
               child: Padding(
@@ -92,7 +94,7 @@ class DrawerBox extends StatelessWidget {
           const Expanded(child: SizedBox()),
           Material(
             child: Container(
-              color: ColorPalette.lightBackground,
+              color: ColorTheme.background(theme ?? 0),
               width: drawerWidth,
               height: screenHeight,
               child: Padding(
