@@ -6,10 +6,11 @@ import '../../repository/module_repo.dart';
 import '../../view/set_module_drawer.dart';
 import 'set_module_state.dart';
 
-/// TODO: DOCUMENTAR.
+/// Lógica del negocio de la vista para la configuración módulos.
 class SetModuleCubit extends Cubit<SetModuleState> {
   SetModuleCubit() : super(LoadedSetModuleState());
 
+  /// Procesos realizados al iniciar el widget.
   Future<void> initLoad(SetModuleFormModel form) async {
     try {
       emit(InitialSetModuleState());
@@ -24,6 +25,8 @@ class SetModuleCubit extends Cubit<SetModuleState> {
     }
   }
 
+  /// Método de recarga de vista. Solo utilizado en caso 
+  /// de ser necesario actualizar estados desde otra clase.
   Future<void> load() async {
     try {
       emit(InitialSetModuleState());
@@ -35,6 +38,7 @@ class SetModuleCubit extends Cubit<SetModuleState> {
     }
   }
 
+  /// Lógica utilizada una vez se presiona el botón para editar un módulo.
   Future<void> edit(BuildContext context, SetModuleFormModel form) async {
     try {
       emit(InitialSetModuleState());
@@ -51,6 +55,7 @@ class SetModuleCubit extends Cubit<SetModuleState> {
   }
 }
 
+/// Cubit que mantiene a la par los datos que cambian de la vista para editar módulos.
 class SetModuleForm extends Cubit<SetModuleFormModel> {
   SetModuleForm() : super(SetModuleFormModel.empty());
 }

@@ -12,7 +12,9 @@ import '../cubit/set_module/set_module_state.dart';
 import '../model/module_model.dart';
 import '../model/set_module_form_model.dart';
 
-/// TODO: DOCUMENTAR.
+/// Widget para la configuración de módulos. Muestra un listado 
+/// de módulos existentes y da la opción de editar cada uno o 
+/// agregar un nuevo módulo.
 class SetModuleWidget extends AxolWidget {
   const SetModuleWidget({super.key, super.theme});
 
@@ -33,6 +35,7 @@ class SetModuleWidget extends AxolWidget {
 class SetModuleWidgetBuild extends AxolWidget {
   const SetModuleWidgetBuild({super.key, super.theme});
 
+  /// Construye el widget según el estado actual.
   @override
   Widget build(BuildContext context) {
     SetModuleFormModel form = context.read<SetModuleForm>().state;
@@ -52,6 +55,7 @@ class SetModuleWidgetBuild extends AxolWidget {
     );
   }
 
+  /// Devuelve la vista principal del widget para editar módulos.
   Widget setModuleWidget(
       BuildContext context, SetModuleFormModel form, bool isLoading) {
     ScrollController scrollCtrlHorizontal = ScrollController();
@@ -190,6 +194,7 @@ class SetModuleWidgetBuild extends AxolWidget {
           );
   }
 
+  /// Devuelve una lista con vista general de todos los módulos existentes.
   Widget moduleList(SetModuleFormModel form) {
     const double rowHeight = 40;
     return Container(
