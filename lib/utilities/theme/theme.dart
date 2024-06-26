@@ -29,14 +29,13 @@ class ColorPalette {
   static const filledLight = Color.fromARGB(10, 255, 255, 255);
 }
 
-/// Clase que proporcionas los distintos colores de cada elemento 
+/// Clase que proporcionas los distintos colores de cada elemento
 /// visual respecto al tema recibido mediante un entero numérico.
-/// 
+///
 /// Temas respecto a índice recibido:
 /// - 0: oscuro.
 /// - 1: claro.
 class ColorTheme {
-
   ///Color de fondo.
   static Color background(int theme) {
     switch (theme) {
@@ -121,8 +120,8 @@ class ColorTheme {
     }
   }
 
-  /// Color para elementos que requieran de un cambio en el 
-  /// color secundario. Por ejemplo, cuando se pasa el cursor 
+  /// Color para elementos que requieran de un cambio en el
+  /// color secundario. Por ejemplo, cuando se pasa el cursor
   /// por encima de un botón.
   static Color secondaryTheme(int theme) {
     switch (theme) {
@@ -236,6 +235,11 @@ class Typo {
       fontWeight: FontWeight.w600,
       fontSize: 20,
       color: ColorPalette.lightText);
+  static TextStyle titleH2(int theme) => TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      color: ColorTheme.text(theme));
   static const subtitleDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w600,

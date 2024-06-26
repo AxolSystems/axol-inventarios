@@ -62,7 +62,7 @@ class ModuleRepo {
 
       for (var moduleDB in modulesDB) {
         module = ModuleModel(
-            icon: IconsModule.getIcon(moduleDB[_icon]),
+            icon: IconsRepo.getIcon(moduleDB[_icon]),
             id: moduleDB[_id],
             widgetLinks: mapWl[moduleDB[_id]] ?? [], //Agregar mapToMenu
             permissions: moduleDB[_permissions],

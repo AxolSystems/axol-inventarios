@@ -214,7 +214,7 @@ class SetModuleWidgetBuild extends AxolWidget {
                 shrinkWrap: false,
                 itemCount: form.modules.length,
                 itemBuilder: (context, index) {
-                  final ModuleModel model = form.modules[index];
+                  final ModuleModel module = form.modules[index];
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     height: rowHeight,
@@ -229,16 +229,16 @@ class SetModuleWidgetBuild extends AxolWidget {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Text(model.name, style: Typo.body(form.theme)),
+                          child: Text(module.name, style: Typo.body(form.theme)),
                         ),
                         Expanded(
                           flex: 2,
-                          child: Text(model.icon.toString(),
+                          child: Text(module.icon.toString(),
                               style: Typo.body(form.theme)),
                         ),
                         Expanded(
                           flex: 2,
-                          child: Text(model.widgetLinks.length.toString(),
+                          child: Text(module.widgetLinks.length.toString(),
                               style: Typo.body(form.theme)),
                         ),
                         Flexible(
@@ -248,7 +248,7 @@ class SetModuleWidgetBuild extends AxolWidget {
                             width: 60,
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             onPressed: () {
-                              context.read<SetModuleCubit>().edit(context, form);
+                              context.read<SetModuleCubit>().edit(context, form, module);
                             },
                           ),
                         ),

@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/module/model/module_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,13 +40,13 @@ class SetModuleCubit extends Cubit<SetModuleState> {
   }
 
   /// Lógica utilizada una vez se presiona el botón para editar un módulo.
-  Future<void> edit(BuildContext context, SetModuleFormModel form) async {
+  Future<void> edit(BuildContext context, SetModuleFormModel form, ModuleModel module) async {
     try {
       emit(InitialSetModuleState());
       emit(LoadingSetModuleState());
       showDialog(
         context: context,
-        builder: (context) => SetModuleDrawer(theme: form.theme),
+        builder: (context) => SetModuleDrawer(module, theme: form.theme),
       );
       emit(LoadedSetModuleState());
     } catch (e) {

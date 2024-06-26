@@ -12,13 +12,13 @@ class DBModule {
 
 /// Clase que devuelve un icono para el módulo según 
 /// en índice numérico proporcionado.
-class IconsModule {
+class IconsRepo {
+  /// Devuelve un icono según el número proporcionado.
   static IconData getIcon(int value) {
-    switch (value) {
-      case 0:
-        return Icons.home;
-      default:
-        return Icons.square;
+    if (value == Icons.home.codePoint) {
+      return Icons.home;
+    } else {
+      return Icons.square;
     }
   }
 }
