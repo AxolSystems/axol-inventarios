@@ -54,4 +54,38 @@ class WidgetLinkRepo {
     }
     return wlList;
   }
+
+  static Future<List<WidgetLinkModel>> fetchAllWidgetLik() async {
+    List<Map<String, dynamic>> wlsDB;
+    List<WidgetLinkModel> wlList = [];
+    WidgetLinkModel wl;
+    BlockModel block = BlockModel.empty();
+
+    wlsDB = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>('*, block:block(*)');
+
+    if (wlsDB.isNotEmpty) {
+      for (var wlDB in wlsDB) {
+        final dynamicBlock = wlDB[_block];
+        if (dynamicBlock is Map<String, dynamic> && dynamicBlock.isNotEmpty) {
+          block = BlockModel(
+            blockName: dynamicBlock[BlockRepo.blockName].toString(),
+            propertyList: PropertyModel.mapToProperty(
+                dynamicBlock[BlockRepo.property] ?? {}),
+            tableName: dynamicBlock[BlockRepo.tableName],
+            uuid: dynamicBlock[BlockRepo.id],
+          );
+        }
+        wl = WidgetLinkModel(
+          block: block,
+          id: wlDB[_id],
+          widget: wlDB[_widget],
+          views: WidgetViewModel.mapToViews(wlDB[_views]),
+        );
+        wlList.add(wl);
+      }
+    }
+    return wlList;
+  }
 }

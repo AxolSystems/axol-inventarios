@@ -8,11 +8,12 @@ import '../../../utilities/widgets/drawer_box.dart';
 import '../../../utilities/widgets/textfield.dart';
 import '../../axol_widget/generic/view/axol_widget.dart';
 import '../../widget_link/model/widgetlink_model.dart';
+import '../../widget_link/view/widgetlink_drawer.dart';
 import '../cubit/set_module_drawer/set_module_drawer_cubit.dart';
 import '../cubit/set_module_drawer/set_module_drawer_state.dart';
 import '../model/set_module_drawer_form_model.dart';
 
-/// Widget de tipo [DrawerBox] que se utiliza para realizar ajustes en un 
+/// Widget de tipo [DrawerBox] que se utiliza para realizar ajustes en un
 /// módulo o crear uno nuevo.
 class SetModuleDrawer extends AxolWidget {
   final ModuleModel module;
@@ -34,7 +35,7 @@ class SetModuleDrawerBuild extends AxolWidget {
   final ModuleModel module;
   const SetModuleDrawerBuild(this.module, {super.key, super.theme});
 
-  /// Crea el widget general del drawer de ajustes, retornando uno distinto 
+  /// Crea el widget general del drawer de ajustes, retornando uno distinto
   /// según su estado.
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class SetModuleDrawerBuild extends AxolWidget {
     );
   }
 
-  /// Widget con los elementos de drawer, este widget es el que se toma para 
+  /// Widget con los elementos de drawer, este widget es el que se toma para
   /// reconstruirlo cada vez que hay un cambio en el estado.
   Widget setModuleDrawer(BuildContext context, SetModuleDrawerFormModel form,
       bool isLoading, int? theme_) {
@@ -147,7 +148,12 @@ class SetModuleDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Agregar link',
                       theme: theme,
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => WidgetLinkDrawer(theme: theme),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -185,6 +191,7 @@ class SetModuleDrawerBuild extends AxolWidget {
                       flex: 1,
                       child: Text('Número de vistas', style: Typo.body(theme)),
                     ),
+                    const SizedBox(width: 56),
                   ],
                 ),
               ),
@@ -251,6 +258,18 @@ class SetModuleDrawerBuild extends AxolWidget {
                                 flex: 1,
                                 child: Text(link.views.length.toString(),
                                     style: Typo.body(theme)),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: SecondaryButton(
+                                  icon: Icons.more_horiz,
+                                  theme: theme,
+                                  width: 31,
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  onPressed: () {},
+                                ),
                               ),
                             ],
                           ),
