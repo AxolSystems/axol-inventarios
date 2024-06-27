@@ -1,6 +1,7 @@
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 
+/// Widget principal de un campo de texto genérico de la aplicación.
 class PrimaryTextField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String value)? onChanged;
@@ -8,6 +9,7 @@ class PrimaryTextField extends StatelessWidget {
   const PrimaryTextField(
       {super.key, this.controller, this.onChanged, this.theme});
 
+  /// Devuelve widget general del campo de texto.
   @override
   Widget build(BuildContext context) {
     return TextField(

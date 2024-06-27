@@ -1,6 +1,10 @@
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 
+/// Widget utilizado para mostrar un drawer con estructura genérica, 
+/// con las propiedades para realizar sus cambios necesarios. 
+/// 
+/// TODO: Falta docuemntar los demás metodos de DrawerBox.
 class DrawerBox extends StatelessWidget {
   final double? width;
   final List<Widget>? children;
@@ -21,19 +25,7 @@ class DrawerBox extends StatelessWidget {
     this.theme,
   });
 
-  double drawerWidth(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double drawerWidth;
-    if (width == null) {
-      drawerWidth = screenWidth * 0.5;
-    } else if (width! <= 1 && width! > 0) {
-      drawerWidth = screenWidth * width!;
-    } else {
-      drawerWidth = screenWidth * 0.5;
-    }
-    return drawerWidth;
-  }
-
+  /// Construye el widget central de DrawerBox.
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -116,7 +108,7 @@ class DrawerBox extends StatelessWidget {
       );
     }
   }
-
+  
   static Widget rowKeyValue(String key, String value) => Row(
         children: [
           Expanded(

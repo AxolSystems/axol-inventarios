@@ -12,6 +12,8 @@ import '../cubit/set_module_drawer/set_module_drawer_cubit.dart';
 import '../cubit/set_module_drawer/set_module_drawer_state.dart';
 import '../model/set_module_drawer_form_model.dart';
 
+/// Widget de tipo [DrawerBox] que se utiliza para realizar ajustes en un 
+/// módulo o crear uno nuevo.
 class SetModuleDrawer extends AxolWidget {
   final ModuleModel module;
   const SetModuleDrawer(this.module, {super.key, super.theme});
@@ -32,6 +34,8 @@ class SetModuleDrawerBuild extends AxolWidget {
   final ModuleModel module;
   const SetModuleDrawerBuild(this.module, {super.key, super.theme});
 
+  /// Crea el widget general del drawer de ajustes, retornando uno distinto 
+  /// según su estado.
   @override
   Widget build(BuildContext context) {
     SetModuleDrawerFormModel form = context.read<SetModuleDrawerForm>().state;
@@ -50,6 +54,8 @@ class SetModuleDrawerBuild extends AxolWidget {
     );
   }
 
+  /// Widget con los elementos de drawer, este widget es el que se toma para 
+  /// reconstruirlo cada vez que hay un cambio en el estado.
   Widget setModuleDrawer(BuildContext context, SetModuleDrawerFormModel form,
       bool isLoading, int? theme_) {
     final int theme = theme_ ?? 0;

@@ -439,7 +439,7 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-/// TODO: DOCUMENTAR.
+/// Botón utilizado para acciones secundarias en una vista.
 class SecondaryButton extends StatelessWidget {
   final Function()? onPressed;
   final IconData? icon;
@@ -457,6 +457,7 @@ class SecondaryButton extends StatelessWidget {
     this.width,
   });
 
+  /// Construye el widget del botón secundario.
   @override
   Widget build(BuildContext context) {
     return SizedBox(
