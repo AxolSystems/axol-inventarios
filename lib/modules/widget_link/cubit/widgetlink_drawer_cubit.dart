@@ -16,7 +16,6 @@ class WLinkDrawerCubit extends Cubit<WLinkDrawerState> {
       
       links = await WidgetLinkRepo.fetchAllWidgetLik();
       form.links = links;
-      print(form.links);
 
       emit(LoadedWLinkDrawerState());
     } catch (e) {

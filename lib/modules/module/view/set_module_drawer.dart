@@ -151,7 +151,8 @@ class SetModuleDrawerBuild extends AxolWidget {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => WidgetLinkDrawer(theme: theme),
+                          builder: (context) => WidgetLinkDrawer(
+                              theme: theme, moduleLinks: form.links),
                         );
                       },
                     ),
@@ -173,12 +174,12 @@ class SetModuleDrawerBuild extends AxolWidget {
                   children: [
                     const SizedBox(width: 8),
                     Expanded(
-                      flex: 1,
+                      flex: 3,
                       child: Text('Id', style: Typo.body(theme)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Text('Bloque', style: Typo.body(theme)),
                     ),
                     const SizedBox(width: 12),
@@ -238,12 +239,12 @@ class SetModuleDrawerBuild extends AxolWidget {
                             children: [
                               const SizedBox(width: 8),
                               Expanded(
-                                flex: 1,
+                                flex: 3,
                                 child: Text(link.id, style: Typo.body(theme)),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                flex: 1,
+                                flex: 2,
                                 child: Text(link.block.blockName,
                                     style: Typo.body(theme)),
                               ),
