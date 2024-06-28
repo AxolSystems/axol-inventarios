@@ -80,7 +80,9 @@ class SetModuleDrawerBuild extends AxolWidget {
           text: 'Cancelar',
           padding: const EdgeInsets.symmetric(horizontal: 8),
           theme: theme,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         PrimaryButton(
           text: 'Guardar',

@@ -54,6 +54,17 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
       emit(ErrorSetModuleDrawerState(error: e.toString()));
     }
   }
+
+  Future<void> save(SetModuleDrawerFormModel form) async {
+    try {
+      emit(InitialSetModuleDrawerState());
+      emit(LoadingSetModuleDrawerState());
+      emit(LoadedSetModuleDrawerState());
+    } catch (e) {
+      emit(InitialSetModuleDrawerState());
+      emit(ErrorSetModuleDrawerState(error: e.toString()));
+    }
+  }
 }
 
 /// Cubit que mantiene en segundo plano los datos del drawer de
