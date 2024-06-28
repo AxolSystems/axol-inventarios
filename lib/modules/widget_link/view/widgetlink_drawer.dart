@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/loading_indicator/progress_indicator.dart';
+import '../../../utilities/widgets/textfield.dart';
 import '../cubit/widgetlink_drawer_cubit.dart';
 import '../cubit/widgetlink_drawer_state.dart';
 import '../model/widgetlink_drawer_form_model.dart';
@@ -72,31 +73,84 @@ class WidgetLinkDrawerBuild extends StatelessWidget {
         : DrawerBox(
             width: 0.45,
             theme: theme,
-            header: Row(
+            header: Column(
               children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: ColorTheme.item30(theme)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: ColorTheme.item30(theme)),
+                          ),
+                        ),
+                        child: Text(
+                          'Búsqueda de links',
+                          style: Typo.titleH2(theme),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      'Búsqueda de links',
-                      style: Typo.titleH2(theme),
-                      textAlign: TextAlign.center,
+                  ],
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  child: PrimaryTextField(
+                    controller: form.ctrlFind,
+                    theme: theme,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: ColorTheme.item10(theme),
+                      size: 24,
                     ),
+                    hintText: 'Buscar por id o nombre de bloque',
+                    onChanged: (value) {
+                      context.read<WLinkDrawerCubit>().finder(form);
+                    },
+                    hintStyle: Typo.hint(theme),
                   ),
                 ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: ColorTheme.item40(theme),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: Text('Id', style: Typo.body(theme)),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: Text('Bloque', style: Typo.body(theme)),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 1,
+                        child: Text('Widget', style: Typo.body(theme)),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 1,
+                        child:
+                            Text('Número de vistas', style: Typo.body(theme)),
+                      ),
+                      const SizedBox(width: 40),
+                    ],
+                  ),
+                )
               ],
             ),
             child: Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: form.links.length,
+                itemCount: form.filterLinks.length,
                 itemBuilder: (context, index) {
-                  final WidgetLinkModel link = form.links[index];
+                  final WidgetLinkModel link = form.filterLinks[index];
                   final bool exist =
                       moduleLinks.indexWhere((x) => x.id == link.id) > -1;
                   return OutlinedButton(
@@ -105,7 +159,13 @@ class WidgetLinkDrawerBuild extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       shape: const ContinuousRectangleBorder(),
                     ),
-                    onPressed: exist ? null : () {},
+                    onPressed: exist
+                        ? null
+                        : () {
+                            context
+                                .read<WLinkDrawerCubit>()
+                                .selectLink(context, link);
+                          },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(

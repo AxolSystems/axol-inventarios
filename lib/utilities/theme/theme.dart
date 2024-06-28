@@ -325,6 +325,11 @@ class Typo {
       fontWeight: FontWeight.normal,
       fontSize: 14,
       color: ColorPalette.middleItems);
+  static TextStyle hint(int theme) => TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: ColorTheme.item10(theme));
 
   //Button mobile
   static const mobileLight20 = TextStyle(

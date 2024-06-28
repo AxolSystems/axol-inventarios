@@ -153,6 +153,12 @@ class SetModuleDrawerBuild extends AxolWidget {
                           context: context,
                           builder: (context) => WidgetLinkDrawer(
                               theme: theme, moduleLinks: form.links),
+                        ).then(
+                          (value) {
+                            context
+                                .read<SetModuleDrawerCubit>()
+                                .thenAddLink(value, form);
+                          },
                         );
                       },
                     ),
