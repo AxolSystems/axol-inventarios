@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../../model/module_model.dart';
 import '../../model/set_module_drawer_form_model.dart';
+import '../../repository/module_data_repo.dart';
+import '../../repository/module_repo.dart';
 import 'set_module_drawer_state.dart';
 
 /// Lógica del negocio del drawer para editar módulos.
@@ -19,7 +22,9 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
 
       form.ctrlName.text = module.name;
       form.ctrlIcon.text = module.icon.codePoint.toString();
-      form.links = module.widgetLinks;
+      for (var link in module.widgetLinks) {
+        form.links.add(link);
+      }
 
       emit(LoadedSetModuleDrawerState());
     } catch (e) {
@@ -55,16 +60,47 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
     }
   }
 
-  Future<void> save(SetModuleDrawerFormModel form) async {
+  /// Actualiza en la base de datos el estado actual del formulario.
+  Future<void> save(SetModuleDrawerFormModel form, ModuleModel module) async {
+    try {
+      emit(InitialSetModuleDrawerState());
+      emit(SavingSetModuleDrawerState());
+      ModuleModel cModule;
+      IconData icon;
+
+      if (int.tryParse(form.ctrlIcon.text) != null) {
+        icon = IconsRepo.getIcon(int.parse(form.ctrlIcon.text));
+      } else {
+        icon = module.icon;
+      }
+
+      cModule = ModuleModel(
+        name: form.ctrlName.text,
+        id: module.id,
+        icon:  icon,
+        widgetLinks: form.links,
+        permissions: module.permissions,
+      );
+
+      await ModuleRepo.update(cModule);
+
+      emit(SavedSetModuleDrawerState());
+    } catch (e) {
+      emit(InitialSetModuleDrawerState());
+      emit(ErrorSetModuleDrawerState(error: e.toString()));
+    }
+  }
+
+  /// Acciones al seleccionar un opción del popupMenu de la lista de
+  /// widgetLinks. 0: Eliminar.
+  Future<void> onSelectPopupMenu(
+      int value, SetModuleDrawerFormModel form, int index) async {
     try {
       emit(InitialSetModuleDrawerState());
       emit(LoadingSetModuleDrawerState());
-      final bool isEqual;
-
-      isEqual = SetModuleDrawerFormModel.compareForms(form);
-      print(isEqual);
-      print(form.initForm[SetModuleFormEnum.links]);
-
+      if (value == 0) {
+        form.links.removeAt(index);
+      }
       emit(LoadedSetModuleDrawerState());
     } catch (e) {
       emit(InitialSetModuleDrawerState());

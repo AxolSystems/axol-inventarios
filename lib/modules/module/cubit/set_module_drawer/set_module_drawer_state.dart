@@ -19,6 +19,16 @@ class LoadedSetModuleDrawerState extends SetModuleDrawerState {
   List<Object?> get props => [];
 }
 
+class SavingSetModuleDrawerState extends SetModuleDrawerState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SavedSetModuleDrawerState extends SetModuleDrawerState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorSetModuleDrawerState extends SetModuleDrawerState {
   final String error;
   const ErrorSetModuleDrawerState({required this.error});
@@ -27,3 +37,5 @@ class ErrorSetModuleDrawerState extends SetModuleDrawerState {
   @override
   List<Object?> get props => [error];
 }
+
+enum SetModuleStateEnum { loading, saving, loaded }

@@ -34,7 +34,7 @@ class SetModuleDrawerFormModel {
         initForm = {
           SetModuleFormEnum.ctrlName: module.name,
           SetModuleFormEnum.ctrlIcon: module.icon.codePoint.toString(),
-          SetModuleFormEnum.links: List.unmodifiable(module.widgetLinks),
+          SetModuleFormEnum.links: List<WidgetLinkModel>.unmodifiable(module.widgetLinks),
         };
 
   /// Realiza la comparación entre el form actual y el inicial; devuelve 
@@ -70,6 +70,6 @@ class SetModuleDrawerFormModel {
   }
 }
 
-/// Enum para identificar las variables del formulario, útil para ubicar los parametros 
+/// Enum para identificar las variables del formulario, útil para ubicar los parámetros 
 /// en un *map*.
 enum SetModuleFormEnum { ctrlName, ctrlIcon, links }

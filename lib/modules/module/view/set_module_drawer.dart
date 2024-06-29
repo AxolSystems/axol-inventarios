@@ -44,11 +44,17 @@ class SetModuleDrawerBuild extends AxolWidget {
       bloc: context.read<SetModuleDrawerCubit>()..initLoad(form, module),
       builder: (context, state) {
         if (state is LoadingSetModuleDrawerState) {
-          return setModuleDrawer(context, form, true, theme);
+          return setModuleDrawer(
+              context, form, SetModuleStateEnum.loading, theme);
         } else if (state is LoadedSetModuleDrawerState) {
-          return setModuleDrawer(context, form, false, theme);
+          return setModuleDrawer(
+              context, form, SetModuleStateEnum.loaded, theme);
+        } else if (state is SavingSetModuleDrawerState) {
+          return setModuleDrawer(
+              context, form, SetModuleStateEnum.saving, theme);
         } else {
-          return setModuleDrawer(context, form, false, theme);
+          return setModuleDrawer(
+              context, form, SetModuleStateEnum.loaded, theme);
         }
       },
       listener: (context, state) {},
@@ -58,7 +64,7 @@ class SetModuleDrawerBuild extends AxolWidget {
   /// Widget con los elementos de drawer, este widget es el que se toma para
   /// reconstruirlo cada vez que hay un cambio en el estado.
   Widget setModuleDrawer(BuildContext context, SetModuleDrawerFormModel form,
-      bool isLoading, int? theme_) {
+      SetModuleStateEnum state, int? theme_) {
     final int theme = theme_ ?? 0;
     const double heightLinkBox = 50;
     return DrawerBox(
@@ -80,17 +86,24 @@ class SetModuleDrawerBuild extends AxolWidget {
           text: 'Cancelar',
           padding: const EdgeInsets.symmetric(horizontal: 8),
           theme: theme,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: state == SetModuleStateEnum.loaded
+              ? () {
+                  Navigator.pop(context);
+                }
+              : null,
         ),
         PrimaryButton(
           text: 'Guardar',
           padding: const EdgeInsets.symmetric(horizontal: 8),
           theme: theme,
-          onPressed: () {
-            context.read<SetModuleDrawerCubit>().save(form);
-          },
+          isLoading: state == SetModuleStateEnum.saving,
+          onPressed: SetModuleDrawerFormModel.compareForms(form)
+              ? null
+              : () {
+                  if (state == SetModuleStateEnum.loaded) {
+                    context.read<SetModuleDrawerCubit>().save(form, module);
+                  }
+                },
         ),
       ],
       children: [
@@ -109,6 +122,10 @@ class SetModuleDrawerBuild extends AxolWidget {
                 child: PrimaryTextField(
                   controller: form.ctrlName,
                   theme: theme,
+                  enabled: state == SetModuleStateEnum.loaded,
+                  onChanged: (value) {
+                    context.read<SetModuleDrawerCubit>().load();
+                  },
                 ),
               ),
             ],
@@ -129,6 +146,10 @@ class SetModuleDrawerBuild extends AxolWidget {
                 child: PrimaryTextField(
                   controller: form.ctrlIcon,
                   theme: theme,
+                  enabled: state == SetModuleStateEnum.loaded,
+                  onChanged: (value) {
+                    context.read<SetModuleDrawerCubit>().load();
+                  },
                 ),
               ),
             ],
@@ -152,7 +173,7 @@ class SetModuleDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Agregar link',
                       theme: theme,
-                      onPressed: () {
+                      onPressed: state != SetModuleStateEnum.loaded ? null : () {
                         showDialog(
                           context: context,
                           builder: (context) => WidgetLinkDrawer(
@@ -273,13 +294,23 @@ class SetModuleDrawerBuild extends AxolWidget {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
-                                child: SecondaryButton(
-                                  icon: Icons.more_horiz,
-                                  theme: theme,
-                                  width: 31,
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  onPressed: () {},
+                                child: PopupMenuButton(
+                                  enabled: state == SetModuleStateEnum.loaded,
+                                  icon: Icon(Icons.more_horiz,
+                                      color: ColorTheme.text(theme)),
+                                  color: ColorTheme.item40(theme),
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      value: 0,
+                                      child: Text('Eliminar',
+                                          style: Typo.alert(theme)),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    context
+                                        .read<SetModuleDrawerCubit>()
+                                        .onSelectPopupMenu(value, form, index);
+                                  },
                                 ),
                               ),
                             ],

@@ -9,6 +9,7 @@ class PrimaryTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final String? hintText;
   final TextStyle? hintStyle;
+  final bool? enabled;
   const PrimaryTextField(
       {super.key,
       this.controller,
@@ -16,13 +17,15 @@ class PrimaryTextField extends StatelessWidget {
       this.theme,
       this.prefixIcon,
       this.hintText,
-      this.hintStyle});
+      this.hintStyle,
+      this.enabled});
 
   /// Devuelve widget general del campo de texto.
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      enabled: enabled,
       style: Typo.body(theme ?? 0),
       cursorColor: ColorTheme.text(theme ?? 0),
       decoration: InputDecoration(

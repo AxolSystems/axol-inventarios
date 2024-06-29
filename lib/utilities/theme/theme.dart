@@ -145,6 +145,18 @@ class ColorTheme {
         return const Color.fromARGB(125, 0, 0, 0);
     }
   }
+
+  /// Color para elementos con advertencias.
+  static Color alert(int theme) {
+    switch (theme) {
+      case 0:
+        return Colors.red;
+      case 1:
+        return ColorPalette.caution;
+      default:
+        return Colors.red;
+    }
+  }
 }
 
 /// TODO: Eliminar todas las fuentes sin usarse y documentar.
@@ -310,6 +322,11 @@ class Typo {
       fontWeight: FontWeight.w400,
       fontSize: 16,
       color: ColorPalette.caution);
+  static TextStyle alert(int theme) => TextStyle(
+      fontFamily: 'Source Sans Pro',
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      color: ColorTheme.alert(theme));
   static const systemDark = TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.normal,

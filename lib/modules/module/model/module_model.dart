@@ -6,12 +6,12 @@ import '../../widget_link/model/widgetlink_model.dart';
 /// 
 /// TODO: verificar si es necesaria la propiedad onPressed.
 class ModuleModel {
-  String id;
-  String name;
-  IconData icon;
-  List<WidgetLinkModel> widgetLinks;
-  Map permissions;
-  Function()? onPressed;
+  final String id;
+  final String name;
+  final IconData icon;
+  final List<WidgetLinkModel> widgetLinks;
+  final Map<String,dynamic> permissions;
+  final Function()? onPressed;
 
   ModuleModel({
     required this.name,

@@ -26,7 +26,7 @@ class SetModuleCubit extends Cubit<SetModuleState> {
     }
   }
 
-  /// Método de recarga de vista. Solo utilizado en caso 
+  /// Método de recarga de vista. Solo utilizado en caso
   /// de ser necesario actualizar estados desde otra clase.
   Future<void> load() async {
     try {
@@ -40,13 +40,16 @@ class SetModuleCubit extends Cubit<SetModuleState> {
   }
 
   /// Lógica utilizada una vez se presiona el botón para editar un módulo.
-  Future<void> edit(BuildContext context, SetModuleFormModel form, ModuleModel module) async {
+  Future<void> edit(
+      BuildContext context, SetModuleFormModel form, ModuleModel module) async {
     try {
       emit(InitialSetModuleState());
       emit(LoadingSetModuleState());
       showDialog(
         context: context,
-        builder: (context) => SetModuleDrawer(module, theme: form.theme),
+        builder: (context) => SetModuleDrawer(
+            module,
+            theme: form.theme),
       );
       emit(LoadedSetModuleState());
     } catch (e) {

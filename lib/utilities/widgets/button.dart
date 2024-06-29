@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
@@ -372,6 +373,7 @@ class PrimaryButton extends StatelessWidget {
   final String? text;
   final EdgeInsetsGeometry? padding;
   final int? theme;
+  final bool? isLoading;
   const PrimaryButton({
     super.key,
     this.onPressed,
@@ -379,6 +381,7 @@ class PrimaryButton extends StatelessWidget {
     this.text,
     this.padding,
     this.theme,
+    this.isLoading,
   });
 
   @override
@@ -403,20 +406,30 @@ class PrimaryButton extends StatelessWidget {
                   textStyle: WidgetStateProperty.all(Typo.systemDark),
                   splashFactory: NoSplash.splashFactory,
                 ),
-                onPressed: onPressed,
+                onPressed: isLoading == true ? null : onPressed,
                 child: Padding(
                   padding: padding ?? EdgeInsets.zero,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Visibility(
-                          visible: icon != null,
-                          child: Icon(
-                            icon,
-                            size: 15,
-                          )),
+                        visible: isLoading ?? false,
+                        replacement: Visibility(
+                            visible: icon != null,
+                            child: Icon(
+                              icon,
+                              size: 15,
+                            )),
+                        child: const SizedBox.square(
+                          dimension: 15,
+                          child: CircularProgressIndicator(
+                            color: ColorPalette.lightText,
+                          ),
+                        ),
+                      ),
                       Visibility(
-                        visible: icon != null && text != null,
+                        visible:
+                            (icon != null || isLoading != null) && (text != null),
                         child: const SizedBox(width: 8),
                       ),
                       Visibility(child: Text(text ?? ''))
@@ -424,7 +437,7 @@ class PrimaryButton extends StatelessWidget {
                   ),
                 )),
             Visibility(
-                visible: onPressed == null,
+                visible: onPressed == null && isLoading != true,
                 replacement: const SizedBox(),
                 child: Positioned.fill(
                   child: Container(

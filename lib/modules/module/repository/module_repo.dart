@@ -73,4 +73,14 @@ class ModuleRepo {
     }
     return moduleList;
   }
+
+  /// Actualiza módulo de base de datos con los datos recibidos.
+  static Future<void> update(ModuleModel module) async {
+    await _supabase.from(_table).update({
+      _text: module.name,
+      _icon: module.icon.codePoint,
+      _permissions: module.permissions,
+      _widgetLink: WidgetLinkModel.listToMap(module.widgetLinks),
+    }).eq(_id, module.id);
+  }
 }
