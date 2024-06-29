@@ -2,32 +2,74 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../widget_link/model/widgetlink_model.dart';
+import 'module_model.dart';
 
-/// Modelo de datos con los valores mutables a través de 
+/// Modelo de datos con los valores mutables a través de
 /// los estados de *SetModuleDrawer*.
-/// 
+///
 /// - [ctrlName] : Controlador del campo de texto donde se edita el nombre del módulo.
 /// - [ctrlIcon] : Controlador del campo de texto donde se edita el icono del módulo.
 /// - [links] : Lista de widgetLinks que contiene el módulo.
-/// - [updated] : Indicador de modelo de datos actualizado, si es así se habilita botón
-/// para guardar.
+/// - [initForm] : Un *map* que almacena variables inmutables del formulario en su 
+/// estado inicial. Se utiliza para hacer la verificación de si el form se mantiene 
+/// igual o cambió. 
 class SetModuleDrawerFormModel {
   TextEditingController ctrlName;
   TextEditingController ctrlIcon;
   List<WidgetLinkModel> links;
-  bool updated;
+  final Map<SetModuleFormEnum, dynamic> initForm;
 
   SetModuleDrawerFormModel({
     required this.ctrlName,
     required this.ctrlIcon,
     required this.links,
-    required this.updated,
+    required this.initForm,
   });
 
   /// Estado inicial de este modelo de datos.
-  SetModuleDrawerFormModel.empty()
+  SetModuleDrawerFormModel.empty(ModuleModel module)
       : ctrlName = TextEditingController(),
         ctrlIcon = TextEditingController(),
         links = [],
-        updated = false;
+        initForm = {
+          SetModuleFormEnum.ctrlName: module.name,
+          SetModuleFormEnum.ctrlIcon: module.icon.codePoint.toString(),
+          SetModuleFormEnum.links: List.unmodifiable(module.widgetLinks),
+        };
+
+  /// Realiza la comparación entre el form actual y el inicial; devuelve 
+  /// *true* si son iguales. 
+  static bool compareForms(SetModuleDrawerFormModel form) {
+    bool isEqual;
+    int compareList = 0;
+    dynamic links = [];
+
+    links = form.initForm[SetModuleFormEnum.links];
+
+    if (links.length == form.links.length) {
+      if (links.isNotEmpty) {
+        for (var link in links) {
+          if (form.links.indexWhere(
+                (x) => x.id == link.id,
+              ) ==
+              -1) {
+            compareList++;
+          }
+        }
+      }
+    } else {
+      compareList = 1;
+    }
+
+    isEqual =
+        (form.ctrlIcon.text == form.initForm[SetModuleFormEnum.ctrlIcon]) &&
+            (form.ctrlName.text == form.initForm[SetModuleFormEnum.ctrlName]) &&
+            (compareList == 0);
+
+    return isEqual;
+  }
 }
+
+/// Enum para identificar las variables del formulario, útil para ubicar los parametros 
+/// en un *map*.
+enum SetModuleFormEnum { ctrlName, ctrlIcon, links }

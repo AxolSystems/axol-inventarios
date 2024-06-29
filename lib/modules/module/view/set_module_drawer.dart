@@ -24,7 +24,7 @@ class SetModuleDrawer extends AxolWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SetModuleDrawerCubit()),
-        BlocProvider(create: (_) => SetModuleDrawerForm()),
+        BlocProvider(create: (_) => SetModuleDrawerForm(module)),
       ],
       child: SetModuleDrawerBuild(module, theme: theme),
     );
@@ -88,7 +88,9 @@ class SetModuleDrawerBuild extends AxolWidget {
           text: 'Guardar',
           padding: const EdgeInsets.symmetric(horizontal: 8),
           theme: theme,
-          onPressed: () {},
+          onPressed: () {
+            context.read<SetModuleDrawerCubit>().save(form);
+          },
         ),
       ],
       children: [

@@ -59,6 +59,12 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
     try {
       emit(InitialSetModuleDrawerState());
       emit(LoadingSetModuleDrawerState());
+      final bool isEqual;
+
+      isEqual = SetModuleDrawerFormModel.compareForms(form);
+      print(isEqual);
+      print(form.initForm[SetModuleFormEnum.links]);
+
       emit(LoadedSetModuleDrawerState());
     } catch (e) {
       emit(InitialSetModuleDrawerState());
@@ -70,5 +76,8 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
 /// Cubit que mantiene en segundo plano los datos del drawer de
 /// ajustes de módulos.
 class SetModuleDrawerForm extends Cubit<SetModuleDrawerFormModel> {
-  SetModuleDrawerForm() : super(SetModuleDrawerFormModel.empty());
+  final ModuleModel module;
+
+  SetModuleDrawerForm(this.module)
+      : super(SetModuleDrawerFormModel.empty(module));
 }
