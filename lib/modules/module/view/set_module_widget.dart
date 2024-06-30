@@ -1,4 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
+import 'package:axol_inventarios/modules/module/model/set_module_drawer_form_model.dart';
+import 'package:axol_inventarios/modules/module/view/set_module_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +14,8 @@ import '../cubit/set_module/set_module_state.dart';
 import '../model/module_model.dart';
 import '../model/set_module_form_model.dart';
 
-/// Widget para la configuración de módulos. Muestra un listado 
-/// de módulos existentes y da la opción de editar cada uno o 
+/// Widget para la configuración de módulos. Muestra un listado
+/// de módulos existentes y da la opción de editar cada uno o
 /// agregar un nuevo módulo.
 class SetModuleWidget extends AxolWidget {
   const SetModuleWidget({super.key, super.theme});
@@ -140,7 +142,14 @@ class SetModuleWidgetBuild extends AxolWidget {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8),
                                           theme: form.theme,
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    SetModuleDrawer(
+                                                        ModuleModel.empty(),
+                                                        theme: theme, action: EnumSetModuleAction.add,));
+                                          },
                                         )
                                       ],
                                     ),
@@ -229,7 +238,8 @@ class SetModuleWidgetBuild extends AxolWidget {
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Text(module.name, style: Typo.body(form.theme)),
+                          child:
+                              Text(module.name, style: Typo.body(form.theme)),
                         ),
                         Expanded(
                           flex: 2,
@@ -248,7 +258,9 @@ class SetModuleWidgetBuild extends AxolWidget {
                             width: 60,
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             onPressed: () {
-                              context.read<SetModuleCubit>().edit(context, form, module);
+                              context
+                                  .read<SetModuleCubit>()
+                                  .edit(context, form, module);
                             },
                           ),
                         ),

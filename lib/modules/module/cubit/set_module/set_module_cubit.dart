@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/module/model/module_model.dart';
+import 'package:axol_inventarios/modules/module/model/set_module_drawer_form_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,7 +50,7 @@ class SetModuleCubit extends Cubit<SetModuleState> {
         context: context,
         builder: (context) => SetModuleDrawer(
             module,
-            theme: form.theme),
+            theme: form.theme, action: EnumSetModuleAction.edit,),
       ).then((value) {
         if (value == true) {
           initLoad(form);

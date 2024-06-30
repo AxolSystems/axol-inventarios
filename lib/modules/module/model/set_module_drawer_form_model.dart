@@ -10,14 +10,14 @@ import 'module_model.dart';
 /// - [ctrlName] : Controlador del campo de texto donde se edita el nombre del módulo.
 /// - [ctrlIcon] : Controlador del campo de texto donde se edita el icono del módulo.
 /// - [links] : Lista de widgetLinks que contiene el módulo.
-/// - [initForm] : Un *map* que almacena variables inmutables del formulario en su 
-/// estado inicial. Se utiliza para hacer la verificación de si el form se mantiene 
-/// igual o cambió. 
+/// - [initForm] : Un *map* que almacena variables inmutables del formulario en su
+/// estado inicial. Se utiliza para hacer la verificación de si el form se mantiene
+/// igual o cambió.
 class SetModuleDrawerFormModel {
   TextEditingController ctrlName;
   TextEditingController ctrlIcon;
   List<WidgetLinkModel> links;
-  final Map<SetModuleFormEnum, dynamic> initForm;
+  final Map<EnumSetModuleForm, dynamic> initForm;
 
   SetModuleDrawerFormModel({
     required this.ctrlName,
@@ -32,19 +32,20 @@ class SetModuleDrawerFormModel {
         ctrlIcon = TextEditingController(),
         links = [],
         initForm = {
-          SetModuleFormEnum.ctrlName: module.name,
-          SetModuleFormEnum.ctrlIcon: module.icon.codePoint.toString(),
-          SetModuleFormEnum.links: List<WidgetLinkModel>.unmodifiable(module.widgetLinks),
+          EnumSetModuleForm.ctrlName: module.name,
+          EnumSetModuleForm.ctrlIcon: module.icon.codePoint.toString(),
+          EnumSetModuleForm.links:
+              List<WidgetLinkModel>.unmodifiable(module.widgetLinks),
         };
 
-  /// Realiza la comparación entre el form actual y el inicial; devuelve 
-  /// *true* si son iguales. 
+  /// Realiza la comparación entre el form actual y el inicial; devuelve
+  /// *true* si son iguales.
   static bool compareForms(SetModuleDrawerFormModel form) {
     bool isEqual;
     int compareList = 0;
     dynamic links = [];
 
-    links = form.initForm[SetModuleFormEnum.links];
+    links = form.initForm[EnumSetModuleForm.links];
 
     if (links.length == form.links.length) {
       if (links.isNotEmpty) {
@@ -62,14 +63,18 @@ class SetModuleDrawerFormModel {
     }
 
     isEqual =
-        (form.ctrlIcon.text == form.initForm[SetModuleFormEnum.ctrlIcon]) &&
-            (form.ctrlName.text == form.initForm[SetModuleFormEnum.ctrlName]) &&
+        (form.ctrlIcon.text == form.initForm[EnumSetModuleForm.ctrlIcon]) &&
+            (form.ctrlName.text == form.initForm[EnumSetModuleForm.ctrlName]) &&
             (compareList == 0);
 
     return isEqual;
   }
 }
 
-/// Enum para identificar las variables del formulario, útil para ubicar los parámetros 
+/// Enum para identificar las variables del formulario, útil para ubicar los parámetros
 /// en un *map*.
-enum SetModuleFormEnum { ctrlName, ctrlIcon, links }
+enum EnumSetModuleForm { ctrlName, ctrlIcon, links }
+
+/// Enum para identificar que tipo de acción se realizará en el drawer; por ejemplo, 
+/// editar o agregar un módulo.
+enum EnumSetModuleAction { add, edit }

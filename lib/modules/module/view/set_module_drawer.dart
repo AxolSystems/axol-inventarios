@@ -18,7 +18,8 @@ import '../model/set_module_drawer_form_model.dart';
 /// módulo o crear uno nuevo.
 class SetModuleDrawer extends AxolWidget {
   final ModuleModel module;
-  const SetModuleDrawer(this.module, {super.key, super.theme});
+  final EnumSetModuleAction action;
+  const SetModuleDrawer(this.module, {super.key, super.theme, required this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +28,15 @@ class SetModuleDrawer extends AxolWidget {
         BlocProvider(create: (_) => SetModuleDrawerCubit()),
         BlocProvider(create: (_) => SetModuleDrawerForm(module)),
       ],
-      child: SetModuleDrawerBuild(module, theme: theme),
+      child: SetModuleDrawerBuild(module, theme: theme, action: action,),
     );
   }
 }
 
 class SetModuleDrawerBuild extends AxolWidget {
   final ModuleModel module;
-  const SetModuleDrawerBuild(this.module, {super.key, super.theme});
+  final EnumSetModuleAction action;
+  const SetModuleDrawerBuild(this.module, {super.key, super.theme, required this.action});
 
   /// Crea el widget general del drawer de ajustes, retornando uno distinto
   /// según su estado.
@@ -77,13 +79,22 @@ class SetModuleDrawerBuild extends AxolWidget {
       SetModuleStateEnum state, int? theme_) {
     final int theme = theme_ ?? 0;
     const double heightLinkBox = 50;
+    final String title;
+
+    if (action == EnumSetModuleAction.add) {
+      title = 'Nuevo módulo';
+    } else if (action == EnumSetModuleAction.edit) {
+      title = 'Editar módulo';
+    } else {
+      title = '';
+    }
     return DrawerBox(
       theme: theme,
       header: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text('Edición de módulo', style: Typo.titleH2(theme)),
+            child: Text(title, style: Typo.titleH2(theme)),
           ),
           Divider(
             color: ColorTheme.item30(theme),
