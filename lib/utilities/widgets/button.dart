@@ -429,7 +429,7 @@ class PrimaryButton extends StatelessWidget {
                       ),
                       Visibility(
                         visible:
-                            (icon != null || isLoading != null) && (text != null),
+                            (icon != null || isLoading == true) && (text != null),
                         child: const SizedBox(width: 8),
                       ),
                       Visibility(child: Text(text ?? ''))

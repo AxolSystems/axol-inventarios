@@ -50,7 +50,11 @@ class SetModuleCubit extends Cubit<SetModuleState> {
         builder: (context) => SetModuleDrawer(
             module,
             theme: form.theme),
-      );
+      ).then((value) {
+        if (value == true) {
+          initLoad(form);
+        }
+      },);
       emit(LoadedSetModuleState());
     } catch (e) {
       emit(InitialSetModuleState());

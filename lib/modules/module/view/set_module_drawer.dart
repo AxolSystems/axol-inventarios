@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/module/model/module_model.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -57,7 +58,16 @@ class SetModuleDrawerBuild extends AxolWidget {
               context, form, SetModuleStateEnum.loaded, theme);
         }
       },
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is ErrorSetModuleDrawerState) {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialogAxol(text: state.error));
+        }
+        if (state is SavedSetModuleDrawerState) {
+          Navigator.pop(context, true);
+        }
+      },
     );
   }
 
@@ -173,19 +183,21 @@ class SetModuleDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Agregar link',
                       theme: theme,
-                      onPressed: state != SetModuleStateEnum.loaded ? null : () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => WidgetLinkDrawer(
-                              theme: theme, moduleLinks: form.links),
-                        ).then(
-                          (value) {
-                            context
-                                .read<SetModuleDrawerCubit>()
-                                .thenAddLink(value, form);
-                          },
-                        );
-                      },
+                      onPressed: state != SetModuleStateEnum.loaded
+                          ? null
+                          : () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => WidgetLinkDrawer(
+                                    theme: theme, moduleLinks: form.links),
+                              ).then(
+                                (value) {
+                                  context
+                                      .read<SetModuleDrawerCubit>()
+                                      .thenAddLink(value, form);
+                                },
+                              );
+                            },
                     ),
                   ],
                 ),
