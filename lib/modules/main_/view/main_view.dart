@@ -98,7 +98,7 @@ class MainViewBuild extends StatelessWidget {
               ),
               Text(
                 form.title,
-                style: Typo.titleLightH2,
+                style: Typo.titleH2(form.user.theme),
               ),
               const Expanded(child: SizedBox()),
               Visibility(

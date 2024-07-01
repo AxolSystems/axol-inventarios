@@ -122,7 +122,7 @@ class SetModuleDrawerBuild extends AxolWidget {
               ? null
               : () {
                   if (state == SetModuleStateEnum.loaded) {
-                    context.read<SetModuleDrawerCubit>().save(form, module);
+                    context.read<SetModuleDrawerCubit>().save(form, module, action);
                   }
                 },
         ),

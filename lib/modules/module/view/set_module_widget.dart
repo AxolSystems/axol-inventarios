@@ -147,8 +147,20 @@ class SetModuleWidgetBuild extends AxolWidget {
                                                 context: context,
                                                 builder: (context) =>
                                                     SetModuleDrawer(
-                                                        ModuleModel.empty(),
-                                                        theme: theme, action: EnumSetModuleAction.add,));
+                                                      ModuleModel.empty(),
+                                                      theme: theme,
+                                                      action:
+                                                          EnumSetModuleAction
+                                                              .add,
+                                                    )).then(
+                                              (value) {
+                                                if (value == true) {
+                                                  context
+                                                      .read<SetModuleCubit>()
+                                                      .initLoad(form);
+                                                }
+                                              },
+                                            );
                                           },
                                         )
                                       ],
@@ -243,7 +255,7 @@ class SetModuleWidgetBuild extends AxolWidget {
                         ),
                         Expanded(
                           flex: 2,
-                          child: Text(module.icon.toString(),
+                          child: Text(module.icon.codePoint.toString(),
                               style: Typo.body(form.theme)),
                         ),
                         Expanded(

@@ -35,6 +35,7 @@ class ModuleRepo {
     // con sus respectivos módulos.
     if (modulesDB.isNotEmpty) {
       for (var mDB in modulesDB) {
+        carryList = [];
         final Map<String, dynamic> map = mDB[_widgetLink];
         for (var value in map.values) {
           if (value is String) {
@@ -82,5 +83,16 @@ class ModuleRepo {
       _permissions: module.permissions,
       _widgetLink: WidgetLinkModel.listToMap(module.widgetLinks),
     }).eq(_id, module.id);
+  }
+
+  /// Inserta en base de datos los datos del módulo recibido.
+  static Future<void> insert(ModuleModel module) async {
+    await _supabase.from(_table).insert({
+      _id: module.id,
+      _text: module.name,
+      _icon: module.icon.codePoint,
+      _permissions: {},
+      _widgetLink: WidgetLinkModel.listToMap(module.widgetLinks),
+    });
   }
 }

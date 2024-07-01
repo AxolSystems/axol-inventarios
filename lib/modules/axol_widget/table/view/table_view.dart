@@ -74,7 +74,7 @@ class TableViewBuild extends AxolWidget {
   Widget tableView(BuildContext context, isLoading, TableFormModel form) {
     return Expanded(
         child: Container(
-      color: color ?? Colors.amber,
+      color: color ?? Colors.transparent,
       child: Column(
         children: [
           Row(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../../model/module_model.dart';
@@ -61,7 +62,8 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
   }
 
   /// Actualiza en la base de datos el estado actual del formulario.
-  Future<void> save(SetModuleDrawerFormModel form, ModuleModel module) async {
+  Future<void> save(SetModuleDrawerFormModel form, ModuleModel module,
+      EnumSetModuleAction action) async {
     try {
       emit(InitialSetModuleDrawerState());
       emit(SavingSetModuleDrawerState());
@@ -77,13 +79,18 @@ class SetModuleDrawerCubit extends Cubit<SetModuleDrawerState> {
       cModule = ModuleModel(
         name: form.ctrlName.text,
         id: module.id,
-        icon:  icon,
+        icon: icon,
         widgetLinks: form.links,
         permissions: module.permissions,
       );
 
-      await ModuleRepo.update(cModule);
-
+      if (action == EnumSetModuleAction.add) {
+        cModule = ModuleModel.setId(module: cModule, newId: const Uuid().v4());
+        await ModuleRepo.insert(cModule);
+      } else if (action == EnumSetModuleAction.edit) {
+        await ModuleRepo.update(cModule);
+      }
+      
       emit(SavedSetModuleDrawerState());
     } catch (e) {
       emit(InitialSetModuleDrawerState());
