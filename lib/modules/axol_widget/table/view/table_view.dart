@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
 import '../cubit/table_cubit.dart';
 import '../cubit/table_state.dart';
 import '../model/table_form_model.dart';
 
-/// Vista que contiene el widget de tabla. Las tablas son el medio donde 
-/// se presentan en pantalla los objetos de un bloque consultado. Permitiendo 
+/// Vista que contiene el widget de tabla. Las tablas son el medio donde
+/// se presentan en pantalla los objetos de un bloque consultado. Permitiendo
 /// herramientas de UI para filtrar o editar su contenido.
 class TableView extends AxolWidget {
   final Color? color;
@@ -40,7 +41,7 @@ class TableViewBuild extends AxolWidget {
   const TableViewBuild(
       {super.key, required this.themes, this.color, required this.table});
 
-  /// Devuelve en un blocConsumer el estado actual de la vista de tabla. 
+  /// Devuelve en un blocConsumer el estado actual de la vista de tabla.
   /// Escucha si hay un cambio en [MainViewCubit] para el cambio de tema.
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,6 @@ class TableViewBuild extends AxolWidget {
           form.theme = state.theme;
           context.read<TableCubit>().load();
         }
-
       },
       child: BlocConsumer<TableCubit, TableState>(
         bloc: context.read<TableCubit>()..initLoad(form, themes),
@@ -69,29 +69,38 @@ class TableViewBuild extends AxolWidget {
     );
   }
 
-  /// Devuelve el widget de tabla general de la vista. Esta compuesto 
+  /// Devuelve el widget de tabla general de la vista. Esta compuesto
   /// por otros widgets que conforman la vista de tabla.
   Widget tableView(BuildContext context, isLoading, TableFormModel form) {
     return Expanded(
         child: Container(
-      color: color ?? Colors.transparent,
+      color: ColorTheme.background(form.theme),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: headerWidget(table.header, form),
-          ),
           Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: table.rowList.length,
-              itemBuilder: (context, index) {
-                final row = table.rowList[index];
-                return Row(
-                  children: rowWidget(context, form, row, table.header),
-                );
-              },
+              child: ScrollViewAxol(
+            child: Column(
+              children: [
+                Row(
+                  children: headerWidget(table.header, form),
+                ),
+                SizedBox(
+                  height: (table.rowList.length * 30) + 30,
+                  width: table.header.length * 100,
+                  child: ListView.builder(
+                    itemCount: table.rowList.length,
+                    itemBuilder: (context, index) {
+                      final row = table.rowList[index];
+                      return Row(
+                        children: rowWidget(context, form, row, table.header),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
+          ))
         ],
       ),
     ));
@@ -102,10 +111,17 @@ class TableViewBuild extends AxolWidget {
     List<Widget> widgetList = [];
     Widget widget;
     for (var element in headerTitles) {
-      widget = SizedBox(
+      widget = Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+            border: Border.all(color: ColorTheme.item30(form.theme))),
         height: 30,
         width: 100,
-        child: Text(element, style: Typo.subtitle(form.theme)),
+        child: Text(
+          element,
+          style: Typo.subtitle(form.theme),
+          overflow: TextOverflow.ellipsis,
+        ),
       );
       widgetList.add(widget);
     }
@@ -121,20 +137,33 @@ class TableViewBuild extends AxolWidget {
     for (var element in header) {
       if (tableRow.keys.contains(element)) {
         final cell = tableRow[element]!;
-        if (cell is CellText) { 
-          widget = SizedBox(
+        if (cell is CellText) {
+          widget = Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+                border: Border.all(color: ColorTheme.item30(form.theme))),
             height: 30,
             width: 100,
-            child: Text(cell.text, style: Typo.body(form.theme)),
+            child: Text(
+              cell.text,
+              style: Typo.body(form.theme),
+              overflow: TextOverflow.ellipsis,
+            ),
           );
         } else {
-          widget = const SizedBox(
+          widget = Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+                border: Border.all(color: ColorTheme.item30(form.theme))),
             height: 30,
             width: 100,
           );
         }
       } else {
-        widget = const SizedBox(
+        widget = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              border: Border.all(color: ColorTheme.item30(form.theme))),
           height: 30,
           width: 100,
         );
