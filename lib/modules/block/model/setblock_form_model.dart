@@ -39,15 +39,18 @@ class SetBlockFormModel {
 class SetBlockPropModel {
   TextEditingController ctrlProp;
   Prop property;
+  String key;
 
   SetBlockPropModel({
     required this.ctrlProp,
     required this.property,
+    required this.key
   });
 
   SetBlockPropModel.empty()
       : ctrlProp = TextEditingController(),
-        property = Prop.text;
+        property = Prop.text,
+        key = '';
 
   static List<SetBlockPropModel> propListToForm(
       List<PropertyModel> properties) {
@@ -58,6 +61,7 @@ class SetBlockPropModel {
       prop = SetBlockPropModel(
         ctrlProp: TextEditingController(text: element.name),
         property: element.propertyType,
+        key: element.key,
       );
       propList.add(prop);
     }

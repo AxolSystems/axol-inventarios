@@ -142,7 +142,7 @@ class SetBlockCubit extends Cubit<SetBlockState> {
 
       for (var element in form.properties) {
         prop = PropertyModel(
-            name: element.ctrlProp.text, propertyType: element.property);
+            name: element.ctrlProp.text, propertyType: element.property, key: element.key);
         if (prop.name.contains('~') ||
             prop.name.contains('\\') ||
             prop.name.contains('/')) {

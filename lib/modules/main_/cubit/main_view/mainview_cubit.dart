@@ -57,6 +57,7 @@ class MainViewCubit extends Cubit<MainViewState> {
               WidgetIndex.data(link.widget, objects, link.block),
               form.user.theme);
           form.title = moduleList.first.name;
+
         } else {
           axolWidget = const EmptyWidget();
           link = WidgetLinkModel.empty();

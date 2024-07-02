@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/scroll_view_axol.dart';
+import '../../../block/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
 import '../cubit/table_cubit.dart';
@@ -107,7 +108,8 @@ class TableViewBuild extends AxolWidget {
   }
 
   /// Contiene los widgets que conforman encabezados de las columnas.
-  List<Widget> headerWidget(List<String> headerTitles, TableFormModel form) {
+  List<Widget> headerWidget(
+      List<PropertyModel> headerTitles, TableFormModel form) {
     List<Widget> widgetList = [];
     Widget widget;
     for (var element in headerTitles) {
@@ -118,7 +120,7 @@ class TableViewBuild extends AxolWidget {
         height: 30,
         width: 100,
         child: Text(
-          element,
+          element.name,
           style: Typo.subtitle(form.theme),
           overflow: TextOverflow.ellipsis,
         ),
@@ -130,24 +132,27 @@ class TableViewBuild extends AxolWidget {
 
   /// Lista de widgets que conforman las filas de la tabla.
   List<Widget> rowWidget(BuildContext context, TableFormModel form,
-      Map<String, TableCellModel> tableRow, List<String> header) {
+      Map<String, TableCellModel> tableRow, List<PropertyModel> header) {
     List<Widget> widgetList = [];
     Widget widget;
 
     for (var element in header) {
-      if (tableRow.keys.contains(element)) {
-        final cell = tableRow[element]!;
+      if (tableRow.keys.contains(element.key)) {
+        final cell = tableRow[element.key]!;
         if (cell is CellText) {
-          widget = Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-                border: Border.all(color: ColorTheme.item30(form.theme))),
-            height: 30,
-            width: 100,
-            child: Text(
-              cell.text,
-              style: Typo.body(form.theme),
-              overflow: TextOverflow.ellipsis,
+          widget = GestureDetector(
+            
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  border: Border.all(color: ColorTheme.item30(form.theme))),
+              height: 30,
+              width: 100,
+              child: Text(
+                cell.text,
+                style: Typo.body(form.theme),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           );
         } else {

@@ -3,19 +3,32 @@ enum Prop { text, int, double, time, bool }
 class PropertyModel {
   final String name;
   final Prop propertyType;
+  final String key;
 
-  PropertyModel({required this.name, required this.propertyType});
+  PropertyModel(
+      {required this.name, required this.propertyType, required this.key});
 
   PropertyModel.empty()
       : name = '',
-        propertyType = Prop.text;
+        propertyType = Prop.text,
+        key = '';
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
     List<PropertyModel> propertyList = [];
     PropertyModel property;
     List<dynamic> values;
 
-    values = map.values.toList();
+    for (var key in map.keys.toList()) {
+      final String value = map[key];
+      property = PropertyModel(
+        name: value.split('~').first,
+        propertyType: getPropToInt(int.tryParse(value.split('~').last) ?? 0),
+        key: key,
+      );
+      propertyList.add(property);
+    }
+
+    /*values = map.values.toList();
     for (var value in values) {
       if (value is String) {
         property = PropertyModel(
@@ -24,7 +37,7 @@ class PropertyModel {
         );
         propertyList.add(property);
       }
-    }
+    }*/
 
     return propertyList;
   }

@@ -39,7 +39,7 @@ class BlockModel {
     Map<String, dynamic> map = {};
     if (props.isNotEmpty) {
       for (PropertyModel prop in props) {
-        map[prop.name] =
+        map[prop.key] =
             '${prop.name}~${PropertyModel.getIntToProp(prop.propertyType)}';
       }
     }

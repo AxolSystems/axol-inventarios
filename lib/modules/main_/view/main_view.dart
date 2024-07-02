@@ -6,6 +6,7 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
+import '../../axol_widget/test/view/resizable_box.dart';
 import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -140,10 +141,10 @@ class MainViewBuild extends StatelessWidget {
   }
 
   /// Contiene barra de módulos.
-  /// 
-  /// Antes de devolver el widget, obtiene de [ModuleModel.widgetLinks] el los widgetLinks 
+  ///
+  /// Antes de devolver el widget, obtiene de [ModuleModel.widgetLinks] el los widgetLinks
   /// que le pertenecen al modulo actual.
-  /// 
+  ///
   /// - En fila:
   ///   - En Columna:
   ///     - ListView con módulos obtenidos de [MainViewFormModel.moduleList].
@@ -151,7 +152,7 @@ class MainViewBuild extends StatelessWidget {
   ///     - [MainNavButton] de configuración.
   ///     - [PopupMenuBtnAxol] de cuenta.
   ///   - Lista de menu de links y views. Las listas pueden ser [listMenu] o [listMenuSetting].
-  /// 
+  ///
   /// TODO: Mover child de popUpMenu a una función aparte.
 
   Widget moduleBar({
@@ -291,6 +292,32 @@ class MainViewBuild extends StatelessWidget {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                child: MainNavButton(
+                  icon: Icons.settings,
+                  isHover: select == -2,
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => const AlertDialog(
+                              content: ResizableBox(),
+                            ));
+                    /*if (form.moduleSelect == -2) {
+                      //form.menuVisible = !form.menuVisible;
+                      context.read<MainViewCubit>().load();
+                    } else {
+                      form.moduleSelect = -2;
+                      //context.read<MainViewCubit>().setSetting(form, 0);
+                      form.title = 'Test';
+                    }*/
+                  },
+                  text: 'Test',
+                  menuVisible: menuVisible,
+                  isModule: false,
+                  theme: form.user.theme,
+                ),
+              ),
             ],
           ),
         ),
@@ -308,8 +335,7 @@ class MainViewBuild extends StatelessWidget {
                 Expanded(
                     child: form.moduleSelect == -1
                         ? listMenuSetting(context, form)
-                        : listMenu(widgetLinks, form)
-                    )
+                        : listMenu(widgetLinks, form))
               ],
             ),
           ),
