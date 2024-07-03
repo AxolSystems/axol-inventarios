@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../model/table_form_model.dart';
@@ -25,10 +26,13 @@ class TableCubit extends Cubit<TableState> {
 
   /// Realiza los cambios necesarios en el form para el estado 
   /// inicial de la vista de tabla.
-  Future<void> initLoad(TableFormModel form, int theme) async {
+  Future<void> initLoad(TableFormModel form, int theme, TableModel table) async {
     try {
       emit(InitialTableState());
       form.theme = theme;
+      for (int i = 0; i < table.header.length; i++) {
+        form.columnWidth.add(150);
+      }
       emit(LoadingTableState());
 
       emit(LoadedTableState());

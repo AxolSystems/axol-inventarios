@@ -55,7 +55,7 @@ class TableViewBuild extends AxolWidget {
         }
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()..initLoad(form, themes),
+        bloc: context.read<TableCubit>()..initLoad(form, themes, table),
         listener: (context, state) {},
         builder: (context, state) {
           if (state is LoadingTableState) {
@@ -84,11 +84,11 @@ class TableViewBuild extends AxolWidget {
             child: Column(
               children: [
                 Row(
-                  children: headerWidget(table.header, form),
+                  children: headerWidget(context, table.header, form),
                 ),
                 SizedBox(
                   height: (table.rowList.length * 30) + 30,
-                  width: table.header.length * 100,
+                  width: form.sum(),
                   child: ListView.builder(
                     itemCount: table.rowList.length,
                     itemBuilder: (context, index) {
@@ -108,23 +108,58 @@ class TableViewBuild extends AxolWidget {
   }
 
   /// Contiene los widgets que conforman encabezados de las columnas.
-  List<Widget> headerWidget(
+  List<Widget> headerWidget(BuildContext context,
       List<PropertyModel> headerTitles, TableFormModel form) {
     List<Widget> widgetList = [];
     Widget widget;
-    for (var element in headerTitles) {
+    for (int i = 0; i < headerTitles.length; i++) {
+      var element = headerTitles[i];
       widget = Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-            border: Border.all(color: ColorTheme.item30(form.theme))),
-        height: 30,
-        width: 100,
-        child: Text(
-          element.name,
-          style: Typo.subtitle(form.theme),
-          overflow: TextOverflow.ellipsis,
-        ),
-      );
+          decoration: BoxDecoration(
+              border: Border.all(color: ColorTheme.item30(form.theme))),
+          height: 30,
+          width: form.columnWidth[i],
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Text(
+                  element.name,
+                  style: Typo.subtitle(form.theme),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Expanded(child: SizedBox()),
+                  GestureDetector(
+                    onHorizontalDragUpdate: (details) {
+                      final double value =
+                          form.columnWidth[i] + details.delta.dx;
+                      if (value > 100 && form.hover) {
+                        form.columnWidth[i] = value;
+                        context.read<TableCubit>().load();
+                      } else {
+                        form.hover = false;
+                      }
+                      //print(form.columnWidth[0]);
+                    },
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.resizeColumn,
+                      onEnter: (event) {
+                        form.hover = true;
+                      },
+                      child: const SizedBox(
+                        height: 30,
+                        width: 4,
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ));
       widgetList.add(widget);
     }
     return widgetList;
@@ -136,23 +171,21 @@ class TableViewBuild extends AxolWidget {
     List<Widget> widgetList = [];
     Widget widget;
 
-    for (var element in header) {
+    for (var i = 0; i < header.length; i++) {
+      var element = header[i];
       if (tableRow.keys.contains(element.key)) {
         final cell = tableRow[element.key]!;
         if (cell is CellText) {
-          widget = GestureDetector(
-            
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  border: Border.all(color: ColorTheme.item30(form.theme))),
-              height: 30,
-              width: 100,
-              child: Text(
-                cell.text,
-                style: Typo.body(form.theme),
-                overflow: TextOverflow.ellipsis,
-              ),
+          widget = Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+                border: Border.all(color: ColorTheme.item30(form.theme))),
+            height: 30,
+            width: form.columnWidth[i],
+            child: Text(
+              cell.text,
+              style: Typo.body(form.theme),
+              overflow: TextOverflow.ellipsis,
             ),
           );
         } else {
@@ -161,7 +194,7 @@ class TableViewBuild extends AxolWidget {
             decoration: BoxDecoration(
                 border: Border.all(color: ColorTheme.item30(form.theme))),
             height: 30,
-            width: 100,
+            width: form.columnWidth[i],
           );
         }
       } else {
@@ -170,7 +203,7 @@ class TableViewBuild extends AxolWidget {
           decoration: BoxDecoration(
               border: Border.all(color: ColorTheme.item30(form.theme))),
           height: 30,
-          width: 100,
+          width: form.columnWidth[i],
         );
       }
 

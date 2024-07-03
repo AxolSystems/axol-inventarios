@@ -26,51 +26,54 @@ class ResizableBoxBuild extends StatelessWidget {
   Widget build(BuildContext context) {
     ResizableFormModel form = context.read<ResizableForm>().state;
     return BlocBuilder<ResizableCubit, ResizableState>(
-      bloc: context.read<ResizableCubit>()..initLoad(form),
-      builder: (context, state) => Container(
-        color: Colors.white,
-        width: 500,
-        height: 400,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Row(
-              children: [
-                Container(
-                  width: (constraints.maxWidth - 2) * form.percent[0],
-                  height: constraints.maxHeight,
-                  color: Colors.blue,
-                ),
-                GestureDetector(
-                  onTapDown: (details) {},
-                  onHorizontalDragStart: (details) {
-                    print('start: ${details.localPosition}');
-                  },
-                  onHorizontalDragEnd: (details) {
-                    final double value;
-                    print('end: ${details.localPosition}');
-                    value = (details.localPosition.dy / 500);
-                    if (details.localPosition.dy < 0) {
-                      form.percent[0] = form.percent[0] - (value * -1);
-                      form.percent[1] = form.percent[1] - (value * -1);
-                      context.read<ResizableCubit>().load();
-                    }
-                  },
-                  child: const VerticalDivider(
-                    width: 2,
-                    thickness: 2,
-                    color: Colors.black,
-                  ),
-                ),
-                Container(
-                  width: (constraints.maxWidth - 2) * form.percent[1],
-                  height: constraints.maxHeight,
-                  color: Colors.amber,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
+        bloc: context.read<ResizableCubit>()..initLoad(form),
+        builder: (context, state) => Container(
+              color: Colors.white,
+              width: 500,
+              height: 400,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Row(
+                    children: [
+                      Container(
+                        width: (constraints.maxWidth - 4) * form.percent[0],
+                        height: constraints.maxHeight,
+                        color: Colors.blue,
+                      ),
+                      GestureDetector(
+                        onHorizontalDragUpdate: (details) {
+                          print(details.delta);
+                          final double value;
+                          value = (details.delta.dx / 500);
+                          form.percent[0] = form.percent[0] + (value);
+                          form.percent[1] = form.percent[1] - (value);
+                          context.read<ResizableCubit>().load();
+                        },
+                        /*onHorizontalDragEnd: (details) {
+                          final double value;
+                          value = (details.localPosition.dx / 500);
+                          form.percent[0] = form.percent[0] + (value);
+                          form.percent[1] = form.percent[1] - (value);
+                          context.read<ResizableCubit>().load();
+                        },*/
+                        child: const MouseRegion(
+                          cursor: SystemMouseCursors.resizeColumn,
+                          child: VerticalDivider(
+                          width: 4,
+                          thickness: 4,
+                          color: Colors.black,
+                        ),
+                        ) 
+                      ),
+                      Container(
+                        width: (constraints.maxWidth - 4) * form.percent[1],
+                        height: constraints.maxHeight,
+                        color: Colors.amber,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ));
   }
 }
