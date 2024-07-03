@@ -1,20 +1,22 @@
 /// Modelo de datos de la vista de tabla.
 class TableFormModel {
   int theme;
-  List<double> columnWidth;
+  Map<String, double> columnWidth;
   bool hover;
 
-  TableFormModel({required this.theme, required this.columnWidth, required this.hover});
+  TableFormModel(
+      {required this.theme, required this.columnWidth, required this.hover});
 
   /// Estado inicial del form de la vista de tabla.
   TableFormModel.empty()
       : theme = 0,
-        columnWidth = [],
+        columnWidth = {},
         hover = false;
 
+  /// Suma los valores de *columnWidth* y devuelve el total.
   double sum() {
     double total = 0;
-    for (var num in columnWidth) {
+    for (double num in columnWidth.values) {
       total = total + num;
     }
     return total;

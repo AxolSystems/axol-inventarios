@@ -9,6 +9,7 @@ import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../block/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
+import '../../../user/model/user_model.dart';
 import '../cubit/table_cubit.dart';
 import '../cubit/table_state.dart';
 import '../model/table_form_model.dart';
@@ -19,9 +20,14 @@ import '../model/table_form_model.dart';
 class TableView extends AxolWidget {
   final Color? color;
   final TableModel table;
-  final int themes;
+  final UserModel user;
+  final String idView;
   const TableView(
-      {super.key, required this.themes, this.color, required this.table});
+      {super.key,
+      required this.user,
+      this.color,
+      required this.table,
+      required this.idView});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,12 @@ class TableView extends AxolWidget {
         BlocProvider(create: (_) => TableCubit()),
         BlocProvider(create: (_) => TableForm()),
       ],
-      child: TableViewBuild(table: table, color: color, themes: themes),
+      child: TableViewBuild(
+        table: table,
+        color: color,
+        user: user,
+        idView: idView,
+      ),
     );
   }
 }
@@ -38,9 +49,14 @@ class TableView extends AxolWidget {
 class TableViewBuild extends AxolWidget {
   final Color? color;
   final TableModel table;
-  final int themes;
+  final UserModel user;
+  final String idView;
   const TableViewBuild(
-      {super.key, required this.themes, this.color, required this.table});
+      {super.key,
+      required this.user,
+      this.color,
+      required this.table,
+      required this.idView});
 
   /// Devuelve en un blocConsumer el estado actual de la vista de tabla.
   /// Escucha si hay un cambio en [MainViewCubit] para el cambio de tema.
@@ -55,7 +71,7 @@ class TableViewBuild extends AxolWidget {
         }
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()..initLoad(form, themes, table),
+        bloc: context.read<TableCubit>()..initLoad(form, table, user),
         listener: (context, state) {},
         builder: (context, state) {
           if (state is LoadingTableState) {

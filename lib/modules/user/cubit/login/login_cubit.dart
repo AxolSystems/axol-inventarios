@@ -18,10 +18,13 @@ class LoginCubit extends Cubit<LoginState> {
             loginDatabaseUser.password == password) {
           emit(LoginSuccessState(user: loginDatabaseUser));
           await localUser.setLocalUser(
-              loginDatabaseUser.name,
-              loginDatabaseUser.rol,
-              loginDatabaseUser.id,
-              loginDatabaseUser.theme);
+            loginDatabaseUser.name,
+            loginDatabaseUser.rol,
+            loginDatabaseUser.id,
+            loginDatabaseUser.theme,
+            UserModel.codeViewToList(
+                UserModel.decodeViews(loginDatabaseUser.views)),
+          );
         } else {
           emit(LoginFailureState());
         }

@@ -10,6 +10,7 @@ abstract class UserRepo {
   static const String _rol = 'rol';
   static const String _password = 'password';
   static const String _theme = 'theme';
+  static const String _views = 'views';
 }
 
 class DatabaseUser extends UserRepo {
@@ -28,6 +29,7 @@ class DatabaseUser extends UserRepo {
         rol: userData.first[UserRepo._rol],
         password: userData.first[UserRepo._password],
         theme: userData.first[UserRepo._theme] ?? 0,
+        views: userData.first[UserRepo._views] ?? {},
       );
     } else {
       user = null;
@@ -49,7 +51,8 @@ class DatabaseUser extends UserRepo {
             id: element[UserRepo._id],
             rol: UserRepo._rol,
             password: UserRepo._password,
-            theme: element[UserRepo._theme] ?? 0);
+            theme: element[UserRepo._theme] ?? 0,
+            views: element[UserRepo._views] ?? {});
         users.add(user);
       }
     }
@@ -71,13 +74,25 @@ class LocalUser extends UserRepo {
     final String? localRol = pref.getString(UserRepo._rol);
     final int localId = pref.getInt(UserRepo._id) ?? -1;
     final int localThem = pref.getInt(UserRepo._theme) ?? 0;
+    final List<String> localViews = pref.getStringList(UserRepo._views) ?? [];
+    Map<String,Map<String,String>> mapViews = {};
+    Map<String,String> mapProp = {};
+
     if (localUser != null && localRol != null) {
+      for (String view in localViews) {
+        for (String prop in view.split('\$\$').last.split('~')) {
+          mapProp[prop.split('%%').first] = prop.split('%%').last;
+        }
+        mapViews[view.split('\$\$').first] = mapProp;
+      }
+
       user = UserModel(
         name: localUser,
         id: localId,
         rol: localRol,
         password: '',
         theme: localThem,
+        views: mapViews,
       );
     } else {
       user = const UserModel(
@@ -86,6 +101,7 @@ class LocalUser extends UserRepo {
         rol: '',
         password: '',
         theme: 0,
+        views: {},
       );
     }
     return user;
@@ -96,12 +112,14 @@ class LocalUser extends UserRepo {
     String newLocalRol,
     int id,
     int theme,
+    List<String> views,
   ) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setString(UserRepo._user, newLocalUser);
     await pref.setString(UserRepo._rol, newLocalRol);
     await pref.setInt(UserRepo._id, id);
     await pref.setInt(UserRepo._theme, theme);
+    await pref.setStringList(UserRepo._views, views);
   }
 
   Future<void> setTheme(int theme) async {
