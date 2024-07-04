@@ -41,9 +41,10 @@ class TableCubit extends Cubit<TableState> {
 
       for (var prop in table.header) {
         widthColumns[prop.key] = 150;
+        print(widthColumns[prop.key]);
       }
       
-      if (user.views.containsKey(idView)) {
+      /*if (user.views.containsKey(idView)) {
         mapPropsView = user.views[idView]!;
         if (mapPropsView.containsKey(UserModel.viewTableColumnWidth)) {
           propView = mapPropsView[UserModel.viewTableColumnWidth]!;
@@ -56,7 +57,7 @@ class TableCubit extends Cubit<TableState> {
             }
           }
         }
-      }
+      }*/
       form.columnWidth = widthColumns;
       emit(LoadedTableState());
     } catch (e) {

@@ -89,7 +89,6 @@ class TableViewBuild extends AxolWidget {
   /// Devuelve el widget de tabla general de la vista. Esta compuesto
   /// por otros widgets que conforman la vista de tabla.
   Widget tableView(BuildContext context, isLoading, TableFormModel form) {
-
     return Expanded(
         child: Container(
       color: ColorTheme.background(form.theme),
@@ -97,33 +96,29 @@ class TableViewBuild extends AxolWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: 
-              ScrollViewAxol(
-            child: Column(
-              children: [
-                /// Aquí esta el error, lo encontré (｡`･д･)=o
-                /*Row(
-                  children: headerWidget(context, table.header, form),
-                ),*/
-                SizedBox(
-                  height: (table.rowList.length * 30) + 30,
-                  width: form.sum(),
-                  child: Container(color: Colors.green,),
-                  /*ListView.builder(
-                    itemCount: table.rowList.length,
-                    itemBuilder: (context, index) {
-                      print('vanderaaaa');
-                      final row = table.rowList[index];
-                      
-                      return Row(
-                        children: rowWidget(context, form, row, table.header),
-                      );
-                    },
-                  ),*/
-                ),
-              ],
+            child: ScrollViewAxol(
+              child: Column(
+                children: [
+                  /// Aquí esta el error, lo encontré (｡`･д･)=o
+                  Row(
+                    children: headerWidget(context, table.header, form),
+                  ),
+                  SizedBox(
+                    height: (table.rowList.length * 30) + 30,
+                    width: form.sum(),
+                    child: ListView.builder(
+                      itemCount: table.rowList.length,
+                      itemBuilder: (context, index) {
+                        final row = table.rowList[index];
+                        return Row(
+                          children: rowWidget(context, form, row, table.header),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
           ),
         ],
       ),
@@ -138,50 +133,55 @@ class TableViewBuild extends AxolWidget {
     for (int i = 0; i < headerTitles.length; i++) {
       var prop = headerTitles[i];
       widget = Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: ColorTheme.item30(form.theme))),
-          height: 30,
-          width: form.columnWidth[i],
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(
-                  prop.name,
-                  style: Typo.subtitle(form.theme),
-                  overflow: TextOverflow.ellipsis,
-                ),
+        decoration: BoxDecoration(
+          border: Border.all(color: ColorTheme.item30(form.theme)),
+        ),
+        height: 30,
+        width: form.columnWidth[prop.key] ?? 150,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Text(
+                prop.name,
+                style: Typo.subtitle(form.theme),
+                overflow: TextOverflow.ellipsis,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Expanded(child: SizedBox()),
-                  GestureDetector(
-                    onHorizontalDragUpdate: (details) {
-                      final double value =
-                          form.columnWidth[prop.key]!  + details.delta.dx;
-                      if (value > 100 && form.hover) {
-                        form.columnWidth[prop.key] = value;
-                        context.read<TableCubit>().load();
-                      } else {
-                        form.hover = false;
-                      }
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Expanded(child: SizedBox()),
+                GestureDetector(
+                  onHorizontalDragUpdate: (details) {
+                    final double value =
+                        (form.columnWidth[prop.key] ?? 0) + details.delta.dx;
+                    if (value > 100 && form.hover) {
+                      form.columnWidth[prop.key] = value;
+                      context.read<TableCubit>().load();
+                    } else {
+                      form.hover = false;
+                    }
+                  },
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.resizeColumn,
+                    onEnter: (event) {
+                      form.hover = true;
                     },
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.resizeColumn,
-                      onEnter: (event) {
-                        form.hover = true;
-                      },
-                      child: const SizedBox(
-                        height: 30,
-                        width: 4,
+                    child: Container(
+                      height: 30,
+                      width: 4,
+                      decoration: BoxDecoration(
+                        color: ColorTheme.item30(form.theme),
                       ),
                     ),
-                  )
-                ],
-              )
-            ],
-          ));
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      );
       widgetList.add(widget);
     }
     return widgetList;
@@ -192,18 +192,17 @@ class TableViewBuild extends AxolWidget {
       Map<String, TableCellModel> tableRow, List<PropertyModel> header) {
     List<Widget> widgetList = [];
     Widget widget;
-    print('flagggg 0');
     for (var i = 0; i < header.length; i++) {
-      var element = header[i];
-      if (tableRow.keys.contains(element.key)) {
-        final cell = tableRow[element.key]!;
+      var prop = header[i];
+      if (tableRow.keys.contains(prop.key)) {
+        final cell = tableRow[prop.key]!;
         if (cell is CellText) {
           widget = Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorTheme.item30(form.theme))),
             height: 30,
-            width: form.columnWidth[i],
+            width: form.columnWidth[prop.key],
             child: Text(
               cell.text,
               style: Typo.body(form.theme),
@@ -216,7 +215,7 @@ class TableViewBuild extends AxolWidget {
             decoration: BoxDecoration(
                 border: Border.all(color: ColorTheme.item30(form.theme))),
             height: 30,
-            width: form.columnWidth[i],
+            width: form.columnWidth[prop.key],
           );
         }
       } else {
@@ -225,13 +224,12 @@ class TableViewBuild extends AxolWidget {
           decoration: BoxDecoration(
               border: Border.all(color: ColorTheme.item30(form.theme))),
           height: 30,
-          width: form.columnWidth[i],
+          width: form.columnWidth[prop.key],
         );
       }
 
       widgetList.add(widget);
     }
-    print('flagggg 1');
     return widgetList;
   }
 }
