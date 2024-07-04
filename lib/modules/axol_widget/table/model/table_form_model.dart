@@ -19,6 +19,7 @@ class TableFormModel {
     for (double num in columnWidth.values) {
       total = total + num;
     }
+    print('total: $total');
     return total;
   }
 }

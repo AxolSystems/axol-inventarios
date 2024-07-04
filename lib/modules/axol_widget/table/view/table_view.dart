@@ -71,7 +71,7 @@ class TableViewBuild extends AxolWidget {
         }
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()..initLoad(form, table, user),
+        bloc: context.read<TableCubit>()..initLoad(form, table, user, idView),
         listener: (context, state) {},
         builder: (context, state) {
           if (state is LoadingTableState) {
@@ -89,6 +89,7 @@ class TableViewBuild extends AxolWidget {
   /// Devuelve el widget de tabla general de la vista. Esta compuesto
   /// por otros widgets que conforman la vista de tabla.
   Widget tableView(BuildContext context, isLoading, TableFormModel form) {
+
     return Expanded(
         child: Container(
       color: ColorTheme.background(form.theme),
@@ -96,28 +97,34 @@ class TableViewBuild extends AxolWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: ScrollViewAxol(
+              child: 
+              ScrollViewAxol(
             child: Column(
               children: [
-                Row(
+                /// Aquí esta el error, lo encontré (｡`･д･)=o
+                /*Row(
                   children: headerWidget(context, table.header, form),
-                ),
+                ),*/
                 SizedBox(
                   height: (table.rowList.length * 30) + 30,
                   width: form.sum(),
-                  child: ListView.builder(
+                  child: Container(color: Colors.green,),
+                  /*ListView.builder(
                     itemCount: table.rowList.length,
                     itemBuilder: (context, index) {
+                      print('vanderaaaa');
                       final row = table.rowList[index];
+                      
                       return Row(
                         children: rowWidget(context, form, row, table.header),
                       );
                     },
-                  ),
+                  ),*/
                 ),
               ],
             ),
-          ))
+          ),
+          ),
         ],
       ),
     ));
@@ -129,7 +136,7 @@ class TableViewBuild extends AxolWidget {
     List<Widget> widgetList = [];
     Widget widget;
     for (int i = 0; i < headerTitles.length; i++) {
-      var element = headerTitles[i];
+      var prop = headerTitles[i];
       widget = Container(
           decoration: BoxDecoration(
               border: Border.all(color: ColorTheme.item30(form.theme))),
@@ -140,7 +147,7 @@ class TableViewBuild extends AxolWidget {
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: Text(
-                  element.name,
+                  prop.name,
                   style: Typo.subtitle(form.theme),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -152,14 +159,13 @@ class TableViewBuild extends AxolWidget {
                   GestureDetector(
                     onHorizontalDragUpdate: (details) {
                       final double value =
-                          form.columnWidth[i] + details.delta.dx;
+                          form.columnWidth[prop.key]!  + details.delta.dx;
                       if (value > 100 && form.hover) {
-                        form.columnWidth[i] = value;
+                        form.columnWidth[prop.key] = value;
                         context.read<TableCubit>().load();
                       } else {
                         form.hover = false;
                       }
-                      //print(form.columnWidth[0]);
                     },
                     child: MouseRegion(
                       cursor: SystemMouseCursors.resizeColumn,
@@ -186,7 +192,7 @@ class TableViewBuild extends AxolWidget {
       Map<String, TableCellModel> tableRow, List<PropertyModel> header) {
     List<Widget> widgetList = [];
     Widget widget;
-
+    print('flagggg 0');
     for (var i = 0; i < header.length; i++) {
       var element = header[i];
       if (tableRow.keys.contains(element.key)) {
@@ -225,6 +231,7 @@ class TableViewBuild extends AxolWidget {
 
       widgetList.add(widget);
     }
+    print('flagggg 1');
     return widgetList;
   }
 }

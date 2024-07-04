@@ -50,14 +50,15 @@ class MainViewCubit extends Cubit<MainViewState> {
           } else {
             view = WidgetViewModel.empty();
           }
-
+        
           objects = await ObjectRepo.fetchObject(link.block, view.filterList);
           axolWidget = WidgetIndex.widget(
-              link.widget,
-              WidgetIndex.data(link.widget, objects, link.block),
-              form.user.theme);
+            link.widget,
+            WidgetIndex.data(link.widget, objects, link.block),
+            form.user,
+            link.views.isNotEmpty ? link.views.first.name : '',
+          );
           form.title = moduleList.first.name;
-
         } else {
           axolWidget = const EmptyWidget();
           link = WidgetLinkModel.empty();
@@ -67,7 +68,7 @@ class MainViewCubit extends Cubit<MainViewState> {
         form.moduleSelect = 0;
         form.body = axolWidget;
       }
-
+      
       emit(LoadedMainViewState());
     } catch (e) {
       emit(InitialMainViewState());
@@ -116,9 +117,11 @@ class MainViewCubit extends Cubit<MainViewState> {
           form.linkSelect = indexLink;
           form.viewSelect = indexView;
           form.body = WidgetIndex.widget(
-              link.widget,
-              WidgetIndex.data(link.widget, objects, link.block),
-              form.user.theme);
+            link.widget,
+            WidgetIndex.data(link.widget, objects, link.block),
+            form.user,
+            link.views[indexView].name,
+          );
         }
         form.title = module.name;
       }
@@ -158,9 +161,11 @@ class MainViewCubit extends Cubit<MainViewState> {
           form.linkSelect = 0;
           form.viewSelect = 0;
           form.body = WidgetIndex.widget(
-              link.widget,
-              WidgetIndex.data(link.widget, objects, link.block),
-              form.user.theme);
+            link.widget,
+            WidgetIndex.data(link.widget, objects, link.block),
+            form.user,
+            link.views.first.name,
+          );
           form.title = module.name;
         }
       }

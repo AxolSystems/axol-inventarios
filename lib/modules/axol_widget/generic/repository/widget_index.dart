@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/axol_widget/generic/model/data_object.d
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 
+import '../../../user/model/user_model.dart';
 import '../view/axol_widget.dart';
 import '../../table/model/table_model.dart';
 import '../../table/view/table_view.dart';
@@ -11,15 +12,21 @@ class WidgetIndex {
   static int get table => 0;
 
   /// Según el índice que se reciba, devuelve el widget equivalente.
-  static AxolWidget widget(int i, DataObject data, int theme) {
+  static AxolWidget widget(
+      int i, DataObject data, UserModel user, String idView) {
     switch (i) {
       case 0:
         if (data is TableModel) {
-          return TableView(table: data, themes: theme);
+          return TableView(
+            table: data,
+            user: user,
+            idView: idView,
+          );
         } else {
           return TableView(
             table: TableModel.empty(),
-            themes: theme,
+            user: user,
+            idView: idView,
           );
         }
       default:
