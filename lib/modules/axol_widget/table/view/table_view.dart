@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/dialog.dart';
+import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../block/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
 import '../../../user/model/user_model.dart';
+import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/table_cubit.dart';
 import '../cubit/table_state.dart';
 import '../model/table_form_model.dart';
@@ -21,13 +24,16 @@ class TableView extends AxolWidget {
   final Color? color;
   final TableModel table;
   final UserModel user;
-  final String idView;
-  const TableView(
-      {super.key,
-      required this.user,
-      this.color,
-      required this.table,
-      required this.idView});
+  final WidgetLinkModel link;
+  final String viewId;
+  const TableView({
+    super.key,
+    required this.user,
+    this.color,
+    required this.table,
+    required this.link,
+    required this.viewId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +46,8 @@ class TableView extends AxolWidget {
         table: table,
         color: color,
         user: user,
-        idView: idView,
+        link: link,
+        viewId: viewId,
       ),
     );
   }
@@ -50,13 +57,16 @@ class TableViewBuild extends AxolWidget {
   final Color? color;
   final TableModel table;
   final UserModel user;
-  final String idView;
-  const TableViewBuild(
-      {super.key,
-      required this.user,
-      this.color,
-      required this.table,
-      required this.idView});
+  final WidgetLinkModel link;
+  final String viewId;
+  const TableViewBuild({
+    super.key,
+    required this.user,
+    this.color,
+    required this.table,
+    required this.link,
+    required this.viewId,
+  });
 
   /// Devuelve en un blocConsumer el estado actual de la vista de tabla.
   /// Escucha si hay un cambio en [MainViewCubit] para el cambio de tema.
@@ -71,15 +81,36 @@ class TableViewBuild extends AxolWidget {
         }
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()..initLoad(form, table, user, idView),
-        listener: (context, state) {},
+        bloc: context.read<TableCubit>()
+          ..initLoad(form, table, user, link, viewId),
+        listener: (context, state) {
+          if (state is ErrorTableState) {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialogAxol(text: state.error));
+          }
+          if (state is SavedTableState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Cambios en tabla guardados.',
+                  style: Typo.body(form.theme),
+                ),
+                showCloseIcon: true,
+                behavior: SnackBarBehavior.floating,
+                closeIconColor: ColorTheme.text(form.theme),
+                backgroundColor: ColorTheme.item30(form.theme),
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is LoadingTableState) {
-            return tableView(context, true, form);
+            return tableView(context, state, form);
           } else if (state is LoadedTableState) {
-            return tableView(context, false, form);
+            return tableView(context, state, form);
           } else {
-            return tableView(context, false, form);
+            return tableView(context, state, form);
           }
         },
       ),
@@ -88,7 +119,8 @@ class TableViewBuild extends AxolWidget {
 
   /// Devuelve el widget de tabla general de la vista. Esta compuesto
   /// por otros widgets que conforman la vista de tabla.
-  Widget tableView(BuildContext context, isLoading, TableFormModel form) {
+  Widget tableView(
+      BuildContext context, TableState state, TableFormModel form) {
     return Expanded(
         child: Scaffold(
       body: Container(
@@ -107,37 +139,30 @@ class TableViewBuild extends AxolWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Visibility(
-                    visible: form.edit,
+                    visible: state is SavingTableState,
                     replacement: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () {
-                        context.read<TableCubit>().openEdit(form);
-                      },
+                      onPressed: form.edit
+                          ? () {
+                              context
+                                  .read<TableCubit>()
+                                  .closeEdit(form, link, viewId);
+                            }
+                          : () {
+                              context.read<TableCubit>().openEdit(form);
+                            },
                       icon: Icon(
-                        Icons.lock_open_outlined,
+                        form.edit
+                            ? Icons.lock_open_outlined
+                            : Icons.lock_outline,
                         color: ColorTheme.item10(form.theme),
                         size: 20,
                       ),
                     ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        context.read<TableCubit>().closeEdit(form);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(
-                            content: Text('Guardado', style: Typo.body(form.theme),),
-                            showCloseIcon: true,
-                            behavior: SnackBarBehavior.floating,
-                            closeIconColor: ColorTheme.text(form.theme),
-                            backgroundColor: ColorTheme.item30(form.theme),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.lock_outline,
-                        color: ColorTheme.item10(form.theme),
-                        size: 20,
-                      ),
+                    child: SizedBox.square(
+                      dimension: 15,
+                      child: CircularProgressIndicator(
+                          color: ColorTheme.item10(form.theme)),
                     ),
                   ),
                 ],

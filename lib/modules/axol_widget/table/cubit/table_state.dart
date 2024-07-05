@@ -26,6 +26,22 @@ class LoadedTableState extends TableState {
   List<Object?> get props => [];
 }
 
+/// Estado de espera para el método de guardado. 
+/// Las acciones a mostrar en pantalla son distintas 
+/// a *LoadingTableState*, razón por la que se tiene que 
+/// utilizar un estado distinto.
+class SavingTableState extends TableState {
+  @override
+  List<Object?> get props => [];
+}
+
+/// Estado al que pasa una vez finalizado el estado 
+/// de *SavingTableState*.
+class SavedTableState extends TableState {
+  @override
+  List<Object?> get props => [];
+}
+
 /// Estado de error. Estado al que pasa si se 
 /// detecta un error interno del sistema.
 /// 

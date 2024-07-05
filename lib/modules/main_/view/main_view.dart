@@ -363,7 +363,12 @@ class MainViewBuild extends StatelessWidget {
           final List<WidgetViewModel> viewList;
           if (wl.views.isEmpty) {
             viewList = [
-              WidgetViewModel(name: wl.block.blockName, filterList: [], key: '')
+              WidgetViewModel(
+                name: wl.block.blockName,
+                filterList: [],
+                key: '',
+                properties: {},
+              ),
             ];
           } else {
             viewList = wl.views;
