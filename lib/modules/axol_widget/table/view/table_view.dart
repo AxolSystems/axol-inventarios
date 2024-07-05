@@ -1,12 +1,12 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
+import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
-import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../block/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
@@ -105,98 +105,124 @@ class TableViewBuild extends AxolWidget {
           }
         },
         builder: (context, state) {
-          if (state is LoadingTableState) {
-            return tableView(context, state, form);
-          } else if (state is LoadedTableState) {
-            return tableView(context, state, form);
-          } else {
-            return tableView(context, state, form);
-          }
-        },
-      ),
-    );
-  }
-
-  /// Devuelve el widget de tabla general de la vista. Esta compuesto
-  /// por otros widgets que conforman la vista de tabla.
-  Widget tableView(
-      BuildContext context, TableState state, TableFormModel form) {
-    return Expanded(
-        child: Scaffold(
-      body: Container(
-        color: ColorTheme.background(form.theme),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 30,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: ColorTheme.item30(form.theme)),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+          return Expanded(
+              child: Scaffold(
+            body: Container(
+              color: ColorTheme.background(form.theme),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Visibility(
-                    visible: state is SavingTableState,
-                    replacement: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: form.edit
-                          ? () {
-                              context
-                                  .read<TableCubit>()
-                                  .closeEdit(form, link, viewId);
-                            }
-                          : () {
-                              context.read<TableCubit>().openEdit(form);
-                            },
-                      icon: Icon(
-                        form.edit
-                            ? Icons.lock_open_outlined
-                            : Icons.lock_outline,
-                        color: ColorTheme.item10(form.theme),
-                        size: 20,
+                  Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom:
+                            BorderSide(color: ColorTheme.item30(form.theme)),
                       ),
                     ),
-                    child: SizedBox.square(
-                      dimension: 15,
-                      child: CircularProgressIndicator(
-                          color: ColorTheme.item10(form.theme)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Visibility(
+                          visible: state is SavingTableState,
+                          replacement: IconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: form.edit
+                                ? () {
+                                    context
+                                        .read<TableCubit>()
+                                        .closeEdit(form, link, viewId);
+                                  }
+                                : () {
+                                    context.read<TableCubit>().openEdit(form);
+                                  },
+                            icon: Icon(
+                              form.edit
+                                  ? Icons.lock_open_outlined
+                                  : Icons.lock_outline,
+                              color: ColorTheme.item10(form.theme),
+                              size: 20,
+                            ),
+                          ),
+                          child: SizedBox.square(
+                            dimension: 15,
+                            child: CircularProgressIndicator(
+                                color: ColorTheme.item10(form.theme)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ScrollViewAxol(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: headerWidget(context, table.header, form),
+                          ),
+                          SizedBox(
+                            height: (table.rowList.length * 30) + 30,
+                            width: form.sum(),
+                            child: ListView.builder(
+                              itemCount: table.rowList.length,
+                              itemBuilder: (context, index) {
+                                final row = table.rowList[index];
+                                return Row(
+                                  children: rowWidget(
+                                      context, form, row, table.header),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: ColorTheme.item30(form.theme)),
+                      ),
+                    ),
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Row(
+                          children: [
+                            SecondaryButton(
+                              icon: Icons.chevron_left,
+                              theme: form.theme,
+                              onPressed: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Text('${form.currentPage} de ${form.totalPage}',
+                                style: Typo.body(form.theme)),
+                            const SizedBox(width: 8),
+                            SecondaryButton(
+                              icon: Icons.chevron_right,
+                              theme: form.theme,
+                              onPressed: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Text('${form.limitRows} filas',
+                                style: Typo.body(form.theme)),
+                            const SizedBox(width: 8),
+                            Text('${form.totalReg} registros',
+                                style: Typo.body(form.theme)),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            Expanded(
-              child: ScrollViewAxol(
-                child: Column(
-                  children: [
-                    Row(
-                      children: headerWidget(context, table.header, form),
-                    ),
-                    SizedBox(
-                      height: (table.rowList.length * 30) + 30,
-                      width: form.sum(),
-                      child: ListView.builder(
-                        itemCount: table.rowList.length,
-                        itemBuilder: (context, index) {
-                          final row = table.rowList[index];
-                          return Row(
-                            children:
-                                rowWidget(context, form, row, table.header),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ));
+        },
       ),
-    ));
+    );
   }
 
   /// Contiene los widgets que conforman encabezados de las columnas.
