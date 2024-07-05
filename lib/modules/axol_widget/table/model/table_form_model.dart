@@ -3,15 +3,21 @@ class TableFormModel {
   int theme;
   Map<String, double> columnWidth;
   bool hover;
+  bool edit;
 
-  TableFormModel(
-      {required this.theme, required this.columnWidth, required this.hover});
+  TableFormModel({
+    required this.theme,
+    required this.columnWidth,
+    required this.hover,
+    required this.edit,
+  });
 
   /// Estado inicial del form de la vista de tabla.
   TableFormModel.empty()
       : theme = 0,
         columnWidth = {},
-        hover = false;
+        hover = false,
+        edit = false;
 
   /// Suma los valores de *columnWidth* y devuelve el total.
   double sum() {
@@ -19,7 +25,6 @@ class TableFormModel {
     for (double num in columnWidth.values) {
       total = total + num;
     }
-    print('total: $total');
     return total;
   }
 }

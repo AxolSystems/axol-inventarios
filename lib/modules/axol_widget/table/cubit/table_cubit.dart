@@ -33,15 +33,14 @@ class TableCubit extends Cubit<TableState> {
       emit(InitialTableState());
       emit(LoadingTableState());
       Map<String, double> widthColumns = {};
-      Map<String, String> mapPropsView;
-      String propView;
-      Map<String, double> propValues = {};
+      //Map<String, String> mapPropsView;
+      //String propView;
+     // Map<String, double> propValues = {};
 
       form.theme = user.theme;
 
       for (var prop in table.header) {
         widthColumns[prop.key] = 150;
-        print(widthColumns[prop.key]);
       }
       
       /*if (user.views.containsKey(idView)) {
@@ -59,6 +58,33 @@ class TableCubit extends Cubit<TableState> {
         }
       }*/
       form.columnWidth = widthColumns;
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
+  /// Proceso al presionar botón para editar.
+  Future<void> openEdit(TableFormModel form) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      form.edit = true;
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
+  /// Proceso al presionar el botón para inhabilitar el estado de edición. 
+  Future<void> closeEdit(TableFormModel form) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      form.edit = false;
+      
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());

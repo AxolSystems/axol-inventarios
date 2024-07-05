@@ -90,37 +90,86 @@ class TableViewBuild extends AxolWidget {
   /// por otros widgets que conforman la vista de tabla.
   Widget tableView(BuildContext context, isLoading, TableFormModel form) {
     return Expanded(
-        child: Container(
-      color: ColorTheme.background(form.theme),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ScrollViewAxol(
-              child: Column(
+        child: Scaffold(
+      body: Container(
+        color: ColorTheme.background(form.theme),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 30,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: ColorTheme.item30(form.theme)),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  /// Aquí esta el error, lo encontré (｡`･д･)=o
-                  Row(
-                    children: headerWidget(context, table.header, form),
-                  ),
-                  SizedBox(
-                    height: (table.rowList.length * 30) + 30,
-                    width: form.sum(),
-                    child: ListView.builder(
-                      itemCount: table.rowList.length,
-                      itemBuilder: (context, index) {
-                        final row = table.rowList[index];
-                        return Row(
-                          children: rowWidget(context, form, row, table.header),
+                  Visibility(
+                    visible: form.edit,
+                    replacement: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        context.read<TableCubit>().openEdit(form);
+                      },
+                      icon: Icon(
+                        Icons.lock_open_outlined,
+                        color: ColorTheme.item10(form.theme),
+                        size: 20,
+                      ),
+                    ),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        context.read<TableCubit>().closeEdit(form);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                           SnackBar(
+                            content: Text('Guardado', style: Typo.body(form.theme),),
+                            showCloseIcon: true,
+                            behavior: SnackBarBehavior.floating,
+                            closeIconColor: ColorTheme.text(form.theme),
+                            backgroundColor: ColorTheme.item30(form.theme),
+                          ),
                         );
                       },
+                      icon: Icon(
+                        Icons.lock_outline,
+                        color: ColorTheme.item10(form.theme),
+                        size: 20,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: ScrollViewAxol(
+                child: Column(
+                  children: [
+                    Row(
+                      children: headerWidget(context, table.header, form),
+                    ),
+                    SizedBox(
+                      height: (table.rowList.length * 30) + 30,
+                      width: form.sum(),
+                      child: ListView.builder(
+                        itemCount: table.rowList.length,
+                        itemBuilder: (context, index) {
+                          final row = table.rowList[index];
+                          return Row(
+                            children:
+                                rowWidget(context, form, row, table.header),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     ));
   }
@@ -152,31 +201,35 @@ class TableViewBuild extends AxolWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Expanded(child: SizedBox()),
-                GestureDetector(
-                  onHorizontalDragUpdate: (details) {
-                    final double value =
-                        (form.columnWidth[prop.key] ?? 0) + details.delta.dx;
-                    if (value > 100 && form.hover) {
-                      form.columnWidth[prop.key] = value;
-                      context.read<TableCubit>().load();
-                    } else {
-                      form.hover = false;
-                    }
-                  },
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.resizeColumn,
-                    onEnter: (event) {
-                      form.hover = true;
+                Visibility(
+                  visible: form.edit,
+                  replacement: const SizedBox(),
+                  child: GestureDetector(
+                    onHorizontalDragUpdate: (details) {
+                      final double value =
+                          (form.columnWidth[prop.key] ?? 0) + details.delta.dx;
+                      if (value > 100 && form.hover) {
+                        form.columnWidth[prop.key] = value;
+                        context.read<TableCubit>().load();
+                      } else {
+                        form.hover = false;
+                      }
                     },
-                    child: Container(
-                      height: 30,
-                      width: 4,
-                      decoration: BoxDecoration(
-                        color: ColorTheme.item30(form.theme),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.resizeColumn,
+                      onEnter: (event) {
+                        form.hover = true;
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 4,
+                        decoration: BoxDecoration(
+                          color: ColorTheme.item30(form.theme),
+                        ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             )
           ],
