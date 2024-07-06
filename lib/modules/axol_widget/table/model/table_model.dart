@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_mode
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
 
+import '../../../../models/data_response_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../generic/model/data_object.dart';
 
@@ -18,11 +19,18 @@ class TableModel extends DataObject {
         rowList = [];
 
   /// Devuelve un modelo de tabla a partir de una lista de objetos y un block.
-  static TableModel dataObject(List<ObjectModel> objects, BlockModel block) {
+  static TableModel dataObject(DataResponseModel dataResponse, BlockModel block) {
     TableModel table;
     List<PropertyModel> header = [];
     List<Map<String, TableCellModel>> rowList = [];
     Map<String, TableCellModel> row;
+    List<ObjectModel> objects;
+
+    if (dataResponse.dataList is List<ObjectModel>) {
+      objects = dataResponse.dataList as List<ObjectModel>;
+    } else {
+      objects = [];
+    }
     
     for (var prop in block.propertyList) {
       header.add(prop);

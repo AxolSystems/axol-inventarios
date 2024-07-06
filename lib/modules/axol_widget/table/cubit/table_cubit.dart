@@ -1,7 +1,10 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../models/data_response_model.dart';
+import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widget_view_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../../../widget_link/repository/widgetlink_repo.dart';
@@ -30,32 +33,50 @@ class TableCubit extends Cubit<TableState> {
 
   /// Realiza los cambios necesarios en el form para el estado
   /// inicial de la vista de tabla.
-  Future<void> initLoad(TableFormModel form, TableModel table, UserModel user,
+  Future<void> initLoad(TableFormModel form, UserModel user,
       WidgetLinkModel link, String viewId) async {
     try {
       emit(InitialTableState());
       emit(LoadingTableState());
       Map<String, double> widthColumns = {};
       Map<String, dynamic> columnWidthDB = {};
+      final DataResponseModel dataResponse;
+      final int countReg;
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == viewId);
 
       form.theme = user.theme;
 
-      for (var prop in table.header) {
+      if (view.properties.containsKey(WidgetViewModel.propNumRows)) {
+        form.limitRows = view.properties[WidgetViewModel.propNumRows];
+        form.ctrlLimitRow = TextEditingController(
+            text: view.properties[WidgetViewModel.propNumRows].toString());
+      } else {
+        form.limitRows = 50;
+        form.ctrlLimitRow = TextEditingController(text: "50");
+      }
+      form.currentPage = 1;
+
+      dataResponse = await ObjectRepo.fetchObject(
+          view.filterList, link, 0, form.limitRows - 1);
+      form.table = TableModel.dataObject(dataResponse, link.block);
+      countReg = dataResponse.count;
+      form.totalPage = (countReg / form.limitRows).ceil();
+      form.totalReg = countReg;
+
+      for (var prop in form.table.header) {
         widthColumns[prop.key] = 150;
       }
-
       if (view.properties.containsKey(WidgetViewModel.propColumnWidth)) {
         columnWidthDB = view.properties[WidgetViewModel.propColumnWidth];
-        for (var prop in table.header) {
+        for (var prop in form.table.header) {
           if (columnWidthDB.containsKey(prop.key)) {
             widthColumns[prop.key] = columnWidthDB[prop.key];
           }
         }
       }
-
       form.columnWidth = widthColumns;
+
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
@@ -69,6 +90,8 @@ class TableCubit extends Cubit<TableState> {
       emit(InitialTableState());
       emit(LoadingTableState());
       form.edit = true;
+      form.ctrlLimitRow =
+          TextEditingController(text: form.limitRows.toString());
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
@@ -82,22 +105,109 @@ class TableCubit extends Cubit<TableState> {
     try {
       emit(InitialTableState());
       emit(SavingTableState());
+      int limitRows;
+      String saveMessage = 'Cambios de tabla guardados.';
       WidgetLinkModel upLink;
       Map<String, dynamic> properties;
+      final DataResponseModel dataResponse;
+      final int countReg;
+      final int rangeMin;
+      final int rangeMax;
       final WidgetViewModel upView;
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == keyView);
 
       properties = view.properties;
+      limitRows = int.parse(form.ctrlLimitRow.text);
+
+      if (limitRows >= 1000) {
+        saveMessage =
+            'Guardado. Número de filas no guardado, seleccione un número menor a 1000';
+      } else {
+        properties[WidgetViewModel.propNumRows] = limitRows;
+        form.limitRows = limitRows;
+      }
+
       properties[WidgetViewModel.propColumnWidth] = form.columnWidth;
       upView = WidgetViewModel.properties(view, properties);
       upLink = link;
       upLink.views[link.views.indexWhere((x) => x.key == keyView)] = upView;
       await WidgetLinkRepo.updateView(upLink);
-
       form.edit = false;
 
-      emit(SavedTableState());
+      rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
+      rangeMax = (form.currentPage * form.limitRows) - 1;
+      /// FIXME: Al acutualizar los datos cuando despues de la actualización la página actual
+      /// es menor a la nueva totalPage, causa el error. 
+      dataResponse = await ObjectRepo.fetchObject(
+          view.filterList, link, rangeMin, rangeMax);
+      countReg = dataResponse.count;
+      form.totalPage = (countReg / form.limitRows).ceil();
+      form.totalReg = countReg;
+      form.table = TableModel.dataObject(dataResponse, link.block);
+
+      emit(SavedTableState(saveMessage));
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
+  /// Procesos al presionar el botón de siguiente página. Si la página 
+  /// actual se vuelve mayor al total de páginas, después de presionar el 
+  /// botón, no realiza los procesos. 
+  Future<void> nextPage(TableFormModel form, WidgetLinkModel link) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      final DataResponseModel dataResponse;
+      final int countReg;
+      final int rangeMin;
+      final int rangeMax;
+
+      if (form.currentPage < form.totalPage) {
+        form.currentPage = form.currentPage + 1;
+        rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
+        rangeMax = (form.currentPage * form.limitRows) - 1;
+        dataResponse =
+            await ObjectRepo.fetchObject([], link, rangeMin, rangeMax);
+        countReg = dataResponse.count;
+        form.totalPage = (countReg / form.limitRows).ceil();
+        form.totalReg = countReg;
+        form.table = TableModel.dataObject(dataResponse, link.block);
+      }
+
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
+  /// Procesos al presionar el botón de página anterior. Si la página actual 
+  /// es 1, no realiza los procesos.
+  Future<void> prevPage(TableFormModel form, WidgetLinkModel link) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      final DataResponseModel dataResponse;
+      final int countReg;
+      final int rangeMin;
+      final int rangeMax;
+
+      if (form.currentPage > 1) {
+        form.currentPage = form.currentPage - 1;
+        rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
+        rangeMax = (form.currentPage * form.limitRows) - 1;
+        dataResponse =
+            await ObjectRepo.fetchObject([], link, rangeMin, rangeMax);
+        countReg = dataResponse.count;
+        form.totalPage = (countReg / form.limitRows).ceil();
+        form.totalReg = countReg;
+        form.table = TableModel.dataObject(dataResponse, link.block);
+      }
+
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());

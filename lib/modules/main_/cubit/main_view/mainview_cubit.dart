@@ -1,5 +1,5 @@
+import 'package:axol_inventarios/models/data_response_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/generic/repository/widget_index.dart';
-import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widget_view_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
@@ -33,9 +33,11 @@ class MainViewCubit extends Cubit<MainViewState> {
       final List<ModuleModel> moduleList;
       final ModuleModel module;
       final AxolWidget axolWidget;
-      final List<ObjectModel> objects;
+      final DataResponseModel dataResponse;
       final WidgetLinkModel link;
       final WidgetViewModel view;
+      const int rangeMin = 0;
+      final int rangeMax;
 
       form.user = await LocalUser().getLocalUser();
 
@@ -51,10 +53,18 @@ class MainViewCubit extends Cubit<MainViewState> {
             view = WidgetViewModel.empty();
           }
 
-          objects = await ObjectRepo.fetchObject(link.block, view.filterList);
+          if (link.views.first.properties
+              .containsKey(WidgetViewModel.propNumRows)) {
+            rangeMax = link.views.first.properties[WidgetViewModel.propNumRows] - 1;
+          } else {
+            rangeMax = 49;
+          }
+
+          /*dataResponse = await ObjectRepo.fetchObject(
+              view.filterList, link, rangeMin, rangeMax);*/
           axolWidget = WidgetIndex.widget(
             i: link.widget,
-            data: WidgetIndex.data(link.widget, objects, link.block),
+            //data: WidgetIndex.data(link.widget, dataResponse, link.block),
             user: form.user,
             link: link,
             viewId: link.views.first.key,
@@ -63,7 +73,7 @@ class MainViewCubit extends Cubit<MainViewState> {
         } else {
           axolWidget = const EmptyWidget();
           link = WidgetLinkModel.empty();
-          objects = [];
+          //objects = [];
         }
         form.moduleList = moduleList;
         form.moduleSelect = 0;
@@ -100,10 +110,12 @@ class MainViewCubit extends Cubit<MainViewState> {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
-      final List<ObjectModel> objects;
       final ModuleModel module;
       final WidgetLinkModel link;
       final WidgetViewModel view;
+      final DataResponseModel dataResponse;
+      const int rangeMin = 0;
+      final int rangeMax;
 
       module = form.moduleList[form.moduleSelect];
       if (module.widgetLinks.isNotEmpty) {
@@ -113,13 +125,22 @@ class MainViewCubit extends Cubit<MainViewState> {
         } else {
           view = WidgetViewModel.empty();
         }
-        objects = await ObjectRepo.fetchObject(link.block, view.filterList);
+
+        if (link.views[indexView].properties
+            .containsKey(WidgetViewModel.propNumRows)) {
+          rangeMax =
+              link.views[indexView].properties[WidgetViewModel.propNumRows] - 1;
+        } else {
+          rangeMax = 49;
+        }
+        /*dataResponse = await ObjectRepo.fetchObject(
+            view.filterList, link, rangeMin, rangeMax);*/
         if (form.linkSelect != indexLink || form.viewSelect != indexView) {
           form.linkSelect = indexLink;
           form.viewSelect = indexView;
           form.body = WidgetIndex.widget(
             i: link.widget,
-            data: WidgetIndex.data(link.widget, objects, link.block),
+            //data: WidgetIndex.data(link.widget, dataResponse, link.block),
             user: form.user,
             link: link,
             viewId: link.views[indexView].key,
@@ -144,10 +165,12 @@ class MainViewCubit extends Cubit<MainViewState> {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
-      final List<ObjectModel> objects;
+      final DataResponseModel dataResponse;
       final ModuleModel module;
       final WidgetLinkModel link;
       final WidgetViewModel view;
+      const int rangeMin = 0;
+      final int rangeMax;
 
       if (indexModule != form.moduleSelect) {
         form.moduleSelect = indexModule;
@@ -159,12 +182,20 @@ class MainViewCubit extends Cubit<MainViewState> {
           } else {
             view = WidgetViewModel.empty();
           }
-          objects = await ObjectRepo.fetchObject(link.block, view.filterList);
+
+          if (link.views.first.properties
+              .containsKey(WidgetViewModel.propNumRows)) {
+            rangeMax = link.views.first.properties[WidgetViewModel.propNumRows] - 1;
+          } else {
+            rangeMax = 49;
+          }
+          /*dataResponse = await ObjectRepo.fetchObject(
+              view.filterList, link, rangeMin, rangeMax);*/
           form.linkSelect = 0;
           form.viewSelect = 0;
           form.body = WidgetIndex.widget(
             i: link.widget,
-            data: WidgetIndex.data(link.widget, objects, link.block),
+            //data: WidgetIndex.data(link.widget, dataResponse, link.block),
             user: form.user,
             link: link,
             viewId: link.views.first.key,

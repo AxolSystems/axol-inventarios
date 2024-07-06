@@ -1,3 +1,6 @@
+import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
+import 'package:flutter/material.dart';
+
 /// Modelo de datos de la vista de tabla.
 class TableFormModel {
   int theme;
@@ -8,6 +11,8 @@ class TableFormModel {
   int totalPage;
   int limitRows;
   int totalReg;
+  TextEditingController ctrlLimitRow;
+  TableModel table;
 
   TableFormModel({
     required this.theme,
@@ -18,6 +23,8 @@ class TableFormModel {
     required this.totalPage,
     required this.limitRows,
     required this.totalReg,
+    required this.ctrlLimitRow,
+    required this.table,
   });
 
   /// Estado inicial del form de la vista de tabla.
@@ -29,7 +36,9 @@ class TableFormModel {
         currentPage = 0,
         totalPage = 0,
         limitRows = 0,
-        totalReg = 0;
+        totalReg = 0,
+        ctrlLimitRow = TextEditingController(),
+        table = TableModel.empty();
 
   /// Suma los valores de *columnWidth* y devuelve el total.
   double sum() {

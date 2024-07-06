@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/models/data_response_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/generic/model/data_object.dart';
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
@@ -17,7 +18,6 @@ class WidgetIndex {
   static AxolWidget widget(
     {
     required int i,
-    required DataObject data,
     required UserModel user,
     required WidgetLinkModel link,
     required String viewId,
@@ -27,14 +27,12 @@ class WidgetIndex {
       case 0:
         if (data is TableModel) {
           return TableView(
-            table: data,
             user: user,
             link: link,
             viewId: viewId,
           );
         } else {
           return TableView(
-            table: TableModel.empty(),
             user: user,
             link: link,
             viewId: viewId,
@@ -46,10 +44,10 @@ class WidgetIndex {
   }
 
   /// Según el índice recibido, devuelve el tipo de dato requerido.
-  static DataObject data(int i, List<ObjectModel> objects, BlockModel block) {
+  static DataObject data(int i, DataResponseModel dataResponse, BlockModel block) {
     switch (i) {
       case 0:
-        return TableModel.dataObject(objects, block);
+        return TableModel.dataObject(dataResponse, block);
       default:
         return DefaultData();
     }

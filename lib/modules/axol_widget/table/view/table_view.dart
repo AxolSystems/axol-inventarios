@@ -1,13 +1,14 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
-import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/scroll_view_axol.dart';
+import '../../../../utilities/widgets/textfield.dart';
 import '../../../block/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
@@ -22,7 +23,7 @@ import '../model/table_form_model.dart';
 /// herramientas de UI para filtrar o editar su contenido.
 class TableView extends AxolWidget {
   final Color? color;
-  final TableModel table;
+  //final TableModel table;
   final UserModel user;
   final WidgetLinkModel link;
   final String viewId;
@@ -30,7 +31,7 @@ class TableView extends AxolWidget {
     super.key,
     required this.user,
     this.color,
-    required this.table,
+    //required this.table,
     required this.link,
     required this.viewId,
   });
@@ -43,7 +44,7 @@ class TableView extends AxolWidget {
         BlocProvider(create: (_) => TableForm()),
       ],
       child: TableViewBuild(
-        table: table,
+        //table: table,
         color: color,
         user: user,
         link: link,
@@ -55,7 +56,7 @@ class TableView extends AxolWidget {
 
 class TableViewBuild extends AxolWidget {
   final Color? color;
-  final TableModel table;
+  //final TableModel table;
   final UserModel user;
   final WidgetLinkModel link;
   final String viewId;
@@ -63,7 +64,7 @@ class TableViewBuild extends AxolWidget {
     super.key,
     required this.user,
     this.color,
-    required this.table,
+    //required this.table,
     required this.link,
     required this.viewId,
   });
@@ -81,8 +82,7 @@ class TableViewBuild extends AxolWidget {
         }
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()
-          ..initLoad(form, table, user, link, viewId),
+        bloc: context.read<TableCubit>()..initLoad(form, user, link, viewId),
         listener: (context, state) {
           if (state is ErrorTableState) {
             showDialog(
@@ -93,7 +93,7 @@ class TableViewBuild extends AxolWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'Cambios en tabla guardados.',
+                  state.text,
                   style: Typo.body(form.theme),
                 ),
                 showCloseIcon: true,
@@ -158,18 +158,19 @@ class TableViewBuild extends AxolWidget {
                       child: Column(
                         children: [
                           Row(
-                            children: headerWidget(context, table.header, form),
+                            children:
+                                headerWidget(context, form.table.header, form),
                           ),
                           SizedBox(
-                            height: (table.rowList.length * 30) + 30,
+                            height: (form.table.rowList.length * 30) + 30,
                             width: form.sum(),
                             child: ListView.builder(
-                              itemCount: table.rowList.length,
+                              itemCount: form.table.rowList.length,
                               itemBuilder: (context, index) {
-                                final row = table.rowList[index];
+                                final row = form.table.rowList[index];
                                 return Row(
                                   children: rowWidget(
-                                      context, form, row, table.header),
+                                      context, form, row, form.table.header),
                                 );
                               },
                             ),
@@ -194,7 +195,9 @@ class TableViewBuild extends AxolWidget {
                             SecondaryButton(
                               icon: Icons.chevron_left,
                               theme: form.theme,
-                              onPressed: () {},
+                              onPressed: () {
+                                context.read<TableCubit>().prevPage(form, link);
+                              },
                             ),
                             const SizedBox(width: 8),
                             Text('${form.currentPage} de ${form.totalPage}',
@@ -203,11 +206,33 @@ class TableViewBuild extends AxolWidget {
                             SecondaryButton(
                               icon: Icons.chevron_right,
                               theme: form.theme,
-                              onPressed: () {},
+                              onPressed: () {
+                                context.read<TableCubit>().nextPage(form, link);
+                              },
                             ),
                             const SizedBox(width: 8),
-                            Text('${form.limitRows} filas',
-                                style: Typo.body(form.theme)),
+                            Row(
+                              children: [
+                                Visibility(
+                                  visible: form.edit,
+                                  replacement: Text('${form.limitRows}',
+                                      style: Typo.body(form.theme)),
+                                  child: SizedBox(
+                                    height: 28,
+                                    width: 60,
+                                    child: PrimaryTextField(
+                                      controller: form.ctrlLimitRow,
+                                      theme: form.theme,
+                                      contentPadding: const EdgeInsets.all(8),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Text(' filas', style: Typo.body(form.theme)),
+                              ],
+                            ),
                             const SizedBox(width: 8),
                             Text('${form.totalReg} registros',
                                 style: Typo.body(form.theme)),

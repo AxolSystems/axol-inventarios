@@ -1,5 +1,7 @@
+import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../models/data_response_model.dart';
 import '../../block/model/block_model.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
@@ -12,18 +14,26 @@ class ObjectRepo {
 
   /// Obtiene una lista de objetos de la base de datos.
   ///
-  /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filterList]. 
+  /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filterList].
   /// Si [filterList] no se encuentra vacía, realiza una búsqueda filtrada; de lo contrario,
   /// realiza una búsqueda completa de la tabla referenciada. La tabla de la base de datos donde
   /// se hará la búsqueda es obtenida mediante [BlockModel.tableName].
-  /// 
+  ///
   /// Después de la consulta convierte los datos obtenidos en una lista [ObjectModel].
-  static Future<List<ObjectModel>> fetchObject(
-      BlockModel block, List<FilterObjModel> filterList) async {
+  static Future<DataResponseModel> fetchObject(
+    List<FilterObjModel> filterList,
+    WidgetLinkModel link, [
+    int? rangeMin,
+    int? rangeMax,
+  ]) async {
     List<Map<String, dynamic>> objsDB;
     List<ObjectModel> objList = [];
     ObjectModel obj;
     Map<String, dynamic> matchMap = {};
+    final int rangeMin_ = rangeMin ?? 0;
+    final int rangeMax_ = rangeMax ?? 0;
+    final DataResponseModel dataResponse;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
 
     if (filterList.isNotEmpty) {
       for (var flt in filterList) {
@@ -31,15 +41,21 @@ class ObjectRepo {
           matchMap[flt.property.name] = flt.value;
         }
       }
-      objsDB = await _supabase
-          .from(block.tableName)
-          .select<List<Map<String, dynamic>>>('*')
-          .match(matchMap);
+      postgrestResponse = await _supabase
+          .from(link.block.tableName)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.estimated))
+          .match(matchMap)
+          .range(rangeMin_, rangeMax_);
     } else {
-      objsDB = await _supabase
-          .from(block.tableName)
-          .select<List<Map<String, dynamic>>>('*');
+      postgrestResponse = await _supabase
+          .from(link.block.tableName)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.estimated))
+          .range(rangeMin_, rangeMax_);
     }
+
+    objsDB = postgrestResponse.data ?? [];
 
     if (objsDB.isNotEmpty) {
       for (var objDB in objsDB) {
@@ -52,6 +68,11 @@ class ObjectRepo {
       }
     }
 
-    return objList;
+    dataResponse = DataResponseModel(
+      dataList: objList,
+      count: postgrestResponse.count ?? 0,
+    );
+
+    return dataResponse;
   }
 }

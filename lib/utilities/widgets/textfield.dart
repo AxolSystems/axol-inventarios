@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Widget principal de un campo de texto genérico de la aplicación.
 class PrimaryTextField extends StatelessWidget {
@@ -10,6 +11,8 @@ class PrimaryTextField extends StatelessWidget {
   final String? hintText;
   final TextStyle? hintStyle;
   final bool? enabled;
+  final EdgeInsetsGeometry? contentPadding;
+  final List<TextInputFormatter>? inputFormatters;
   const PrimaryTextField(
       {super.key,
       this.controller,
@@ -18,7 +21,8 @@ class PrimaryTextField extends StatelessWidget {
       this.prefixIcon,
       this.hintText,
       this.hintStyle,
-      this.enabled});
+      this.enabled,
+      this.contentPadding, this.inputFormatters});
 
   /// Devuelve widget general del campo de texto.
   @override
@@ -32,7 +36,7 @@ class PrimaryTextField extends StatelessWidget {
         isDense: true,
         filled: true,
         fillColor: ColorTheme.fill(theme ?? 0),
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: contentPadding ?? const EdgeInsets.all(12),
         enabledBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(6)),
             borderSide: BorderSide(color: ColorTheme.item20(theme ?? 0))),
@@ -43,6 +47,7 @@ class PrimaryTextField extends StatelessWidget {
         hintText: hintText,
         hintStyle: hintStyle,
       ),
+      inputFormatters: inputFormatters,
       onChanged: onChanged,
     );
   }

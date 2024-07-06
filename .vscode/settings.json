@@ -13,6 +13,8 @@
         "modulebar",
         "objs",
         "Overscroll",
+        "postgrest",
+        "Postgrest",
         "setblock",
         "supabase",
         "tableview",
