@@ -46,10 +46,12 @@ class TableCubit extends Cubit<TableState> {
         widthColumns[prop.key] = 150;
       }
 
-      columnWidthDB = view.properties;
-      for (var prop in table.header) {
-        if (columnWidthDB.containsKey(prop.key)) {
-          widthColumns[prop.key] = columnWidthDB[prop.key];
+      if (view.properties.containsKey(WidgetViewModel.propColumnWidth)) {
+        columnWidthDB = view.properties[WidgetViewModel.propColumnWidth];
+        for (var prop in table.header) {
+          if (columnWidthDB.containsKey(prop.key)) {
+            widthColumns[prop.key] = columnWidthDB[prop.key];
+          }
         }
       }
 
@@ -86,7 +88,8 @@ class TableCubit extends Cubit<TableState> {
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == keyView);
 
-      properties = form.columnWidth;
+      properties = view.properties;
+      properties[WidgetViewModel.propColumnWidth] = form.columnWidth;
       upView = WidgetViewModel.properties(view, properties);
       upLink = link;
       upLink.views[link.views.indexWhere((x) => x.key == keyView)] = upView;

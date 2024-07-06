@@ -28,6 +28,7 @@ class WidgetViewModel {
   static String get tName => 'name';
   static String get tProperties => 'properties';
   static String get propColumnWidth => 'columnWidth';
+  static String get propNumRows => 'numRows';
 
   /// Estructura view en base de datos:
   /// {"key": {"name": String, "properties": Map<String,String>}}
