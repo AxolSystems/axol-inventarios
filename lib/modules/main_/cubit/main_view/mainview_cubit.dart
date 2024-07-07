@@ -36,7 +36,7 @@ class MainViewCubit extends Cubit<MainViewState> {
       final DataResponseModel dataResponse;
       final WidgetLinkModel link;
       final WidgetViewModel view;
-      const int rangeMin = 0;
+      const int rangeMin = 0; 
       final int rangeMax;
 
       form.user = await LocalUser().getLocalUser();
