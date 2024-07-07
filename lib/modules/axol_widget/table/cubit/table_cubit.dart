@@ -40,8 +40,6 @@ class TableCubit extends Cubit<TableState> {
       emit(LoadingTableState());
       Map<String, double> widthColumns = {};
       Map<String, dynamic> columnWidthDB = {};
-      final DataResponseModel dataResponse;
-      final int countReg;
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == viewId);
 
@@ -57,18 +55,8 @@ class TableCubit extends Cubit<TableState> {
       }
       form.currentPage = 1;
 
-      dataResponse = await ObjectRepo.fetchObject(
-        filterList: view.filterList,
-        link: link,
-        rangeMin: 0,
-        rangeMax: form.limitRows - 1,
-        ascending: form.ascending,
-        keyAscending: form.keyAscending,
-      );
-      form.table = TableModel.dataObject(dataResponse, link.block);
-      countReg = dataResponse.count;
-      form.totalPage = (countReg / form.limitRows).ceil();
-      form.totalReg = countReg;
+      await getData(
+          form: form, link: link, rangeMin: 0, rangeMax: form.limitRows - 1);
 
       for (var prop in form.table.header) {
         widthColumns[prop.key] = 150;
@@ -124,10 +112,6 @@ class TableCubit extends Cubit<TableState> {
       String saveMessage = 'Cambios de tabla guardados.';
       WidgetLinkModel upLink;
       Map<String, dynamic> properties;
-      final DataResponseModel dataResponse;
-      final int countReg;
-      final int rangeMin;
-      final int rangeMax;
       final WidgetViewModel upView;
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == keyView);
@@ -137,7 +121,6 @@ class TableCubit extends Cubit<TableState> {
 
       properties[WidgetViewModel.propAscending] = form.ascending;
       properties[WidgetViewModel.propKeyAscending] = form.keyAscending;
-
 
       if (limitRows >= 1000) {
         saveMessage =
@@ -158,21 +141,7 @@ class TableCubit extends Cubit<TableState> {
           form.totalReg) {
         form.currentPage = 1;
       }
-      rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
-      rangeMax = (form.currentPage * form.limitRows) - 1;
-
-      dataResponse = await ObjectRepo.fetchObject(
-        filterList: view.filterList,
-        link: link,
-        rangeMin: rangeMin,
-        rangeMax: rangeMax,
-        ascending: form.ascending,
-        keyAscending: form.keyAscending,
-      );
-      countReg = dataResponse.count;
-      form.totalPage = (countReg / form.limitRows).ceil();
-      form.totalReg = countReg;
-      form.table = TableModel.dataObject(dataResponse, link.block);
+      await getData(form: form, link: link);
 
       emit(SavedTableState(saveMessage));
       emit(LoadedTableState());
@@ -189,27 +158,10 @@ class TableCubit extends Cubit<TableState> {
     try {
       emit(InitialTableState());
       emit(LoadingTableState());
-      final DataResponseModel dataResponse;
-      final int countReg;
-      final int rangeMin;
-      final int rangeMax;
 
       if (form.currentPage < form.totalPage) {
         form.currentPage = form.currentPage + 1;
-        rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
-        rangeMax = (form.currentPage * form.limitRows) - 1;
-        dataResponse = await ObjectRepo.fetchObject(
-          filterList: [],
-          link: link,
-          rangeMin: rangeMin,
-          rangeMax: rangeMax,
-          ascending: form.ascending,
-          keyAscending: form.keyAscending,
-        );
-        countReg = dataResponse.count;
-        form.totalPage = (countReg / form.limitRows).ceil();
-        form.totalReg = countReg;
-        form.table = TableModel.dataObject(dataResponse, link.block);
+        await getData(form: form, link: link);
       }
 
       emit(LoadedTableState());
@@ -225,27 +177,10 @@ class TableCubit extends Cubit<TableState> {
     try {
       emit(InitialTableState());
       emit(LoadingTableState());
-      final DataResponseModel dataResponse;
-      final int countReg;
-      final int rangeMin;
-      final int rangeMax;
 
       if (form.currentPage > 1) {
         form.currentPage = form.currentPage - 1;
-        rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
-        rangeMax = (form.currentPage * form.limitRows) - 1;
-        dataResponse = await ObjectRepo.fetchObject(
-          filterList: [],
-          link: link,
-          rangeMax: rangeMin,
-          rangeMin: rangeMax,
-          ascending: form.ascending,
-          keyAscending: form.keyAscending,
-        );
-        countReg = dataResponse.count;
-        form.totalPage = (countReg / form.limitRows).ceil();
-        form.totalReg = countReg;
-        form.table = TableModel.dataObject(dataResponse, link.block);
+        await getData(form: form, link: link);
       }
 
       emit(LoadedTableState());
@@ -261,34 +196,62 @@ class TableCubit extends Cubit<TableState> {
     try {
       emit(InitialTableState());
       emit(LoadingTableState());
-      final DataResponseModel dataResponse;
-      final int countReg;
-      final int rangeMin;
-      final int rangeMax;
 
       form.ascending = !form.ascending;
       form.keyAscending = keyAscending;
 
-      rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
-      rangeMax = (form.currentPage * form.limitRows) - 1;
-      dataResponse = await ObjectRepo.fetchObject(
-        filterList: [],
-        link: link,
-        rangeMin: rangeMin,
-        rangeMax: rangeMax,
-        ascending: form.ascending,
-        keyAscending: form.keyAscending,
-      );
-      countReg = dataResponse.count;
-      form.totalPage = (countReg / form.limitRows).ceil();
-      form.totalReg = countReg;
-      form.table = TableModel.dataObject(dataResponse, link.block);
+      await getData(form: form, link: link);
 
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
       emit(ErrorTableState(error: e.toString()));
     }
+  }
+
+  /// Si *keyAscending* es diferente a null, vuelve los parámetros filtro de orden 
+  /// a su estado inicial. 
+  Future<void> switchSort(TableFormModel form, WidgetLinkModel link) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      if (form.keyAscending != null) {
+        form.keyAscending = null;
+        form.ascending = false;
+      }
+      await getData(form: form, link: link);
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
+  /// Método para actualizar los datos de la tabla.
+  Future<void> getData({
+    required TableFormModel form,
+    required WidgetLinkModel link,
+    int? rangeMin,
+    int? rangeMax,
+  }) async {
+    final DataResponseModel dataResponse;
+    final int countReg;
+
+    rangeMin ??= (form.currentPage * form.limitRows) - form.limitRows;
+    rangeMax ??= (form.currentPage * form.limitRows) - 1;
+
+    dataResponse = await ObjectRepo.fetchObject(
+      filterList: [],
+      link: link,
+      rangeMin: rangeMin,
+      rangeMax: rangeMax,
+      ascending: form.ascending,
+      keyAscending: form.keyAscending,
+    );
+    countReg = dataResponse.count;
+    form.totalPage = (countReg / form.limitRows).ceil();
+    form.totalReg = countReg;
+    form.table = TableModel.dataObject(dataResponse, link.block);
   }
 }
 

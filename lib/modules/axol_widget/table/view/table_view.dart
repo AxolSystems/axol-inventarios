@@ -124,6 +124,20 @@ class TableViewBuild extends AxolWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Visibility(
+                          visible: form.edit,
+                          child: Row(
+                            children: [
+                              Text('Ordenar: ', style: Typo.body(form.theme)),
+                              Switch(
+                                value: form.keyAscending != null,
+                                onChanged: (value) {
+                                  context.read<TableCubit>().switchSort(form, link);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Visibility(
                           visible: (state is SavingTableState) ||
                               (state is LoadingTableState),
                           replacement: IconButton(
