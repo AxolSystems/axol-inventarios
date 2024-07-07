@@ -83,6 +83,12 @@ class TableCubit extends Cubit<TableState> {
       }
       form.columnWidth = widthColumns;
 
+      if (view.properties.containsKey(WidgetViewModel.propAscending) &&
+          view.properties.containsKey(WidgetViewModel.propKeyAscending)) {
+        form.ascending = view.properties[WidgetViewModel.propAscending];
+        form.keyAscending = view.properties[WidgetViewModel.propKeyAscending];
+      }
+
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
@@ -125,6 +131,10 @@ class TableCubit extends Cubit<TableState> {
 
       properties = view.properties;
       limitRows = int.parse(form.ctrlLimitRow.text);
+
+      properties[WidgetViewModel.propAscending] = form.ascending;
+      properties[WidgetViewModel.propKeyAscending] = form.keyAscending;
+
 
       if (limitRows >= 1000) {
         saveMessage =
