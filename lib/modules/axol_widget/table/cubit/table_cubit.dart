@@ -242,6 +242,7 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
+  /// Función para ordenar los datos según la key de la columna recibida.
   Future<void> sort(
       TableFormModel form, String keyAscending, WidgetLinkModel link) async {
     try {

@@ -288,7 +288,9 @@ class TableViewBuild extends AxolWidget {
                       padding: EdgeInsets.zero,
                       icon: Icon(
                         Icons.filter_list,
-                        color: ColorTheme.item20(form.theme),
+                        color: form.keyAscending == prop.key
+                            ? ColorPalette.primary
+                            : ColorTheme.item20(form.theme),
                         size: 20,
                       ),
                     )),
