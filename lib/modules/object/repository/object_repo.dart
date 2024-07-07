@@ -20,20 +20,30 @@ class ObjectRepo {
   /// se hará la búsqueda es obtenida mediante [BlockModel.tableName].
   ///
   /// Después de la consulta convierte los datos obtenidos en una lista [ObjectModel].
-  static Future<DataResponseModel> fetchObject(
-    List<FilterObjModel> filterList,
-    WidgetLinkModel link, [
+  static Future<DataResponseModel> fetchObject({
+    required List<FilterObjModel> filterList,
+    required WidgetLinkModel link,
     int? rangeMin,
     int? rangeMax,
-  ]) async {
+    bool? ascending,
+    String? keyAscending,
+  }) async {
     List<Map<String, dynamic>> objsDB;
     List<ObjectModel> objList = [];
     ObjectModel obj;
     Map<String, dynamic> matchMap = {};
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
+    final bool ascending_ = ascending ?? false;
+    final String keyAscending_;
     final DataResponseModel dataResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+
+    if (keyAscending == null) {
+      keyAscending_ = _createAt;
+    } else {
+      keyAscending_ = '$_object->"$keyAscending"';
+    }
 
     if (filterList.isNotEmpty) {
       for (var flt in filterList) {
@@ -46,13 +56,15 @@ class ObjectRepo {
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
           .match(matchMap)
-          .range(rangeMin_, rangeMax_);
+          .range(rangeMin_, rangeMax_)
+          .order(keyAscending_, ascending: ascending_);
     } else {
       postgrestResponse = await _supabase
           .from(link.block.tableName)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
-          .range(rangeMin_, rangeMax_);
+          .range(rangeMin_, rangeMax_)
+          .order(keyAscending_, ascending: ascending_);
     }
 
     objsDB = postgrestResponse.data ?? [];

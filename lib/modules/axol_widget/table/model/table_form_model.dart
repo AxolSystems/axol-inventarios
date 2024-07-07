@@ -13,6 +13,8 @@ class TableFormModel {
   int totalReg;
   TextEditingController ctrlLimitRow;
   TableModel table;
+  bool ascending;
+  String? keyAscending;
 
   TableFormModel({
     required this.theme,
@@ -25,6 +27,8 @@ class TableFormModel {
     required this.totalReg,
     required this.ctrlLimitRow,
     required this.table,
+    required this.ascending,
+    required this.keyAscending,
   });
 
   /// Estado inicial del form de la vista de tabla.
@@ -38,7 +42,9 @@ class TableFormModel {
         limitRows = 0,
         totalReg = 0,
         ctrlLimitRow = TextEditingController(),
-        table = TableModel.empty();
+        table = TableModel.empty(),
+        ascending = false,
+        keyAscending = null;
 
   /// Suma los valores de *columnWidth* y devuelve el total.
   double sum() {

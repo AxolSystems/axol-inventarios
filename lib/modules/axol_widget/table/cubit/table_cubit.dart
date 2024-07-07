@@ -58,7 +58,13 @@ class TableCubit extends Cubit<TableState> {
       form.currentPage = 1;
 
       dataResponse = await ObjectRepo.fetchObject(
-          view.filterList, link, 0, form.limitRows - 1);
+        filterList: view.filterList,
+        link: link,
+        rangeMin: 0,
+        rangeMax: form.limitRows - 1,
+        ascending: form.ascending,
+        keyAscending: form.keyAscending,
+      );
       form.table = TableModel.dataObject(dataResponse, link.block);
       countReg = dataResponse.count;
       form.totalPage = (countReg / form.limitRows).ceil();
@@ -135,12 +141,21 @@ class TableCubit extends Cubit<TableState> {
       await WidgetLinkRepo.updateView(upLink);
       form.edit = false;
 
+      if (((form.currentPage * form.limitRows) - form.limitRows) >
+          form.totalReg) {
+        form.currentPage = 1;
+      }
       rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
       rangeMax = (form.currentPage * form.limitRows) - 1;
-      /// FIXME: Al acutualizar los datos cuando despues de la actualización la página actual
-      /// es menor a la nueva totalPage, causa el error. 
+
       dataResponse = await ObjectRepo.fetchObject(
-          view.filterList, link, rangeMin, rangeMax);
+        filterList: view.filterList,
+        link: link,
+        rangeMin: rangeMin,
+        rangeMax: rangeMax,
+        ascending: form.ascending,
+        keyAscending: form.keyAscending,
+      );
       countReg = dataResponse.count;
       form.totalPage = (countReg / form.limitRows).ceil();
       form.totalReg = countReg;
@@ -154,9 +169,9 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
-  /// Procesos al presionar el botón de siguiente página. Si la página 
-  /// actual se vuelve mayor al total de páginas, después de presionar el 
-  /// botón, no realiza los procesos. 
+  /// Procesos al presionar el botón de siguiente página. Si la página
+  /// actual se vuelve mayor al total de páginas, después de presionar el
+  /// botón, no realiza los procesos.
   Future<void> nextPage(TableFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialTableState());
@@ -170,8 +185,14 @@ class TableCubit extends Cubit<TableState> {
         form.currentPage = form.currentPage + 1;
         rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
         rangeMax = (form.currentPage * form.limitRows) - 1;
-        dataResponse =
-            await ObjectRepo.fetchObject([], link, rangeMin, rangeMax);
+        dataResponse = await ObjectRepo.fetchObject(
+          filterList: [],
+          link: link,
+          rangeMin: rangeMin,
+          rangeMax: rangeMax,
+          ascending: form.ascending,
+          keyAscending: form.keyAscending,
+        );
         countReg = dataResponse.count;
         form.totalPage = (countReg / form.limitRows).ceil();
         form.totalReg = countReg;
@@ -185,7 +206,7 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
-  /// Procesos al presionar el botón de página anterior. Si la página actual 
+  /// Procesos al presionar el botón de página anterior. Si la página actual
   /// es 1, no realiza los procesos.
   Future<void> prevPage(TableFormModel form, WidgetLinkModel link) async {
     try {
@@ -200,13 +221,54 @@ class TableCubit extends Cubit<TableState> {
         form.currentPage = form.currentPage - 1;
         rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
         rangeMax = (form.currentPage * form.limitRows) - 1;
-        dataResponse =
-            await ObjectRepo.fetchObject([], link, rangeMin, rangeMax);
+        dataResponse = await ObjectRepo.fetchObject(
+          filterList: [],
+          link: link,
+          rangeMax: rangeMin,
+          rangeMin: rangeMax,
+          ascending: form.ascending,
+          keyAscending: form.keyAscending,
+        );
         countReg = dataResponse.count;
         form.totalPage = (countReg / form.limitRows).ceil();
         form.totalReg = countReg;
         form.table = TableModel.dataObject(dataResponse, link.block);
       }
+
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
+  Future<void> sort(
+      TableFormModel form, String keyAscending, WidgetLinkModel link) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      final DataResponseModel dataResponse;
+      final int countReg;
+      final int rangeMin;
+      final int rangeMax;
+
+      form.ascending = !form.ascending;
+      form.keyAscending = keyAscending;
+
+      rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
+      rangeMax = (form.currentPage * form.limitRows) - 1;
+      dataResponse = await ObjectRepo.fetchObject(
+        filterList: [],
+        link: link,
+        rangeMin: rangeMin,
+        rangeMax: rangeMax,
+        ascending: form.ascending,
+        keyAscending: form.keyAscending,
+      );
+      countReg = dataResponse.count;
+      form.totalPage = (countReg / form.limitRows).ceil();
+      form.totalReg = countReg;
+      form.table = TableModel.dataObject(dataResponse, link.block);
 
       emit(LoadedTableState());
     } catch (e) {

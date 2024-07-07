@@ -266,7 +266,9 @@ class TableViewBuild extends AxolWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(4),
+              padding: form.edit
+                  ? const EdgeInsets.fromLTRB(4, 4, 32, 4)
+                  : const EdgeInsets.all(4),
               child: Text(
                 prop.name,
                 style: Typo.subtitle(form.theme),
@@ -277,6 +279,19 @@ class TableViewBuild extends AxolWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Expanded(child: SizedBox()),
+                Visibility(
+                    visible: form.edit,
+                    child: IconButton(
+                      onPressed: () {
+                        context.read<TableCubit>().sort(form, prop.key, link);
+                      },
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        Icons.filter_list,
+                        color: ColorTheme.item20(form.theme),
+                        size: 20,
+                      ),
+                    )),
                 Visibility(
                   visible: form.edit,
                   replacement: const SizedBox(),
