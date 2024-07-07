@@ -87,6 +87,9 @@ class TableCubit extends Cubit<TableState> {
           view.properties.containsKey(WidgetViewModel.propKeyAscending)) {
         form.ascending = view.properties[WidgetViewModel.propAscending];
         form.keyAscending = view.properties[WidgetViewModel.propKeyAscending];
+      } else {
+        form.ascending = false;
+        form.keyAscending = null;
       }
 
       emit(LoadedTableState());

@@ -124,7 +124,8 @@ class TableViewBuild extends AxolWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Visibility(
-                          visible: state is SavingTableState,
+                          visible: (state is SavingTableState) ||
+                              (state is LoadingTableState),
                           replacement: IconButton(
                             padding: EdgeInsets.zero,
                             onPressed: form.edit
@@ -144,10 +145,13 @@ class TableViewBuild extends AxolWidget {
                               size: 20,
                             ),
                           ),
-                          child: SizedBox.square(
-                            dimension: 15,
-                            child: CircularProgressIndicator(
-                                color: ColorTheme.item10(form.theme)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: SizedBox.square(
+                              dimension: 15,
+                              child: CircularProgressIndicator(
+                                  color: ColorTheme.item10(form.theme)),
+                            ),
                           ),
                         ),
                       ],
@@ -158,8 +162,8 @@ class TableViewBuild extends AxolWidget {
                       child: Column(
                         children: [
                           Row(
-                            children:
-                                headerWidget(context, form.table.header, form),
+                            children: headerWidget(
+                                context, form.table.header, form, state),
                           ),
                           SizedBox(
                             height: (form.table.rowList.length * 30) + 30,
@@ -252,7 +256,7 @@ class TableViewBuild extends AxolWidget {
 
   /// Contiene los widgets que conforman encabezados de las columnas.
   List<Widget> headerWidget(BuildContext context,
-      List<PropertyModel> headerTitles, TableFormModel form) {
+      List<PropertyModel> headerTitles, TableFormModel form, TableState state) {
     List<Widget> widgetList = [];
     Widget widget;
     for (int i = 0; i < headerTitles.length; i++) {
@@ -282,9 +286,14 @@ class TableViewBuild extends AxolWidget {
                 Visibility(
                     visible: form.edit,
                     child: IconButton(
-                      onPressed: () {
-                        context.read<TableCubit>().sort(form, prop.key, link);
-                      },
+                      onPressed: (state is SavingTableState) ||
+                              (state is LoadingTableState)
+                          ? () {}
+                          : () {
+                              context
+                                  .read<TableCubit>()
+                                  .sort(form, prop.key, link);
+                            },
                       padding: EdgeInsets.zero,
                       icon: Icon(
                         Icons.filter_list,
