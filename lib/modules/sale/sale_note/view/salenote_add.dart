@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:axol_inventarios/utilities/widgets/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -763,3 +764,780 @@ class SaleNoteAddBuild extends StatelessWidget {
     );
   }
 }
+=======
+import 'package:axol_inventarios/utilities/widgets/providers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../models/inventory_row_model.dart';
+import '../../../../utilities/format.dart';
+import '../../../../utilities/widgets/alert_dialog_axol.dart';
+import '../../../../utilities/widgets/appbar_axol/appbar_axol.dart';
+import '../../../../models/data_find.dart';
+import '../../../../utilities/widgets/navigation_rail/navigation_utilities.dart';
+import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/btn_select_inptu_form.dart';
+import '../../../../utilities/widgets/input_table.dart';
+import '../../../../utilities/widgets/toolbar.dart';
+import '../../../inventory_/inventory/model/warehouse_model.dart';
+import '../../../inventory_/product/view/product_drawer_details.dart';
+import '../../../inventory_/product/view/product_drawer_find.dart';
+import '../../customer/model/customer_model.dart';
+import '../../customer/view/customer_drawer_find.dart';
+import '../../vendor/model/vendor_model.dart';
+import '../cubit/salenote_add/salenote_add_cubit.dart';
+import '../cubit/salenote_add/salenote_add_form.dart';
+import '../cubit/salenote_add/salenote_add_state.dart';
+import '../model/saelnote_add_form_model.dart';
+import '../model/salenote_row_form_model.dart';
+import 'salenote_dialog_save.dart';
+import 'salenote_drawer_note.dart';
+
+class SaleNoteAdd extends Providers {
+  final int saleType;
+  const SaleNoteAdd({super.key, required this.saleType});
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => SaleNoteAddCubit()),
+            BlocProvider(create: (_) => SaleNoteAddForm()),
+          ],
+          child: SaleNoteAddBuild(
+            saleType: saleType,
+          ));
+}
+
+class SaleNoteAddBuild extends StatelessWidget {
+  final int saleType;
+  const SaleNoteAddBuild({super.key, required this.saleType});
+
+  String _toEmptyString(int num) {
+    final String string;
+    if (num < 0) {
+      string = '';
+    } else {
+      string = num.toString();
+    }
+    return string;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SaleNoteAddFormModel form = context.read<SaleNoteAddForm>().state;
+    return BlocConsumer<SaleNoteAddCubit, SaleNoteAddState>(
+      bloc: context.read<SaleNoteAddCubit>()..initLoad(form, saleType),
+      builder: (context, state) {
+        if (state is LoadingSaleNoteAddState) {
+          return saleNoteAdd(context, form.productList, true, saleType);
+        } else if (state is LoadedSaleNoteAddState) {
+          return saleNoteAdd(context, form.productList, false, saleType);
+        } else {
+          return saleNoteAdd(context, form.productList, false, saleType);
+        }
+      },
+      listener: (context, state) {
+        if (state is ErrorSaleNoteAddState) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialogAxol(
+              text: state.error,
+            ),
+          );
+        }
+
+        if (state is SavedNoteAddState) {
+          showDialog(
+            context: context,
+            builder: (context) => SaleNoteDialogSave(
+              saleNote: state.saleNote,
+              productList: state.productsList,
+              saleType: state.saleType,
+              idChanged: state.finalId == -1 ? null : state.finalId,
+            ),
+          ).then((value) {
+            Navigator.pop(context);
+          });
+        }
+      },
+    );
+  }
+
+  Widget saleNoteAdd(BuildContext context,
+      List<SaleNoteRowFormModel> productList, bool isLoading, int saleType) {
+    String title = '';
+    SaleNoteAddFormModel form = context.read<SaleNoteAddForm>().state;
+    int linesNote = 3;
+    String dateText =
+        '${form.dateTime.day}/${form.dateTime.month}/${form.dateTime.year}';
+    //SaleNoteAddFormModel upForm = form;
+    TextEditingController customerCtrl = TextEditingController();
+    TextEditingController vendorCtrl = TextEditingController();
+    TextEditingController warehouseCtrl = TextEditingController();
+    customerCtrl.value = TextEditingValue(
+        text: form.customerTf.value,
+        selection: TextSelection.collapsed(offset: form.customerTf.position));
+    vendorCtrl.value = TextEditingValue(
+        text: form.vendorTf.value,
+        selection: TextSelection.collapsed(offset: form.vendorTf.position));
+    warehouseCtrl.value = TextEditingValue(
+        text: form.warehouseTf.value,
+        selection: TextSelection.collapsed(offset: form.warehouseTf.position));
+    if (form.vendorTf.validation.isValid == false) {
+      linesNote = linesNote - 1;
+    }
+    if (form.warehouseTf.validation.isValid == false) {
+      linesNote = linesNote - 1;
+    }
+
+    if (saleType == 0) {
+      title = 'Nueva de nota de venta';
+    }
+    if (saleType == 1) {
+      title = 'Nueva remisión';
+    }
+
+    return Scaffold(
+      backgroundColor: ColorPalette.darkBackground,
+      appBar: AppBarAxol.appBar(
+        title: title,
+        isLoading: isLoading,
+      ),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          NavigationUtilities.emptyNavRailReturn(),
+          const VerticalDivider(
+              thickness: 1, width: 1, color: ColorPalette.darkItems),
+          Expanded(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 270,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                BtnSelectInputForm(
+                                  isLoading: isLoading,
+                                  controller: customerCtrl,
+                                  icon: Icons.search,
+                                  lblText: 'Cliente',
+                                  errorText: form.customerTf.validation.isValid
+                                      ? null
+                                      : form.customerTf.validation.errorMessage,
+                                  onChanged: (value) {
+                                    form.customerTf.value = value;
+                                    form.customerTf.position =
+                                        customerCtrl.selection.base.offset;
+                                    context
+                                        .read<SaleNoteAddForm>()
+                                        .setForm(form);
+                                  },
+                                  onSubmitted: (value) {
+                                    form =
+                                        context.read<SaleNoteAddForm>().state;
+                                    context
+                                        .read<SaleNoteAddCubit>()
+                                        .fetchCustomer(value, form);
+                                  },
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const CustomerDrawerFind(),
+                                    ).then((value) {
+                                      if (value is DataFind &&
+                                          value.data is CustomerModel) {
+                                        form.customerTf.value =
+                                            '${value.id} - ${value.data.name}';
+                                        form.customer = value.data;
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(form);
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .fetchCustomer(
+                                                value.id.toString(), form);
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text(
+                                    '${CustomerModel.lblPhoneNumber} ${form.customer.phoneNumber ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblRfc} ${form.customer.rfc ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblStreet} ${form.customer.street ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblOutNumber} ${form.customer.outNumber ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblIntNumber} ${form.customer.intNumber ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblHood} ${form.customer.hood ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblPostalCode} ${form.customer.postalCode ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblTown} ${form.customer.town ?? ''}',
+                                    style: Typo.labelLight),
+                                Text(
+                                    '${CustomerModel.lblCountry} ${form.customer.country ?? ''}',
+                                    style: Typo.labelLight),
+                              ],
+                            ),
+                          )),
+                      const VerticalDivider(
+                        color: ColorPalette.darkItems,
+                        width: 1,
+                        thickness: 1,
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Folio: ${_toEmptyString(form.id)}',
+                                    style: Typo.labelLight),
+                                Text('Fecha: $dateText',
+                                    style: Typo.labelLight),
+                                BtnSelectInputForm(
+                                  icon: Icons.search,
+                                  lblText: 'Vendedor',
+                                  controller: vendorCtrl,
+                                  isLoading: isLoading,
+                                  errorText: form.vendorTf.validation.isValid
+                                      ? null
+                                      : form.vendorTf.validation.errorMessage,
+                                  onChanged: (value) {
+                                    form.vendorTf.value = value;
+                                    form.vendorTf.position =
+                                        vendorCtrl.selection.base.offset;
+                                    context
+                                        .read<SaleNoteAddForm>()
+                                        .setForm(form);
+                                  },
+                                  onSubmitted: (value) {
+                                    form =
+                                        context.read<SaleNoteAddForm>().state;
+                                    context
+                                        .read<SaleNoteAddCubit>()
+                                        .fetchVendor(value, form);
+                                  },
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const ProviderVendorFind(),
+                                    ).then((value) {
+                                      if (value is DataFind &&
+                                          value.data is VendorModel) {
+                                        form.vendorTf.value =
+                                            '${value.id} - ${value.data.name}';
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(form);
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .fetchVendor(
+                                                value.id.toString(), form);
+                                      }
+                                    });
+                                  },
+                                ),
+                                BtnSelectInputForm(
+                                  icon: Icons.search,
+                                  lblText: 'Almacén',
+                                  controller: warehouseCtrl,
+                                  isLoading: isLoading,
+                                  errorText: form.warehouseTf.validation.isValid
+                                      ? null
+                                      : form
+                                          .warehouseTf.validation.errorMessage,
+                                  onChanged: (value) {
+                                    form.warehouseTf.value = value;
+                                    form.warehouseTf.position =
+                                        warehouseCtrl.selection.base.offset;
+                                    context
+                                        .read<SaleNoteAddForm>()
+                                        .setForm(form);
+                                  },
+                                  onSubmitted: (value) {
+                                    form =
+                                        context.read<SaleNoteAddForm>().state;
+                                    context
+                                        .read<SaleNoteAddCubit>()
+                                        .fetchWarehouse(value, form);
+                                  },
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          const ProviderWarehouseFind(),
+                                    ).then((value) {
+                                      if (value is DataFind &&
+                                          value.data is WarehouseModel) {
+                                        form.warehouseTf.value =
+                                            '${value.id} - ${value.data.name}';
+                                        form.warehouse = value.data;
+                                        context
+                                            .read<SaleNoteAddForm>()
+                                            .setForm(form);
+                                        context
+                                            .read<SaleNoteAddCubit>()
+                                            .fetchWarehouse(
+                                                value.id.toString(), form);
+                                      }
+                                    });
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    const Expanded(
+                                      child: Text(
+                                        'Nota:',
+                                        style: Typo.labelLight,
+                                      ),
+                                    ),
+                                    SizedBox.square(
+                                      dimension: 30,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: ((context) => SaleNoteNote(
+                                                  textNote: form.note,
+                                                )),
+                                          ).then((value) {
+                                            if (value is String) {
+                                              form.note = value;
+                                              context
+                                                  .read<SaleNoteAddCubit>()
+                                                  .load();
+                                            }
+                                          });
+                                        },
+                                        padding: EdgeInsets.zero,
+                                        splashRadius: 20,
+                                        icon: const Icon(
+                                          Icons.sticky_note_2_outlined,
+                                          color: ColorPalette.lightItems10,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  form.note,
+                                  style: Typo.labelLight,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: linesNote,
+                                ),
+                              ],
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecorationTheme.headerTable(),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Cantidad',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Producto',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  'Descripición',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Precio unitario',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Subtotal',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'Opciones',
+                                  style: Typo.subtitleLight,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: productList.length,
+                            itemBuilder: (context, index) {
+                              final row = productList[index];
+                              TextEditingController quantityCtrl =
+                                  TextEditingController.fromValue(
+                                      TextEditingValue(
+                                text: row.quantity.value,
+                                selection: TextSelection.collapsed(
+                                    offset: row.quantity.position),
+                              ));
+                              TextEditingController productCtrl =
+                                  TextEditingController.fromValue(
+                                      TextEditingValue(
+                                text: row.productCode.value,
+                                selection: TextSelection.collapsed(
+                                    offset: row.productCode.position),
+                              ));
+                              TextEditingController priceCtrl =
+                                  TextEditingController.fromValue(
+                                      TextEditingValue(
+                                          text: row.unitPrice.value,
+                                          selection: TextSelection.collapsed(
+                                              offset: row.unitPrice.position)));
+                              final bool isQuantityFocus =
+                                  form.productList[index].quantity.isFocus ??
+                                      false;
+                              final bool isProductFocus =
+                                  form.productList[index].productCode.isFocus ??
+                                      false;
+                              final bool isPriceFocus =
+                                  form.productList[index].unitPrice.isFocus ??
+                                      false;
+                              return InputRow(
+                                children: [
+                                  // --- Quantity
+                                  TextFieldCell(
+                                    enabled: !isLoading,
+                                    valid: row.quantity.validation,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'^\d*\.?\d*$'))
+                                    ],
+                                    controller: quantityCtrl,
+                                    onSubmitted: (value) {
+                                      form =
+                                          context.read<SaleNoteAddForm>().state;
+                                      context
+                                          .read<SaleNoteAddCubit>()
+                                          .validateCell(
+                                              form, row.keyQuantity, index);
+                                    },
+                                    onChanged: (value) {
+                                      form.productList[index].quantity.value =
+                                          value;
+                                      form.productList[index].quantity
+                                              .position =
+                                          quantityCtrl.selection.base.offset;
+                                      context
+                                          .read<SaleNoteAddForm>()
+                                          .sumTotal(index);
+                                      context.read<SaleNoteAddCubit>().load();
+                                    },
+                                    borderColor: isQuantityFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (bool value) {},
+                                  ),
+                                  // --- Product code
+                                  TextFieldCell(
+                                    enabled: !isLoading,
+                                    controller: productCtrl,
+                                    suffixIcon: Icons.search,
+                                    valid: row.productCode.validation,
+                                    onChanged: (value) {
+                                      form.productList[index].productCode
+                                          .value = value;
+                                      form.productList[index].productCode
+                                              .position =
+                                          quantityCtrl.selection.base.offset;
+                                    },
+                                    onSubmitted: (value) {
+                                      context
+                                          .read<SaleNoteAddCubit>()
+                                          .validateCell(
+                                              form, row.keyProduct, index);
+                                    },
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              ProductDrawerFind(
+                                                warehouse: form.warehouse,
+                                              )).then((value) {
+                                        if (value is DataFindValues &&
+                                            value.data is InventoryRowModel) {
+                                          final InventoryRowModel inventoryRow =
+                                              value.data;
+                                          form.productList[index].productCode
+                                                  .value =
+                                              inventoryRow.product.code;
+                                          context
+                                              .read<SaleNoteAddCubit>()
+                                              .validateCell(
+                                                  form, row.keyProduct, index);
+                                        }
+                                      });
+                                    },
+                                    borderColor: isProductFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (bool value) {},
+                                  ),
+                                  // --- Descriprtion
+                                  LabelCell(
+                                    enabled: !isLoading,
+                                    row.product.description,
+                                    flex: 2,
+                                    alignment: Alignment.center,
+                                    suffixIcon: Icons.arrow_outward,
+                                    onPressedSuffix: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            ProductDrawerDetails(
+                                          product: row.product,
+                                          user: form.user,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  // --- Unit price
+                                  TextFieldCell(
+                                    enabled: !isLoading,
+                                    valid: row.unitPrice.validation,
+                                    controller: priceCtrl,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'^\d*\.?\d*$'))
+                                    ],
+                                    onChanged: (value) {
+                                      form.productList[index].unitPrice.value =
+                                          value;
+                                      form.productList[index].unitPrice
+                                              .position =
+                                          priceCtrl.selection.base.offset;
+                                      context
+                                          .read<SaleNoteAddForm>()
+                                          .sumTotal(index);
+                                      context.read<SaleNoteAddCubit>().load();
+                                    },
+                                    onSubmitted: (value) {
+                                      context
+                                          .read<SaleNoteAddCubit>()
+                                          .validateCell(
+                                              form, row.keyPrice, index);
+                                    },
+                                    borderColor: isPriceFocus
+                                        ? ColorPalette.primary
+                                        : ColorPalette.darkItems,
+                                    onFocusChange: (bool value) {},
+                                  ),
+                                  // --- Subtotal
+                                  LabelCell(FormatNumber.format2dec(
+                                      form.productList[index].subtotal)),
+                                  // --- Options
+                                  MenuCell(
+                                    icon: const Icon(
+                                      Icons.more_horiz,
+                                      size: 20,
+                                      color: ColorPalette.lightItems10,
+                                    ),
+                                    menuChildren: [
+                                      MenuItemButton(
+                                        onPressed: isLoading
+                                            ? null
+                                            : () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      SaleNoteNote(row: row),
+                                                ).then((value) {
+                                                  if (value
+                                                      is SaleNoteRowFormModel) {
+                                                    form.productList[index] =
+                                                        value;
+                                                    context
+                                                        .read<
+                                                            SaleNoteAddCubit>()
+                                                        .load();
+                                                  }
+                                                });
+                                              },
+                                        child: const Text(
+                                          'Nota',
+                                          style: Typo.bodyDark,
+                                        ),
+                                      ),
+                                      MenuItemButton(
+                                        child: const Text(
+                                          'Eliminar',
+                                          style: Typo.bodyCaution,
+                                        ),
+                                        onPressed: () {
+                                          form.productList.removeAt(index);
+                                          context
+                                              .read<SaleNoteAddCubit>()
+                                              .load();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecorationTheme.headerTable(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Total: \$${FormatNumber.format2dec(form.total)}',
+                                style: Typo.subtitleLight,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+                    HorizontalToolBar(
+                      border: const Border(
+                        left: BorderSide(color: ColorPalette.darkItems),
+                        top: BorderSide(color: ColorPalette.darkItems),
+                      ),
+                      children: [
+                        ButtonTool(
+                          icon: Icons.add,
+                          height: 50,
+                          iconColor: ColorPalette.lightItems10,
+                          iconSize: 30,
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  form.productList
+                                      .add(SaleNoteRowFormModel.empty());
+                                  context.read<SaleNoteAddCubit>().load();
+                                },
+                        ),
+                        ButtonTool(
+                          icon: Icons.save,
+                          height: 50,
+                          iconColor: ColorPalette.lightItems10,
+                          iconSize: 30,
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  context
+                                      .read<SaleNoteAddCubit>()
+                                      .save(form, saleType);
+                                },
+                        ),
+                        /*SizedBox(
+                          height: 50,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              form.productList
+                                  .add(SaleNoteRowFormModel.empty());
+                              context.read<SaleNoteAddCubit>().load();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide.none,
+                              foregroundColor: ColorPalette.primary,
+                              shape: const RoundedRectangleBorder(),
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: ColorPalette.lightItems10,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              context
+                                  .read<SaleNoteAddCubit>()
+                                  .save(form, saleType);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide.none,
+                              foregroundColor: ColorPalette.primary,
+                              shape: const RoundedRectangleBorder(),
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: const Icon(
+                              Icons.save,
+                              color: ColorPalette.lightItems10,
+                              size: 30,
+                            ),
+                          ),
+                        ),*/
+                      ],
+                    ),
+                  ],
+                )),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+>>>>>>> main
