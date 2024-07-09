@@ -49,18 +49,35 @@ class ObjectRepo {
     }
 
     if (search != null) {
-      for (int i = 0; i < link.block.propertyList.length; i++) {
-        final PropertyModel prop = link.block.propertyList[i];
-        if (i == 0) {
-          textOr = '$_object->>"${prop.key}".ilike.%$search%';
+      if (search.contains(':')) {
+        final String key = link.block.propertyList
+            .firstWhere(
+              (x) => x.name == search.split(':').first,
+              orElse: () => PropertyModel.empty(),
+            )
+            .key;
+        if (search.split(':').last.contains(',')) {
+          for (int i = 0; i < search.split(':').last.split(',').length; i++) {
+            final String element = search.split(':').last.split(',').elementAt(i);
+            if (i == 0) {
+              textOr = '$_object->>"$key".ilike.%$element%';
+            } else {
+              textOr = '$textOr,$_object->>"$key".ilike.%$element%';
+            }
+          }
         } else {
-          textOr = '$textOr,$_object->>"${prop.key}".ilike.%$search%';
+          textOr = '$_object->>"$key".ilike.%${search.split(':').last}%';
         }
-        /*if (i < (link.block.propertyList.length - 1)) {
-          textOr = '$textOr,';
-        }*/
+      } else {
+        for (int i = 0; i < link.block.propertyList.length; i++) {
+          final PropertyModel prop = link.block.propertyList[i];
+          if (i == 0) {
+            textOr = '$_object->>"${prop.key}".ilike.%$search%';
+          } else {
+            textOr = '$textOr,$_object->>"${prop.key}".ilike.%$search%';
+          }
+        }
       }
-      //textOr = '$_name.ilike.%$inText%';
     }
 
     if (filterList.isNotEmpty) {

@@ -227,6 +227,7 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
+  ///Función para buscar contenido en barra de búsqueda.
   Future<void> search(TableFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialTableState());
