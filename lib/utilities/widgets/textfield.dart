@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 class PrimaryTextField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String value)? onChanged;
+  final Function(String value)? onSubmitted;
   final int? theme;
   final Widget? prefixIcon;
   final String? hintText;
@@ -22,7 +23,9 @@ class PrimaryTextField extends StatelessWidget {
       this.hintText,
       this.hintStyle,
       this.enabled,
-      this.contentPadding, this.inputFormatters});
+      this.contentPadding,
+      this.inputFormatters,
+      this.onSubmitted});
 
   /// Devuelve widget general del campo de texto.
   @override
@@ -49,6 +52,7 @@ class PrimaryTextField extends StatelessWidget {
       ),
       inputFormatters: inputFormatters,
       onChanged: onChanged,
+      onSubmitted: onSubmitted,
     );
   }
 }

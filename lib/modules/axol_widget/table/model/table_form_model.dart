@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// Modelo de datos de la vista de tabla.
 class TableFormModel {
@@ -12,6 +13,7 @@ class TableFormModel {
   int limitRows;
   int totalReg;
   TextEditingController ctrlLimitRow;
+  TextEditingController ctrlSearch;
   TableModel table;
   bool ascending;
   String? keyAscending;
@@ -29,6 +31,7 @@ class TableFormModel {
     required this.table,
     required this.ascending,
     required this.keyAscending,
+    required this.ctrlSearch,
   });
 
   /// Estado inicial del form de la vista de tabla.
@@ -42,6 +45,7 @@ class TableFormModel {
         limitRows = 0,
         totalReg = 0,
         ctrlLimitRow = TextEditingController(),
+        ctrlSearch = TextEditingController(),
         table = TableModel.empty(),
         ascending = false,
         keyAscending = null;

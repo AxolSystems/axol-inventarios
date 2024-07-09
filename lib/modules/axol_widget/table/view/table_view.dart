@@ -129,12 +129,16 @@ class TableViewBuild extends AxolWidget {
                             height: 32,
                             width: 300,
                             child: PrimaryTextField(
+                              controller: form.ctrlSearch,
                               contentPadding: const EdgeInsets.all(8),
                               theme: form.theme,
                               prefixIcon: Icon(Icons.search,
                                   color: ColorTheme.item10(form.theme)),
                               hintText: "Buscar",
                               hintStyle: Typo.hint(form.theme),
+                              onSubmitted: (value) {
+                                context.read<TableCubit>().search(form, link);
+                              },
                             ),
                           ),
                         ),

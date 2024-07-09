@@ -209,8 +209,8 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
-  /// Si *keyAscending* es diferente a null, vuelve los parámetros filtro de orden 
-  /// a su estado inicial. 
+  /// Si *keyAscending* es diferente a null, vuelve los parámetros filtro de orden
+  /// a su estado inicial.
   Future<void> switchSort(TableFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialTableState());
@@ -227,12 +227,25 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
+  Future<void> search(TableFormModel form, WidgetLinkModel link) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+      await getData(form: form, link: link, search: form.ctrlSearch.text);
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
   /// Método para actualizar los datos de la tabla.
   Future<void> getData({
     required TableFormModel form,
     required WidgetLinkModel link,
     int? rangeMin,
     int? rangeMax,
+    String? search,
   }) async {
     final DataResponseModel dataResponse;
     final int countReg;
@@ -247,6 +260,7 @@ class TableCubit extends Cubit<TableState> {
       rangeMax: rangeMax,
       ascending: form.ascending,
       keyAscending: form.keyAscending,
+      search: search,
     );
     countReg = dataResponse.count;
     form.totalPage = (countReg / form.limitRows).ceil();

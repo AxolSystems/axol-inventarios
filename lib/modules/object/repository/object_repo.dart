@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
 import '../../block/model/block_model.dart';
+import '../../block/model/property_model.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
 
@@ -27,11 +28,13 @@ class ObjectRepo {
     int? rangeMax,
     bool? ascending,
     String? keyAscending,
+    String? search,
   }) async {
     List<Map<String, dynamic>> objsDB;
     List<ObjectModel> objList = [];
     ObjectModel obj;
     Map<String, dynamic> matchMap = {};
+    String textOr = '';
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
     final bool ascending_ = ascending ?? false;
@@ -43,6 +46,21 @@ class ObjectRepo {
       keyAscending_ = _createAt;
     } else {
       keyAscending_ = '$_object->"$keyAscending"';
+    }
+
+    if (search != null) {
+      for (int i = 0; i < link.block.propertyList.length; i++) {
+        final PropertyModel prop = link.block.propertyList[i];
+        if (i == 0) {
+          textOr = '$_object->>"${prop.key}".ilike.%$search%';
+        } else {
+          textOr = '$textOr,$_object->>"${prop.key}".ilike.%$search%';
+        }
+        /*if (i < (link.block.propertyList.length - 1)) {
+          textOr = '$textOr,';
+        }*/
+      }
+      //textOr = '$_name.ilike.%$inText%';
     }
 
     if (filterList.isNotEmpty) {
@@ -58,11 +76,20 @@ class ObjectRepo {
           .match(matchMap)
           .range(rangeMin_, rangeMax_)
           .order(keyAscending_, ascending: ascending_);
+    } else if (search != null) {
+      postgrestResponse = await _supabase
+          .from(link.block.tableName)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '*', const FetchOptions(count: CountOption.estimated))
+          .or(textOr)
+          .range(rangeMin_, rangeMax_)
+          .order(keyAscending_, ascending: ascending_);
     } else {
       postgrestResponse = await _supabase
           .from(link.block.tableName)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
+          //.or(textOr)
           .range(rangeMin_, rangeMax_)
           .order(keyAscending_, ascending: ascending_);
     }
