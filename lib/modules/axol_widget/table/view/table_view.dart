@@ -14,9 +14,10 @@ import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
 import '../../../user/model/user_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
-import '../cubit/table_cubit.dart';
-import '../cubit/table_state.dart';
+import '../cubit/table/table_cubit.dart';
+import '../cubit/table/table_state.dart';
 import '../model/table_form_model.dart';
+import 'row_details_drawer.dart';
 
 /// Vista que contiene el widget de tabla. Las tablas son el medio donde
 /// se presentan en pantalla los objetos de un bloque consultado. Permitiendo
@@ -208,10 +209,28 @@ class TableViewBuild extends AxolWidget {
                               itemCount: form.table.rowList.length,
                               itemBuilder: (context, index) {
                                 final row = form.table.rowList[index];
-                                return Row(
-                                  children: rowWidget(
-                                      context, form, row, form.table.header),
-                                );
+                                return OutlinedButton(
+                                    style: ButtonStyle(
+                                      side: WidgetStateProperty.all(
+                                          BorderSide.none),
+                                      padding: const WidgetStatePropertyAll(
+                                          EdgeInsets.zero),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              RowDetailsDrawer(
+                                                theme: form.theme,
+                                                link: link,
+                                                object:
+                                                    form.table.rowList[index],
+                                              ));
+                                    },
+                                    child: Row(
+                                      children: rowWidget(context, form, row,
+                                          form.table.header),
+                                    ));
                               },
                             ),
                           ),

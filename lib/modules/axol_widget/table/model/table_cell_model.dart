@@ -6,4 +6,6 @@ class CellText extends TableCellModel {
   final String text;
 
   CellText({required this.text});
+
+  CellText.empty() : text = '';
 }
