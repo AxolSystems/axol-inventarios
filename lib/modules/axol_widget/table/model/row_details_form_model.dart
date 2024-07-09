@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class RowDetailsFormModel {
-  Map<String,TextEditingController> controllers;
+  Map<String, TextEditingController> controllers;
+  bool edit;
 
-  RowDetailsFormModel({required this.controllers});
+  RowDetailsFormModel({
+    required this.controllers,
+    required this.edit,
+  });
 
-  RowDetailsFormModel.empty() : controllers = {};
+  RowDetailsFormModel.empty()
+      : controllers = {},
+        edit = false;
 }

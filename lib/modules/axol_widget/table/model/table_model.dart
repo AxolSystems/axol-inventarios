@@ -10,16 +10,23 @@ import '../../generic/model/data_object.dart';
 class TableModel extends DataObject {
   final List<PropertyModel> header;
   final List<Map<String, TableCellModel>> rowList;
+  final List<ObjectModel> objects;
 
-  TableModel({required this.header, required this.rowList});
+  TableModel({
+    required this.header,
+    required this.rowList,
+    required this.objects,
+  });
 
   /// Devuelve el estado inicial de [TableModel].
   TableModel.empty()
       : header = [],
-        rowList = [];
+        rowList = [],
+        objects = [];
 
   /// Devuelve un modelo de tabla a partir de una lista de objetos y un block.
-  static TableModel dataObject(DataResponseModel dataResponse, BlockModel block) {
+  static TableModel dataObject(
+      DataResponseModel dataResponse, BlockModel block) {
     TableModel table;
     List<PropertyModel> header = [];
     List<Map<String, TableCellModel>> rowList = [];
@@ -31,7 +38,7 @@ class TableModel extends DataObject {
     } else {
       objects = [];
     }
-    
+
     for (var prop in block.propertyList) {
       header.add(prop);
     }
@@ -39,16 +46,15 @@ class TableModel extends DataObject {
       row = {};
 
       for (var key in obj.map.keys) {
-        final Prop prop = block.propertyList
-            .firstWhere((x) => x.key == key)
-            .propertyType;
+        final Prop prop =
+            block.propertyList.firstWhere((x) => x.key == key).propertyType;
         if (prop == Prop.text) {
           row[key] = CellText(text: obj.map[key]);
         }
       }
       rowList.add(row);
     }
-    table = TableModel(header: header, rowList: rowList);
+    table = TableModel(header: header, rowList: rowList, objects: objects);
     return table;
   }
 }

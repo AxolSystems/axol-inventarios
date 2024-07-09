@@ -2,19 +2,21 @@ import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.da
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
+import 'package:axol_inventarios/utilities/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/dialog.dart';
+import '../../../object/model/object_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/row_details/row_details_cubit.dart';
 import '../cubit/row_details/row_details_state.dart';
 import '../model/row_details_form_model.dart';
-import '../model/table_cell_model.dart';
 
 class RowDetailsDrawer extends AxolWidget {
   final WidgetLinkModel link;
-  final Map<String, TableCellModel> object;
+  final ObjectModel object;
   const RowDetailsDrawer({
     super.key,
     super.theme,
@@ -40,7 +42,7 @@ class RowDetailsDrawer extends AxolWidget {
 
 class RowDetailsDrawerBuild extends AxolWidget {
   final WidgetLinkModel link;
-  final Map<String, TableCellModel> object;
+  final ObjectModel object;
   const RowDetailsDrawerBuild({
     super.key,
     super.theme,
@@ -53,8 +55,15 @@ class RowDetailsDrawerBuild extends AxolWidget {
     int theme_ = theme ?? 0;
     RowDetailsFormModel form = context.read<RowDetailsForm>().state;
     return BlocConsumer<RowDetailsCubit, RowDetailsState>(
-        bloc: context.read<RowDetailsCubit>()..initLoad(form, link),
-        listener: (context, state) {},
+        bloc: context.read<RowDetailsCubit>()..initLoad(form, link, object),
+        listener: (context, state) {
+          if (state is ErrorRowDetailsState) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialogAxol(text: state.error),
+            );
+          }
+        },
         builder: (context, state) {
           return DrawerBox(
             theme: theme_,
@@ -75,26 +84,51 @@ class RowDetailsDrawerBuild extends AxolWidget {
                 ))
               ],
             ),
-            actions: [
-              SecondaryButton(
-                theme: theme_,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                text: 'Regresar',
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
+            actions: form.edit
+                ? [
+                    SecondaryButton(
+                      theme: theme_,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      text: 'Cancelar',
+                      onPressed: () {
+                        context.read<RowDetailsCubit>().editState(form);
+                      },
+                    ),
+                    PrimaryButton(
+                      theme: theme_,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      text: 'Guardar',
+                      onPressed: () {},
+                    ),
+                  ]
+                : [
+                    SecondaryButton(
+                      theme: theme_,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      text: 'Editar',
+                      onPressed: () {
+                        context.read<RowDetailsCubit>().editState(form);
+                      },
+                    ),
+                    SecondaryButton(
+                      theme: theme_,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      text: 'Regresar',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
             child: Expanded(
               child: ListView.builder(
                 itemCount: link.block.propertyList.length,
                 itemBuilder: (context, index) {
                   final PropertyModel prop = link.block.propertyList[index];
-                  final CellText cell;
-                  if (object[prop.key] is CellText) {
-                    cell = object[prop.key] as CellText;
+                  final String cell;
+                  if (object.map[prop.key] is String) {
+                    cell = object.map[prop.key] as String;
                   } else {
-                    cell = CellText.empty();
+                    cell = '';
                   }
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -107,9 +141,16 @@ class RowDetailsDrawerBuild extends AxolWidget {
                         ),
                         Expanded(
                           flex: 3,
-                          child: Text(
-                            cell.text,
-                            style: Typo.body(theme_),
+                          child: Visibility(
+                            visible: form.edit,
+                            replacement: Text(
+                              cell,
+                              style: Typo.body(theme_),
+                            ),
+                            child: PrimaryTextField(
+                              theme: theme_,
+                              controller: form.controllers[prop.key],
+                            ),
                           ),
                         ),
                       ],

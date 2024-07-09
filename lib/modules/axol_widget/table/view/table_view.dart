@@ -224,7 +224,7 @@ class TableViewBuild extends AxolWidget {
                                                 theme: form.theme,
                                                 link: link,
                                                 object:
-                                                    form.table.rowList[index],
+                                                    form.table.objects[index],
                                               ));
                                     },
                                     child: Row(

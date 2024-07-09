@@ -58,7 +58,8 @@ class ObjectRepo {
             .key;
         if (search.split(':').last.contains(',')) {
           for (int i = 0; i < search.split(':').last.split(',').length; i++) {
-            final String element = search.split(':').last.split(',').elementAt(i);
+            final String element =
+                search.split(':').last.split(',').elementAt(i);
             if (i == 0) {
               textOr = '$_object->>"$key".ilike.%$element%';
             } else {
@@ -130,5 +131,11 @@ class ObjectRepo {
     );
 
     return dataResponse;
+  }
+
+  Future<void> updateObject(ObjectModel object, WidgetLinkModel link) async {
+    await _supabase
+        .from(link.block.tableName)
+        .update({_object: object.map}).eq(_id, object.id);
   }
 }
