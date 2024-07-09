@@ -113,7 +113,7 @@ class TableViewBuild extends AxolWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 30,
+                    height: 40,
                     decoration: BoxDecoration(
                       border: Border(
                         bottom:
@@ -121,8 +121,24 @@ class TableViewBuild extends AxolWidget {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: SizedBox(
+                            height: 32,
+                            width: 300,
+                            child: PrimaryTextField(
+                              contentPadding: const EdgeInsets.all(8),
+                              theme: form.theme,
+                              prefixIcon: Icon(Icons.search,
+                                  color: ColorTheme.item10(form.theme)),
+                              hintText: "Buscar",
+                              hintStyle: Typo.hint(form.theme),
+                            ),
+                          ),
+                        ),
+                        const Expanded(child: SizedBox()),
                         Visibility(
                           visible: form.edit,
                           child: Row(
@@ -131,7 +147,9 @@ class TableViewBuild extends AxolWidget {
                               Switch(
                                 value: form.keyAscending != null,
                                 onChanged: (value) {
-                                  context.read<TableCubit>().switchSort(form, link);
+                                  context
+                                      .read<TableCubit>()
+                                      .switchSort(form, link);
                                 },
                               ),
                             ],
