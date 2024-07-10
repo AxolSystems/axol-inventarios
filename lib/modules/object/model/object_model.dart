@@ -14,4 +14,9 @@ class ObjectModel {
     required this.map,
     required this.createAt,
   });
+
+  ObjectModel.empty() : 
+  id = '',
+  map = {},
+  createAt = DateTime(0);
 }

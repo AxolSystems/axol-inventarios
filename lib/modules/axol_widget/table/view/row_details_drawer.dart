@@ -14,6 +14,10 @@ import '../cubit/row_details/row_details_cubit.dart';
 import '../cubit/row_details/row_details_state.dart';
 import '../model/row_details_form_model.dart';
 
+/// Un drawer que se abre para mostrar los detalles 
+/// de los parámetros seleccionados. Se da la opción 
+/// para entrar a un modo de edición de los parámetros, 
+/// y eliminar el objeto.
 class RowDetailsDrawer extends AxolWidget {
   final WidgetLinkModel link;
   final ObjectModel object;
@@ -50,6 +54,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
     required this.object,
   });
 
+  /// Construcción de drawer con el resto de su contenido.
   @override
   Widget build(BuildContext context) {
     int theme_ = theme ?? 0;
@@ -62,6 +67,9 @@ class RowDetailsDrawerBuild extends AxolWidget {
               context: context,
               builder: (context) => AlertDialogAxol(text: state.error),
             );
+          }
+          if (state is SavedRowDetailsState) {
+            context.read<RowDetailsCubit>().edit(form);
           }
         },
         builder: (context, state) {
@@ -91,14 +99,19 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Cancelar',
                       onPressed: () {
-                        context.read<RowDetailsCubit>().editState(form);
+                        context.read<RowDetailsCubit>().edit(form);
                       },
                     ),
                     PrimaryButton(
+                      isLoading: state is SavingRowDetailsState,
                       theme: theme_,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Guardar',
-                      onPressed: () {},
+                      onPressed: () {
+                        context
+                            .read<RowDetailsCubit>()
+                            .save(form, link);
+                      },
                     ),
                   ]
                 : [
@@ -107,7 +120,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Editar',
                       onPressed: () {
-                        context.read<RowDetailsCubit>().editState(form);
+                        context.read<RowDetailsCubit>().edit(form);
                       },
                     ),
                     SecondaryButton(
@@ -125,8 +138,8 @@ class RowDetailsDrawerBuild extends AxolWidget {
                 itemBuilder: (context, index) {
                   final PropertyModel prop = link.block.propertyList[index];
                   final String cell;
-                  if (object.map[prop.key] is String) {
-                    cell = object.map[prop.key] as String;
+                  if (form.object.map[prop.key] is String) {
+                    cell = form.object.map[prop.key] as String;
                   } else {
                     cell = '';
                   }

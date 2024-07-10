@@ -133,7 +133,7 @@ class ObjectRepo {
     return dataResponse;
   }
 
-  Future<void> updateObject(ObjectModel object, WidgetLinkModel link) async {
+  static Future<void> updateObject(ObjectModel object, WidgetLinkModel link) async {
     await _supabase
         .from(link.block.tableName)
         .update({_object: object.map}).eq(_id, object.id);

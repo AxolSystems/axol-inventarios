@@ -218,14 +218,17 @@ class TableViewBuild extends AxolWidget {
                                     ),
                                     onPressed: () {
                                       showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              RowDetailsDrawer(
-                                                theme: form.theme,
-                                                link: link,
-                                                object:
-                                                    form.table.objects[index],
-                                              ));
+                                        context: context,
+                                        builder: (context) => RowDetailsDrawer(
+                                          theme: form.theme,
+                                          link: link,
+                                          object: form.table.objects[index],
+                                        ),
+                                      ).then(
+                                        (value) {
+                                          context.read<TableCubit>().initLoad(form, user, link, viewId);
+                                        },
+                                      );
                                     },
                                     child: Row(
                                       children: rowWidget(context, form, row,

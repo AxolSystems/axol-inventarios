@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,10 +29,12 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       emit(InitialRowDetailsState());
       emit(LoadingRowDetailsState());
 
+      form.object = ObjectModel(
+          id: object.id, map: object.map, createAt: object.createAt);
       for (PropertyModel prop in link.block.propertyList) {
         final String cell;
-        if (object.map[prop.key] is String) {
-          cell = object.map[prop.key] as String;
+        if (form.object.map[prop.key] is String) {
+          cell = form.object.map[prop.key] as String;
         } else {
           cell = '';
         }
@@ -47,7 +48,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
     }
   }
 
-  Future<void> editState(RowDetailsFormModel form) async {
+  Future<void> edit(RowDetailsFormModel form) async {
     try {
       emit(InitialRowDetailsState());
       emit(LoadingRowDetailsState());
@@ -59,12 +60,25 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
     }
   }
 
-  Future<void> save(RowDetailsFormModel form, WidgetLinkModel link,
-      ObjectModel object) async {
+  Future<void> save(RowDetailsFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialRowDetailsState());
-      emit(LoadingRowDetailsState());
-      await ObjectRepo.
+      emit(SavingRowDetailsState());
+      ObjectModel object;
+      Map<String, dynamic> map = {};
+      TextEditingController controller;
+
+      for (String key in form.object.map.keys) {
+        controller = form.controllers[key] ?? TextEditingController();
+        map[key] = controller.text;
+      }
+      object = ObjectModel(
+          createAt: form.object.createAt, id: form.object.id, map: map);
+
+      await ObjectRepo.updateObject(object, link);
+      form.object = object;
+
+      emit(SavedRowDetailsState());
       emit(LoadedRowDetailsState());
     } catch (e) {
       emit(InitialRowDetailsState());
