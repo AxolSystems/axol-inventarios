@@ -150,8 +150,8 @@ class _AlertButtonDialog extends State<AlertButtonDialog> {
       onPressed: isLoading_ ? () {} : fOnPressed,
       style: OutlinedButton.styleFrom(
         foregroundColor:
-            isLoading_ ? ColorPalette.caution : ColorPalette.lightBackground,
-        backgroundColor: ColorPalette.caution,
+            isLoading_ ? ColorPalette.primaryAlert : ColorPalette.lightBackground,
+        backgroundColor: ColorPalette.primaryAlert,
         side: BorderSide.none,
       ),
       child: Text(fText, style: textStyle),
@@ -515,6 +515,91 @@ class SecondaryButton extends StatelessWidget {
                 )),
             Visibility(
                 visible: onPressed == null,
+                replacement: const SizedBox(),
+                child: Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: ColorTheme.enabledButton(theme ?? 0),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(6))),
+                  ),
+                )),
+          ],
+        ));
+  }
+}
+
+class AlertButton extends StatelessWidget {
+  final Function()? onPressed;
+  final IconData? icon;
+  final String? text;
+  final EdgeInsetsGeometry? padding;
+  final int? theme;
+  final bool? isLoading;
+  const AlertButton({
+    super.key,
+    this.onPressed,
+    this.icon,
+    this.text,
+    this.padding,
+    this.theme,
+    this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        height: 28,
+        child: Stack(
+          children: [
+            OutlinedButton(
+                style: ButtonStyle(
+                  side: WidgetStateProperty.all(
+                      const BorderSide(color: ColorPalette.primaryAlert)),
+                  shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6)))),
+                  padding: WidgetStateProperty.all(EdgeInsets.zero),
+                  overlayColor: WidgetStateProperty.all(
+                      ColorTheme.alertButton(theme ?? 0)),
+                  backgroundColor:
+                      WidgetStateProperty.all(const Color.fromARGB(255, 151, 23, 14)),
+                  foregroundColor:
+                      WidgetStateProperty.all(ColorPalette.lightText),
+                  textStyle: WidgetStateProperty.all(Typo.systemDark),
+                  splashFactory: NoSplash.splashFactory,
+                ),
+                onPressed: isLoading == true ? null : onPressed,
+                child: Padding(
+                  padding: padding ?? EdgeInsets.zero,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Visibility(
+                        visible: isLoading ?? false,
+                        replacement: Visibility(
+                            visible: icon != null,
+                            child: Icon(
+                              icon,
+                              size: 15,
+                            )),
+                        child: const SizedBox.square(
+                          dimension: 15,
+                          child: CircularProgressIndicator(
+                            color: ColorPalette.lightText,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible:
+                            (icon != null || isLoading == true) && (text != null),
+                        child: const SizedBox(width: 8),
+                      ),
+                      Visibility(child: Text(text ?? ''))
+                    ],
+                  ),
+                )),
+            Visibility(
+                visible: onPressed == null && isLoading != true,
                 replacement: const SizedBox(),
                 child: Positioned.fill(
                   child: Container(

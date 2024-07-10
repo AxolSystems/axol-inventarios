@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/data_response_model.dart';
 import '../../../../object/repository/object_repo.dart';
+import '../../../../user/repository/user_repo.dart';
 import '../../../../widget_link/model/widget_view_model.dart';
 import '../../../../widget_link/model/widgetlink_model.dart';
 import '../../../../widget_link/repository/widgetlink_repo.dart';
@@ -33,7 +34,7 @@ class TableCubit extends Cubit<TableState> {
 
   /// Realiza los cambios necesarios en el form para el estado
   /// inicial de la vista de tabla.
-  Future<void> initLoad(TableFormModel form, UserModel user,
+  Future<void> initLoad(TableFormModel form,
       WidgetLinkModel link, String viewId) async {
     try {
       emit(InitialTableState());
@@ -42,7 +43,9 @@ class TableCubit extends Cubit<TableState> {
       Map<String, dynamic> columnWidthDB = {};
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == viewId);
+      final UserModel user = await LocalUser().getLocalUser();
 
+      
       form.theme = user.theme;
 
       if (view.properties.containsKey(WidgetViewModel.propNumRows)) {

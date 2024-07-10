@@ -27,13 +27,13 @@ class WidgetIndex {
       case 0:
         if (data is TableModel) {
           return TableView(
-            user: user,
+            //user: user,
             link: link,
             viewId: viewId,
           );
         } else {
           return TableView(
-            user: user,
+            //user: user,
             link: link,
             viewId: viewId,
           );

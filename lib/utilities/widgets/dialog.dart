@@ -20,7 +20,7 @@ class AlertDialogAxol extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon_ = icon ?? Icons.warning;
-    final iconColor_ = iconColor ?? ColorPalette.caution;
+    final iconColor_ = iconColor ?? ColorPalette.primaryAlert;
     final List<Widget> actions_ = actions ??
         [
           OutlinedButton(

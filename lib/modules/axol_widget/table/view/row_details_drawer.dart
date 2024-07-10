@@ -14,9 +14,9 @@ import '../cubit/row_details/row_details_cubit.dart';
 import '../cubit/row_details/row_details_state.dart';
 import '../model/row_details_form_model.dart';
 
-/// Un drawer que se abre para mostrar los detalles 
-/// de los parámetros seleccionados. Se da la opción 
-/// para entrar a un modo de edición de los parámetros, 
+/// Un drawer que se abre para mostrar los detalles
+/// de los parámetros seleccionados. Se da la opción
+/// para entrar a un modo de edición de los parámetros,
 /// y eliminar el objeto.
 class RowDetailsDrawer extends AxolWidget {
   final WidgetLinkModel link;
@@ -108,13 +108,16 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Guardar',
                       onPressed: () {
-                        context
-                            .read<RowDetailsCubit>()
-                            .save(form, link);
+                        context.read<RowDetailsCubit>().save(form, link);
                       },
                     ),
                   ]
                 : [
+                    AlertButton(
+                      text: 'Eliminar',
+                      theme: theme_,
+                      onPressed: () {},
+                    ),
                     SecondaryButton(
                       theme: theme_,
                       padding: const EdgeInsets.symmetric(horizontal: 8),

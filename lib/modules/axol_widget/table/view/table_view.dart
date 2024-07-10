@@ -25,12 +25,12 @@ import 'row_details_drawer.dart';
 class TableView extends AxolWidget {
   final Color? color;
   //final TableModel table;
-  final UserModel user;
+  //final UserModel user;
   final WidgetLinkModel link;
   final String viewId;
   const TableView({
     super.key,
-    required this.user,
+    //required this.user,
     this.color,
     //required this.table,
     required this.link,
@@ -47,7 +47,7 @@ class TableView extends AxolWidget {
       child: TableViewBuild(
         //table: table,
         color: color,
-        user: user,
+        //user: user,
         link: link,
         viewId: viewId,
       ),
@@ -58,12 +58,12 @@ class TableView extends AxolWidget {
 class TableViewBuild extends AxolWidget {
   final Color? color;
   //final TableModel table;
-  final UserModel user;
+  //final UserModel user;
   final WidgetLinkModel link;
   final String viewId;
   const TableViewBuild({
     super.key,
-    required this.user,
+    //required this.user,
     this.color,
     //required this.table,
     required this.link,
@@ -83,7 +83,7 @@ class TableViewBuild extends AxolWidget {
         }
       },
       child: BlocConsumer<TableCubit, TableState>(
-        bloc: context.read<TableCubit>()..initLoad(form, user, link, viewId),
+        bloc: context.read<TableCubit>()..initLoad(form, link, viewId),
         listener: (context, state) {
           if (state is ErrorTableState) {
             showDialog(
@@ -226,7 +226,7 @@ class TableViewBuild extends AxolWidget {
                                         ),
                                       ).then(
                                         (value) {
-                                          context.read<TableCubit>().initLoad(form, user, link, viewId);
+                                          context.read<TableCubit>().initLoad(form, link, viewId);
                                         },
                                       );
                                     },

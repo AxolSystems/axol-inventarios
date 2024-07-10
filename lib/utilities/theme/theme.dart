@@ -14,7 +14,10 @@ class ColorPalette {
   static const darkText = Color(0xFF282828);
   static final secondaryText2 = const Color(0xFF282828).withOpacity(0.5);
   static const overlayButton = Color.fromARGB(28, 131, 114, 242);
-  static const caution = Color.fromARGB(255, 180, 32, 22);
+  static const primaryAlert = Color.fromARGB(255, 219, 53, 41);
+  static const secondaryAlert = Color.fromARGB(255, 168, 34, 24);
+  static const cautionLight = Color.fromARGB(255, 161, 73, 67);
+  static const cautionDark = Color.fromARGB(255, 131, 15, 7);
   static const correct = Color.fromARGB(255, 68, 228, 108);
   static const darkItems40 = Color.fromARGB(255, 46, 46, 46);
   static const darkItems30 = Color.fromARGB(255, 69, 69, 69);
@@ -152,9 +155,20 @@ class ColorTheme {
       case 0:
         return Colors.red;
       case 1:
-        return ColorPalette.caution;
+        return ColorPalette.primaryAlert;
       default:
         return Colors.red;
+    }
+  }
+
+  static Color alertButton(int theme) {
+    switch (theme) {
+      case 0:
+        return ColorPalette.cautionDark;
+      case 1:
+        return ColorPalette.cautionLight;
+      default:
+        return ColorPalette.cautionDark;
     }
   }
 }
@@ -321,7 +335,7 @@ class Typo {
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,
       fontSize: 16,
-      color: ColorPalette.caution);
+      color: ColorPalette.primaryAlert);
   static TextStyle alert(int theme) => TextStyle(
       fontFamily: 'Source Sans Pro',
       fontWeight: FontWeight.w400,

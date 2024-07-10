@@ -64,7 +64,7 @@ class TextFieldCell extends InputCell {
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(
-                color: isValid ? borderColor : ColorPalette.caution,
+                color: isValid ? borderColor : ColorPalette.primaryAlert,
               )),
               height: 30,
               child: Row(
@@ -79,7 +79,7 @@ class TextFieldCell extends InputCell {
                       controller: controller,
                       style: Typo.bodyLight,
                       cursorColor:
-                          isValid ? ColorPalette.primary : ColorPalette.caution,
+                          isValid ? ColorPalette.primary : ColorPalette.primaryAlert,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         isDense: true,
@@ -90,7 +90,7 @@ class TextFieldCell extends InputCell {
                                 child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
                                       side: BorderSide.none,
-                                      foregroundColor: ColorPalette.caution,
+                                      foregroundColor: ColorPalette.primaryAlert,
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.zero),
                                       padding: EdgeInsets.zero,
@@ -104,7 +104,7 @@ class TextFieldCell extends InputCell {
                                     },
                                     child: const Icon(
                                       Icons.error_outline,
-                                      color: ColorPalette.caution,
+                                      color: ColorPalette.primaryAlert,
                                       size: 20,
                                     )),
                               ),
