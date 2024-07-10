@@ -138,4 +138,9 @@ class ObjectRepo {
         .from(link.block.tableName)
         .update({_object: object.map}).eq(_id, object.id);
   }
+
+  static Future<void> deleteObject(ObjectModel object, WidgetLinkModel link) async {
+    await _supabase
+        .from(link.block.tableName).delete().eq(_id, object.id);
+  }
 }

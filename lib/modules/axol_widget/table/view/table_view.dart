@@ -12,7 +12,6 @@ import '../../../../utilities/widgets/textfield.dart';
 import '../../../block/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
-import '../../../user/model/user_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/table/table_cubit.dart';
 import '../cubit/table/table_state.dart';
@@ -24,15 +23,11 @@ import 'row_details_drawer.dart';
 /// herramientas de UI para filtrar o editar su contenido.
 class TableView extends AxolWidget {
   final Color? color;
-  //final TableModel table;
-  //final UserModel user;
   final WidgetLinkModel link;
   final String viewId;
   const TableView({
     super.key,
-    //required this.user,
     this.color,
-    //required this.table,
     required this.link,
     required this.viewId,
   });
@@ -45,9 +40,7 @@ class TableView extends AxolWidget {
         BlocProvider(create: (_) => TableForm()),
       ],
       child: TableViewBuild(
-        //table: table,
         color: color,
-        //user: user,
         link: link,
         viewId: viewId,
       ),

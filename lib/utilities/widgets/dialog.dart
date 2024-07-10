@@ -1,4 +1,3 @@
-import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
@@ -9,13 +8,15 @@ class AlertDialogAxol extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
   final Function()? onPressed;
+  final int? theme;
   const AlertDialogAxol(
       {super.key,
       required this.text,
       this.actions,
       this.icon,
       this.iconColor,
-      this.onPressed});
+      this.onPressed,
+      this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,9 @@ class AlertDialogAxol extends StatelessWidget {
             ),
           ),
         ];
+    final int theme_ = theme ?? 0;
     return AlertDialog(
+        backgroundColor: ColorTheme.background(theme_),
         icon: Icon(
           icon_,
           color: iconColor_,
@@ -46,7 +49,7 @@ class AlertDialogAxol extends StatelessWidget {
         ),
         content: Text(
           text,
-          style: Typo.bodyDark,
+          style: Typo.body(theme_),
         ),
         actions: actions_);
   }
@@ -66,7 +69,8 @@ class LoadingDialog extends StatelessWidget {
           child: CircularProgressIndicator(color: ColorPalette.primary),
         ),
       ),
-      content: Row( mainAxisAlignment: MainAxisAlignment.center,
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             text ?? 'Cargando...',

@@ -8,14 +8,14 @@ import '../../../../widget_link/model/widgetlink_model.dart';
 import '../../model/row_details_form_model.dart';
 import 'row_details_state.dart';
 
-/// Cubit con lógica del negocio de drawer de detalles 
+/// Cubit con lógica del negocio de drawer de detalles
 /// del objeto recibido.
 class RowDetailsCubit extends Cubit<RowDetailsState> {
   RowDetailsCubit() : super(InitialRowDetailsState());
 
-/// Recarga los estados para mostrar un cambio en los parámetros 
-/// mutables. Util si se requiere recargar la pantalla desde fuera 
-/// del cubit.
+  /// Recarga los estados para mostrar un cambio en los parámetros
+  /// mutables. Util si se requiere recargar la pantalla desde fuera
+  /// del cubit.
   Future<void> load() async {
     try {
       emit(InitialRowDetailsState());
@@ -67,7 +67,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
     }
   }
 
-  /// Proceso para guardar los cambios realizados en el objeto. 
+  /// Proceso para guardar los cambios realizados en el objeto.
   Future<void> save(RowDetailsFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialRowDetailsState());
@@ -93,9 +93,24 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
+
+  Future<void> delete(RowDetailsFormModel form, WidgetLinkModel link) async {
+    try {
+      emit(InitialRowDetailsState());
+      emit(DeletingRowDetailsState());
+
+      await ObjectRepo.deleteObject(form.object, link);
+
+      emit(DeletedRowDetailsState());
+      emit(LoadedRowDetailsState());
+    } catch (e) {
+      emit(InitialRowDetailsState());
+      emit(ErrorRowDetailsState(error: e.toString()));
+    }
+  }
 }
 
-/// Cubit que mantiene modelo de datos del formulario en segundo planto 
+/// Cubit que mantiene modelo de datos del formulario en segundo planto
 /// respecto al cambio de estados.
 class RowDetailsForm extends Cubit<RowDetailsFormModel> {
   RowDetailsForm() : super(RowDetailsFormModel.empty());

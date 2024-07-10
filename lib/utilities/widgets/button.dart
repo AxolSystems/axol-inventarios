@@ -149,8 +149,9 @@ class _AlertButtonDialog extends State<AlertButtonDialog> {
     return OutlinedButton(
       onPressed: isLoading_ ? () {} : fOnPressed,
       style: OutlinedButton.styleFrom(
-        foregroundColor:
-            isLoading_ ? ColorPalette.primaryAlert : ColorPalette.lightBackground,
+        foregroundColor: isLoading_
+            ? ColorPalette.primaryAlert
+            : ColorPalette.lightBackground,
         backgroundColor: ColorPalette.primaryAlert,
         side: BorderSide.none,
       ),
@@ -428,8 +429,8 @@ class PrimaryButton extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible:
-                            (icon != null || isLoading == true) && (text != null),
+                        visible: (icon != null || isLoading == true) &&
+                            (text != null),
                         child: const SizedBox(width: 8),
                       ),
                       Visibility(child: Text(text ?? ''))
@@ -457,75 +458,85 @@ class SecondaryButton extends StatelessWidget {
   final Function()? onPressed;
   final IconData? icon;
   final String? text;
+  final TextAlign? textAlign;
   final EdgeInsetsGeometry? padding;
   final int? theme;
   final double? width;
+  final double? height;
   const SecondaryButton({
     super.key,
     this.onPressed,
     this.icon,
     this.text,
+    this.textAlign,
     this.padding,
     this.theme,
     this.width,
+    this.height,
   });
 
   /// Construye el widget del botón secundario.
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 28,
-        width: width,
-        child: Stack(
-          children: [
-            OutlinedButton(
-                style: ButtonStyle(
-                  side: WidgetStateProperty.all(
-                      BorderSide(color: ColorTheme.item30(theme ?? 0))),
-                  shape: WidgetStateProperty.all(const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)))),
-                  padding: WidgetStateProperty.all(EdgeInsets.zero),
-                  overlayColor:
-                      WidgetStateProperty.all(ColorTheme.fill(theme ?? 0)),
-                  backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                  foregroundColor:
-                      WidgetStateProperty.all(ColorTheme.text(theme ?? 0)),
-                  textStyle: WidgetStateProperty.all(Typo.systemDark),
-                  splashFactory: NoSplash.splashFactory,
-                ),
-                onPressed: onPressed,
-                child: Padding(
-                  padding: padding ?? EdgeInsets.zero,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Visibility(
-                          visible: icon != null,
-                          child: Icon(
-                            icon,
-                            size: 15,
-                          )),
-                      Visibility(
-                        visible: icon != null && text != null,
-                        child: const SizedBox(width: 8),
-                      ),
-                      Visibility(child: Text(text ?? ''))
-                    ],
+      height: height ?? 28,
+      width: width,
+      child: Stack(
+        children: [
+          OutlinedButton(
+            style: ButtonStyle(
+              side: WidgetStateProperty.all(
+                  BorderSide(color: ColorTheme.item30(theme ?? 0))),
+              shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(6)))),
+              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              overlayColor:
+                  WidgetStateProperty.all(ColorTheme.fill(theme ?? 0)),
+              backgroundColor: WidgetStateProperty.all(Colors.transparent),
+              foregroundColor:
+                  WidgetStateProperty.all(ColorTheme.text(theme ?? 0)),
+              textStyle: WidgetStateProperty.all(Typo.systemDark),
+              splashFactory: NoSplash.splashFactory,
+            ),
+            onPressed: onPressed,
+            child: Padding(
+              padding: padding ?? EdgeInsets.zero,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Visibility(
+                      visible: icon != null,
+                      child: Icon(
+                        icon,
+                        size: 15,
+                      )),
+                  Visibility(
+                    visible: icon != null && text != null,
+                    child: const SizedBox(width: 8),
                   ),
-                )),
-            Visibility(
-                visible: onPressed == null,
-                replacement: const SizedBox(),
-                child: Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: ColorTheme.enabledButton(theme ?? 0),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(6))),
+                  Visibility(
+                    child: Text(
+                      text ?? '',
+                    ),
                   ),
-                )),
-          ],
-        ));
+                ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: onPressed == null,
+            replacement: const SizedBox(),
+            child: Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: ColorTheme.enabledButton(theme ?? 0),
+                    borderRadius: const BorderRadius.all(Radius.circular(6))),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -536,6 +547,8 @@ class AlertButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final int? theme;
   final bool? isLoading;
+  final double? height;
+  final double? width;
   const AlertButton({
     super.key,
     this.onPressed,
@@ -544,12 +557,15 @@ class AlertButton extends StatelessWidget {
     this.padding,
     this.theme,
     this.isLoading,
+    this.height,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 28,
+        height: height ?? 28,
+        width: width,
         child: Stack(
           children: [
             OutlinedButton(
@@ -561,8 +577,8 @@ class AlertButton extends StatelessWidget {
                   padding: WidgetStateProperty.all(EdgeInsets.zero),
                   overlayColor: WidgetStateProperty.all(
                       ColorTheme.alertButton(theme ?? 0)),
-                  backgroundColor:
-                      WidgetStateProperty.all(const Color.fromARGB(255, 151, 23, 14)),
+                  backgroundColor: WidgetStateProperty.all(
+                      const Color.fromARGB(255, 151, 23, 14)),
                   foregroundColor:
                       WidgetStateProperty.all(ColorPalette.lightText),
                   textStyle: WidgetStateProperty.all(Typo.systemDark),
@@ -590,8 +606,8 @@ class AlertButton extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible:
-                            (icon != null || isLoading == true) && (text != null),
+                        visible: (icon != null || isLoading == true) &&
+                            (text != null),
                         child: const SizedBox(width: 8),
                       ),
                       Visibility(child: Text(text ?? ''))

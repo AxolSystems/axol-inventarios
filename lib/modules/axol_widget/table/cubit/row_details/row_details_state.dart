@@ -36,6 +36,17 @@ class SavingRowDetailsState extends RowDetailsState {
   List<Object?> get props => [];
 }
 
+class DeletingRowDetailsState extends RowDetailsState {
+  @override
+  List<Object?> get props => [];
+}
+
+class DeletedRowDetailsState extends RowDetailsState {
+  @override
+  List<Object?> get props => [];
+}
+
+
 /// Estado de error que aparece cuando se llega aun conflicto.
 class ErrorRowDetailsState extends RowDetailsState {
   final String error;

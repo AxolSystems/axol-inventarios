@@ -1,13 +1,13 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
-import 'package:axol_inventarios/modules/block/model/property_model.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
-import 'package:axol_inventarios/utilities/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
+import '../../../../utilities/widgets/textfield.dart';
+import '../../../block/model/property_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/row_details/row_details_cubit.dart';
@@ -65,7 +65,9 @@ class RowDetailsDrawerBuild extends AxolWidget {
           if (state is ErrorRowDetailsState) {
             showDialog(
               context: context,
-              builder: (context) => AlertDialogAxol(text: state.error),
+              builder: (context) => AlertDialogAxol(
+                text: state.error,
+              ),
             );
           }
           if (state is SavedRowDetailsState) {
@@ -116,7 +118,19 @@ class RowDetailsDrawerBuild extends AxolWidget {
                     AlertButton(
                       text: 'Eliminar',
                       theme: theme_,
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => BlocProvider(
+                            create: (_) => RowDetailsCubit(),
+                            child: AlertDialogObjectDelete(
+                              form: form,
+                              link: link,
+                              theme: theme_,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SecondaryButton(
                       theme: theme_,
@@ -177,5 +191,73 @@ class RowDetailsDrawerBuild extends AxolWidget {
             ),
           );
         });
+  }
+}
+
+class AlertDialogObjectDelete extends AxolWidget {
+  final RowDetailsFormModel form;
+  final WidgetLinkModel link;
+  const AlertDialogObjectDelete({
+    super.key,
+    super.theme,
+    required this.form,
+    required this.link,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    int theme_ = theme ?? 0;
+    return BlocConsumer<RowDetailsCubit, RowDetailsState>(
+      listener: (context, state) {
+        if (state is DeletedRowDetailsState) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+      },
+      builder: (context, state) => AlertDialogAxol(
+        theme: theme_,
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 4, 0),
+                child: SecondaryButton(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  theme: theme_,
+                  height: 40,
+                  text: 'Regresar',
+                  textAlign: TextAlign.center,
+                  onPressed: () {
+                    if (state is LoadedRowDetailsState) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 0, 8, 0),
+                child: AlertButton(
+                  theme: theme_,
+                  height: 40,
+                  padding: const EdgeInsetsDirectional.symmetric(
+                      horizontal: 8, vertical: 8),
+                  text: 'Eliminar',
+                  isLoading: state is DeletingRowDetailsState,
+                  onPressed: () {
+                    if (state is LoadedRowDetailsState) {
+                      context.read<RowDetailsCubit>().delete(form, link);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+        text:
+            'Seguro desea eliminar este objeto. \nEsta acción no se podrá deshacer.',
+      ),
+    );
   }
 }

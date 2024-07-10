@@ -1,10 +1,8 @@
 import 'package:axol_inventarios/models/data_response_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/generic/model/data_object.dart';
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
-import 'package:axol_inventarios/modules/object/model/object_model.dart';
 
 import '../../../user/model/user_model.dart';
-import '../../../widget_link/model/widget_view_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../view/axol_widget.dart';
 import '../../table/model/table_model.dart';
