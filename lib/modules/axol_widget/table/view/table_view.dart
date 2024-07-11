@@ -16,6 +16,7 @@ import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/table/table_cubit.dart';
 import '../cubit/table/table_state.dart';
 import '../model/table_form_model.dart';
+import 'filter_drawer.dart';
 import 'row_details_drawer.dart';
 
 /// Vista que contiene el widget de tabla. Las tablas son el medio donde
@@ -153,6 +154,18 @@ class TableViewBuild extends AxolWidget {
                             ],
                           ),
                         ),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => FilterDrawer(
+                                theme: form.theme,
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.filter_alt_outlined),
+                          color: ColorTheme.item10(form.theme),
+                        ),
                         Visibility(
                           visible: (state is SavingTableState) ||
                               (state is LoadingTableState),
@@ -219,7 +232,9 @@ class TableViewBuild extends AxolWidget {
                                         ),
                                       ).then(
                                         (value) {
-                                          context.read<TableCubit>().initLoad(form, link, viewId);
+                                          context
+                                              .read<TableCubit>()
+                                              .initLoad(form, link, viewId);
                                         },
                                       );
                                     },
