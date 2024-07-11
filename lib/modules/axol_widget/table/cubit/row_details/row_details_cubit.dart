@@ -94,6 +94,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
     }
   }
 
+  /// Función para eliminar objeto actual en form.
   Future<void> delete(RowDetailsFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialRowDetailsState());

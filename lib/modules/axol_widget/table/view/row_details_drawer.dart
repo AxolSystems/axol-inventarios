@@ -194,6 +194,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
   }
 }
 
+/// Clase que contiene widget dialogo de alerta para confirmación de eliminación de objeto.
 class AlertDialogObjectDelete extends AxolWidget {
   final RowDetailsFormModel form;
   final WidgetLinkModel link;
