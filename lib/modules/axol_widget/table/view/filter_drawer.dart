@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
+import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ import '../cubit/filter/filter_state.dart';
 import '../model/filter_form_model.dart';
 
 class FilterDrawer extends AxolWidget {
-  const FilterDrawer({super.key, super.theme});
+  final BlockModel block;
+  const FilterDrawer({super.key, super.theme, required this.block});
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +24,22 @@ class FilterDrawer extends AxolWidget {
       ],
       child: FilterDrawerBuild(
         theme: theme,
+        block: block,
       ),
     );
   }
 }
 
 class FilterDrawerBuild extends AxolWidget {
-  const FilterDrawerBuild({super.key, super.theme});
+  final BlockModel block;
+  const FilterDrawerBuild({super.key, super.theme, required this.block});
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
     final FilterFormModel form = context.read<FilterForm>().state;
     return BlocConsumer<FilterCubit, FilterState>(
-      bloc: context.read<FilterCubit>()..initLoad(form),
+      bloc: context.read<FilterCubit>()..initLoad(form, block),
       listener: (context, state) {
         if (state is ErrorFilterState) {
           showDialog(
@@ -45,22 +49,24 @@ class FilterDrawerBuild extends AxolWidget {
       },
       builder: (context, state) {
         return DrawerBox(
+          theme: theme_,
           header: Row(
             children: [
               Expanded(
-                  child: Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(color: ColorTheme.item30(theme_))),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: ColorTheme.item30(theme_))),
+                  ),
+                  child: Text(
+                    'Filtros',
+                    style: Typo.titleH2(theme_),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                child: Text(
-                  'Filtros',
-                  style: Typo.titleH2(theme_),
-                  textAlign: TextAlign.center,
-                ),
-              ))
+              ),
             ],
           ),
           child: Expanded(
@@ -69,9 +75,9 @@ class FilterDrawerBuild extends AxolWidget {
             itemBuilder: (context, index) {
               final FilterModel filter = form.filterList[index];
               if (filter is AddFilterModel) {
-                return addFilter();
+                return addFilter(context, form);
               } else {
-                return const SizedBox();
+                return filterWidget(context, state, form, index);
               }
             },
           )),
@@ -80,7 +86,7 @@ class FilterDrawerBuild extends AxolWidget {
     );
   }
 
-  Widget addFilter() {
+  Widget addFilter(BuildContext context, FilterFormModel form) {
     final int theme_ = theme ?? 0;
     return Container(
       height: 60,
@@ -91,7 +97,9 @@ class FilterDrawerBuild extends AxolWidget {
       ),
       child: OutlinedButton(
           style: OutlinedButton.styleFrom(side: BorderSide.none),
-          onPressed: () {},
+          onPressed: () {
+            context.read<FilterCubit>().add(form);
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -108,9 +116,11 @@ class FilterDrawerBuild extends AxolWidget {
     );
   }
 
-  Widget dropDownProp(BuildContext context, FilterFormModel form, int index) {
+  Widget filterWidget(BuildContext context, FilterState state,
+      FilterFormModel form, int index) {
     final int theme_ = theme ?? 0;
     List<DropdownMenuItem<String>> items = [];
+    Widget widget = const SizedBox();
 
     for (PropertyModel prop in form.block.propertyList) {
       items.add(DropdownMenuItem(
@@ -118,23 +128,55 @@ class FilterDrawerBuild extends AxolWidget {
         child: Text(
           prop.name,
           style: Typo.body(theme_),
+          overflow: TextOverflow.ellipsis,
         ),
       ));
     }
 
+    if (state is EmptyFilterModel) {
+      const SizedBox(width: 100);
+    }
+
     return Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: ColorTheme.item30(theme_)),
-          borderRadius: const BorderRadius.all(Radius.circular(6)),
-        ),
-        child: Row(
-          children: [
-            DropdownButtonFormField(
+      height: 60,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        border: Border.all(color: ColorTheme.item30(theme_)),
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: DropdownButtonFormField(
+              isExpanded: true,
+              decoration: InputDecoration(
+                isDense: true,
+                filled: true,
+                fillColor: ColorTheme.fill(theme ?? 0),
+                contentPadding: const EdgeInsets.all(12),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                    borderSide:
+                        BorderSide(color: ColorTheme.item20(theme ?? 0))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    borderSide:
+                        BorderSide(color: ColorTheme.item10(theme ?? 0))),
+              ),
+              dropdownColor: ColorTheme.background(theme ?? 0),
+              value: form.filterList[index].value,
               items: items,
-              onChanged: (value) {},
+              onChanged: (value) {
+                if (value != null) {
+                  form.filterList[index].value = value;
+                }
+              },
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget textFilter(BuildContext context, FilterFormModel form, int index) {

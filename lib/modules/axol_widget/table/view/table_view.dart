@@ -160,6 +160,7 @@ class TableViewBuild extends AxolWidget {
                               context: context,
                               builder: (context) => FilterDrawer(
                                 theme: form.theme,
+                                block: link.block,
                               ),
                             );
                           },

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../block/model/block_model.dart';
 
 class FilterFormModel {
-  final List<FilterModel> filterList;
-  final BlockModel block;
+  List<FilterModel> filterList;
+  BlockModel block;
 
   FilterFormModel({required this.filterList, required this.block});
 
@@ -14,12 +14,16 @@ class FilterFormModel {
 }
 
 abstract class FilterModel {
-  final String value;
+  String value;
   FilterModel({required this.value});
 }
 
 class AddFilterModel extends FilterModel {
   AddFilterModel() : super(value: '');
+}
+
+class EmptyFilterModel extends FilterModel {
+  EmptyFilterModel({required super.value});
 }
 
 class TextFilterModel extends FilterModel {
