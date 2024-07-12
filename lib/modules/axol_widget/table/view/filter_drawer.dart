@@ -108,6 +108,35 @@ class FilterDrawerBuild extends AxolWidget {
     );
   }
 
+  Widget dropDownProp(BuildContext context, FilterFormModel form, int index) {
+    final int theme_ = theme ?? 0;
+    List<DropdownMenuItem<String>> items = [];
+
+    for (PropertyModel prop in form.block.propertyList) {
+      items.add(DropdownMenuItem(
+        value: prop.key,
+        child: Text(
+          prop.name,
+          style: Typo.body(theme_),
+        ),
+      ));
+    }
+
+    return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: ColorTheme.item30(theme_)),
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+        ),
+        child: Row(
+          children: [
+            DropdownButtonFormField(
+              items: items,
+              onChanged: (value) {},
+            ),
+          ],
+        ));
+  }
+
   Widget textFilter(BuildContext context, FilterFormModel form, int index) {
     final int theme_ = theme ?? 0;
     final TextFilterModel filter = form.filterList[index] as TextFilterModel;
