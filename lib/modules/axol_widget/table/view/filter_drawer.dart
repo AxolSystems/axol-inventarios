@@ -152,42 +152,14 @@ class FilterDrawerBuild extends AxolWidget {
                 theme: theme_,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 width: (constraints.minWidth - 16) / 2,
-                value: form.filterList[index].value,
+                value: form.filterList[index].property.key,
                 items: items,
                 onChanged: (value) {
                   if (value != null) {
-                    form.filterList[index].value = value;
+                    form.filterList[index].property = value;
                   }
                 },
               ),
-              /*SizedBox(
-            width: 100,
-            child: DropdownButtonFormField(
-              isExpanded: true,
-              decoration: InputDecoration(
-                isDense: true,
-                filled: true,
-                fillColor: ColorTheme.fill(theme ?? 0),
-                contentPadding: const EdgeInsets.all(12),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(6)),
-                    borderSide:
-                        BorderSide(color: ColorTheme.item20(theme ?? 0))),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    borderSide:
-                        BorderSide(color: ColorTheme.item10(theme ?? 0))),
-              ),
-              dropdownColor: ColorTheme.background(theme ?? 0),
-              value: form.filterList[index].value,
-              items: items,
-              onChanged: (value) {
-                if (value != null) {
-                  form.filterList[index].value = value;
-                }
-              },
-            ),
-          ),*/
             ],
           ),
         ));
@@ -196,7 +168,7 @@ class FilterDrawerBuild extends AxolWidget {
   Widget textFilter(BuildContext context, FilterFormModel form, int index) {
     final int theme_ = theme ?? 0;
     final TextFilterModel filter = form.filterList[index] as TextFilterModel;
-    String valueDrop = filter.value;
+    String valueDrop = filter.property.key;
     List<DropdownMenuItem<String>> items = [];
 
     for (PropertyModel prop in form.block.propertyList) {
@@ -227,8 +199,10 @@ class FilterDrawerBuild extends AxolWidget {
               items: items,
               onChanged: (value) {
                 if (value != null) {
+                  final PropertyModel prop =
+                      form.block.propertyList.firstWhere((x) => x.key == value);
                   form.filterList[index] = TextFilterModel(
-                      ctrlValue: filter.ctrlValue, value: value);
+                      ctrlValue: filter.ctrlValue, property: prop);
                   context.read<FilterCubit>().load();
                 }
               },

@@ -49,7 +49,7 @@ class FilterCubit extends Cubit<FilterState> {
       emit(InitialFilterState());
       emit(LoadingFilterState());
       form.filterList
-          .insert(form.filterList.length - 1, EmptyFilterModel(value: ''));
+          .insert(form.filterList.length - 1, EmptyFilterModel.empty());
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());

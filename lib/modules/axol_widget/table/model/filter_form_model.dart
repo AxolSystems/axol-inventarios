@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../block/model/block_model.dart';
+import '../../../block/model/property_model.dart';
 
 class FilterFormModel {
   List<FilterModel> filterList;
@@ -14,24 +15,26 @@ class FilterFormModel {
 }
 
 abstract class FilterModel {
-  String value;
-  FilterModel({required this.value});
+  PropertyModel property;
+  FilterModel({required this.property});
 }
 
 class AddFilterModel extends FilterModel {
-  AddFilterModel() : super(value: '');
+  AddFilterModel() : super(property: PropertyModel.empty());
 }
 
 class EmptyFilterModel extends FilterModel {
-  EmptyFilterModel({required super.value});
+  EmptyFilterModel({required super.property});
+  
+  EmptyFilterModel.empty() : super(property: PropertyModel.empty());
 }
 
 class TextFilterModel extends FilterModel {
   final TextEditingController ctrlValue;
 
-  TextFilterModel({required this.ctrlValue, required super.value});
+  TextFilterModel({required this.ctrlValue, required super.property});
 
   TextFilterModel.empty()
       : ctrlValue = TextEditingController(),
-        super(value: '');
+        super(property: PropertyModel.empty());
 }
