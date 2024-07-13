@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/dropdown_button.dart';
 import '../../../block/model/property_model.dart';
 import '../cubit/filter/filter_cubit.dart';
 import '../cubit/filter/filter_state.dart';
@@ -138,15 +139,28 @@ class FilterDrawerBuild extends AxolWidget {
     }
 
     return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: ColorTheme.item30(theme_)),
-        borderRadius: const BorderRadius.all(Radius.circular(6)),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
+        height: 60,
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: ColorTheme.item30(theme_)),
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) => Row(
+            children: [
+              PrimaryDropDownButton(
+                theme: theme_,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                width: (constraints.minWidth - 16) / 2,
+                value: form.filterList[index].value,
+                items: items,
+                onChanged: (value) {
+                  if (value != null) {
+                    form.filterList[index].value = value;
+                  }
+                },
+              ),
+              /*SizedBox(
             width: 100,
             child: DropdownButtonFormField(
               isExpanded: true,
@@ -173,10 +187,10 @@ class FilterDrawerBuild extends AxolWidget {
                 }
               },
             ),
+          ),*/
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget textFilter(BuildContext context, FilterFormModel form, int index) {
