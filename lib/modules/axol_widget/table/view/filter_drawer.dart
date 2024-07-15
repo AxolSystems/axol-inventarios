@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dropdown_button.dart';
+import '../../../../utilities/widgets/textfield.dart';
 import '../../../block/model/property_model.dart';
 import '../cubit/filter/filter_cubit.dart';
 import '../cubit/filter/filter_state.dart';
@@ -45,7 +46,10 @@ class FilterDrawerBuild extends AxolWidget {
         if (state is ErrorFilterState) {
           showDialog(
               context: context,
-              builder: (context) => AlertDialogAxol(text: state.error));
+              builder: (context) => AlertDialogAxol(
+                    text: state.error,
+                    theme: theme_,
+                  ));
         }
       },
       builder: (context, state) {
@@ -78,7 +82,10 @@ class FilterDrawerBuild extends AxolWidget {
               if (filter is AddFilterModel) {
                 return addFilter(context, form);
               } else {
-                return filterWidget(context, state, form, index);
+                return LayoutBuilder(
+                  builder: (context, constraints) => filterWidget(
+                      context, state, form, index, constraints.minWidth),
+                );
               }
             },
           )),
@@ -118,7 +125,7 @@ class FilterDrawerBuild extends AxolWidget {
   }
 
   Widget filterWidget(BuildContext context, FilterState state,
-      FilterFormModel form, int index) {
+      FilterFormModel form, int index, double constraintWidth) {
     final int theme_ = theme ?? 0;
     List<DropdownMenuItem<String>> items = [];
     Widget widget = const SizedBox();
@@ -133,36 +140,48 @@ class FilterDrawerBuild extends AxolWidget {
         ),
       ));
     }
-
-    if (state is EmptyFilterModel) {
-      const SizedBox(width: 100);
+    if (form.filterList[index] is TextFilterModel) {
+      TextFilterModel textFilterModel =
+          form.filterList[index] as TextFilterModel;
+      widget = Container(
+        //color: Colors.blue,
+        height: 60,
+        width: (constraintWidth - 50) / 2,
+        child: PrimaryTextField(
+          theme: theme_,
+          controller: textFilterModel.ctrlValue,
+          margin: const EdgeInsets.fromLTRB(4, 8, 10, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        ),
+      );
     }
 
     return Container(
-        height: 60,
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: ColorTheme.item30(theme_)),
-          borderRadius: const BorderRadius.all(Radius.circular(6)),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) => Row(
-            children: [
-              PrimaryDropDownButton(
-                theme: theme_,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                width: (constraints.minWidth - 16) / 2,
-                value: form.filterList[index].property.key,
-                items: items,
-                onChanged: (value) {
-                  if (value != null) {
-                    form.filterList[index].property = value;
-                  }
-                },
-              ),
-            ],
+      height: 60,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        border: Border.all(color: ColorTheme.item30(theme_)),
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          PrimaryDropDownButton(
+            theme: theme_,
+            margin: const EdgeInsets.fromLTRB(8, 8, 4, 8),
+            width: (constraintWidth - 50) / 2,
+            value: form.filterList[index].property.key,
+            items: items,
+            onChanged: (value) {
+              context
+                  .read<FilterCubit>()
+                  .changeDropdown(form, block, value, index);
+            },
           ),
-        ));
+          widget,
+        ],
+      ),
+    );
   }
 
   Widget textFilter(BuildContext context, FilterFormModel form, int index) {

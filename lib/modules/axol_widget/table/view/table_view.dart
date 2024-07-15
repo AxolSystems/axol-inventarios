@@ -125,7 +125,7 @@ class TableViewBuild extends AxolWidget {
                             width: 300,
                             child: PrimaryTextField(
                               controller: form.ctrlSearch,
-                              contentPadding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               theme: form.theme,
                               prefixIcon: Icon(Icons.search,
                                   color: ColorTheme.item10(form.theme)),
@@ -294,7 +294,7 @@ class TableViewBuild extends AxolWidget {
                                     child: PrimaryTextField(
                                       controller: form.ctrlLimitRow,
                                       theme: form.theme,
-                                      contentPadding: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly
                                       ],

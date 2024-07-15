@@ -12,47 +12,53 @@ class PrimaryTextField extends StatelessWidget {
   final String? hintText;
   final TextStyle? hintStyle;
   final bool? enabled;
-  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
   final List<TextInputFormatter>? inputFormatters;
-  const PrimaryTextField(
-      {super.key,
-      this.controller,
-      this.onChanged,
-      this.theme,
-      this.prefixIcon,
-      this.hintText,
-      this.hintStyle,
-      this.enabled,
-      this.contentPadding,
-      this.inputFormatters,
-      this.onSubmitted});
+  const PrimaryTextField({
+    super.key,
+    this.controller,
+    this.onChanged,
+    this.theme,
+    this.prefixIcon,
+    this.hintText,
+    this.hintStyle,
+    this.enabled,
+    this.padding,
+    this.inputFormatters,
+    this.onSubmitted,
+    this.margin,
+  });
 
   /// Devuelve widget general del campo de texto.
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      enabled: enabled,
-      style: Typo.body(theme ?? 0),
-      cursorColor: ColorTheme.text(theme ?? 0),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: ColorTheme.fill(theme ?? 0),
-        contentPadding: contentPadding ?? const EdgeInsets.all(12),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(6)),
-            borderSide: BorderSide(color: ColorTheme.item20(theme ?? 0))),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            borderSide: BorderSide(color: ColorTheme.item10(theme ?? 0))),
-        prefixIcon: prefixIcon,
-        hintText: hintText,
-        hintStyle: hintStyle,
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: TextField(
+        controller: controller,
+        enabled: enabled,
+        style: Typo.body(theme ?? 0),
+        cursorColor: ColorTheme.text(theme ?? 0),
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: ColorTheme.fill(theme ?? 0),
+          contentPadding: padding ?? const EdgeInsets.all(12),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(6)),
+              borderSide: BorderSide(color: ColorTheme.item20(theme ?? 0))),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(6)),
+              borderSide: BorderSide(color: ColorTheme.item10(theme ?? 0))),
+          prefixIcon: prefixIcon,
+          hintText: hintText,
+          hintStyle: hintStyle,
+        ),
+        inputFormatters: inputFormatters,
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
       ),
-      inputFormatters: inputFormatters,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
     );
   }
 }

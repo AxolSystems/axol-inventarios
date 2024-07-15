@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../block/model/block_model.dart';
@@ -50,6 +51,32 @@ class FilterCubit extends Cubit<FilterState> {
       emit(LoadingFilterState());
       form.filterList
           .insert(form.filterList.length - 1, EmptyFilterModel.empty());
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeDropdown(
+      FilterFormModel form, BlockModel block, dynamic value, int index) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      if (value != null) {
+        final PropertyModel prop = PropertyModel(
+            name: block.propertyList
+                .firstWhere((x) => x.key == value.toString())
+                .name,
+            propertyType: block.propertyList
+                .firstWhere((x) => x.key == value.toString())
+                .propertyType,
+            key: value.toString());
+        if (prop.propertyType == Prop.text) {
+          form.filterList[index] = TextFilterModel(
+              ctrlValue: TextEditingController(), property: prop);
+        }
+      }
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());

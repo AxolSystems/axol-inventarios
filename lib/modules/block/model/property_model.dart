@@ -1,4 +1,4 @@
-enum Prop { text, int, double, time, bool }
+enum Prop { text, int, double, time, bool, empty }
 
 class PropertyModel {
   final String name;
@@ -10,7 +10,7 @@ class PropertyModel {
 
   PropertyModel.empty()
       : name = '',
-        propertyType = Prop.text,
+        propertyType = Prop.empty,
         key = '';
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
@@ -44,6 +44,8 @@ class PropertyModel {
 
   static Prop getPropToInt(int n) {
     switch (n) {
+      case -1:
+        return Prop.empty;
       case 0:
         return Prop.text;
       case 1:
@@ -55,12 +57,14 @@ class PropertyModel {
       case 4:
         return Prop.bool;
       default:
-        return Prop.text;
+        return Prop.empty;
     }
   }
 
   static int getIntToProp(Prop prop) {
     switch (prop) {
+      case Prop.empty:
+        return -1;
       case Prop.text:
         return 0;
       case Prop.int:
@@ -72,7 +76,7 @@ class PropertyModel {
       case Prop.bool:
         return 4;
       default:
-        return 0;
+        return -1;
     }
   }
 

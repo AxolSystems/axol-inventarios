@@ -36,7 +36,7 @@ class PrimaryDropDownButton extends AxolWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(6)),
                 borderSide: BorderSide(color: ColorTheme.item20(theme ?? 0))),
             focusedBorder: OutlineInputBorder(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                borderRadius: const BorderRadius.all(Radius.circular(6)),
                 borderSide: BorderSide(color: ColorTheme.item10(theme ?? 0))),
           ),
           dropdownColor: ColorTheme.background(theme ?? 0),
