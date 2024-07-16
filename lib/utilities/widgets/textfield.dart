@@ -15,6 +15,7 @@ class PrimaryTextField extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final List<TextInputFormatter>? inputFormatters;
+  final bool? isDense;
   const PrimaryTextField({
     super.key,
     this.controller,
@@ -28,6 +29,7 @@ class PrimaryTextField extends StatelessWidget {
     this.inputFormatters,
     this.onSubmitted,
     this.margin,
+    this.isDense,
   });
 
   /// Devuelve widget general del campo de texto.
@@ -41,7 +43,7 @@ class PrimaryTextField extends StatelessWidget {
         style: Typo.body(theme ?? 0),
         cursorColor: ColorTheme.text(theme ?? 0),
         decoration: InputDecoration(
-          isDense: true,
+          isDense: isDense ?? true,
           filled: true,
           fillColor: ColorTheme.fill(theme ?? 0),
           contentPadding: padding ?? const EdgeInsets.all(12),

@@ -15,14 +15,14 @@ class ObjectRepo {
 
   /// Obtiene una lista de objetos de la base de datos.
   ///
-  /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filterList].
-  /// Si [filterList] no se encuentra vacía, realiza una búsqueda filtrada; de lo contrario,
+  /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filters].
+  /// Si [filters] no se encuentra vacía, realiza una búsqueda filtrada; de lo contrario,
   /// realiza una búsqueda completa de la tabla referenciada. La tabla de la base de datos donde
   /// se hará la búsqueda es obtenida mediante [BlockModel.tableName].
   ///
   /// Después de la consulta convierte los datos obtenidos en una lista [ObjectModel].
   static Future<DataResponseModel> fetchObject({
-    required List<FilterObjModel> filterList,
+    required List filters,
     required WidgetLinkModel link,
     int? rangeMin,
     int? rangeMax,
@@ -35,6 +35,8 @@ class ObjectRepo {
     ObjectModel obj;
     Map<String, dynamic> matchMap = {};
     String textOr = '';
+    String filterOr = '';
+    int index = 0;
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
     final bool ascending_ = ascending ?? false;
@@ -81,17 +83,27 @@ class ObjectRepo {
       }
     }
 
-    if (filterList.isNotEmpty) {
-      for (var flt in filterList) {
-        if (flt.filter == FilterOperator.eq) {
-          matchMap[flt.property.name] = flt.value;
+    /*if (filters.isNotEmpty) {
+      for (int i = 0; i < link.block.propertyList.length; i++) {
+        final PropertyModel prop = link.block.propertyList[i];
+        if (filters.containsKey(prop.propertyType)) {
+          final String textFilter = filter.prop
+          if (i == 0) {
+            filterOr = '$_object->>"${prop.key}".eq.$search';
+          } else {
+            filterOr = '$textOr,$_object->>"${prop.key}".eq.$search';
+          }
         }
+        
       }
+    }*/
+
+    if (filters.isNotEmpty) {
       postgrestResponse = await _supabase
           .from(link.block.tableName)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
-          .match(matchMap)
+          //.match(query)
           .range(rangeMin_, rangeMax_)
           .order(keyAscending_, ascending: ascending_);
     } else if (search != null) {
@@ -108,6 +120,9 @@ class ObjectRepo {
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
           //.or(textOr)
+          .match({})
+          //.rangeAdjacent(column, range)
+          //.match({'$_object->>"2"': "dato 3.2"})
           .range(rangeMin_, rangeMax_)
           .order(keyAscending_, ascending: ascending_);
     }
@@ -133,14 +148,15 @@ class ObjectRepo {
     return dataResponse;
   }
 
-  static Future<void> updateObject(ObjectModel object, WidgetLinkModel link) async {
+  static Future<void> updateObject(
+      ObjectModel object, WidgetLinkModel link) async {
     await _supabase
         .from(link.block.tableName)
         .update({_object: object.map}).eq(_id, object.id);
   }
 
-  static Future<void> deleteObject(ObjectModel object, WidgetLinkModel link) async {
-    await _supabase
-        .from(link.block.tableName).delete().eq(_id, object.id);
+  static Future<void> deleteObject(
+      ObjectModel object, WidgetLinkModel link) async {
+    await _supabase.from(link.block.tableName).delete().eq(_id, object.id);
   }
 }

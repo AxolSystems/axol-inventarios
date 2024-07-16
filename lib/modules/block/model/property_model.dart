@@ -13,31 +13,22 @@ class PropertyModel {
         propertyType = Prop.empty,
         key = '';
 
+  static String get dataType => 'dataType';
+  static String get propName => 'propName';
+
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
     List<PropertyModel> propertyList = [];
     PropertyModel property;
-    List<dynamic> values;
 
     for (var key in map.keys.toList()) {
-      final String value = map[key];
+      final Map<String, dynamic> value = map[key];
       property = PropertyModel(
-        name: value.split('~').first,
-        propertyType: getPropToInt(int.tryParse(value.split('~').last) ?? 0),
-        key: key,
-      );
+          name: value[PropertyModel.propName],
+          propertyType:
+              PropertyModel.getPropToInt(value[PropertyModel.dataType]),
+          key: key);
       propertyList.add(property);
     }
-
-    /*values = map.values.toList();
-    for (var value in values) {
-      if (value is String) {
-        property = PropertyModel(
-          name: value.split('~').first,
-          propertyType: getPropToInt(int.tryParse(value.split('~').last) ?? 0),
-        );
-        propertyList.add(property);
-      }
-    }*/
 
     return propertyList;
   }

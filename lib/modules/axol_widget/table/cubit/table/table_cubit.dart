@@ -258,7 +258,7 @@ class TableCubit extends Cubit<TableState> {
     rangeMax ??= (form.currentPage * form.limitRows) - 1;
 
     dataResponse = await ObjectRepo.fetchObject(
-      filterList: [],
+      filters: [],
       link: link,
       rangeMin: rangeMin,
       rangeMax: rangeMax,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/dropdown_button.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../../block/model/property_model.dart';
@@ -74,6 +75,24 @@ class FilterDrawerBuild extends AxolWidget {
               ),
             ],
           ),
+          actions: [
+            SecondaryButton(
+              theme: theme_,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              text: 'Regresar',
+              onPressed: () {
+              },
+            ),
+            PrimaryButton(
+              //isLoading: state is SavingRowDetailsState,
+              theme: theme_,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              text: 'Guardar',
+              onPressed: () {
+                //context.read<RowDetailsCubit>().save(form, link);
+              },
+            ),
+          ],
           child: Expanded(
               child: ListView.builder(
             itemCount: form.filterList.length,
@@ -143,15 +162,15 @@ class FilterDrawerBuild extends AxolWidget {
     if (form.filterList[index] is TextFilterModel) {
       TextFilterModel textFilterModel =
           form.filterList[index] as TextFilterModel;
-      widget = Container(
-        //color: Colors.blue,
-        height: 60,
+      widget = SizedBox(
+        height: 56,
         width: (constraintWidth - 50) / 2,
         child: PrimaryTextField(
+          isDense: false,
           theme: theme_,
           controller: textFilterModel.ctrlValue,
-          margin: const EdgeInsets.fromLTRB(4, 8, 10, 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         ),
       );
     }
