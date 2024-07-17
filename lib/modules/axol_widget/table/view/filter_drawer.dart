@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
+import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,9 @@ class FilterDrawerBuild extends AxolWidget {
                     theme: theme_,
                   ));
         }
+        if (state is ApplyFilterState) {
+          Navigator.pop(context, state.filters);
+        }
       },
       builder: (context, state) {
         return DrawerBox(
@@ -81,15 +85,16 @@ class FilterDrawerBuild extends AxolWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               text: 'Regresar',
               onPressed: () {
+                Navigator.pop(context);
               },
             ),
             PrimaryButton(
               //isLoading: state is SavingRowDetailsState,
               theme: theme_,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              text: 'Guardar',
+              text: 'Aplicar',
               onPressed: () {
-                //context.read<RowDetailsCubit>().save(form, link);
+                context.read<FilterCubit>().apply(form);
               },
             ),
           ],
@@ -162,16 +167,45 @@ class FilterDrawerBuild extends AxolWidget {
     if (form.filterList[index] is TextFilterModel) {
       TextFilterModel textFilterModel =
           form.filterList[index] as TextFilterModel;
-      widget = SizedBox(
-        height: 56,
-        width: (constraintWidth - 50) / 2,
-        child: PrimaryTextField(
-          isDense: false,
-          theme: theme_,
-          controller: textFilterModel.ctrlValue,
-          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        ),
+      List<DropdownMenuItem<dynamic>> textFilterItems = [];
+
+      for (FilterOperator oper in textFilterModel.operatorList) {
+        textFilterItems.add(DropdownMenuItem(
+            value: oper,
+            child: Text(
+              FilterObjModel.operatorToText(oper),
+              style: Typo.body(theme_),
+            )));
+      }
+
+      widget = Row(
+        children: [
+          PrimaryDropDownButton(
+            theme: theme_,
+            margin: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            width: 80,
+            value: textFilterModel.operator,
+            items: textFilterItems,
+            onChanged: (value) {
+              if (value != null) {
+                context
+                    .read<FilterCubit>()
+                    .changeDropdownOper(form, value, index);
+              }
+            },
+          ),
+          SizedBox(
+            height: 56,
+            width: ((constraintWidth - 50) / 2) - 42,
+            child: PrimaryTextField(
+              isDense: false,
+              theme: theme_,
+              controller: textFilterModel.ctrlValue,
+              margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            ),
+          ),
+        ],
       );
     }
 
@@ -188,13 +222,13 @@ class FilterDrawerBuild extends AxolWidget {
           PrimaryDropDownButton(
             theme: theme_,
             margin: const EdgeInsets.fromLTRB(8, 8, 4, 8),
-            width: (constraintWidth - 50) / 2,
+            width: ((constraintWidth - 50) / 2) - 42,
             value: form.filterList[index].property.key,
             items: items,
             onChanged: (value) {
               context
                   .read<FilterCubit>()
-                  .changeDropdown(form, block, value, index);
+                  .changeDropdownProp(form, block, value, index);
             },
           ),
           widget,
@@ -240,7 +274,11 @@ class FilterDrawerBuild extends AxolWidget {
                   final PropertyModel prop =
                       form.block.propertyList.firstWhere((x) => x.key == value);
                   form.filterList[index] = TextFilterModel(
-                      ctrlValue: filter.ctrlValue, property: prop);
+                    ctrlValue: filter.ctrlValue,
+                    property: prop,
+                    operatorList: filter.operatorList,
+                    operator: filter.operator,
+                  );
                   context.read<FilterCubit>().load();
                 }
               },

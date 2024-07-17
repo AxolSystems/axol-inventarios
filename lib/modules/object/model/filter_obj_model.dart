@@ -34,4 +34,25 @@ class FilterObjModel {
 
     return filters;
   }
+
+  static String operatorToText(FilterOperator operator) {
+    switch (operator) {
+      case FilterOperator.eq: 
+      return '=';
+      case FilterOperator.gt:
+      return '>';
+      case FilterOperator.gte:
+      return '>=';
+      case FilterOperator.like:
+      return '~~';
+      case FilterOperator.ilike:
+      return '~~*';
+      case FilterOperator.lt:
+      return '<';
+      case FilterOperator.lte:
+      return '<=';
+      case FilterOperator.neq:
+      return '<>';
+    }
+  }
 }

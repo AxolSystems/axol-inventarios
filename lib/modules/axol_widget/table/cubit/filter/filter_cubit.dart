@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../block/model/block_model.dart';
+import '../../../../object/model/filter_obj_model.dart';
 import '../../model/filter_form_model.dart';
 import 'filter_state.dart';
 
@@ -58,7 +59,7 @@ class FilterCubit extends Cubit<FilterState> {
     }
   }
 
-  Future<void> changeDropdown(
+  Future<void> changeDropdownProp(
       FilterFormModel form, BlockModel block, dynamic value, int index) async {
     try {
       emit(InitialFilterState());
@@ -74,9 +75,65 @@ class FilterCubit extends Cubit<FilterState> {
             key: value.toString());
         if (prop.propertyType == Prop.text) {
           form.filterList[index] = TextFilterModel(
-              ctrlValue: TextEditingController(), property: prop);
+            ctrlValue: TextEditingController(),
+            property: prop,
+            operatorList: [
+              FilterOperator.eq,
+              FilterOperator.like,
+              FilterOperator.ilike
+            ],
+            operator: FilterOperator.eq,
+          );
         }
       }
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeDropdownOper(
+      FilterFormModel form, dynamic value, int index) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      if (value is FilterOperator &&
+          form.filterList[index] is TextFilterModel) {
+        final TextFilterModel textFilter =
+            form.filterList[index] as TextFilterModel;
+        form.filterList[index] = TextFilterModel(
+            ctrlValue: textFilter.ctrlValue,
+            property: textFilter.property,
+            operatorList: textFilter.operatorList,
+            operator: value);
+      }
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
+  Future<void> apply(FilterFormModel form) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      List<FilterObjModel> filters = [];
+      FilterObjModel filter;
+      dynamic value;
+      for (FilterModel flt in form.filterList) {
+
+        if (flt is TextFilterModel) {
+          value = flt.ctrlValue.text;
+        }
+        if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
+          filter = FilterObjModel(
+              property: flt.property, value: value, operator: flt.operator);
+          filters.add(filter);
+        }
+      }
+      emit(ApplyFilterState(filters: filters));
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());

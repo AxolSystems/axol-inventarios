@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
+import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,8 +35,8 @@ class TableCubit extends Cubit<TableState> {
 
   /// Realiza los cambios necesarios en el form para el estado
   /// inicial de la vista de tabla.
-  Future<void> initLoad(TableFormModel form,
-      WidgetLinkModel link, String viewId) async {
+  Future<void> initLoad(
+      TableFormModel form, WidgetLinkModel link, String viewId) async {
     try {
       emit(InitialTableState());
       emit(LoadingTableState());
@@ -45,7 +46,6 @@ class TableCubit extends Cubit<TableState> {
           link.views.firstWhere((x) => x.key == viewId);
       final UserModel user = await LocalUser().getLocalUser();
 
-      
       form.theme = user.theme;
 
       if (view.properties.containsKey(WidgetViewModel.propNumRows)) {
@@ -243,6 +243,24 @@ class TableCubit extends Cubit<TableState> {
     }
   }
 
+  Future<void> thenFilter(
+      TableFormModel form, WidgetLinkModel link, dynamic value) async {
+    try {
+      emit(InitialTableState());
+      emit(LoadingTableState());
+
+      if (value is List<FilterObjModel>) {
+        form.filters = value;
+        await getData(form: form, link: link, search: form.ctrlSearch.text);
+      }
+
+      emit(LoadedTableState());
+    } catch (e) {
+      emit(InitialTableState());
+      emit(ErrorTableState(error: e.toString()));
+    }
+  }
+
   /// Método para actualizar los datos de la tabla.
   Future<void> getData({
     required TableFormModel form,
@@ -258,7 +276,7 @@ class TableCubit extends Cubit<TableState> {
     rangeMax ??= (form.currentPage * form.limitRows) - 1;
 
     dataResponse = await ObjectRepo.fetchObject(
-      filters: [],
+      filters: form.filters,
       link: link,
       rangeMin: rangeMin,
       rangeMax: rangeMax,

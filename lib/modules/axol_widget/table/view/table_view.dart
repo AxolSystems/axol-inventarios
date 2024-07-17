@@ -162,6 +162,10 @@ class TableViewBuild extends AxolWidget {
                                 theme: form.theme,
                                 block: link.block,
                               ),
+                            ).then(
+                              (value) {
+                                context.read<TableCubit>().thenFilter(form, link, value);
+                              },
                             );
                           },
                           icon: const Icon(Icons.filter_alt_outlined),

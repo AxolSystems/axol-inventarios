@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class FilterState extends Equatable {
@@ -17,6 +18,13 @@ class LoadingFilterState extends FilterState {
 class LoadedFilterState extends FilterState {
   @override
   List<Object?> get props => [];
+}
+
+class ApplyFilterState extends FilterState {
+  final List<FilterObjModel> filters;
+  const ApplyFilterState({required this.filters});
+  @override
+  List<Object?> get props => [filters];
 }
 
 class ErrorFilterState extends FilterState {

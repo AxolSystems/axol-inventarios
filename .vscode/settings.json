@@ -12,6 +12,7 @@
         "mainview",
         "modulebar",
         "objs",
+        "oper",
         "Overscroll",
         "postgrest",
         "Postgrest",
