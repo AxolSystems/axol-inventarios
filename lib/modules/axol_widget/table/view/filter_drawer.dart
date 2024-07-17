@@ -196,7 +196,7 @@ class FilterDrawerBuild extends AxolWidget {
           ),
           SizedBox(
             height: 56,
-            width: ((constraintWidth - 50) / 2) - 42,
+            width: ((constraintWidth - 50) / 2) - 67,
             child: PrimaryTextField(
               isDense: false,
               theme: theme_,
@@ -222,7 +222,7 @@ class FilterDrawerBuild extends AxolWidget {
           PrimaryDropDownButton(
             theme: theme_,
             margin: const EdgeInsets.fromLTRB(8, 8, 4, 8),
-            width: ((constraintWidth - 50) / 2) - 42,
+            width: ((constraintWidth - 50) / 2) - 67,
             value: form.filterList[index].property.key,
             items: items,
             onChanged: (value) {
@@ -232,6 +232,12 @@ class FilterDrawerBuild extends AxolWidget {
             },
           ),
           widget,
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.clear),
+            color: ColorTheme.item20(theme_),
+            iconSize: 30,
+          )
         ],
       ),
     );

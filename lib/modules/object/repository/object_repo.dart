@@ -94,10 +94,10 @@ class ObjectRepo {
         query = query.eq('$_object->>"${filter.property.key}"', filter.value);
       }
       if (filter.operator == FilterOperator.like) {
-        query = query.like('$_object->>"${filter.property.key}"', filter.value);
+        query = query.like('$_object->>"${filter.property.key}"', '%${filter.value}%');
       }
       if (filter.operator == FilterOperator.ilike) {
-        query = query.ilike('$_object->>"${filter.property.key}"', filter.value);
+        query = query.ilike('$_object->>"${filter.property.key}"', '%${filter.value}%');
       }
     }
 
