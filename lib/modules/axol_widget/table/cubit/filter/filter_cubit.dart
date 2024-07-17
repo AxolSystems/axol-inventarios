@@ -140,6 +140,18 @@ class FilterCubit extends Cubit<FilterState> {
       emit(ErrorFilterState(error: e.toString()));
     }
   }
+
+  Future<void> remove(FilterFormModel form, int index) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      form.filterList.removeAt(index);
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
 }
 
 class FilterForm extends Cubit<FilterFormModel> {

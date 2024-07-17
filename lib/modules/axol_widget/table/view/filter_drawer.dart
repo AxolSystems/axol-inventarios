@@ -136,12 +136,12 @@ class FilterDrawerBuild extends AxolWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Agregar filtro',
-                style: Typo.body(theme_),
+                'Agregar filtro  ',
+                style: Typo.hint(theme_),
               ),
               Icon(
                 Icons.add,
-                color: ColorTheme.text(theme_),
+                color: ColorTheme.item10(theme_),
               )
             ],
           )),
@@ -196,7 +196,7 @@ class FilterDrawerBuild extends AxolWidget {
           ),
           SizedBox(
             height: 56,
-            width: ((constraintWidth - 50) / 2) - 67,
+            width: ((constraintWidth - 50) / 2) - 65,
             child: PrimaryTextField(
               isDense: false,
               theme: theme_,
@@ -222,7 +222,7 @@ class FilterDrawerBuild extends AxolWidget {
           PrimaryDropDownButton(
             theme: theme_,
             margin: const EdgeInsets.fromLTRB(8, 8, 4, 8),
-            width: ((constraintWidth - 50) / 2) - 67,
+            width: ((constraintWidth - 50) / 2) - 65,
             value: form.filterList[index].property.key,
             items: items,
             onChanged: (value) {
@@ -231,11 +231,13 @@ class FilterDrawerBuild extends AxolWidget {
                   .changeDropdownProp(form, block, value, index);
             },
           ),
-          widget,
+          widget is SizedBox ? const Expanded(child: SizedBox()) : widget,
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.read<FilterCubit>().remove(form, index);
+            },
             icon: const Icon(Icons.clear),
-            color: ColorTheme.item20(theme_),
+            color: ColorTheme.item10(theme_),
             iconSize: 30,
           )
         ],
