@@ -22,7 +22,7 @@ class ObjectRepo {
   ///
   /// Después de la consulta convierte los datos obtenidos en una lista [ObjectModel].
   static Future<DataResponseModel> fetchObject({
-    required List filters,
+    required List<FilterObjModel> filters,
     required WidgetLinkModel link,
     int? rangeMin,
     int? rangeMax,
@@ -33,10 +33,7 @@ class ObjectRepo {
     List<Map<String, dynamic>> objsDB;
     List<ObjectModel> objList = [];
     ObjectModel obj;
-    Map<String, dynamic> matchMap = {};
     String textOr = '';
-    String filterOr = '';
-    int index = 0;
     final int rangeMin_ = rangeMin ?? 0;
     final int rangeMax_ = rangeMax ?? 0;
     final bool ascending_ = ascending ?? false;
@@ -83,58 +80,30 @@ class ObjectRepo {
       }
     }
 
-    /*if (filters.isNotEmpty) {
-      for (int i = 0; i < link.block.propertyList.length; i++) {
-        final PropertyModel prop = link.block.propertyList[i];
-        if (filters.containsKey(prop.propertyType)) {
-          final String textFilter = filter.prop
-          if (i == 0) {
-            filterOr = '$_object->>"${prop.key}".eq.$search';
-          } else {
-            filterOr = '$textOr,$_object->>"${prop.key}".eq.$search';
-          }
-        }
-        
-      }
-    }*/
+    var query = _supabase
+        .from(link.block.tableName)
+        .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+            '*', const FetchOptions(count: CountOption.estimated));
 
-    PostgrestTransformBuilder<PostgrestResponse<List<Map<String, dynamic>>>>
-        query = _supabase
-            .from(link.block.tableName)
-            .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-                '*', const FetchOptions(count: CountOption.estimated));
-
-    if (filters.isNotEmpty) {
-      postgrestResponse = await _supabase
-          .from(link.block.tableName)
-          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '*', const FetchOptions(count: CountOption.estimated))
-          //.match(query)
-          .range(rangeMin_, rangeMax_)
-          .order(keyAscending_, ascending: ascending_);
-    } else if (search != null) {
-      postgrestResponse = await _supabase
-          .from(link.block.tableName)
-          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '*', const FetchOptions(count: CountOption.estimated))
-          .or(textOr)
-          .range(rangeMin_, rangeMax_)
-          .order(keyAscending_, ascending: ascending_);
-    } else {
-      query = query.range(rangeMin_, rangeMax_);
-      query = query.order(keyAscending_, ascending: ascending_);
-      postgrestResponse = await query;
-      /*postgrestResponse = await _supabase
-          .from(link.block.tableName)
-          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '*', const FetchOptions(count: CountOption.estimated))
-          //.or(textOr)
-          .match({})
-          //.rangeAdjacent(column, range)
-          //.match({'$_object->>"2"': "dato 3.2"})
-          .range(rangeMin_, rangeMax_)
-          .order(keyAscending_, ascending: ascending_);*/
+    if (search != null) {
+      query = query.or(textOr);
     }
+
+    for (FilterObjModel filter in filters) {
+      if (filter.operator == FilterOperator.eq) {
+        query = query.eq('$_object->>"${filter.property.key}"', filter.value);
+      }
+      if (filter.operator == FilterOperator.like) {
+        query = query.like('$_object->>"${filter.property.key}"', filter.value);
+      }
+      if (filter.operator == FilterOperator.ilike) {
+        query = query.ilike('$_object->>"${filter.property.key}"', filter.value);
+      }
+    }
+
+    postgrestResponse = await query
+          .range(rangeMin_, rangeMax_)
+          .order(keyAscending_, ascending: ascending_);
 
     objsDB = postgrestResponse.data ?? [];
 
