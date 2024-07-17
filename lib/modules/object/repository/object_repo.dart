@@ -98,6 +98,12 @@ class ObjectRepo {
       }
     }*/
 
+    PostgrestTransformBuilder<PostgrestResponse<List<Map<String, dynamic>>>>
+        query = _supabase
+            .from(link.block.tableName)
+            .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+                '*', const FetchOptions(count: CountOption.estimated));
+
     if (filters.isNotEmpty) {
       postgrestResponse = await _supabase
           .from(link.block.tableName)
@@ -115,7 +121,10 @@ class ObjectRepo {
           .range(rangeMin_, rangeMax_)
           .order(keyAscending_, ascending: ascending_);
     } else {
-      postgrestResponse = await _supabase
+      query = query.range(rangeMin_, rangeMax_);
+      query = query.order(keyAscending_, ascending: ascending_);
+      postgrestResponse = await query;
+      /*postgrestResponse = await _supabase
           .from(link.block.tableName)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
@@ -124,7 +133,7 @@ class ObjectRepo {
           //.rangeAdjacent(column, range)
           //.match({'$_object->>"2"': "dato 3.2"})
           .range(rangeMin_, rangeMax_)
-          .order(keyAscending_, ascending: ascending_);
+          .order(keyAscending_, ascending: ascending_);*/
     }
 
     objsDB = postgrestResponse.data ?? [];
