@@ -63,10 +63,25 @@ class TextFilterModel extends FilterModel {
       : ctrlValue = TextEditingController(),
         super(
             property: PropertyModel.empty(),
-            operatorList: [
-              FilterOperator.eq,
-              FilterOperator.like,
-              FilterOperator.ilike
-            ],
+            operatorList: FilterObjModel.operTextList,
             operator: FilterOperator.eq);
+}
+
+class NumberFilterModel extends FilterModel {
+  TextEditingController ctrlValue;
+
+  NumberFilterModel({
+    required this.ctrlValue,
+    required super.property,
+    required super.operatorList,
+    required super.operator,
+  });
+
+  NumberFilterModel.empty()
+      : ctrlValue = TextEditingController(),
+        super(
+          property: PropertyModel.empty(),
+          operatorList: FilterObjModel.operNumberList,
+          operator: FilterOperator.eq,
+        );
 }

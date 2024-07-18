@@ -16,9 +16,21 @@ class FilterObjModel {
   static String get tProperty => 'property';
   static String get tValue => 'value';
   static String get tFilter => 'filter';
-  static List<FilterOperator> get operTextList => [FilterOperator.eq, FilterOperator.like, FilterOperator.ilike];
+  static List<FilterOperator> get operTextList => [
+        FilterOperator.eq,
+        FilterOperator.like,
+        FilterOperator.ilike,
+      ];
+  static List<FilterOperator> get operNumberList => [
+    FilterOperator.eq,
+    FilterOperator.neq,
+    FilterOperator.gt,
+    FilterOperator.gte,
+    FilterOperator.lt,
+    FilterOperator.lte,
+  ];
 
-  static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {  
+  static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {
     /// Estructura map recibido:
     /// {"n": {"property":int, "value":dynamic, "filter":int}}
     List<FilterObjModel> filters = [];
@@ -38,22 +50,22 @@ class FilterObjModel {
 
   static String operatorToText(FilterOperator operator) {
     switch (operator) {
-      case FilterOperator.eq: 
-      return '=';
+      case FilterOperator.eq:
+        return '=';
       case FilterOperator.gt:
-      return '>';
+        return '>';
       case FilterOperator.gte:
-      return '>=';
+        return '>=';
       case FilterOperator.like:
-      return '~~';
+        return '~~';
       case FilterOperator.ilike:
-      return '~~*';
+        return '~~*';
       case FilterOperator.lt:
-      return '<';
+        return '<';
       case FilterOperator.lte:
-      return '<=';
+        return '<=';
       case FilterOperator.neq:
-      return '<>';
+        return '<>';
     }
   }
 }

@@ -157,6 +157,9 @@ class RowDetailsDrawerBuild extends AxolWidget {
                   final String cell;
                   if (form.object.map[prop.key] is String) {
                     cell = form.object.map[prop.key] as String;
+                  } else if (form.object.map[prop.key] is int ||
+                      form.object.map[prop.key] is double) {
+                    cell = form.object.map[prop.key].toString();
                   } else {
                     cell = '';
                   }

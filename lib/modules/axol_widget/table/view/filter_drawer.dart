@@ -4,6 +4,7 @@ import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
@@ -173,50 +174,8 @@ class FilterDrawerBuild extends AxolWidget {
         ),
       ));
     }
-    if (form.filterList[index] is TextFilterModel) {
-      TextFilterModel textFilterModel =
-          form.filterList[index] as TextFilterModel;
-      List<DropdownMenuItem<dynamic>> textFilterItems = [];
 
-      for (FilterOperator oper in textFilterModel.operatorList) {
-        textFilterItems.add(DropdownMenuItem(
-            value: oper,
-            child: Text(
-              FilterObjModel.operatorToText(oper),
-              style: Typo.body(theme_),
-            )));
-      }
-
-      widget = Row(
-        children: [
-          PrimaryDropDownButton(
-            theme: theme_,
-            margin: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-            width: 80,
-            value: textFilterModel.operator,
-            items: textFilterItems,
-            onChanged: (value) {
-              if (value != null) {
-                context
-                    .read<FilterCubit>()
-                    .changeDropdownOper(form, value, index);
-              }
-            },
-          ),
-          SizedBox(
-            height: 56,
-            width: ((constraintWidth - 50) / 2) - 65,
-            child: PrimaryTextField(
-              isDense: false,
-              theme: theme_,
-              controller: textFilterModel.ctrlValue,
-              margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            ),
-          ),
-        ],
-      );
-    }
+    widget = filterController(context, form, index, theme_, constraintWidth);
 
     return Container(
       height: 60,
@@ -254,55 +213,99 @@ class FilterDrawerBuild extends AxolWidget {
     );
   }
 
-  Widget textFilter(BuildContext context, FilterFormModel form, int index) {
-    final int theme_ = theme ?? 0;
-    final TextFilterModel filter = form.filterList[index] as TextFilterModel;
-    String valueDrop = filter.property.key;
-    List<DropdownMenuItem<String>> items = [];
+  Widget filterController(BuildContext context, FilterFormModel form, int index,
+      int theme, double constraintWidth) {
+    Widget widget = const SizedBox();
+    Widget subWidget = const SizedBox();
+    FilterOperator operatorValue = FilterOperator.eq;
+    List<DropdownMenuItem> items = [];
 
-    for (PropertyModel prop in form.block.propertyList) {
-      items.add(DropdownMenuItem(
-        value: prop.key,
-        child: Text(
-          prop.name,
-          style: Typo.body(theme_),
+    if (form.filterList[index] is TextFilterModel) {
+      final TextFilterModel textFilterModel =
+          form.filterList[index] as TextFilterModel;
+
+      for (FilterOperator oper in textFilterModel.operatorList) {
+        items.add(
+          DropdownMenuItem(
+            value: oper,
+            child: Text(
+              FilterObjModel.operatorToText(oper),
+              style: Typo.body(theme),
+            ),
+          ),
+        );
+      }
+
+      operatorValue = textFilterModel.operator;
+
+      subWidget = SizedBox(
+        height: 56,
+        width: ((constraintWidth - 50) / 2) - 65,
+        child: PrimaryTextField(
+          isDense: false,
+          theme: theme,
+          controller: textFilterModel.ctrlValue,
+          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         ),
-      ));
-    }
+      );
+    } else if (form.filterList[index] is NumberFilterModel) {
+      final NumberFilterModel numberFilter =
+          form.filterList[index] as NumberFilterModel;
 
-    return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: ColorTheme.item30(theme_)),
-        borderRadius: const BorderRadius.all(Radius.circular(6)),
-      ),
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(side: BorderSide.none),
-        onPressed: () {},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DropdownButtonFormField(
-              value: valueDrop,
-              items: items,
-              onChanged: (value) {
-                if (value != null) {
-                  final PropertyModel prop =
-                      form.block.propertyList.firstWhere((x) => x.key == value);
-                  form.filterList[index] = TextFilterModel(
-                    ctrlValue: filter.ctrlValue,
-                    property: prop,
-                    operatorList: filter.operatorList,
-                    operator: filter.operator,
-                  );
-                  context.read<FilterCubit>().load();
-                }
-              },
-            )
+      for (FilterOperator oper in numberFilter.operatorList) {
+        items.add(
+          DropdownMenuItem(
+            value: oper,
+            child: Text(
+              FilterObjModel.operatorToText(oper),
+              style: Typo.body(theme),
+            ),
+          ),
+        );
+      }
+
+      operatorValue = numberFilter.operator;
+
+      subWidget = SizedBox(
+        height: 56,
+        width: ((constraintWidth - 50) / 2) - 65,
+        child: PrimaryTextField(
+          isDense: false,
+          theme: theme,
+          controller: numberFilter.ctrlValue,
+          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
           ],
         ),
-      ),
-    );
+      );
+    }
+
+    if (form.filterList[index] is! AddFilterModel &&
+        form.filterList[index] is! EmptyFilterModel) {
+      widget = Row(
+        children: [
+          PrimaryDropDownButton(
+            theme: theme,
+            margin: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            width: 80,
+            value: operatorValue,
+            items: items,
+            onChanged: (value) {
+              if (value != null) {
+                context
+                    .read<FilterCubit>()
+                    .changeDropdownOper(form, value, index);
+              }
+            },
+          ),
+          subWidget,
+        ],
+      );
+    }
+
+    return widget;
   }
 }

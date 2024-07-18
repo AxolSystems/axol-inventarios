@@ -44,6 +44,16 @@ class FilterCubit extends Cubit<FilterState> {
                 operatorList: FilterObjModel.operTextList,
                 operator: flt.operator),
           );
+        } else if (flt.property.propertyType == Prop.double ||
+            flt.property.propertyType == Prop.int) {
+          form.filterList.insert(
+            form.filterList.length - 1,
+            NumberFilterModel(
+                ctrlValue: TextEditingController(text: flt.value.toString()),
+                property: flt.property,
+                operatorList: FilterObjModel.operTextList,
+                operator: flt.operator),
+          );
         }
       }
       form.block = BlockModel(
@@ -90,11 +100,15 @@ class FilterCubit extends Cubit<FilterState> {
           form.filterList[index] = TextFilterModel(
             ctrlValue: TextEditingController(),
             property: prop,
-            operatorList: [
-              FilterOperator.eq,
-              FilterOperator.like,
-              FilterOperator.ilike
-            ],
+            operatorList: FilterObjModel.operTextList,
+            operator: FilterOperator.eq,
+          );
+        } else if (prop.propertyType == Prop.double ||
+            prop.propertyType == Prop.int) {
+          form.filterList[index] = NumberFilterModel(
+            ctrlValue: TextEditingController(),
+            property: prop,
+            operatorList: FilterObjModel.operNumberList,
             operator: FilterOperator.eq,
           );
         }
@@ -120,6 +134,15 @@ class FilterCubit extends Cubit<FilterState> {
             property: textFilter.property,
             operatorList: textFilter.operatorList,
             operator: value);
+      } else if (value is FilterOperator &&
+          form.filterList[index] is NumberFilterModel) {
+        final NumberFilterModel numberFilter =
+            form.filterList[index] as NumberFilterModel;
+        form.filterList[index] = NumberFilterModel(
+            ctrlValue: numberFilter.ctrlValue,
+            property: numberFilter.property,
+            operatorList: numberFilter.operatorList,
+            operator: value);
       }
       emit(LoadedFilterState());
     } catch (e) {
@@ -137,6 +160,8 @@ class FilterCubit extends Cubit<FilterState> {
       dynamic value;
       for (FilterModel flt in form.filterList) {
         if (flt is TextFilterModel) {
+          value = flt.ctrlValue.text;
+        } else if (flt is NumberFilterModel) {
           value = flt.ctrlValue.text;
         }
         if (flt is! EmptyFilterModel && flt is! AddFilterModel) {

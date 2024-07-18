@@ -50,6 +50,8 @@ class TableModel extends DataObject {
             block.propertyList.firstWhere((x) => x.key == key).propertyType;
         if (prop == Prop.text) {
           row[key] = CellText(text: obj.map[key]);
+        } else if (prop == Prop.double || prop == Prop.int) {
+          row[key] = CellText(text: obj.map[key].toString());
         }
       }
       rowList.add(row);
