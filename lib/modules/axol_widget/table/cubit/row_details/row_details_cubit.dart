@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../block/model/block_model.dart';
 import '../../../../block/model/property_model.dart';
 import '../../../../object/model/object_model.dart';
 import '../../../../object/repository/object_repo.dart';
@@ -78,10 +79,19 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       ObjectModel object;
       Map<String, dynamic> map = {};
       TextEditingController controller;
+      PropertyModel property;
 
       for (String key in form.object.map.keys) {
         controller = form.controllers[key] ?? TextEditingController();
-        map[key] = controller.text;
+        property = link.block.propertyList.firstWhere((x) => x.key == key);
+        if (form.controllers[key] is TextEditingController &&
+            property.propertyType == Prop.text) {
+          map[key] = controller.text;
+        } else if (form.controllers[key] is TextEditingController &&
+            (property.propertyType == Prop.int ||
+                property.propertyType == Prop.double)) {
+          map[key] = double.parse(controller.text);
+        }
       }
       object = ObjectModel(
           createAt: form.object.createAt, id: form.object.id, map: map);

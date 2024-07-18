@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.da
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
@@ -110,7 +111,10 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Guardar',
                       onPressed: () {
-                        context.read<RowDetailsCubit>().save(form, link);
+                        context.read<RowDetailsCubit>().save(
+                              form,
+                              link,
+                            );
                       },
                     ),
                   ]
@@ -155,6 +159,8 @@ class RowDetailsDrawerBuild extends AxolWidget {
                 itemBuilder: (context, index) {
                   final PropertyModel prop = link.block.propertyList[index];
                   final String cell;
+                  final List<TextInputFormatter> inputFormatters;
+
                   if (form.object.map[prop.key] is String) {
                     cell = form.object.map[prop.key] as String;
                   } else if (form.object.map[prop.key] is int ||
@@ -163,6 +169,16 @@ class RowDetailsDrawerBuild extends AxolWidget {
                   } else {
                     cell = '';
                   }
+
+                  if (prop.propertyType == Prop.int ||
+                      prop.propertyType == Prop.double) {
+                    inputFormatters = [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
+                    ];
+                  } else {
+                    inputFormatters = [];
+                  }
+
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                     child: Row(
@@ -183,6 +199,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                             child: PrimaryTextField(
                               theme: theme_,
                               controller: form.controllers[prop.key],
+                              inputFormatters: inputFormatters,
                             ),
                           ),
                         ),

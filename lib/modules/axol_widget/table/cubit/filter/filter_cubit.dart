@@ -51,7 +51,7 @@ class FilterCubit extends Cubit<FilterState> {
             NumberFilterModel(
                 ctrlValue: TextEditingController(text: flt.value.toString()),
                 property: flt.property,
-                operatorList: FilterObjModel.operTextList,
+                operatorList: FilterObjModel.operNumberList,
                 operator: flt.operator),
           );
         }

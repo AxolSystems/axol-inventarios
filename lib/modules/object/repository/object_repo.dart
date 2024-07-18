@@ -99,6 +99,21 @@ class ObjectRepo {
       if (filter.operator == FilterOperator.ilike) {
         query = query.ilike('$_object->>"${filter.property.key}"', '%${filter.value}%');
       }
+      if (filter.operator == FilterOperator.gt) {
+        query = query.gt('$_object->>"${filter.property.key}"', filter.value);
+      }
+      if (filter.operator == FilterOperator.gte) {
+        query = query.gte('$_object->>"${filter.property.key}"', filter.value);
+      }
+      if (filter.operator == FilterOperator.lt) {
+        query = query.lt('$_object->>"${filter.property.key}"', filter.value);
+      }
+      if (filter.operator == FilterOperator.lte) {
+        query = query.lte('$_object->>"${filter.property.key}"', filter.value);
+      }
+      if (filter.operator == FilterOperator.neq) {
+        query = query.neq('$_object->>"${filter.property.key}"', filter.value);
+      }
     }
 
     postgrestResponse = await query
