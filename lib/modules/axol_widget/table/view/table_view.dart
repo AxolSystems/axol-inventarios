@@ -161,10 +161,13 @@ class TableViewBuild extends AxolWidget {
                               builder: (context) => FilterDrawer(
                                 theme: form.theme,
                                 block: link.block,
+                                filters: form.filters,
                               ),
                             ).then(
                               (value) {
-                                context.read<TableCubit>().thenFilter(form, link, value);
+                                context
+                                    .read<TableCubit>()
+                                    .thenFilter(form, link, value);
                               },
                             );
                           },

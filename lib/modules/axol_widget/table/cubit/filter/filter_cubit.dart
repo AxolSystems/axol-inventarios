@@ -22,7 +22,8 @@ class FilterCubit extends Cubit<FilterState> {
     }
   }
 
-  Future<void> initLoad(FilterFormModel form, BlockModel block) async {
+  Future<void> initLoad(FilterFormModel form, BlockModel block,
+      List<FilterObjModel> filters) async {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
@@ -33,6 +34,18 @@ class FilterCubit extends Cubit<FilterState> {
       }
 
       form.filterList.add(AddFilterModel());
+      for (FilterObjModel flt in filters) {
+        if (flt.property.propertyType == Prop.text) {
+          form.filterList.insert(
+            form.filterList.length - 1,
+            TextFilterModel(
+                ctrlValue: TextEditingController(text: flt.value.toString()),
+                property: flt.property,
+                operatorList: FilterObjModel.operTextList,
+                operator: flt.operator),
+          );
+        }
+      }
       form.block = BlockModel(
         blockName: block.blockName,
         propertyList: properties,
@@ -123,7 +136,6 @@ class FilterCubit extends Cubit<FilterState> {
       FilterObjModel filter;
       dynamic value;
       for (FilterModel flt in form.filterList) {
-
         if (flt is TextFilterModel) {
           value = flt.ctrlValue.text;
         }

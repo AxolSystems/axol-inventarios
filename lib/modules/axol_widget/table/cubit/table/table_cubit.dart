@@ -250,7 +250,10 @@ class TableCubit extends Cubit<TableState> {
       emit(LoadingTableState());
 
       if (value is List<FilterObjModel>) {
-        form.filters = value;
+        form.filters = [];
+        for (FilterObjModel flt in value) {
+          form.filters.add(flt);
+        }
         await getData(form: form, link: link, search: form.ctrlSearch.text);
       }
 

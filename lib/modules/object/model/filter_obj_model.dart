@@ -16,6 +16,7 @@ class FilterObjModel {
   static String get tProperty => 'property';
   static String get tValue => 'value';
   static String get tFilter => 'filter';
+  static List<FilterOperator> get operTextList => [FilterOperator.eq, FilterOperator.like, FilterOperator.ilike];
 
   static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {  
     /// Estructura map recibido:

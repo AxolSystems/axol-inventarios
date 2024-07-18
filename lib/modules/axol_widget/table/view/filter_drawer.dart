@@ -17,7 +17,13 @@ import '../model/filter_form_model.dart';
 
 class FilterDrawer extends AxolWidget {
   final BlockModel block;
-  const FilterDrawer({super.key, super.theme, required this.block});
+  final List<FilterObjModel> filters;
+  const FilterDrawer({
+    super.key,
+    super.theme,
+    required this.block,
+    required this.filters,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +35,7 @@ class FilterDrawer extends AxolWidget {
       child: FilterDrawerBuild(
         theme: theme,
         block: block,
+        filters: filters,
       ),
     );
   }
@@ -36,14 +43,16 @@ class FilterDrawer extends AxolWidget {
 
 class FilterDrawerBuild extends AxolWidget {
   final BlockModel block;
-  const FilterDrawerBuild({super.key, super.theme, required this.block});
+  final List<FilterObjModel> filters;
+  const FilterDrawerBuild(
+      {super.key, super.theme, required this.block, required this.filters});
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
     final FilterFormModel form = context.read<FilterForm>().state;
     return BlocConsumer<FilterCubit, FilterState>(
-      bloc: context.read<FilterCubit>()..initLoad(form, block),
+      bloc: context.read<FilterCubit>()..initLoad(form, block, filters),
       listener: (context, state) {
         if (state is ErrorFilterState) {
           showDialog(
