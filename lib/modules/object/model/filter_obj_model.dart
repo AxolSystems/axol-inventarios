@@ -18,6 +18,7 @@ class FilterObjModel {
   static String get tFilter => 'filter';
   static List<FilterOperator> get operTextList => [
         FilterOperator.eq,
+        FilterOperator.neq,
         FilterOperator.like,
         FilterOperator.ilike,
       ];
@@ -28,6 +29,10 @@ class FilterObjModel {
     FilterOperator.gte,
     FilterOperator.lt,
     FilterOperator.lte,
+  ];
+  static List<FilterOperator> get operBoolList => [
+    FilterOperator.eq,
+    FilterOperator.neq,
   ];
 
   static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {

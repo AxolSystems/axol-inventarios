@@ -4,7 +4,6 @@ import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/format.dart';
@@ -248,6 +247,7 @@ class FilterDrawerBuild extends AxolWidget {
           controller: textFilterModel.ctrlValue,
           margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          hintText: 'Ingrese el valor',
         ),
       );
     } else if (form.filterList[index] is NumberFilterModel) {
@@ -278,7 +278,48 @@ class FilterDrawerBuild extends AxolWidget {
           margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           inputFormatters: [DecimalTextInputFormatter()],
+          hintText: 'Ingrese el número',
         ),
+      );
+    } else if (form.filterList[index] is BooleanFilterModel) {
+      final BooleanFilterModel booleanFilter =
+          form.filterList[index] as BooleanFilterModel;
+      List<DropdownMenuItem<bool>> boolItems = [
+        DropdownMenuItem(
+          value: true,
+          child: Text('TRUE', style: Typo.body(theme)),
+        ),
+        DropdownMenuItem(
+          value: false,
+          child: Text('FALSE', style: Typo.body(theme)),
+        ),
+      ];
+
+      for (FilterOperator oper in booleanFilter.operatorList) {
+        items.add(
+          DropdownMenuItem(
+            value: oper,
+            child: Text(
+              FilterObjModel.operatorToText(oper),
+              style: Typo.body(theme),
+            ),
+          ),
+        );
+      }
+
+      operatorValue = booleanFilter.operator;
+
+      PrimaryDropDownButton(
+        theme: theme,
+        margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+        width: ((constraintWidth - 50) / 2) - 65,
+        value: booleanFilter.value,
+        items: boolItems,
+        onChanged: (value) {
+          if (value != null) {
+            //context.read<FilterCubit>().changeDropdownOper(form, value, index);
+          }
+        },
       );
     }
 

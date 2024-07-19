@@ -85,3 +85,22 @@ class NumberFilterModel extends FilterModel {
           operator: FilterOperator.eq,
         );
 }
+
+class BooleanFilterModel extends FilterModel {
+  bool value;
+
+  BooleanFilterModel({
+    required this.value,
+    required super.property,
+    required super.operatorList,
+    required super.operator,
+  });
+
+  BooleanFilterModel.empty()
+      : value = false,
+        super(
+          property: PropertyModel.empty(),
+          operatorList: FilterObjModel.operNumberList,
+          operator: FilterOperator.eq,
+        );
+}

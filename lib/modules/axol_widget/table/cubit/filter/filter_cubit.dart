@@ -54,6 +54,15 @@ class FilterCubit extends Cubit<FilterState> {
                 operatorList: FilterObjModel.operNumberList,
                 operator: flt.operator),
           );
+        } else if (flt.property.propertyType == Prop.bool) {
+          form.filterList.insert(
+            form.filterList.length - 1,
+            BooleanFilterModel(
+                value: flt.value,
+                property: flt.property,
+                operatorList: FilterObjModel.operBoolList,
+                operator: flt.operator),
+          );
         }
       }
       form.block = BlockModel(
