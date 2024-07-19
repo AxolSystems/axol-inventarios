@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class FormatDate {
@@ -92,5 +93,21 @@ class FormatNumber {
       textNum = number.toString();
     }
     return textNum;
+  }
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  static final RegExp _decimalRegExp = RegExp(r'^\d*\.?\d*$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (_decimalRegExp.hasMatch(newValue.text)) {
+      return newValue;
+    } else {
+      return oldValue;
+    }
   }
 }

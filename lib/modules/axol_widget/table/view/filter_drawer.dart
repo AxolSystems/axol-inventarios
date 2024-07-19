@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/dropdown_button.dart';
@@ -276,9 +277,7 @@ class FilterDrawerBuild extends AxolWidget {
           controller: numberFilter.ctrlValue,
           margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
-          ],
+          inputFormatters: [DecimalTextInputFormatter()],
         ),
       );
     }

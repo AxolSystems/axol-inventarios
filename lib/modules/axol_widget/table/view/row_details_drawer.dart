@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/textfield.dart';
@@ -173,7 +174,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                   if (prop.propertyType == Prop.int ||
                       prop.propertyType == Prop.double) {
                     inputFormatters = [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))
+                      DecimalTextInputFormatter(),
                     ];
                   } else {
                     inputFormatters = [];
