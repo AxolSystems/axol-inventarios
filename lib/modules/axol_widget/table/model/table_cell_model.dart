@@ -9,3 +9,12 @@ class CellText extends TableCellModel {
 
   CellText.empty() : text = '';
 }
+
+/// Modelo de datos para una celda booleana.
+class CellCheck extends TableCellModel {
+  final bool value;
+
+  CellCheck({required this.value});
+
+  CellCheck.init() : value = false;
+}

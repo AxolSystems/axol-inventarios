@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/checkbox_view.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../../utilities/widgets/textfield.dart';
@@ -438,6 +439,17 @@ class TableViewBuild extends AxolWidget {
               overflow: TextOverflow.ellipsis,
             ),
           );
+        } else if (cell is CellCheck) {
+          widget = Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  border: Border.all(color: ColorTheme.item30(form.theme))),
+              height: 30,
+              width: form.columnWidth[prop.key],
+              child: CheckboxView(
+                value: cell.value,
+                theme: form.theme,
+              ));
         } else {
           widget = Container(
             padding: const EdgeInsets.all(4),

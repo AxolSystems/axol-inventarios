@@ -39,16 +39,21 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       form.object = ObjectModel(
           id: object.id, map: object.map, createAt: object.createAt);
       for (PropertyModel prop in link.block.propertyList) {
-        final String cell;
+        final String cellText;
+        final bool cellBool;
         if (form.object.map[prop.key] is String) {
-          cell = form.object.map[prop.key] as String;
+          cellText = form.object.map[prop.key] as String;
+          form.controllers[prop.key] = RDTextEditingController(
+              controller: TextEditingController(text: cellText));
         } else if (form.object.map[prop.key] is int ||
             form.object.map[prop.key] is double) {
-          cell = form.object.map[prop.key].toString();
-        } else {
-          cell = '';
+          cellText = form.object.map[prop.key].toString();
+          form.controllers[prop.key] = RDTextEditingController(
+              controller: TextEditingController(text: cellText));
+        } else if (form.object.map[prop.key] is bool) {
+          cellBool = form.object.map[prop.key];
+          form.controllers[prop.key] = RDBoolController(controller: cellBool);
         }
-        form.controllers[prop.key] = TextEditingController(text: cell);
       }
 
       emit(LoadedRowDetailsState());
@@ -78,21 +83,39 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       emit(SavingRowDetailsState());
       ObjectModel object;
       Map<String, dynamic> map = {};
-      TextEditingController controller;
       PropertyModel property;
 
       for (String key in form.object.map.keys) {
-        controller = form.controllers[key] ?? TextEditingController();
+        final RDTextEditingController textController;
+        final RDBoolController boolController;
+
+        if (form.controllers[key] is RDTextEditingController) {
+          textController = form.controllers[key] as RDTextEditingController;
+        } else {
+          textController = RDTextEditingController.empty();
+        }
+
+        if (form.controllers[key] is RDBoolController) {
+          boolController = form.controllers[key] as RDBoolController;
+        } else {
+          boolController = RDBoolController.init();
+        }
+
         property = link.block.propertyList.firstWhere((x) => x.key == key);
-        if (form.controllers[key] is TextEditingController &&
+
+        if (form.controllers[key] is RDTextEditingController &&
             property.propertyType == Prop.text) {
-          map[key] = controller.text;
-        } else if (form.controllers[key] is TextEditingController &&
+          map[key] = textController.controller.text;
+        } else if (form.controllers[key] is RDTextEditingController &&
             (property.propertyType == Prop.int ||
                 property.propertyType == Prop.double)) {
-          map[key] = double.parse(controller.text);
+          map[key] = double.parse(textController.controller.text);
+        } else if (form.controllers[key] is RDBoolController &&
+            property.propertyType == Prop.bool) {
+          map[key] = boolController.controller;
         }
       }
+
       object = ObjectModel(
           createAt: form.object.createAt, id: form.object.id, map: map);
 

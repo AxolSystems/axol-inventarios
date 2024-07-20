@@ -52,6 +52,8 @@ class TableModel extends DataObject {
           row[key] = CellText(text: obj.map[key]);
         } else if (prop == Prop.double || prop == Prop.int) {
           row[key] = CellText(text: obj.map[key].toString());
+        } else if (prop == Prop.bool) {
+          row[key] = CellCheck(value: obj.map[key]);
         }
       }
       rowList.add(row);

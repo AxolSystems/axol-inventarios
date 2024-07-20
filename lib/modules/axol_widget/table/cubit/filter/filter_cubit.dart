@@ -114,8 +114,8 @@ class FilterCubit extends Cubit<FilterState> {
           );
         } else if (prop.propertyType == Prop.double ||
             prop.propertyType == Prop.int) {
-          form.filterList[index] = NumberFilterModel(
-            ctrlValue: TextEditingController(),
+          form.filterList[index] = BooleanFilterModel(
+            value: false,
             property: prop,
             operatorList: FilterObjModel.operNumberList,
             operator: FilterOperator.eq,
@@ -152,6 +152,16 @@ class FilterCubit extends Cubit<FilterState> {
             property: numberFilter.property,
             operatorList: numberFilter.operatorList,
             operator: value);
+      } else if (value is FilterOperator &&
+          form.filterList[index] is BooleanFilterModel) {
+        final BooleanFilterModel booleanFilter =
+            form.filterList[index] as BooleanFilterModel;
+        form.filterList[index] = BooleanFilterModel(
+          value: booleanFilter.value,
+          property: booleanFilter.property,
+          operatorList: booleanFilter.operatorList,
+          operator: value,
+        );
       }
       emit(LoadedFilterState());
     } catch (e) {
@@ -172,6 +182,8 @@ class FilterCubit extends Cubit<FilterState> {
           value = flt.ctrlValue.text;
         } else if (flt is NumberFilterModel) {
           value = flt.ctrlValue.text;
+        } else if (flt is BooleanFilterModel) {
+          value = flt.value;
         }
         if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
           filter = FilterObjModel(

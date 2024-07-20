@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/checkbox_view.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -159,16 +160,31 @@ class RowDetailsDrawerBuild extends AxolWidget {
                 itemCount: link.block.propertyList.length,
                 itemBuilder: (context, index) {
                   final PropertyModel prop = link.block.propertyList[index];
-                  final String cell;
+                  final Widget widgetRead;
+                  final Widget widgetWrite;
                   final List<TextInputFormatter> inputFormatters;
 
                   if (form.object.map[prop.key] is String) {
-                    cell = form.object.map[prop.key] as String;
+                    widgetRead = Text(
+                      form.object.map[prop.key],
+                      style: Typo.body(theme_),
+                    );
                   } else if (form.object.map[prop.key] is int ||
                       form.object.map[prop.key] is double) {
-                    cell = form.object.map[prop.key].toString();
+                    widgetRead = Text(
+                      form.object.map[prop.key].toString(),
+                      style: Typo.body(theme_),
+                    );
+                  } else if (form.object.map[prop.key] is bool) {
+                    widgetRead = Align(
+                      alignment: Alignment.centerLeft,
+                      child: CheckboxView(
+                        value: form.object.map[prop.key],
+                        theme: theme_,
+                      ),
+                    );
                   } else {
-                    cell = '';
+                    widgetRead = const SizedBox();
                   }
 
                   if (prop.propertyType == Prop.int ||
@@ -178,6 +194,43 @@ class RowDetailsDrawerBuild extends AxolWidget {
                     ];
                   } else {
                     inputFormatters = [];
+                  }
+
+                  if (form.object.map[prop.key] is String) {
+                    final RDTextEditingController textController =
+                        form.controllers[prop.key] as RDTextEditingController;
+                    widgetWrite = PrimaryTextField(
+                      theme: theme_,
+                      controller: textController.controller,
+                      inputFormatters: inputFormatters,
+                    );
+                  } else if (form.object.map[prop.key] is int ||
+                      form.object.map[prop.key] is double) {
+                    final RDTextEditingController textController =
+                        form.controllers[prop.key] as RDTextEditingController;
+                    widgetWrite = PrimaryTextField(
+                      theme: theme_,
+                      controller: textController.controller,
+                      inputFormatters: inputFormatters,
+                    );
+                  } else if (form.object.map[prop.key] is bool) {
+                    final RDBoolController boolController =
+                        form.controllers[prop.key] as RDBoolController;
+                    widgetWrite = Align(
+                      alignment: Alignment.centerLeft,
+                      child: Checkbox(
+                        value: boolController.controller,
+                        onChanged: (value) {
+                          if (value != null) {
+                            form.controllers[prop.key] =
+                                RDBoolController(controller: value);
+                          }
+                          context.read<RowDetailsCubit>().load();
+                        },
+                      ),
+                    );
+                  } else {
+                    widgetWrite = const SizedBox();
                   }
 
                   return Padding(
@@ -193,15 +246,8 @@ class RowDetailsDrawerBuild extends AxolWidget {
                           flex: 3,
                           child: Visibility(
                             visible: form.edit,
-                            replacement: Text(
-                              cell,
-                              style: Typo.body(theme_),
-                            ),
-                            child: PrimaryTextField(
-                              theme: theme_,
-                              controller: form.controllers[prop.key],
-                              inputFormatters: inputFormatters,
-                            ),
+                            replacement: widgetRead,
+                            child: widgetWrite,
                           ),
                         ),
                       ],

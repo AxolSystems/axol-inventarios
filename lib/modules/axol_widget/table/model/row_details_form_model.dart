@@ -1,10 +1,10 @@
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:flutter/material.dart';
 
-/// Modelo de datos con propiedades mutables a traves 
+/// Modelo de datos con propiedades mutables a traves
 /// de los estados del drawer de detalles del objeto.
 class RowDetailsFormModel {
-  Map<String, TextEditingController> controllers;
+  Map<String, RowDetailsController> controllers;
   bool edit;
   ObjectModel object;
 
@@ -19,4 +19,20 @@ class RowDetailsFormModel {
       : controllers = {},
         edit = false,
         object = ObjectModel.empty();
+}
+
+abstract class RowDetailsController {}
+
+class RDTextEditingController extends RowDetailsController {
+  TextEditingController controller;
+
+  RDTextEditingController({required this.controller});
+
+  RDTextEditingController.empty() : controller = TextEditingController();
+}
+
+class RDBoolController extends RowDetailsController {
+  bool controller;
+  RDBoolController({required this.controller});
+  RDBoolController.init() : controller = false;
 }
