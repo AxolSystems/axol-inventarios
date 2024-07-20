@@ -114,10 +114,17 @@ class FilterCubit extends Cubit<FilterState> {
           );
         } else if (prop.propertyType == Prop.double ||
             prop.propertyType == Prop.int) {
+          form.filterList[index] = NumberFilterModel(
+            ctrlValue: TextEditingController(),
+            property: prop,
+            operatorList: FilterObjModel.operNumberList,
+            operator: FilterOperator.eq,
+          );
+        } else if (prop.propertyType == Prop.bool) {
           form.filterList[index] = BooleanFilterModel(
             value: false,
             property: prop,
-            operatorList: FilterObjModel.operNumberList,
+            operatorList: FilterObjModel.operBoolList,
             operator: FilterOperator.eq,
           );
         }
@@ -204,6 +211,25 @@ class FilterCubit extends Cubit<FilterState> {
       emit(InitialFilterState());
       emit(LoadingFilterState());
       form.filterList.removeAt(index);
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeDropdownBool(FilterFormModel form, int index,
+      BooleanFilterModel booleanFilter, dynamic value) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      if (value != null) {
+        form.filterList[index] = BooleanFilterModel(
+            value: value,
+            property: booleanFilter.property,
+            operatorList: booleanFilter.operatorList,
+            operator: booleanFilter.operator);
+      }
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());

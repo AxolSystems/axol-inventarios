@@ -309,16 +309,16 @@ class FilterDrawerBuild extends AxolWidget {
 
       operatorValue = booleanFilter.operator;
 
-      PrimaryDropDownButton(
+      subWidget = PrimaryDropDownButton(
         theme: theme,
         margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-        width: ((constraintWidth - 50) / 2) - 65,
+        width: ((constraintWidth - 50) / 2) - 77,
         value: booleanFilter.value,
         items: boolItems,
         onChanged: (value) {
-          if (value != null) {
-            //context.read<FilterCubit>().changeDropdownOper(form, value, index);
-          }
+          context
+              .read<FilterCubit>()
+              .changeDropdownBool(form, index, booleanFilter, value);
         },
       );
     }
