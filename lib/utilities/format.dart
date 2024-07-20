@@ -10,8 +10,12 @@ class FormatDate {
 
   static String dmyHm(DateTime dateTime) {
     String dateText;
-    dateText =
-        '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
+    final String day = FormatNumber.format2dig(dateTime.day);
+    final String month = FormatNumber.format2dig(dateTime.month);
+    final String hour = FormatNumber.format2dig(dateTime.hour);
+    final String minute = FormatNumber.format2dig(dateTime.minute);
+
+    dateText = '$day/$month/${dateTime.year} $hour:$minute';
     return dateText;
   }
 
@@ -53,7 +57,8 @@ class FormatDate {
       11: 'noviembre',
       12: 'diciembre',
     };
-    dateText = '${dateTime.day} de ${month[dateTime.month]} de ${dateTime.year}';
+    dateText =
+        '${dateTime.day} de ${month[dateTime.month]} de ${dateTime.year}';
     return dateText;
   }
 

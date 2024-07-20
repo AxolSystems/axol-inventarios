@@ -164,13 +164,16 @@ class RowDetailsDrawerBuild extends AxolWidget {
                   final Widget widgetWrite;
                   final List<TextInputFormatter> inputFormatters;
 
-                  if (form.object.map[prop.key] is String) {
+                  if (form.object.map[prop.key] is String &&
+                      prop.propertyType == Prop.text) {
                     widgetRead = Text(
                       form.object.map[prop.key],
                       style: Typo.body(theme_),
                     );
-                  } else if (form.object.map[prop.key] is int ||
-                      form.object.map[prop.key] is double) {
+                  } else if ((form.object.map[prop.key] is int ||
+                          form.object.map[prop.key] is double) &&
+                      (prop.propertyType == Prop.int ||
+                          prop.propertyType == Prop.double)) {
                     widgetRead = Text(
                       form.object.map[prop.key].toString(),
                       style: Typo.body(theme_),
@@ -229,6 +232,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                         },
                       ),
                     );
+                  } else if (form.object.map[prop.key] is int) {
                   } else {
                     widgetWrite = const SizedBox();
                   }

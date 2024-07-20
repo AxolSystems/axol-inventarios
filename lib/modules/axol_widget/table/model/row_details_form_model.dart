@@ -25,9 +25,7 @@ abstract class RowDetailsController {}
 
 class RDTextEditingController extends RowDetailsController {
   TextEditingController controller;
-
   RDTextEditingController({required this.controller});
-
   RDTextEditingController.empty() : controller = TextEditingController();
 }
 
@@ -35,4 +33,10 @@ class RDBoolController extends RowDetailsController {
   bool controller;
   RDBoolController({required this.controller});
   RDBoolController.init() : controller = false;
+}
+
+class RDDateController extends RowDetailsController {
+  DateTime controller;
+  RDDateController({required this.controller});
+  RDDateController.empty() :  controller = DateTime(0);
 }

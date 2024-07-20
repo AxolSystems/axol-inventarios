@@ -1,6 +1,7 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
 import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/block/model/property_model.dart';
+import 'package:axol_inventarios/utilities/format.dart';
 
 import '../../../../models/data_response_model.dart';
 import '../../../object/model/object_model.dart';
@@ -54,6 +55,10 @@ class TableModel extends DataObject {
           row[key] = CellText(text: obj.map[key].toString());
         } else if (prop == Prop.bool) {
           row[key] = CellCheck(value: obj.map[key]);
+        } else if (prop == Prop.time) {
+          row[key] = CellText(
+              text: FormatDate.dmyHm(
+                  DateTime.fromMillisecondsSinceEpoch(obj.map[key])));
         }
       }
       rowList.add(row);

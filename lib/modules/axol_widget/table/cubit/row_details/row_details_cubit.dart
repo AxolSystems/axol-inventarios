@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../block/model/block_model.dart';
 import '../../../../block/model/property_model.dart';
 import '../../../../object/model/object_model.dart';
 import '../../../../object/repository/object_repo.dart';
@@ -41,18 +40,27 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       for (PropertyModel prop in link.block.propertyList) {
         final String cellText;
         final bool cellBool;
-        if (form.object.map[prop.key] is String) {
+        final DateTime cellTime;
+        if (form.object.map[prop.key] is String &&
+            prop.propertyType == Prop.text) {
           cellText = form.object.map[prop.key] as String;
           form.controllers[prop.key] = RDTextEditingController(
               controller: TextEditingController(text: cellText));
-        } else if (form.object.map[prop.key] is int ||
-            form.object.map[prop.key] is double) {
+        } else if ((form.object.map[prop.key] is int ||
+                form.object.map[prop.key] is double) &&
+            (prop.propertyType == Prop.int ||
+                prop.propertyType == Prop.double)) {
           cellText = form.object.map[prop.key].toString();
           form.controllers[prop.key] = RDTextEditingController(
               controller: TextEditingController(text: cellText));
-        } else if (form.object.map[prop.key] is bool) {
+        } else if (form.object.map[prop.key] is bool &&
+            prop.propertyType == Prop.bool) {
           cellBool = form.object.map[prop.key];
           form.controllers[prop.key] = RDBoolController(controller: cellBool);
+        } else if (form.object.map[prop.key] is int &&
+            prop.propertyType == Prop.time) {
+          cellTime = form.object.map[prop.key];
+          form.controllers[prop.key] = RDDateController(controller: cellTime);
         }
       }
 
@@ -88,6 +96,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       for (String key in form.object.map.keys) {
         final RDTextEditingController textController;
         final RDBoolController boolController;
+        final RDDateController timeController;
 
         if (form.controllers[key] is RDTextEditingController) {
           textController = form.controllers[key] as RDTextEditingController;
@@ -101,6 +110,12 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           boolController = RDBoolController.init();
         }
 
+        if (form.controllers[key] is RDDateController) {
+          timeController = form.controllers[key] as RDDateController;
+        } else {
+          timeController = form.controllers[key] as RDDateController;
+        }
+
         property = link.block.propertyList.firstWhere((x) => x.key == key);
 
         if (form.controllers[key] is RDTextEditingController &&
@@ -110,6 +125,9 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
             (property.propertyType == Prop.int ||
                 property.propertyType == Prop.double)) {
           map[key] = double.parse(textController.controller.text);
+        } else if (form.controllers[key] is RDDateController &&
+            property.propertyType == Prop.time) {
+          map[key] = timeController.controller.millisecondsSinceEpoch;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
