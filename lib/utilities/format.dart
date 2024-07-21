@@ -79,6 +79,14 @@ class FormatDate {
 
   static DateTime endDay(DateTime dateTime) =>
       DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59, 999);
+
+  static DateTime secondZero(DateTime dateTime) => DateTime(
+        dateTime.year,
+        dateTime.month,
+        dateTime.day,
+        dateTime.hour,
+        dateTime.minute,
+      );
 }
 
 class FormatNumber {

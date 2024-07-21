@@ -104,3 +104,22 @@ class BooleanFilterModel extends FilterModel {
           operator: FilterOperator.eq,
         );
 }
+
+class DateFilterModel extends FilterModel {
+  DateTime dateTime;
+
+  DateFilterModel({
+    required this.dateTime,
+    required super.property,
+    required super.operatorList,
+    required super.operator,
+  });
+
+  DateFilterModel.init()
+      : dateTime = DateTime.now(),
+        super(
+          property: PropertyModel.empty(),
+          operatorList: FilterObjModel.operNumberList,
+          operator: FilterOperator.eq,
+        );
+}

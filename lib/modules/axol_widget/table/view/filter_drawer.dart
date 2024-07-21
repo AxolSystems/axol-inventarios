@@ -161,6 +161,7 @@ class FilterDrawerBuild extends AxolWidget {
   Widget filterWidget(BuildContext context, FilterState state,
       FilterFormModel form, int index, double constraintWidth) {
     final int theme_ = theme ?? 0;
+    final ScrollController scrollController = ScrollController();
     List<DropdownMenuItem<String>> items = [];
     Widget widget = const SizedBox();
 
@@ -177,40 +178,51 @@ class FilterDrawerBuild extends AxolWidget {
 
     widget = filterController(context, form, index, theme_, constraintWidth);
 
-    return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: ColorTheme.item30(theme_)),
-        borderRadius: const BorderRadius.all(Radius.circular(6)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          PrimaryDropDownButton(
-            theme: theme_,
-            margin: const EdgeInsets.fromLTRB(8, 8, 4, 8),
-            width: ((constraintWidth - 50) / 2) - 65,
-            value: form.filterList[index].property.key,
-            items: items,
-            onChanged: (value) {
-              context
-                  .read<FilterCubit>()
-                  .changeDropdownProp(form, block, value, index);
-            },
-          ),
-          widget is SizedBox ? const Expanded(child: SizedBox()) : widget,
-          IconButton(
-            onPressed: () {
-              context.read<FilterCubit>().remove(form, index);
-            },
-            icon: const Icon(Icons.clear),
-            color: ColorTheme.item10(theme_),
-            iconSize: 30,
-          )
-        ],
-      ),
+    final Widget rowWidget = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        PrimaryDropDownButton(
+          theme: theme_,
+          margin: const EdgeInsets.fromLTRB(8, 8, 4, 8),
+          width: ((constraintWidth - 50) / 2) - 65,
+          value: form.filterList[index].property.key,
+          items: items,
+          onChanged: (value) {
+            context
+                .read<FilterCubit>()
+                .changeDropdownProp(form, block, value, index);
+          },
+        ),
+        widget is SizedBox ? const Expanded(child: SizedBox()) : widget,
+        IconButton(
+          onPressed: () {
+            context.read<FilterCubit>().remove(form, index);
+          },
+          icon: const Icon(Icons.clear),
+          color: ColorTheme.item10(theme_),
+          iconSize: 30,
+        )
+      ],
     );
+
+    return Container(
+        height: 60,
+        width: constraintWidth,
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: ColorTheme.item30(theme_)),
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+        ),
+        child: form.filterList[index] is DateFilterModel
+            ? RawScrollbar(
+                controller: scrollController,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  scrollDirection: Axis.horizontal,
+                  child: rowWidget,
+                ),
+              )
+            : rowWidget);
   }
 
   Widget filterController(BuildContext context, FilterFormModel form, int index,
@@ -320,6 +332,109 @@ class FilterDrawerBuild extends AxolWidget {
               .read<FilterCubit>()
               .changeDropdownBool(form, index, booleanFilter, value);
         },
+      );
+    } else if (form.filterList[index] is DateFilterModel) {
+      final DateFilterModel dateFilter =
+          form.filterList[index] as DateFilterModel;
+
+      for (FilterOperator oper in dateFilter.operatorList) {
+        items.add(
+          DropdownMenuItem(
+            value: oper,
+            child: Text(
+              FilterObjModel.operatorToText(oper),
+              style: Typo.body(theme),
+            ),
+          ),
+        );
+      }
+
+      subWidget = Row(
+        children: [
+          const SizedBox(width: 4),
+          OutlinedButton(
+            style: ButtonStyle(
+              alignment: Alignment.centerLeft,
+              side: WidgetStatePropertyAll(
+                  BorderSide(color: ColorTheme.item20(theme))),
+              shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(6)))),
+              backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme)),
+            ),
+            onPressed: () {
+              showDatePicker(
+                context: context,
+                firstDate: DateTime(2000),
+                lastDate: DateTime.now(),
+              ).then(
+                (value) {
+                  context.read<FilterCubit>().thenDateTimePick(
+                        form: form,
+                        index: index,
+                        date: value,
+                      );
+                },
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    FormatDate.dmy(dateFilter.dateTime),
+                    style: Typo.body(theme),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.calendar_month,
+                    color: ColorTheme.item10(theme),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          OutlinedButton(
+            style: ButtonStyle(
+              alignment: Alignment.centerLeft,
+              side: WidgetStatePropertyAll(
+                  BorderSide(color: ColorTheme.item20(theme))),
+              shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(6)))),
+              backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme)),
+            ),
+            onPressed: () {
+              showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              ).then(
+                (value) {
+                  context.read<FilterCubit>().thenDateTimePick(
+                        form: form,
+                        index: index,
+                        time: value,
+                      );
+                },
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    FormatDate.hm(TimeOfDay.fromDateTime(dateFilter.dateTime)),
+                    style: Typo.body(theme),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.watch_later_outlined,
+                    color: ColorTheme.item10(theme),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       );
     }
 

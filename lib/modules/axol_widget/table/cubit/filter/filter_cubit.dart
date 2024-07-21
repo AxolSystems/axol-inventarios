@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/block/model/property_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../utilities/format.dart';
 import '../../../../block/model/block_model.dart';
 import '../../../../object/model/filter_obj_model.dart';
 import '../../model/filter_form_model.dart';
@@ -61,6 +62,16 @@ class FilterCubit extends Cubit<FilterState> {
                 value: flt.value,
                 property: flt.property,
                 operatorList: FilterObjModel.operBoolList,
+                operator: flt.operator),
+          );
+        } else if (flt.property.propertyType == Prop.time) {
+          form.filterList.insert(
+            form.filterList.length - 1,
+            DateFilterModel(
+                dateTime: FormatDate.secondZero(
+                    DateTime.fromMillisecondsSinceEpoch(flt.value)),
+                property: flt.property,
+                operatorList: FilterObjModel.operDateTimeList,
                 operator: flt.operator),
           );
         }
@@ -127,6 +138,13 @@ class FilterCubit extends Cubit<FilterState> {
             operatorList: FilterObjModel.operBoolList,
             operator: FilterOperator.eq,
           );
+        } else if (prop.propertyType == Prop.time) {
+          form.filterList[index] = DateFilterModel(
+            dateTime: FormatDate.secondZero(DateTime.now()),
+            property: prop,
+            operatorList: FilterObjModel.operDateTimeList,
+            operator: FilterOperator.eq,
+          );
         }
       }
       emit(LoadedFilterState());
@@ -169,6 +187,16 @@ class FilterCubit extends Cubit<FilterState> {
           operatorList: booleanFilter.operatorList,
           operator: value,
         );
+      } else if (value is FilterOperator &&
+          form.filterList[index] is DateFilterModel) {
+        final DateFilterModel dateFilter =
+            form.filterList[index] as DateFilterModel;
+        form.filterList[index] = DateFilterModel(
+          dateTime: dateFilter.dateTime,
+          property: dateFilter.property,
+          operatorList: dateFilter.operatorList,
+          operator: value,
+        );
       }
       emit(LoadedFilterState());
     } catch (e) {
@@ -191,6 +219,8 @@ class FilterCubit extends Cubit<FilterState> {
           value = flt.ctrlValue.text;
         } else if (flt is BooleanFilterModel) {
           value = flt.value;
+        } else if (flt is DateFilterModel) {
+          value = flt.dateTime.millisecondsSinceEpoch;
         }
         if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
           filter = FilterObjModel(
@@ -229,6 +259,51 @@ class FilterCubit extends Cubit<FilterState> {
             property: booleanFilter.property,
             operatorList: booleanFilter.operatorList,
             operator: booleanFilter.operator);
+      }
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
+  Future<void> thenDateTimePick(
+      {DateTime? date,
+      TimeOfDay? time,
+      required FilterFormModel form,
+      required int index}) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      final DateFilterModel dateFilter =
+          form.filterList[index] as DateFilterModel;
+      final DateTime dateTime = dateFilter.dateTime;
+      if (date != null) {
+        form.filterList[index] = DateFilterModel(
+          dateTime: DateTime(
+            date.year,
+            date.month,
+            date.day,
+            dateTime.hour,
+            dateTime.minute,
+          ),
+          operator: dateFilter.operator,
+          operatorList: dateFilter.operatorList,
+          property: dateFilter.property,
+        );
+      } else if (time != null) {
+        form.filterList[index] = DateFilterModel(
+          dateTime: DateTime(
+            dateTime.year,
+            dateTime.month,
+            dateTime.day,
+            time.hour,
+            time.minute,
+          ),
+          operator: dateFilter.operator,
+          operatorList: dateFilter.operatorList,
+          property: dateFilter.property,
+        );
       }
       emit(LoadedFilterState());
     } catch (e) {

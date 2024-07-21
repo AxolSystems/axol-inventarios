@@ -34,6 +34,14 @@ class FilterObjModel {
     FilterOperator.eq,
     FilterOperator.neq,
   ];
+  static List<FilterOperator> get operDateTimeList => [
+    FilterOperator.eq,
+    FilterOperator.neq,
+    FilterOperator.gt,
+    FilterOperator.gte,
+    FilterOperator.lt,
+    FilterOperator.lte,
+  ];
 
   static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {
     /// Estructura map recibido:
