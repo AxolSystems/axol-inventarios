@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,7 +60,8 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           form.controllers[prop.key] = RDBoolController(controller: cellBool);
         } else if (form.object.map[prop.key] is int &&
             prop.propertyType == Prop.time) {
-          cellTime = form.object.map[prop.key];
+          cellTime =
+              DateTime.fromMillisecondsSinceEpoch(form.object.map[prop.key]);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         }
       }
@@ -96,7 +98,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       for (String key in form.object.map.keys) {
         final RDTextEditingController textController;
         final RDBoolController boolController;
-        final RDDateController timeController;
+        final RDDateController dateController;
 
         if (form.controllers[key] is RDTextEditingController) {
           textController = form.controllers[key] as RDTextEditingController;
@@ -111,9 +113,9 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
         }
 
         if (form.controllers[key] is RDDateController) {
-          timeController = form.controllers[key] as RDDateController;
+          dateController = form.controllers[key] as RDDateController;
         } else {
-          timeController = form.controllers[key] as RDDateController;
+          dateController = RDDateController(controller: DateTime.now());
         }
 
         property = link.block.propertyList.firstWhere((x) => x.key == key);
@@ -127,7 +129,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           map[key] = double.parse(textController.controller.text);
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
-          map[key] = timeController.controller.millisecondsSinceEpoch;
+          map[key] = dateController.controller.millisecondsSinceEpoch;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
@@ -157,6 +159,43 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       await ObjectRepo.deleteObject(form.object, link);
 
       emit(DeletedRowDetailsState());
+      emit(LoadedRowDetailsState());
+    } catch (e) {
+      emit(InitialRowDetailsState());
+      emit(ErrorRowDetailsState(error: e.toString()));
+    }
+  }
+
+  Future<void> thenDateTimePick(
+      {DateTime? date,
+      TimeOfDay? time,
+      required RowDetailsFormModel form,
+      required PropertyModel prop}) async {
+    try {
+      emit(InitialRowDetailsState());
+      emit(LoadingRowDetailsState());
+      final RDDateController dateController =
+          form.controllers[prop.key] as RDDateController;
+      final DateTime dateTime = dateController.controller;
+      if (date != null) {
+        form.controllers[prop.key] = RDDateController(
+            controller: DateTime(
+          date.year,
+          date.month,
+          date.day,
+          dateTime.hour,
+          dateTime.minute,
+        ));
+      } else if (time != null) {
+        form.controllers[prop.key] = RDDateController(
+            controller: DateTime(
+          dateTime.year,
+          dateTime.month,
+          dateTime.day,
+          time.hour,
+          time.minute,
+        ));
+      }
       emit(LoadedRowDetailsState());
     } catch (e) {
       emit(InitialRowDetailsState());

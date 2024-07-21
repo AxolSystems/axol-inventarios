@@ -178,13 +178,21 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       form.object.map[prop.key].toString(),
                       style: Typo.body(theme_),
                     );
-                  } else if (form.object.map[prop.key] is bool) {
+                  } else if (form.object.map[prop.key] is bool &&
+                      prop.propertyType == Prop.bool) {
                     widgetRead = Align(
                       alignment: Alignment.centerLeft,
                       child: CheckboxView(
                         value: form.object.map[prop.key],
                         theme: theme_,
                       ),
+                    );
+                  } else if (form.object.map[prop.key] is int &&
+                      prop.propertyType == Prop.time) {
+                    widgetRead = Text(
+                      FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
+                          form.object.map[prop.key])),
+                      style: Typo.body(theme_),
                     );
                   } else {
                     widgetRead = const SizedBox();
@@ -199,7 +207,8 @@ class RowDetailsDrawerBuild extends AxolWidget {
                     inputFormatters = [];
                   }
 
-                  if (form.object.map[prop.key] is String) {
+                  if (form.object.map[prop.key] is String ||
+                      prop.propertyType == Prop.text) {
                     final RDTextEditingController textController =
                         form.controllers[prop.key] as RDTextEditingController;
                     widgetWrite = PrimaryTextField(
@@ -207,8 +216,10 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
                     );
-                  } else if (form.object.map[prop.key] is int ||
-                      form.object.map[prop.key] is double) {
+                  } else if ((form.object.map[prop.key] is int ||
+                          form.object.map[prop.key] is double) &&
+                      (prop.propertyType == Prop.int ||
+                          prop.propertyType == Prop.double)) {
                     final RDTextEditingController textController =
                         form.controllers[prop.key] as RDTextEditingController;
                     widgetWrite = PrimaryTextField(
@@ -216,12 +227,16 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
                     );
-                  } else if (form.object.map[prop.key] is bool) {
+                  } else if (form.object.map[prop.key] is bool &&
+                      prop.propertyType == Prop.bool) {
                     final RDBoolController boolController =
                         form.controllers[prop.key] as RDBoolController;
                     widgetWrite = Align(
                       alignment: Alignment.centerLeft,
                       child: Checkbox(
+                        activeColor: ColorTheme.item20(theme_),
+                        side: BorderSide(
+                            color: ColorTheme.item20(theme_), width: 2),
                         value: boolController.controller,
                         onChanged: (value) {
                           if (value != null) {
@@ -233,6 +248,110 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       ),
                     );
                   } else if (form.object.map[prop.key] is int) {
+                    final RDDateController dateController =
+                        form.controllers[prop.key] as RDDateController;
+                    ScrollController scrollController = ScrollController();
+                    widgetWrite = RawScrollbar(
+                      controller: scrollController,
+                      scrollbarOrientation: ScrollbarOrientation.bottom,
+                        child: SizedBox(
+                      height: 40,
+                      child: ListView(
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          OutlinedButton(
+                            style: ButtonStyle(
+                              alignment: Alignment.centerLeft,
+                              side: WidgetStatePropertyAll(
+                                  BorderSide(color: ColorTheme.item20(theme_))),
+                              shape: const WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(6)))),
+                              backgroundColor: WidgetStatePropertyAll(
+                                  ColorTheme.fill(theme_)),
+                            ),
+                            onPressed: () {
+                              showDatePicker(
+                                context: context,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime.now(),
+                              ).then(
+                                (value) {
+                                  context
+                                      .read<RowDetailsCubit>()
+                                      .thenDateTimePick(
+                                          form: form, prop: prop, date: value);
+                                },
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(
+                                    FormatDate.dmy(dateController.controller),
+                                    style: Typo.body(theme_),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: ColorTheme.item10(theme_),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          OutlinedButton(
+                            style: ButtonStyle(
+                              alignment: Alignment.centerLeft,
+                              side: WidgetStatePropertyAll(
+                                  BorderSide(color: ColorTheme.item20(theme_))),
+                              shape: const WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(6)))),
+                              backgroundColor: WidgetStatePropertyAll(
+                                  ColorTheme.fill(theme_)),
+                            ),
+                            onPressed: () {
+                              showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                              ).then(
+                                (value) {
+                                  context
+                                      .read<RowDetailsCubit>()
+                                      .thenDateTimePick(
+                                          form: form, prop: prop, time: value);
+                                },
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    FormatDate.hm(TimeOfDay.fromDateTime(
+                                        dateController.controller)),
+                                    style: Typo.body(theme_),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Icon(
+                                    Icons.watch_later_outlined,
+                                    color: ColorTheme.item10(theme_),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ));
                   } else {
                     widgetWrite = const SizedBox();
                   }

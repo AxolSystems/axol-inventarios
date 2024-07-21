@@ -1,10 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class FormatDate {
   static String dmy(DateTime dateTime) {
     String dateText;
-    dateText = '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    final String day = FormatNumber.format2dig(dateTime.day);
+    final String month = FormatNumber.format2dig(dateTime.month);
+    dateText = '$day/$month/${dateTime.year}';
+    return dateText;
+  }
+
+  static String hm(TimeOfDay time) {
+    String dateText;
+    final String hour = FormatNumber.format2dig(time.hour);
+    final String minute = FormatNumber.format2dig(time.minute);
+
+    dateText = '$hour:$minute';
     return dateText;
   }
 
