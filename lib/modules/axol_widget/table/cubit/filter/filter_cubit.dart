@@ -1,9 +1,9 @@
-import 'package:axol_inventarios/modules/block/model/property_model.dart';
+import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
+import 'package:axol_inventarios/modules/entity/model/property_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/format.dart';
-import '../../../../block/model/block_model.dart';
 import '../../../../object/model/filter_obj_model.dart';
 import '../../model/filter_form_model.dart';
 import 'filter_state.dart';
@@ -23,14 +23,14 @@ class FilterCubit extends Cubit<FilterState> {
     }
   }
 
-  Future<void> initLoad(FilterFormModel form, BlockModel block,
+  Future<void> initLoad(FilterFormModel form, EntityModel entity,
       List<FilterObjModel> filters) async {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
       List<PropertyModel> properties = [PropertyModel.empty()];
 
-      for (PropertyModel prop in block.propertyList) {
+      for (PropertyModel prop in entity.propertyList) {
         properties.add(prop);
       }
 
@@ -76,11 +76,11 @@ class FilterCubit extends Cubit<FilterState> {
           );
         }
       }
-      form.block = BlockModel(
-        blockName: block.blockName,
+      form.entity = EntityModel(
+        entityName: entity.entityName,
         propertyList: properties,
-        tableName: block.tableName,
-        uuid: block.uuid,
+        tableName: entity.tableName,
+        uuid: entity.uuid,
       );
       emit(LoadedFilterState());
     } catch (e) {
@@ -103,16 +103,16 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   Future<void> changeDropdownProp(
-      FilterFormModel form, BlockModel block, dynamic value, int index) async {
+      FilterFormModel form, EntityModel entity, dynamic value, int index) async {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
       if (value != null) {
         final PropertyModel prop = PropertyModel(
-            name: block.propertyList
+            name: entity.propertyList
                 .firstWhere((x) => x.key == value.toString())
                 .name,
-            propertyType: block.propertyList
+            propertyType: entity.propertyList
                 .firstWhere((x) => x.key == value.toString())
                 .propertyType,
             key: value.toString());

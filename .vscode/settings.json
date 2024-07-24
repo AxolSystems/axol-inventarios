@@ -17,6 +17,7 @@
         "postgrest",
         "Postgrest",
         "setblock",
+        "setentity",
         "supabase",
         "tableview",
         "uuid",

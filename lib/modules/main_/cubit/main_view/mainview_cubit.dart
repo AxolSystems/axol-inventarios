@@ -6,7 +6,7 @@ import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../axol_widget/generic/view/axol_widget.dart';
-import '../../../block/view/setblock_widget.dart';
+import '../../../entity/view/setentity_widget.dart';
 import '../../../module/view/set_module_widget.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../user/repository/user_repo.dart';
@@ -64,7 +64,7 @@ class MainViewCubit extends Cubit<MainViewState> {
               view.filterList, link, rangeMin, rangeMax);*/
           axolWidget = WidgetIndex.widget(
             i: link.widget,
-            //data: WidgetIndex.data(link.widget, dataResponse, link.block),
+            //data: WidgetIndex.data(link.widget, dataResponse, link.entity),
             user: form.user,
             link: link,
             viewId: link.views.first.key,
@@ -140,7 +140,7 @@ class MainViewCubit extends Cubit<MainViewState> {
           form.viewSelect = indexView;
           form.body = WidgetIndex.widget(
             i: link.widget,
-            //data: WidgetIndex.data(link.widget, dataResponse, link.block),
+            //data: WidgetIndex.data(link.widget, dataResponse, link.entity),
             user: form.user,
             link: link,
             viewId: link.views[indexView].key,
@@ -195,7 +195,7 @@ class MainViewCubit extends Cubit<MainViewState> {
           form.viewSelect = 0;
           form.body = WidgetIndex.widget(
             i: link.widget,
-            //data: WidgetIndex.data(link.widget, dataResponse, link.block),
+            //data: WidgetIndex.data(link.widget, dataResponse, link.entity),
             user: form.user,
             link: link,
             viewId: link.views.first.key,
@@ -211,14 +211,14 @@ class MainViewCubit extends Cubit<MainViewState> {
     }
   }
 
-  /// Carga el widget para configurar bloques desde [SetBlockWidget].
+  /// Carga el widget para configurar bloques desde [SetEntityWidget].
   Future<void> setSetting(MainViewFormModel form, int linkSelect) async {
     try {
       emit(InitialMainViewState());
       emit(LoadingMainViewState());
 
       if (linkSelect == 0) {
-        form.body = SetBlockWidget(theme: form.user.theme);
+        form.body = SetEntityWidget(theme: form.user.theme);
         if (form.linkSelect != 0) {
           form.linkSelect = 0;
         }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../block/model/property_model.dart';
+import '../../../../entity/model/property_model.dart';
 import '../../../../object/model/object_model.dart';
 import '../../../../object/repository/object_repo.dart';
 import '../../../../widget_link/model/widgetlink_model.dart';
@@ -38,7 +38,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
 
       form.object = ObjectModel(
           id: object.id, map: object.map, createAt: object.createAt);
-      for (PropertyModel prop in link.block.propertyList) {
+      for (PropertyModel prop in link.entity.propertyList) {
         final String cellText;
         final bool cellBool;
         final DateTime cellTime;
@@ -118,7 +118,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           dateController = RDDateController(controller: DateTime.now());
         }
 
-        property = link.block.propertyList.firstWhere((x) => x.key == key);
+        property = link.entity.propertyList.firstWhere((x) => x.key == key);
 
         if (form.controllers[key] is RDTextEditingController &&
             property.propertyType == Prop.text) {

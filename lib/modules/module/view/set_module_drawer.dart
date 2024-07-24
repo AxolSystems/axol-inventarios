@@ -299,7 +299,7 @@ class SetModuleDrawerBuild extends AxolWidget {
                               const SizedBox(width: 12),
                               Expanded(
                                 flex: 2,
-                                child: Text(link.block.blockName,
+                                child: Text(link.entity.entityName,
                                     style: Typo.body(theme)),
                               ),
                               const SizedBox(width: 12),

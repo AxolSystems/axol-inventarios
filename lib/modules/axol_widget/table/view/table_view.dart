@@ -10,7 +10,7 @@ import '../../../../utilities/widgets/checkbox_view.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../../utilities/widgets/textfield.dart';
-import '../../../block/model/property_model.dart';
+import '../../../entity/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
@@ -161,7 +161,7 @@ class TableViewBuild extends AxolWidget {
                               context: context,
                               builder: (context) => FilterDrawer(
                                 theme: form.theme,
-                                block: link.block,
+                                entity: link.entity,
                                 filters: form.filters,
                               ),
                             ).then(

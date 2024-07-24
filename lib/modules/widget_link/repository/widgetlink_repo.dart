@@ -1,8 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../block/model/block_model.dart';
-import '../../block/model/property_model.dart';
-import '../../block/repository/block_repo.dart';
+import '../../entity/model/entity_model.dart';
+import '../../entity/model/property_model.dart';
+import '../../entity/repository/entity_repo.dart';
 import '../model/widget_view_model.dart';
 import '../model/widgetlink_model.dart';
 
@@ -12,7 +12,7 @@ import '../model/widgetlink_model.dart';
 class WidgetLinkRepo {
   static const String _table = 'widget_link';
   static const String _id = 'id';
-  static const String _block = 'block';
+  static const String _entity = 'entity';
   static const String _widget = 'widget';
   static const String _views = 'views';
   static final _supabase = Supabase.instance.client;
@@ -24,27 +24,27 @@ class WidgetLinkRepo {
     List<Map<String, dynamic>> wlsDB;
     List<WidgetLinkModel> wlList = [];
     WidgetLinkModel wl;
-    BlockModel block = BlockModel.empty();
+    EntityModel entity = EntityModel.empty();
 
     wlsDB = await _supabase
         .from(_table)
-        .select<List<Map<String, dynamic>>>('*, block:block(*)')
+        .select<List<Map<String, dynamic>>>('*, entity:entity(*)')
         .in_(_id, idList);
 
     if (wlsDB.isNotEmpty) {
       for (var wlDB in wlsDB) {
-        final dynamicBlock = wlDB[_block];
-        if (dynamicBlock is Map<String, dynamic> && dynamicBlock.isNotEmpty) {
-          block = BlockModel(
-            blockName: dynamicBlock[BlockRepo.blockName].toString(),
+        final dynamicEntity = wlDB[_entity];
+        if (dynamicEntity is Map<String, dynamic> && dynamicEntity.isNotEmpty) {
+          entity = EntityModel(
+            entityName: dynamicEntity[EntityRepo.entityName].toString(),
             propertyList: PropertyModel.mapToProperty(
-                dynamicBlock[BlockRepo.property] ?? {}),
-            tableName: dynamicBlock[BlockRepo.tableName],
-            uuid: dynamicBlock[BlockRepo.id],
+                dynamicEntity[EntityRepo.property] ?? {}),
+            tableName: dynamicEntity[EntityRepo.tableName],
+            uuid: dynamicEntity[EntityRepo.id],
           );
         }
         wl = WidgetLinkModel(
-          block: block,
+          entity: entity,
           id: wlDB[_id],
           widget: wlDB[_widget],
           views: WidgetViewModel.mapToViews(wlDB[_views]),
@@ -59,26 +59,26 @@ class WidgetLinkRepo {
     List<Map<String, dynamic>> wlsDB;
     List<WidgetLinkModel> wlList = [];
     WidgetLinkModel wl;
-    BlockModel block = BlockModel.empty();
+    EntityModel entity = EntityModel.empty();
 
     wlsDB = await _supabase
         .from(_table)
-        .select<List<Map<String, dynamic>>>('*, block:block(*)');
+        .select<List<Map<String, dynamic>>>('*, entity:entity(*)');
 
     if (wlsDB.isNotEmpty) {
       for (var wlDB in wlsDB) {
-        final dynamicBlock = wlDB[_block];
-        if (dynamicBlock is Map<String, dynamic> && dynamicBlock.isNotEmpty) {
-          block = BlockModel(
-            blockName: dynamicBlock[BlockRepo.blockName].toString(),
+        final dynamicEntity = wlDB[_entity];
+        if (dynamicEntity is Map<String, dynamic> && dynamicEntity.isNotEmpty) {
+          entity = EntityModel(
+            entityName: dynamicEntity[EntityRepo.entityName].toString(),
             propertyList: PropertyModel.mapToProperty(
-                dynamicBlock[BlockRepo.property] ?? {}),
-            tableName: dynamicBlock[BlockRepo.tableName],
-            uuid: dynamicBlock[BlockRepo.id],
+                dynamicEntity[EntityRepo.property] ?? {}),
+            tableName: dynamicEntity[EntityRepo.tableName],
+            uuid: dynamicEntity[EntityRepo.id],
           );
         }
         wl = WidgetLinkModel(
-          block: block,
+          entity: entity,
           id: wlDB[_id],
           widget: wlDB[_widget],
           views: WidgetViewModel.mapToViews(wlDB[_views]),

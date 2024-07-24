@@ -10,7 +10,7 @@ import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/textfield.dart';
-import '../../../block/model/property_model.dart';
+import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/row_details/row_details_cubit.dart';
@@ -157,9 +157,9 @@ class RowDetailsDrawerBuild extends AxolWidget {
                   ],
             child: Expanded(
               child: ListView.builder(
-                itemCount: link.block.propertyList.length,
+                itemCount: link.entity.propertyList.length,
                 itemBuilder: (context, index) {
-                  final PropertyModel prop = link.block.propertyList[index];
+                  final PropertyModel prop = link.entity.propertyList[index];
                   final Widget widgetRead;
                   final Widget widgetWrite;
                   final List<TextInputFormatter> inputFormatters;

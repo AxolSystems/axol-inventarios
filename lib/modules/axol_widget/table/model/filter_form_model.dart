@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../../block/model/block_model.dart';
-import '../../../block/model/property_model.dart';
+import '../../../entity/model/entity_model.dart';
+import '../../../entity/model/property_model.dart';
 import '../../../object/model/filter_obj_model.dart';
 
 class FilterFormModel {
   List<FilterModel> filterList;
-  BlockModel block;
+  EntityModel entity;
 
-  FilterFormModel({required this.filterList, required this.block});
+  FilterFormModel({required this.filterList, required this.entity});
 
   FilterFormModel.empty()
       : filterList = [],
-        block = BlockModel.empty();
+        entity = EntityModel.empty();
 }
 
 abstract class FilterModel {

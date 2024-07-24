@@ -1,4 +1,4 @@
-import '../../block/model/block_model.dart';
+import '../../entity/model/entity_model.dart';
 import 'widget_view_model.dart';
 
 /// Enlace que sirve como puente entre bloque, módulo y
@@ -8,13 +8,13 @@ import 'widget_view_model.dart';
 /// widget con el que se encuentra enlazado.
 class WidgetLinkModel {
   final String id;
-  final BlockModel block;
+  final EntityModel entity;
   final int widget;
   final List<WidgetViewModel> views;
 
   WidgetLinkModel({
     required this.id,
-    required this.block,
+    required this.entity,
     required this.widget,
     required this.views,
   });
@@ -22,7 +22,7 @@ class WidgetLinkModel {
   /// Devuelve el estado inicial del WidgetLinkModel.
   WidgetLinkModel.empty()
       : id = '',
-        block = BlockModel.empty(),
+        entity = EntityModel.empty(),
         widget = -1,
         views = [];
 

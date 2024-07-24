@@ -1,4 +1,4 @@
-import '../../block/model/property_model.dart';
+import '../../entity/model/property_model.dart';
 
 enum FilterOperator { eq, neq, gt, gte, lt, lte, like, ilike }
 

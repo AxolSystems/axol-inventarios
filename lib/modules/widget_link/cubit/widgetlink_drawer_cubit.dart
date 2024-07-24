@@ -53,7 +53,7 @@ class WLinkDrawerCubit extends Cubit<WLinkDrawerState> {
       links = form.links
           .where((x) =>
               x.id.toLowerCase().contains(text) ||
-              x.block.blockName.toLowerCase().contains(text))
+              x.entity.entityName.toLowerCase().contains(text))
           .toList();
       form.filterLinks = links;
 

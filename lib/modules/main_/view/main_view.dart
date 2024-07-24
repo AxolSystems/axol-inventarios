@@ -364,7 +364,7 @@ class MainViewBuild extends StatelessWidget {
           if (wl.views.isEmpty) {
             viewList = [
               WidgetViewModel(
-                name: wl.block.blockName,
+                name: wl.entity.entityName,
                 filterList: [],
                 key: '',
                 properties: {},
@@ -380,7 +380,7 @@ class MainViewBuild extends StatelessWidget {
               children: [
                 SizedBox(
                   height: 30,
-                  child: Text(wl.block.blockName,
+                  child: Text(wl.entity.entityName,
                       style: Typo.system(form.user.theme)),
                 ),
                 SizedBox(

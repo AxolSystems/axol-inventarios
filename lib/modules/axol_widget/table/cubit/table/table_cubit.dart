@@ -290,7 +290,7 @@ class TableCubit extends Cubit<TableState> {
     countReg = dataResponse.count;
     form.totalPage = (countReg / form.limitRows).ceil();
     form.totalReg = countReg;
-    form.table = TableModel.dataObject(dataResponse, link.block);
+    form.table = TableModel.dataObject(dataResponse, link.entity);
   }
 }
 

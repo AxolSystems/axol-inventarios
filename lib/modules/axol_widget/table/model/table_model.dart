@@ -1,9 +1,9 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
-import 'package:axol_inventarios/modules/block/model/block_model.dart';
-import 'package:axol_inventarios/modules/block/model/property_model.dart';
+import 'package:axol_inventarios/modules/entity/model/property_model.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 
 import '../../../../models/data_response_model.dart';
+import '../../../entity/model/entity_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../generic/model/data_object.dart';
 
@@ -25,9 +25,9 @@ class TableModel extends DataObject {
         rowList = [],
         objects = [];
 
-  /// Devuelve un modelo de tabla a partir de una lista de objetos y un block.
+  /// Devuelve un modelo de tabla a partir de una lista de objetos y un entity.
   static TableModel dataObject(
-      DataResponseModel dataResponse, BlockModel block) {
+      DataResponseModel dataResponse, EntityModel entity) {
     TableModel table;
     List<PropertyModel> header = [];
     List<Map<String, TableCellModel>> rowList = [];
@@ -40,7 +40,7 @@ class TableModel extends DataObject {
       objects = [];
     }
 
-    for (var prop in block.propertyList) {
+    for (var prop in entity.propertyList) {
       header.add(prop);
     }
     for (var obj in objects) {
@@ -48,7 +48,7 @@ class TableModel extends DataObject {
 
       for (var key in obj.map.keys) {
         final Prop prop =
-            block.propertyList.firstWhere((x) => x.key == key).propertyType;
+            entity.propertyList.firstWhere((x) => x.key == key).propertyType;
         if (prop == Prop.text) {
           row[key] = CellText(text: obj.map[key]);
         } else if (prop == Prop.double || prop == Prop.int) {

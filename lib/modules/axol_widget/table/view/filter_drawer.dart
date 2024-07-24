@@ -1,5 +1,4 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
-import 'package:axol_inventarios/modules/block/model/block_model.dart';
 import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
@@ -11,18 +10,19 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/dropdown_button.dart';
 import '../../../../utilities/widgets/textfield.dart';
-import '../../../block/model/property_model.dart';
+import '../../../entity/model/entity_model.dart';
+import '../../../entity/model/property_model.dart';
 import '../cubit/filter/filter_cubit.dart';
 import '../cubit/filter/filter_state.dart';
 import '../model/filter_form_model.dart';
 
 class FilterDrawer extends AxolWidget {
-  final BlockModel block;
+  final EntityModel entity;
   final List<FilterObjModel> filters;
   const FilterDrawer({
     super.key,
     super.theme,
-    required this.block,
+    required this.entity,
     required this.filters,
   });
 
@@ -35,7 +35,7 @@ class FilterDrawer extends AxolWidget {
       ],
       child: FilterDrawerBuild(
         theme: theme,
-        block: block,
+        entity: entity,
         filters: filters,
       ),
     );
@@ -43,17 +43,17 @@ class FilterDrawer extends AxolWidget {
 }
 
 class FilterDrawerBuild extends AxolWidget {
-  final BlockModel block;
+  final EntityModel entity;
   final List<FilterObjModel> filters;
   const FilterDrawerBuild(
-      {super.key, super.theme, required this.block, required this.filters});
+      {super.key, super.theme, required this.entity, required this.filters});
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
     final FilterFormModel form = context.read<FilterForm>().state;
     return BlocConsumer<FilterCubit, FilterState>(
-      bloc: context.read<FilterCubit>()..initLoad(form, block, filters),
+      bloc: context.read<FilterCubit>()..initLoad(form, entity, filters),
       listener: (context, state) {
         if (state is ErrorFilterState) {
           showDialog(
@@ -165,7 +165,7 @@ class FilterDrawerBuild extends AxolWidget {
     List<DropdownMenuItem<String>> items = [];
     Widget widget = const SizedBox();
 
-    for (PropertyModel prop in form.block.propertyList) {
+    for (PropertyModel prop in form.entity.propertyList) {
       items.add(DropdownMenuItem(
         value: prop.key,
         child: Text(
@@ -190,7 +190,7 @@ class FilterDrawerBuild extends AxolWidget {
           onChanged: (value) {
             context
                 .read<FilterCubit>()
-                .changeDropdownProp(form, block, value, index);
+                .changeDropdownProp(form, entity, value, index);
           },
         ),
         widget is SizedBox ? const Expanded(child: SizedBox()) : widget,

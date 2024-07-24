@@ -2,8 +2,8 @@ import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
-import '../../block/model/block_model.dart';
-import '../../block/model/property_model.dart';
+import '../../entity/model/entity_model.dart';
+import '../../entity/model/property_model.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
 
@@ -15,10 +15,10 @@ class ObjectRepo {
 
   /// Obtiene una lista de objetos de la base de datos.
   ///
-  /// Recibe un [BlockModel] : [block] y una lista [FilterObjModel] : [filters].
+  /// Recibe un [EntityModel] : [entity] y una lista [FilterObjModel] : [filters].
   /// Si [filters] no se encuentra vacía, realiza una búsqueda filtrada; de lo contrario,
   /// realiza una búsqueda completa de la tabla referenciada. La tabla de la base de datos donde
-  /// se hará la búsqueda es obtenida mediante [BlockModel.tableName].
+  /// se hará la búsqueda es obtenida mediante [EntityModel.tableName].
   ///
   /// Después de la consulta convierte los datos obtenidos en una lista [ObjectModel].
   static Future<DataResponseModel> fetchObject({
@@ -49,7 +49,7 @@ class ObjectRepo {
 
     if (search != null) {
       if (search.contains(':')) {
-        final String key = link.block.propertyList
+        final String key = link.entity.propertyList
             .firstWhere(
               (x) => x.name == search.split(':').first,
               orElse: () => PropertyModel.empty(),
@@ -69,8 +69,8 @@ class ObjectRepo {
           textOr = '$_object->>"$key".ilike.%${search.split(':').last}%';
         }
       } else {
-        for (int i = 0; i < link.block.propertyList.length; i++) {
-          final PropertyModel prop = link.block.propertyList[i];
+        for (int i = 0; i < link.entity.propertyList.length; i++) {
+          final PropertyModel prop = link.entity.propertyList[i];
           if (i == 0) {
             textOr = '$_object->>"${prop.key}".ilike.%$search%';
           } else {
@@ -81,7 +81,7 @@ class ObjectRepo {
     }
 
     var query = _supabase
-        .from(link.block.tableName)
+        .from(link.entity.tableName)
         .select<PostgrestResponse<List<Map<String, dynamic>>>>(
             '*', const FetchOptions(count: CountOption.estimated));
 
@@ -144,12 +144,12 @@ class ObjectRepo {
   static Future<void> updateObject(
       ObjectModel object, WidgetLinkModel link) async {
     await _supabase
-        .from(link.block.tableName)
+        .from(link.entity.tableName)
         .update({_object: object.map}).eq(_id, object.id);
   }
 
   static Future<void> deleteObject(
       ObjectModel object, WidgetLinkModel link) async {
-    await _supabase.from(link.block.tableName).delete().eq(_id, object.id);
+    await _supabase.from(link.entity.tableName).delete().eq(_id, object.id);
   }
 }
