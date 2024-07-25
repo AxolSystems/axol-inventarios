@@ -1,14 +1,20 @@
+import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
+import '../../../../utilities/widgets/textfield.dart';
+import '../../../entity/model/entity_model.dart';
 import '../../generic/view/axol_widget.dart';
 import '../cubit/form_cubit.dart';
+import '../cubit/form_state.dart';
+import '../model/form_form_model.dart';
 
 class FormDrawer extends AxolWidget {
-  const FormDrawer({super.key, super.theme});
+  final WidgetLinkModel link;
+  const FormDrawer({super.key, super.theme, required this.link});
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +25,42 @@ class FormDrawer extends AxolWidget {
       ],
       child: FormDrawerBuild(
         theme: theme,
+        link: link,
       ),
     );
   }
 }
 
 class FormDrawerBuild extends AxolWidget {
-  const FormDrawerBuild({super.key, super.theme});
+  final WidgetLinkModel link;
+  const FormDrawerBuild({super.key, super.theme, required this.link});
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
-    return BlocConsumer(
-      listener: (context, state) {},
+    FormFormModel form = context.read<FormForm>().state;
+    return BlocConsumer<FormCubit, FormDrawerState>(
+      bloc: context.read<FormCubit>()..initLoad(form, link.entity),
+      listener: (context, state) {
+        if (state is ErrorFormState) {}
+      },
       builder: (context, state) {
+        List<Widget> widgetList = [];
+
+        for (FormFieldModel field in form.fields) {
+          if (field is TextFieldModel) {
+            widgetList.add(PrimaryTextField(
+              isDense: false,
+              theme: theme,
+              controller: field.ctrlText,
+              margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              labelText: field.property.name,
+              labelStyle: Typo.hint(theme_),
+            ));
+          }
+        }
+
         return DrawerBox(
           theme: theme_,
           header: Row(
@@ -67,10 +95,11 @@ class FormDrawerBuild extends AxolWidget {
               //isLoading: state is SavingRowDetailsState,
               theme: theme_,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              text: 'Aplicar',
+              text: 'Guardar',
               onPressed: () {},
             ),
           ],
+          children: widgetList,
         );
       },
     );

@@ -94,10 +94,12 @@ class ObjectRepo {
         query = query.eq('$_object->>"${filter.property.key}"', filter.value);
       }
       if (filter.operator == FilterOperator.like) {
-        query = query.like('$_object->>"${filter.property.key}"', '%${filter.value}%');
+        query = query.like(
+            '$_object->>"${filter.property.key}"', '%${filter.value}%');
       }
       if (filter.operator == FilterOperator.ilike) {
-        query = query.ilike('$_object->>"${filter.property.key}"', '%${filter.value}%');
+        query = query.ilike(
+            '$_object->>"${filter.property.key}"', '%${filter.value}%');
       }
       if (filter.operator == FilterOperator.gt) {
         query = query.gt('$_object->>"${filter.property.key}"', filter.value);
@@ -117,8 +119,8 @@ class ObjectRepo {
     }
 
     postgrestResponse = await query
-          .range(rangeMin_, rangeMax_)
-          .order(keyAscending_, ascending: ascending_);
+        .range(rangeMin_, rangeMax_)
+        .order(keyAscending_, ascending: ascending_);
 
     objsDB = postgrestResponse.data ?? [];
 
@@ -141,15 +143,27 @@ class ObjectRepo {
     return dataResponse;
   }
 
-  static Future<void> updateObject(
+  /// Actualiza un objeto de la base de datos.
+  static Future<void> update(
       ObjectModel object, WidgetLinkModel link) async {
     await _supabase
         .from(link.entity.tableName)
         .update({_object: object.map}).eq(_id, object.id);
   }
 
-  static Future<void> deleteObject(
+  /// Elimina un objeto de la base de datos.
+  static Future<void> delete(
       ObjectModel object, WidgetLinkModel link) async {
     await _supabase.from(link.entity.tableName).delete().eq(_id, object.id);
+  }
+
+  /// Inserta un objeto en la base de datos.
+  static Future<void> insert(
+      ObjectModel object, WidgetLinkModel link) async {
+    await _supabase.from(link.entity.tableName).insert({
+      _id: object.id,
+      _object: object.map,
+      _createAt: object.createAt.toIso8601String(),
+    });
   }
 }

@@ -139,7 +139,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       object = ObjectModel(
           createAt: form.object.createAt, id: form.object.id, map: map);
 
-      await ObjectRepo.updateObject(object, link);
+      await ObjectRepo.update(object, link);
       form.object = object;
 
       emit(SavedRowDetailsState());
@@ -156,7 +156,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       emit(InitialRowDetailsState());
       emit(DeletingRowDetailsState());
 
-      await ObjectRepo.deleteObject(form.object, link);
+      await ObjectRepo.delete(form.object, link);
 
       emit(DeletedRowDetailsState());
       emit(LoadedRowDetailsState());

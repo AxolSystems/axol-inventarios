@@ -14,6 +14,7 @@ import '../../../entity/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../../main_/cubit/main_view/mainview_state.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
+import '../../form/view/form_drawer.dart';
 import '../cubit/table/table_cubit.dart';
 import '../cubit/table/table_state.dart';
 import '../model/table_form_model.dart';
@@ -136,6 +137,24 @@ class TableViewBuild extends AxolWidget {
                                 context.read<TableCubit>().search(form, link);
                               },
                             ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          child: PrimaryButton(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            theme: form.theme,
+                            icon: Icons.add,
+                            text: 'Nuevo',
+                            onPressed: (state is SavingTableState) ||
+                                (state is LoadingTableState) ? null : () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => FormDrawer(
+                                        theme: form.theme,
+                                        link: link,
+                                      ));
+                            },
                           ),
                         ),
                         const Expanded(child: SizedBox()),

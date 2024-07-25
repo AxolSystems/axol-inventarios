@@ -1,31 +1,31 @@
 import 'package:equatable/equatable.dart';
 
-abstract class FormState extends Equatable {
-  const FormState();
+abstract class FormDrawerState extends Equatable {
+  const FormDrawerState();
 }
 
 /// Estado inicial de cubit para widget de formulario.
-class InitialFormState extends FormState {
+class InitialFormState extends FormDrawerState {
   @override
   List<Object?> get props => [];
 }
 
-class LoadingFormState extends FormState {
+class LoadingFormState extends FormDrawerState {
   @override
   List<Object?> get props => [];
 }
 
-class LoadedFormState extends FormState {
+class LoadedFormState extends FormDrawerState {
   @override
   List<Object?> get props => [];
 }
 
-class SavingFormState extends FormState {
+class SavingFormState extends FormDrawerState {
   @override
   List<Object?> get props => [];
 }
 
-class SavedFormState extends FormState {
+class SavedFormState extends FormDrawerState {
   final String text;
   const SavedFormState(this.text);
   @override
@@ -36,7 +36,7 @@ class SavedFormState extends FormState {
 /// detecta un error interno del sistema.
 ///
 /// - [error] : Texto que describe el error detectado.
-class ErrorFormState extends FormState {
+class ErrorFormState extends FormDrawerState {
   final String error;
   const ErrorFormState({required this.error});
   @override
