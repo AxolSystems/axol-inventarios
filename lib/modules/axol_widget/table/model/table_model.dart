@@ -50,15 +50,15 @@ class TableModel extends DataObject {
         final Prop prop =
             entity.propertyList.firstWhere((x) => x.key == key).propertyType;
         if (prop == Prop.text) {
-          row[key] = CellText(text: obj.map[key]);
+          row[key] = CellText(text: obj.map[key] ?? '');
         } else if (prop == Prop.double || prop == Prop.int) {
-          row[key] = CellText(text: obj.map[key].toString());
+          row[key] = CellText(text: '${obj.map[key] ?? ''}');
         } else if (prop == Prop.bool) {
-          row[key] = CellCheck(value: obj.map[key]);
+          row[key] = CellCheck(value: obj.map[key] ?? false);
         } else if (prop == Prop.time) {
           row[key] = CellText(
               text: FormatDate.dmyHm(
-                  DateTime.fromMillisecondsSinceEpoch(obj.map[key])));
+                  DateTime.fromMillisecondsSinceEpoch(obj.map[key] ?? 0)));
         }
       }
       rowList.add(row);

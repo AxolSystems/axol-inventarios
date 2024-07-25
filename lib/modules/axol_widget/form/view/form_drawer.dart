@@ -6,7 +6,6 @@ import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/textfield.dart';
-import '../../../entity/model/entity_model.dart';
 import '../../generic/view/axol_widget.dart';
 import '../cubit/form_cubit.dart';
 import '../cubit/form_state.dart';
@@ -96,7 +95,9 @@ class FormDrawerBuild extends AxolWidget {
               theme: theme_,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               text: 'Guardar',
-              onPressed: () {},
+              onPressed: () {
+                context.read<FormCubit>().save(form, link);
+              },
             ),
           ],
           children: widgetList,

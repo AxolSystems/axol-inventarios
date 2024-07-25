@@ -2,9 +2,11 @@ import 'package:axol_inventarios/modules/axol_widget/form/model/form_form_model.
 import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
+import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import 'form_state.dart';
 
@@ -49,9 +51,30 @@ class FormCubit extends Cubit<FormDrawerState> {
       emit(InitialFormState());
       emit(LoadingFormState());
       ObjectModel object;
-      
-      
-      
+      Map<String, dynamic> map = {};
+      int i;
+
+      for (PropertyModel prop in link.entity.propertyList) {
+        i = form.fields.indexWhere((x) => x.property.key == prop.key);
+        if (i > -1) {
+          if (form.fields[i] is TextFieldModel) {
+            final TextFieldModel textField = form.fields[i] as TextFieldModel;
+            map[prop.key] = textField.ctrlText.text;
+          } else {
+            map[prop.key] = null;
+          }
+        } else {
+          map[prop.key] = null;
+        }
+      }
+
+      object = ObjectModel(
+        id: const Uuid().v4(),
+        map: map,
+        createAt: DateTime.now(),
+      );
+
+      await ObjectRepo.insert(object, link);
 
       emit(LoadedFormState());
     } catch (e) {

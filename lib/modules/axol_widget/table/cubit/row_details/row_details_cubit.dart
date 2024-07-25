@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../entity/model/property_model.dart';
@@ -42,26 +41,30 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
         final String cellText;
         final bool cellBool;
         final DateTime cellTime;
-        if (form.object.map[prop.key] is String &&
+        if ((form.object.map[prop.key] is String ||
+                form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.text) {
-          cellText = form.object.map[prop.key] as String;
+          cellText = form.object.map[prop.key] ?? '';
           form.controllers[prop.key] = RDTextEditingController(
               controller: TextEditingController(text: cellText));
         } else if ((form.object.map[prop.key] is int ||
-                form.object.map[prop.key] is double) &&
+                form.object.map[prop.key] is double ||
+                form.object.map[prop.key] == null) &&
             (prop.propertyType == Prop.int ||
                 prop.propertyType == Prop.double)) {
-          cellText = form.object.map[prop.key].toString();
+          cellText = '${form.object.map[prop.key] ?? ''}';
           form.controllers[prop.key] = RDTextEditingController(
               controller: TextEditingController(text: cellText));
-        } else if (form.object.map[prop.key] is bool &&
+        } else if ((form.object.map[prop.key] is bool ||
+                form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.bool) {
-          cellBool = form.object.map[prop.key];
+          cellBool = form.object.map[prop.key] ?? false;
           form.controllers[prop.key] = RDBoolController(controller: cellBool);
-        } else if (form.object.map[prop.key] is int &&
+        } else if ((form.object.map[prop.key] is int ||
+                form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.time) {
-          cellTime =
-              DateTime.fromMillisecondsSinceEpoch(form.object.map[prop.key]);
+          cellTime = DateTime.fromMillisecondsSinceEpoch(
+              form.object.map[prop.key] ?? 0);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         }
       }
