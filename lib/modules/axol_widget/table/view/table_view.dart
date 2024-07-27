@@ -147,14 +147,24 @@ class TableViewBuild extends AxolWidget {
                             icon: Icons.add,
                             text: 'Nuevo',
                             onPressed: (state is SavingTableState) ||
-                                (state is LoadingTableState) ? null : () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => FormDrawer(
-                                        theme: form.theme,
-                                        link: link,
-                                      ));
-                            },
+                                    (state is LoadingTableState)
+                                ? null
+                                : () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => FormDrawer(
+                                              theme: form.theme,
+                                              link: link,
+                                            )).then(
+                                      (value) {
+                                        if (value == true) {
+                                          context
+                                              .read<TableCubit>()
+                                              .initLoad(form, link, viewId);
+                                        }
+                                      },
+                                    );
+                                  },
                           ),
                         ),
                         const Expanded(child: SizedBox()),

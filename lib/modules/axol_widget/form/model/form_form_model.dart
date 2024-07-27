@@ -19,3 +19,8 @@ class TextFieldModel extends FormFieldModel {
   TextEditingController ctrlText;
   TextFieldModel({required this.ctrlText, required super.property});
 }
+
+class NumberFieldModel extends FormFieldModel {
+  TextEditingController ctrlText;
+  NumberFieldModel({required this.ctrlText, required super.property});
+}

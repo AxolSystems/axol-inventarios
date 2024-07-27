@@ -36,6 +36,12 @@ class FormCubit extends Cubit<FormDrawerState> {
             ctrlText: TextEditingController(),
             property: prop,
           ));
+        } else if (prop.propertyType == Prop.int ||
+            prop.propertyType == Prop.double) {
+          form.fields.add(NumberFieldModel(
+            ctrlText: TextEditingController(),
+            property: prop,
+          ));
         }
       }
 
@@ -49,7 +55,7 @@ class FormCubit extends Cubit<FormDrawerState> {
   Future<void> save(FormFormModel form, WidgetLinkModel link) async {
     try {
       emit(InitialFormState());
-      emit(LoadingFormState());
+      emit(SavingFormState());
       ObjectModel object;
       Map<String, dynamic> map = {};
       int i;
@@ -60,6 +66,9 @@ class FormCubit extends Cubit<FormDrawerState> {
           if (form.fields[i] is TextFieldModel) {
             final TextFieldModel textField = form.fields[i] as TextFieldModel;
             map[prop.key] = textField.ctrlText.text;
+          } else if (form.fields[i] is NumberFieldModel) {
+            final NumberFieldModel numberField = form.fields[i] as NumberFieldModel;
+            map[prop.key] = double.parse(numberField.ctrlText.text);
           } else {
             map[prop.key] = null;
           }
@@ -76,6 +85,7 @@ class FormCubit extends Cubit<FormDrawerState> {
 
       await ObjectRepo.insert(object, link);
 
+      emit(SavedFormState());
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());

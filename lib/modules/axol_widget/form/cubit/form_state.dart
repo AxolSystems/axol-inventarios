@@ -26,10 +26,8 @@ class SavingFormState extends FormDrawerState {
 }
 
 class SavedFormState extends FormDrawerState {
-  final String text;
-  const SavedFormState(this.text);
   @override
-  List<Object?> get props => [text];
+  List<Object?> get props => [];
 }
 
 /// Estado de error. Estado al que pasa si se

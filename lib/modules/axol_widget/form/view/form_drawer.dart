@@ -2,8 +2,10 @@ import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../generic/view/axol_widget.dart';
@@ -41,7 +43,18 @@ class FormDrawerBuild extends AxolWidget {
     return BlocConsumer<FormCubit, FormDrawerState>(
       bloc: context.read<FormCubit>()..initLoad(form, link.entity),
       listener: (context, state) {
-        if (state is ErrorFormState) {}
+        if (state is ErrorFormState) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialogAxol(
+              text: state.error,
+              theme: theme_,
+            ),
+          );
+        }
+        if (state is SavedFormState) {
+          Navigator.pop(context, true);
+        }
       },
       builder: (context, state) {
         List<Widget> widgetList = [];
@@ -56,6 +69,17 @@ class FormDrawerBuild extends AxolWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               labelText: field.property.name,
               labelStyle: Typo.hint(theme_),
+            ));
+          } else if (field is NumberFieldModel) {
+            widgetList.add(PrimaryTextField(
+              isDense: false,
+              theme: theme,
+              controller: field.ctrlText,
+              margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              labelText: field.property.name,
+              labelStyle: Typo.hint(theme_),
+              inputFormatters: [DecimalTextInputFormatter()],
             ));
           }
         }
@@ -91,7 +115,7 @@ class FormDrawerBuild extends AxolWidget {
               },
             ),
             PrimaryButton(
-              //isLoading: state is SavingRowDetailsState,
+              isLoading: state is SavingFormState,
               theme: theme_,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               text: 'Guardar',
