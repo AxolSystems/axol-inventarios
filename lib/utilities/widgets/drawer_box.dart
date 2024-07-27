@@ -156,13 +156,13 @@ class DrawerCellText extends StatelessWidget {
   final String text;
   final int? flex;
   final TextStyle? style;
-  final TextAlign? aligin;
+  final TextAlign? align;
   const DrawerCellText(
     this.text, {
     super.key,
     this.flex,
     this.style,
-    this.aligin,
+    this.align,
   });
 
   @override
@@ -172,7 +172,7 @@ class DrawerCellText extends StatelessWidget {
       child: Text(
         text,
         style: style,
-        textAlign: aligin,
+        textAlign: align,
       ),
     );
   }

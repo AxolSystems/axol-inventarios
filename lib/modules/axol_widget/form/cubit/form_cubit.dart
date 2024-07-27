@@ -42,6 +42,16 @@ class FormCubit extends Cubit<FormDrawerState> {
             ctrlText: TextEditingController(),
             property: prop,
           ));
+        } else if (prop.propertyType == Prop.bool) {
+          form.fields.add(BooleanFieldModel(
+            value: false,
+            property: prop,
+          ));
+        } else if (prop.propertyType == Prop.time) {
+          form.fields.add(DateFieldModel(
+            dateTime: DateTime.now(),
+            property: prop,
+          ));
         }
       }
 
@@ -67,8 +77,16 @@ class FormCubit extends Cubit<FormDrawerState> {
             final TextFieldModel textField = form.fields[i] as TextFieldModel;
             map[prop.key] = textField.ctrlText.text;
           } else if (form.fields[i] is NumberFieldModel) {
-            final NumberFieldModel numberField = form.fields[i] as NumberFieldModel;
+            final NumberFieldModel numberField =
+                form.fields[i] as NumberFieldModel;
             map[prop.key] = double.parse(numberField.ctrlText.text);
+          } else if (form.fields[i] is BooleanFieldModel) {
+            final BooleanFieldModel booleanField =
+                form.fields[i] as BooleanFieldModel;
+            map[prop.key] = booleanField.value;
+          } else if (form.fields[i] is DateFieldModel) {
+            final DateFieldModel dateField = form.fields[i] as DateFieldModel;
+            map[prop.key] = dateField.dateTime.toIso8601String();
           } else {
             map[prop.key] = null;
           }
@@ -86,6 +104,23 @@ class FormCubit extends Cubit<FormDrawerState> {
       await ObjectRepo.insert(object, link);
 
       emit(SavedFormState());
+      emit(LoadedFormState());
+    } catch (e) {
+      emit(InitialFormState());
+      emit(ErrorFormState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeCheckbox(
+      FormFormModel form, bool? value, int index) async {
+    try {
+      emit(InitialFormState());
+      emit(LoadingFormState());
+      if (value != null) {
+        final BooleanFieldModel booleanField = BooleanFieldModel(
+            value: value, property: form.fields[index].property);
+        form.fields[index] = booleanField;
+      }
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());

@@ -24,3 +24,13 @@ class NumberFieldModel extends FormFieldModel {
   TextEditingController ctrlText;
   NumberFieldModel({required this.ctrlText, required super.property});
 }
+
+class BooleanFieldModel extends FormFieldModel {
+  bool value;
+  BooleanFieldModel({required this.value, required super.property});
+}
+
+class DateFieldModel extends FormFieldModel {
+  DateTime dateTime;
+  DateFieldModel({required this.dateTime, required super.property});
+}

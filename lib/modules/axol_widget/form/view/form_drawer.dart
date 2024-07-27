@@ -59,7 +59,8 @@ class FormDrawerBuild extends AxolWidget {
       builder: (context, state) {
         List<Widget> widgetList = [];
 
-        for (FormFieldModel field in form.fields) {
+        for (int i = 0; i < form.fields.length; i++) {
+          final FormFieldModel field = form.fields[i];
           if (field is TextFieldModel) {
             widgetList.add(PrimaryTextField(
               isDense: false,
@@ -80,6 +81,33 @@ class FormDrawerBuild extends AxolWidget {
               labelText: field.property.name,
               labelStyle: Typo.hint(theme_),
               inputFormatters: [DecimalTextInputFormatter()],
+            ));
+          } else if (field is BooleanFieldModel) {
+            widgetList.add(Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                        field.property.name,
+                        style: Typo.body(theme_),
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Checkbox(
+                        activeColor: ColorTheme.item20(theme_),
+                        side: BorderSide(
+                            color: ColorTheme.item20(theme_), width: 2),
+                        value: field.value,
+                        onChanged: (value) {
+                          context
+                              .read<FormCubit>()
+                              .changeCheckbox(form, value, i);
+                        },
+                      ))
+                ],
+              ),
             ));
           }
         }
