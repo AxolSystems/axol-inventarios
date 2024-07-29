@@ -21,8 +21,8 @@ class TextFieldModel extends FormFieldModel {
 }
 
 class NumberFieldModel extends FormFieldModel {
-  TextEditingController ctrlText;
-  NumberFieldModel({required this.ctrlText, required super.property});
+  TextEditingController ctrlNum;
+  NumberFieldModel({required this.ctrlNum, required super.property});
 }
 
 class BooleanFieldModel extends FormFieldModel {

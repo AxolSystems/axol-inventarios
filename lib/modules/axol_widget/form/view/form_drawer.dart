@@ -75,7 +75,7 @@ class FormDrawerBuild extends AxolWidget {
             widgetList.add(PrimaryTextField(
               isDense: false,
               theme: theme,
-              controller: field.ctrlText,
+              controller: field.ctrlNum,
               margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               labelText: field.property.name,

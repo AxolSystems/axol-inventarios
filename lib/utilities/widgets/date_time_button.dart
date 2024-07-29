@@ -6,10 +6,12 @@ import '../theme/theme.dart';
 
 class DateTimeButton extends AxolWidget {
   final DateTime dateTime;
+  final Function()? onPressed;
   const DateTimeButton({
     super.key,
     super.theme,
     required this.dateTime,
+    this.onPressed,
   });
 
   @override
@@ -24,21 +26,7 @@ class DateTimeButton extends AxolWidget {
             borderRadius: BorderRadius.all(Radius.circular(6)))),
         backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme_)),
       ),
-      onPressed: () {
-        /*showDatePicker(
-                context: context,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              ).then(
-                (value) {
-                  context.read<FilterCubit>().thenDateTimePick(
-                        form: form,
-                        index: index,
-                        date: value,
-                      );
-                },
-              );*/
-      },
+      onPressed: onPressed,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
@@ -60,13 +48,71 @@ class DateTimeButton extends AxolWidget {
 }
 
 class DateTimeDialog extends AxolWidget {
-  const DateTimeDialog({super.key});
+  final DateTime dateTime;
+  const DateTimeDialog({super.key, super.theme, required this.dateTime});
 
   @override
   Widget build(BuildContext context) {
-    return 
+    final int theme_ = theme ?? 0;
+    return AlertDialog(
+      content: Row(
+        children: [
+          OutlinedButton(
+            style: ButtonStyle(
+              alignment: Alignment.centerLeft,
+              side: WidgetStatePropertyAll(
+                  BorderSide(color: ColorTheme.item20(theme_))),
+              shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(6)))),
+              backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme_)),
+            ),
+            onPressed: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    FormatDate.dmy(dateTime),
+                    style: Typo.body(theme_),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.calendar_month,
+                    color: ColorTheme.item10(theme_),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          OutlinedButton(
+            style: ButtonStyle(
+              alignment: Alignment.centerLeft,
+              side: WidgetStatePropertyAll(
+                  BorderSide(color: ColorTheme.item20(theme_))),
+              shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(6)))),
+              backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme_)),
+            ),
+            onPressed: () {},
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    FormatDate.hm(TimeOfDay.fromDateTime(dateTime)),
+                    style: Typo.body(theme_),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.access_time,
+                    color: ColorTheme.item10(theme_),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
 }
-
-

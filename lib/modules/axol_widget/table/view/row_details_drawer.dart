@@ -412,6 +412,7 @@ class AlertDialogObjectDelete extends AxolWidget {
   Widget build(BuildContext context) {
     int theme_ = theme ?? 0;
     return BlocConsumer<RowDetailsCubit, RowDetailsState>(
+      bloc: context.read<RowDetailsCubit>()..load(),
       listener: (context, state) {
         if (state is DeletedRowDetailsState) {
           Navigator.pop(context);

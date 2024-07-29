@@ -39,7 +39,7 @@ class FormCubit extends Cubit<FormDrawerState> {
         } else if (prop.propertyType == Prop.int ||
             prop.propertyType == Prop.double) {
           form.fields.add(NumberFieldModel(
-            ctrlText: TextEditingController(),
+            ctrlNum: TextEditingController(),
             property: prop,
           ));
         } else if (prop.propertyType == Prop.bool) {
@@ -79,14 +79,14 @@ class FormCubit extends Cubit<FormDrawerState> {
           } else if (form.fields[i] is NumberFieldModel) {
             final NumberFieldModel numberField =
                 form.fields[i] as NumberFieldModel;
-            map[prop.key] = double.parse(numberField.ctrlText.text);
+            map[prop.key] = double.parse(numberField.ctrlNum.text);
           } else if (form.fields[i] is BooleanFieldModel) {
             final BooleanFieldModel booleanField =
                 form.fields[i] as BooleanFieldModel;
             map[prop.key] = booleanField.value;
           } else if (form.fields[i] is DateFieldModel) {
             final DateFieldModel dateField = form.fields[i] as DateFieldModel;
-            map[prop.key] = dateField.dateTime.toIso8601String();
+            map[prop.key] = dateField.dateTime.millisecondsSinceEpoch;
           } else {
             map[prop.key] = null;
           }
