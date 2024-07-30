@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/date_time_button.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/textfield.dart';
@@ -108,6 +109,29 @@ class FormDrawerBuild extends AxolWidget {
                       ))
                 ],
               ),
+            ));
+          } else if (field is DateFieldModel) {
+            widgetList.add(DateTimeButton(
+              theme: theme_,
+              dateTime: field.dateTime,
+              margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => DateTimeDialog(
+                          dateTime: field.dateTime,
+                          theme: theme_,
+                        )).then(
+                  (value) {
+                    if (value is DateTime) {
+                      context
+                          .read<FormCubit>()
+                          .thenDateTimePick(form, i, value);
+                    }
+                  },
+                );
+              },
             ));
           }
         }

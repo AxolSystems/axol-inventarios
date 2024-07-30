@@ -284,33 +284,6 @@ class FilterCubit extends Cubit<FilterState> {
         operatorList: dateFilter.operatorList,
         operator: dateFilter.operator,
       );
-      /*if (date != null) {
-        form.filterList[index] = DateFilterModel(
-          dateTime: DateTime(
-            date.year,
-            date.month,
-            date.day,
-            dateTime.hour,
-            dateTime.minute,
-          ),
-          operator: dateFilter.operator,
-          operatorList: dateFilter.operatorList,
-          property: dateFilter.property,
-        );
-      } else if (time != null) {
-        form.filterList[index] = DateFilterModel(
-          dateTime: DateTime(
-            dateTime.year,
-            dateTime.month,
-            dateTime.day,
-            time.hour,
-            time.minute,
-          ),
-          operator: dateFilter.operator,
-          operatorList: dateFilter.operatorList,
-          property: dateFilter.property,
-        );
-      }*/
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());

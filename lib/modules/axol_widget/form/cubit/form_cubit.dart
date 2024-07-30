@@ -127,6 +127,21 @@ class FormCubit extends Cubit<FormDrawerState> {
       emit(ErrorFormState(error: e.toString()));
     }
   }
+
+  Future<void> thenDateTimePick(
+      FormFormModel form, int index, DateTime dateTime) async {
+    try {
+      emit(InitialFormState());
+      emit(LoadingFormState());
+      final DateFieldModel dateField = form.fields[index] as DateFieldModel;
+      form.fields[index] =
+          DateFieldModel(dateTime: dateTime, property: dateField.property);
+      emit(LoadedFormState());
+    } catch (e) {
+      emit(InitialFormState());
+      emit(ErrorFormState(error: e.toString()));
+    }
+  }
 }
 
 class FormForm extends Cubit<FormFormModel> {
