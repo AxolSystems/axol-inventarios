@@ -102,8 +102,8 @@ class FilterCubit extends Cubit<FilterState> {
     }
   }
 
-  Future<void> changeDropdownProp(
-      FilterFormModel form, EntityModel entity, dynamic value, int index) async {
+  Future<void> changeDropdownProp(FilterFormModel form, EntityModel entity,
+      dynamic value, int index) async {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
@@ -268,8 +268,8 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   Future<void> thenDateTimePick(
-      {DateTime? date,
-      TimeOfDay? time,
+      {
+      required DateTime dateTime,
       required FilterFormModel form,
       required int index}) async {
     try {
@@ -277,8 +277,14 @@ class FilterCubit extends Cubit<FilterState> {
       emit(LoadingFilterState());
       final DateFilterModel dateFilter =
           form.filterList[index] as DateFilterModel;
-      final DateTime dateTime = dateFilter.dateTime;
-      if (date != null) {
+
+      form.filterList[index] = DateFilterModel(
+        dateTime: dateTime,
+        property: dateFilter.property,
+        operatorList: dateFilter.operatorList,
+        operator: dateFilter.operator,
+      );
+      /*if (date != null) {
         form.filterList[index] = DateFilterModel(
           dateTime: DateTime(
             date.year,
@@ -304,7 +310,7 @@ class FilterCubit extends Cubit<FilterState> {
           operatorList: dateFilter.operatorList,
           property: dateFilter.property,
         );
-      }
+      }*/
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());

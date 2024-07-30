@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/date_time_button.dart';
 import '../../../../utilities/widgets/dropdown_button.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../../entity/model/entity_model.dart';
@@ -159,11 +160,18 @@ class FilterDrawerBuild extends AxolWidget {
   }
 
   Widget filterWidget(BuildContext context, FilterState state,
-      FilterFormModel form, int index, double constraintWidth) {
+      FilterFormModel form, int index, double constraint) {
     final int theme_ = theme ?? 0;
     final ScrollController scrollController = ScrollController();
+    final double constraintWidth;
     List<DropdownMenuItem<String>> items = [];
     Widget widget = const SizedBox();
+
+    if (constraint < 545) {
+      constraintWidth = 545;
+    } else {
+      constraintWidth = constraint;
+    }
 
     for (PropertyModel prop in form.entity.propertyList) {
       items.add(DropdownMenuItem(
@@ -193,7 +201,12 @@ class FilterDrawerBuild extends AxolWidget {
                 .changeDropdownProp(form, entity, value, index);
           },
         ),
-        widget is SizedBox ? const Expanded(child: SizedBox()) : widget,
+        widget is SizedBox
+            ? SizedBox(
+                width:
+                    constraintWidth - (((constraintWidth - 50) / 2) - 65) - 92,
+              )
+            : widget,
         IconButton(
           onPressed: () {
             context.read<FilterCubit>().remove(form, index);
@@ -201,7 +214,7 @@ class FilterDrawerBuild extends AxolWidget {
           icon: const Icon(Icons.clear),
           color: ColorTheme.item10(theme_),
           iconSize: 30,
-        )
+        ),
       ],
     );
 
@@ -213,7 +226,7 @@ class FilterDrawerBuild extends AxolWidget {
           border: Border.all(color: ColorTheme.item30(theme_)),
           borderRadius: const BorderRadius.all(Radius.circular(6)),
         ),
-        child: form.filterList[index] is DateFilterModel
+        child: constraint < 545 //form.filterList[index] is DateFilterModel
             ? RawScrollbar(
                 controller: scrollController,
                 child: SingleChildScrollView(
@@ -349,7 +362,30 @@ class FilterDrawerBuild extends AxolWidget {
         );
       }
 
-      subWidget = Row(
+      subWidget = DateTimeButton(
+        dateTime: dateFilter.dateTime,
+        theme: theme,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        width: ((constraintWidth - 50) / 2) - 73,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => DateTimeDialog(
+              dateTime: dateFilter.dateTime,
+              theme: theme,
+            ),
+          ).then(
+            (value) {
+              if (value is DateTime) {
+                context.read<FilterCubit>().thenDateTimePick(
+                    dateTime: value, form: form, index: index);
+              }
+            },
+          );
+        },
+      );
+
+      /*subWidget = Row(
         children: [
           const SizedBox(width: 4),
           OutlinedButton(
@@ -435,7 +471,7 @@ class FilterDrawerBuild extends AxolWidget {
             ),
           ),
         ],
-      );
+      );*/
     }
 
     if (form.filterList[index] is! AddFilterModel &&
