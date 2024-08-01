@@ -1,4 +1,4 @@
-enum Prop { text, int, double, time, bool, empty }
+enum Prop { text, int, double, time, bool, empty, referenceObject }
 
 class PropertyModel {
   final String name;
@@ -47,6 +47,8 @@ class PropertyModel {
         return Prop.time;
       case 4:
         return Prop.bool;
+      case 5:
+        return Prop.referenceObject;
       default:
         return Prop.empty;
     }
@@ -66,6 +68,8 @@ class PropertyModel {
         return 3;
       case Prop.bool:
         return 4;
+      case Prop.referenceObject:
+        return 5;
       default:
         return -1;
     }
@@ -83,6 +87,8 @@ class PropertyModel {
         return 'Fecha';
       case Prop.bool:
         return 'Booleano';
+      case Prop.referenceObject:
+        return 'Objeto relacional';
       default:
         return 'Texto';
     }
