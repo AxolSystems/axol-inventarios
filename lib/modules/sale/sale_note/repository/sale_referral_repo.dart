@@ -38,6 +38,7 @@ class SaleReferralRepo {
     List mapList;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     DataResponseModel dataResponse;
+    double totalAmount = 0;
     final int rangeMin = filter.rangeMin ?? 0;
     final int rangeMax = filter.rangeMax ?? 999;
 
@@ -117,6 +118,7 @@ class SaleReferralRepo {
       productList = [];
       jsonbProducts = element[_products];
       mapList = jsonbProducts.values.toList();
+      totalAmount = 0;
       for (Map<String, dynamic> map in mapList) {
         saleProduct = SaleProductModel(
           product:
@@ -126,12 +128,13 @@ class SaleReferralRepo {
           note: map[SaleProductModel.empty().tNote],
         );
         productList.add(saleProduct);
+        totalAmount = totalAmount + (saleProduct.price * saleProduct.quantity);
       }
       saleNote = SaleNoteModel(
         id: element[_id],
         customer: CustomerModel.fill(element[_customer]),
         date: DateTime.fromMillisecondsSinceEpoch(element[_time]),
-        total: element[_total],
+        total: totalAmount, //element[_total],
         warehouse: WarehouseModel.fillMap(element[_warehouse]),
         vendor: VendorModel.fillMap(element[_vendor]),
         note: element[_note],

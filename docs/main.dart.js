@@ -67584,31 +67584,31 @@ A.zY.prototype={
 gj_(a){return this.d}}
 A.rf.prototype={
 ni(a,b){return this.aFn(a,b)},
-aFn(a7,a8){var s=0,r=A.u(t._Z),q,p=this,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6
-var $async$ni=A.v(function(a9,b0){if(a9===1)return A.q(b0,r)
+aFn(a8,a9){var s=0,r=A.u(t._Z),q,p=this,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7
+var $async$ni=A.v(function(b0,b1){if(b0===1)return A.q(b1,r)
 while(true)switch(s){case 0:A.bX()
 o=A.a([],t.u5)
 n=A.x(t.N,t.z)
-m=a7.r
+m=a8.r
 if(m==null)m=0
-l=a7.w
+l=a8.w
 if(l==null)l=999
-k=a7.a
+k=a8.a
 if(k>-1)n.l(0,"customer->>id",k)
-k=a7.b
+k=a8.b
 if(k>-1)n.l(0,"vendor->>id",k)
-k=a7.c
+k=a8.c
 if(k>-1)n.l(0,"warehouse->>id",k)
-s=a8===""?3:5
+s=a9===""?3:5
 break
 case 3:s=6
 return A.m(p.a.bn("sales_notes").dX(0,"*",B.ba,t.G).dP(0,"date",!1).fO(m,l),$async$ni)
-case 6:j=b0
+case 6:j=b1
 s=4
 break
-case 5:s=B.e.cz(a8.toLowerCase(),"clave:")?7:9
+case 5:s=B.e.cz(a9.toLowerCase(),"clave:")?7:9
 break
-case 7:i=B.e.Jm(a8.toLowerCase(),"clave:","")
+case 7:i=B.e.Jm(a9.toLowerCase(),"clave:","")
 s=B.e.q(i,"-")?10:12
 break
 case 10:h=i.split("-")
@@ -67619,7 +67619,7 @@ k.dU("id","gte."+A.f(B.b.gP(h)))
 k.dU("id","lte."+A.f(B.b.gU(h)))
 s=16
 return A.m(k.dP(0,"date",!1).fO(m,l),$async$ni)
-case 16:j=b0
+case 16:j=b1
 s=14
 break
 case 15:j=B.OF
@@ -67632,39 +67632,40 @@ break
 case 17:h=A.a(i.split(","),t.s)
 s=20
 return A.m(g.bn("sales_notes").dX(0,"*",B.ba,k).xi("id",h).dP(0,"date",!1).fO(m,l),$async$ni)
-case 20:j=b0
+case 20:j=b1
 s=18
 break
 case 19:s=21
 return A.m(g.bn("sales_notes").dX(0,"*",B.ba,k).eW("id",i).dP(0,"date",!1).fO(m,l),$async$ni)
-case 21:j=b0
+case 21:j=b1
 case 18:case 11:s=8
 break
-case 9:f="customer->>name.ilike.%"+a8+"%,vendor->>name.ilike.%"+a8+"%"
-if(A.dl(a8)!=null)f=f+",id.eq."+a8
+case 9:f="customer->>name.ilike.%"+a9+"%,vendor->>name.ilike.%"+a9+"%"
+if(A.dl(a9)!=null)f=f+",id.eq."+a9
 s=22
 return A.m(p.a.bn("sales_notes").dX(0,"*",B.ba,t.G).mE(f).dP(0,"date",!1).fO(m,l),$async$ni)
-case 22:j=b0
+case 22:j=b1
 case 8:case 4:e=j.a
 for(k=J.av(e==null?A.a([],t.H7):e),g=t.qa;k.u();){d=k.gI(k)
 c=A.a([],g)
 b=J.V(d)
 a=J.lS(J.pE(b.h(d,"products")))
-for(a0=a.length,a1=0;a1<a.length;a.length===a0||(0,A.z)(a),++a1){a2=a[a1]
+for(a0=a.length,a1=0,a2=0;a2<a.length;a.length===a0||(0,A.z)(a),++a2){a3=a[a2]
 A.fx()
-a3=J.V(a2)
-a4=A.bio(a3.h(a2,"product"))
+a4=J.V(a3)
+a5=A.bio(a4.h(a3,"product"))
 A.fx()
-a5=a3.h(a2,"quantity")
+a6=a4.h(a3,"quantity")
 A.fx()
-a6=a3.h(a2,"price")
+a7=a4.h(a3,"price")
 A.fx()
-c.push(new A.rg(a4,a5,a6,a3.h(a2,"note")))}a0=b.h(d,"id")
-a2=A.beY(b.h(d,"customer"))
-a3=b.h(d,"date")
-a4=new A.aq(a3,!1)
-a4.m1(a3,!1)
-o.push(new A.re(a0,a2,a4,null,null,b.h(d,"total"),A.bk4(b.h(d,"warehouse")),A.bk_(b.h(d,"vendor")),b.h(d,"note"),b.h(d,"status"),c))}k=j.c
+c.push(new A.rg(a5,a6,a7,a4.h(a3,"note")))
+a1+=a7*a6}a0=b.h(d,"id")
+a3=A.beY(b.h(d,"customer"))
+a4=b.h(d,"date")
+a5=new A.aq(a4,!1)
+a5.m1(a4,!1)
+o.push(new A.re(a0,a3,a5,null,null,a1,A.bk4(b.h(d,"warehouse")),A.bk_(b.h(d,"vendor")),b.h(d,"note"),b.h(d,"status"),c))}k=j.c
 q=new A.ol(o,k==null?0:k)
 s=1
 break
@@ -67711,28 +67712,28 @@ case 2:return A.r(null,r)}})
 return A.t($async$GR,r)}}
 A.rh.prototype={
 nk(a,b){return this.aFr(a,b)},
-aFr(a7,a8){var s=0,r=A.u(t._Z),q,p=this,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6
-var $async$nk=A.v(function(a9,b0){if(a9===1)return A.q(b0,r)
+aFr(a8,a9){var s=0,r=A.u(t._Z),q,p=this,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7
+var $async$nk=A.v(function(b0,b1){if(b0===1)return A.q(b1,r)
 while(true)switch(s){case 0:A.bX()
 o=A.a([],t.u5)
 n=A.x(t.N,t.z)
-m=a7.r
+m=a8.r
 if(m==null)m=0
-l=a7.w
+l=a8.w
 if(l==null)l=999
-k=a7.a
+k=a8.a
 if(k>-1)n.l(0,"customer->>id",k)
-k=a7.b
+k=a8.b
 if(k>-1)n.l(0,"vendor->>id",k)
-k=a7.c
+k=a8.c
 if(k>-1)n.l(0,"warehouse->>id",k)
-s=a8===""?3:4
+s=a9===""?3:4
 break
 case 3:s=5
 return A.m(p.a.bn("sales_referral").dX(0,"*",B.ba,t.G).dP(0,"date",!1).fO(m,l),$async$nk)
-case 5:case 4:s=B.e.cz(a8.toLowerCase(),"clave:")?6:8
+case 5:case 4:s=B.e.cz(a9.toLowerCase(),"clave:")?6:8
 break
-case 6:j=B.e.Jm(a8.toLowerCase(),"clave:","")
+case 6:j=B.e.Jm(a9.toLowerCase(),"clave:","")
 s=B.e.q(j,"-")?9:11
 break
 case 9:i=j.split("-")
@@ -67743,7 +67744,7 @@ k.dU("id","gte."+A.f(B.b.gP(i)))
 k.dU("id","lte."+A.f(B.b.gU(i)))
 s=15
 return A.m(k.dP(0,"date",!1).fO(m,l),$async$nk)
-case 15:h=b0
+case 15:h=b1
 s=13
 break
 case 14:h=B.OF
@@ -67756,39 +67757,40 @@ break
 case 16:i=A.a(j.split(","),t.s)
 s=19
 return A.m(g.bn("sales_referral").dX(0,"*",B.ba,k).xi("id",i).dP(0,"date",!1).fO(m,l),$async$nk)
-case 19:h=b0
+case 19:h=b1
 s=17
 break
 case 18:s=20
 return A.m(g.bn("sales_referral").dX(0,"*",B.ba,k).eW("id",j).dP(0,"date",!1).fO(m,l),$async$nk)
-case 20:h=b0
+case 20:h=b1
 case 17:case 10:s=7
 break
-case 8:f="customer->>name.ilike.%"+a8+"%,vendor->>name.ilike.%"+a8+"%"
-if(A.dl(a8)!=null)f=f+",id.eq."+a8
+case 8:f="customer->>name.ilike.%"+a9+"%,vendor->>name.ilike.%"+a9+"%"
+if(A.dl(a9)!=null)f=f+",id.eq."+a9
 s=21
 return A.m(p.a.bn("sales_referral").dX(0,"*",B.ba,t.G).mE(f).dP(0,"date",!1).fO(m,l),$async$nk)
-case 21:h=b0
+case 21:h=b1
 case 7:e=h.a
 for(k=J.av(e==null?A.a([],t.H7):e),g=t.qa;k.u();){d=k.gI(k)
 c=A.a([],g)
 b=J.V(d)
 a=J.lS(J.pE(b.h(d,"products")))
-for(a0=a.length,a1=0;a1<a.length;a.length===a0||(0,A.z)(a),++a1){a2=a[a1]
+for(a0=a.length,a1=0,a2=0;a2<a.length;a.length===a0||(0,A.z)(a),++a2){a3=a[a2]
 A.fx()
-a3=J.V(a2)
-a4=A.bio(a3.h(a2,"product"))
+a4=J.V(a3)
+a5=A.bio(a4.h(a3,"product"))
 A.fx()
-a5=a3.h(a2,"quantity")
+a6=a4.h(a3,"quantity")
 A.fx()
-a6=a3.h(a2,"price")
+a7=a4.h(a3,"price")
 A.fx()
-c.push(new A.rg(a4,a5,a6,a3.h(a2,"note")))}a0=b.h(d,"id")
-a2=A.beY(b.h(d,"customer"))
-a3=b.h(d,"date")
-a4=new A.aq(a3,!1)
-a4.m1(a3,!1)
-o.push(new A.re(a0,a2,a4,null,null,b.h(d,"total"),A.bk4(b.h(d,"warehouse")),A.bk_(b.h(d,"vendor")),b.h(d,"note"),b.h(d,"status"),c))}k=h.c
+c.push(new A.rg(a5,a6,a7,a4.h(a3,"note")))
+a1+=a7*a6}a0=b.h(d,"id")
+a3=A.beY(b.h(d,"customer"))
+a4=b.h(d,"date")
+a5=new A.aq(a4,!1)
+a5.m1(a4,!1)
+o.push(new A.re(a0,a3,a5,null,null,a1,A.bk4(b.h(d,"warehouse")),A.bk_(b.h(d,"vendor")),b.h(d,"note"),b.h(d,"status"),c))}k=h.c
 q=new A.ol(o,k==null?0:k)
 s=1
 break
@@ -70462,7 +70464,7 @@ o=A.bP(new A.lv(o.a,p),B.D,r)
 if(d>790)r=700
 else r=r?d-90:d-16
 q=t.p
-return A.p_(s,B.bP,A.bC(A.a3(A.a([o,B.dK,B.bz,A.bC(A.aH(A.a([A.Y(A.ayf(A.a([new A.aC(B.ao,new A.a2q('# Registro de cambios\n\n## [1.0.15] - 2024-06-02\n### Corregido\n- Error en vista de tel\xe9fono en donde no aparec\xeda bot\xf3n de puntos decimales en teclados de tipo num\xe9rico.\n- Error en descarga de inventario a una fecha determinada.\n### A\xf1adido\n- Opci\xf3n para editar clientes.\n\n## [1.0.14] - 2024-05-16\n### Corregido\n- Error en descarga de estado de inventario a un tiempo determinado. En el calculo no agregaba los productos que al inicio del calculo se encontraban con stock cero. \n- Error en ventana emergente de confirmaci\xf3n de guardado en nuevo movimiento.\n- Error que manten\xeda habilitado el bot\xf3n de guardado cuando se encontraba una pantalla de carga en formulario de notas de ventas.\n\n## [1.0.13] - 2024-05-09\n### Modificado\n- Descarga de estado de inventario a determinada fecha omitiendo folio de movimiento seleccionado.\n### Corregido\n- Error en descarga de archivo de nota de venta cuando m\xe1s de una persona crea una nueva nota de venta a la vez.\n\n## [1.0.12+] - 2024-05-06\n### Corregido\n- Error que no guardaba notas de venta al guardar m\xe1s de una al mismo tiempo.\n\n## [1.0.11] - 2024-05-05\n### A\xf1adido\n- Descarga CSV de estado de inventario hasta una fecha determinada (limitada hasta una consulta de 1000 registros).\n- Descarga CSV de movimientos de un rango de fecha determinado.\n### Corregido\n- Error que reiniciaba las vistas de notas de ventas y clientes cuando se sal\xeda de una ventana de detalles.\n- Error en campo de texto de ventana de b\xfasquedas de productos que mov\xeda el cursor al final de la linea cuando se intentaba editar en otra posici\xf3n.\n- En el formulario de traspasos, se elimino de la lista de almacenes destino el almac\xe9n de origen, para as\xed evitar hacer traspasos al mismo almac\xe9n por error.\n\n## [1.0.10] - 2024-05-01\n### A\xf1adido\n- Filtro por clave en notas de ventas y remisiones. Al escribir en el buscador "clave:" y luego el n\xfamero de la nota, se filtrara dicha nota; puede filtrar una lista de notas en especifico escribiendo cada n\xfamero de nota separado por una coma; tambi\xe9n puede filtrar un rango escribiendo un gui\xf3n entre dos n\xfameros de notas.\n- Descarga en csv de tabla con los datos de las notas de ventas y remisiones filtrados en el momento.\n\n## [1.0.9] - 2024-05-01\n### Modificado\n- Vista responsiva en modulo de reportes de venta.\n- Formato pdf de notas de venta.\n### Corregido\n- Formato a dos decimales del peso de nota de venta.\n\n## [1.0.8] - 2024-04-28\n### A\xf1adido\n- Tipo de cuenta con permiso de lectura.\n- Modulo de inventario para cuenta de vendedor.\n### Corregido\n- Error en formula para restar reportes de ventas a inventarios.\n### Modificado\n- Vista responsiva en modulo de inventarios.\n- Vista responsiva en modulo de ventas.\n- Vista responsiva en modulo de listas pata cartas porte.\n\n## [1.0.7] - 2024-04-21\n### A\xf1adido\n- Descarga de archivos csv de estado de inventario del almac\xe9n seleccionado.\n- Ahora es posible editar las listas para cartas porte y reportes de venta hasta 24 horas despu\xe9s de haber sido creadas.\n### Modificado\n- Se agreg\xf3 nombre de almac\xe9n a vista de inventario.\n- Cambio en formato de archivo csv para estado de inventario.\n### Corregido\n- Error en calculo de estado de inventario con descuento de reporte de ventas, el cual no sumaba las cantidades de los productos con la misma clave.\n\n## [1.0.6] - 2024-04-17\n### A\xf1adido\n- Ventana emergente de confirmaci\xf3n de guardado para nueva lista de carta porte y nuevo reporte de venta.\n- Descarga de archivos csv para reportes de ventas.\n- Descarga de archivos csv de estado de inventario descontando ventas del reporte seleccionado.\n### Corregido\n- Formula de calculo para valor total de mercanc\xeda en listas para cartas porte.\n\n## [1.0.5] - 2024-04-15\n### Corregido\n- Error en buscadores de las vistas de inventario que no reiniciaba el contador de p\xe1ginas de la listas consultadas en la base de datos.\n- Error en buscadores de las vistas de notas de venta que imped\xeda actualizar el n\xfamero de p\xe1gina y de registros consultados.\n### A\xf1adido\n- Bot\xf3n para cerrar sesi\xf3n en la barra de navegaci\xf3n lateral.\n- Bot\xf3n para eliminar elemento del formulario para nueva lista de carta porte, ubicado en vista de detalles de fila de carta porte. Se accede a dicha vista al dejar presionado la fila que se requiere revisar.\n### Pr\xf3ximos cambios\n- En proceso para agregar reportes de ventas.\n\n## [1.0.4] - 2024-04-11\n### A\xf1adido\n- Agregado buscador para formulario de nuevo elemento en listas de carta porte.\n- Agregado soporte en markdown para notas de versi\xf3n.\n### Modificado\n- Se ajustaron los tama\xf1os de las celdas en el formulario de nuevo movimiento al inventario, y se agreg\xf3 peso total de los movimientos agregados.\n### Corregido\n- Correcci\xf3n de error que imped\xeda guardar movimientos al inventario cuando la cantidad era menor a uno.\n\n## [1.0.3] - 2024-04-07\n### A\xf1adido\n- Se agregaron la creaci\xf3n de listas para cartas porte.\n### Modificado\n- Se cambio el dise\xf1o de la barra de navegaci\xf3n para agregar sus respectivas etiquetas.\n\n## [1.0.2] - 2024-03-26\n### Corregido\n- Correcci\xf3n en formulario de notas de ventas de error que indicaba stock insuficiente cuando la cantidad era la misma que la stock existente.\n- Correcci\xf3n de error en campo de texto de almac\xe9n, el cual al escribir directamente con teclado el n\xfamero del almac\xe9n, no guardaban el almac\xe9n consultado en la base de datos.\n\n## [1.0.1] - 2024-03-25\n### Corregido\n- Correcci\xf3n de error en formulario de nuevas notas de venta y remisiones, el cual indicaba que no hab\xeda stock suficiente en cualquier situaci\xf3n o dejaba la p\xe1gina cargando todo el tiempo. \n- Ahora al cancelar una nota de venta o remisi\xf3n tambi\xe9n se guarda el movimiento en el historial de movimientos.\n### Modificado\n- Se cambi\xf3 el t\xedtulo de la vista de inventario, antes se llamaba "Men\xfa de almacenes", ahora "Inventario".\n',!0,A.ayS(p,p,p,B.a9,p,p,p,p,B.a9,p,p,p,p,B.b43,B.a9,p,B.o1,B.a9,p,B.as,B.a9,p,p,B.a9,p,p,B.a9,p,p,B.a9,p,p,p,B.b1r,p,p,B.a9,B.af,p,p,p,p,p,p,p,p,p,B.uc,B.a9,p,B.a9),p,p,p,p,p,p,p,p,p,p,p,B.aRM,B.aRP,!0,B.aRZ,!1,p),p)],q),p,p,!1),1)],q),B.j,B.i,B.h),p,r),B.bz],q),B.C,B.i,B.h,p),1/0,1/0),p)},
+return A.p_(s,B.bP,A.bC(A.a3(A.a([o,B.dK,B.bz,A.bC(A.aH(A.a([A.Y(A.ayf(A.a([new A.aC(B.ao,new A.a2q('# Registro de cambios\n\n## [1.0.16] - 2024-08-02\n### Corregido\n- Corregido error al mostrar importe total en notas de ventas y remisiones.\n\n## [1.0.15] - 2024-06-02\n### Corregido\n- Error en vista de tel\xe9fono en donde no aparec\xeda bot\xf3n de puntos decimales en teclados de tipo num\xe9rico.\n- Error en descarga de inventario a una fecha determinada.\n### A\xf1adido\n- Opci\xf3n para editar clientes.\n\n## [1.0.14] - 2024-05-16\n### Corregido\n- Error en descarga de estado de inventario a un tiempo determinado. En el calculo no agregaba los productos que al inicio del calculo se encontraban con stock cero. \n- Error en ventana emergente de confirmaci\xf3n de guardado en nuevo movimiento.\n- Error que manten\xeda habilitado el bot\xf3n de guardado cuando se encontraba una pantalla de carga en formulario de notas de ventas.\n\n## [1.0.13] - 2024-05-09\n### Modificado\n- Descarga de estado de inventario a determinada fecha omitiendo folio de movimiento seleccionado.\n### Corregido\n- Error en descarga de archivo de nota de venta cuando m\xe1s de una persona crea una nueva nota de venta a la vez.\n\n## [1.0.12+] - 2024-05-06\n### Corregido\n- Error que no guardaba notas de venta al guardar m\xe1s de una al mismo tiempo.\n\n## [1.0.11] - 2024-05-05\n### A\xf1adido\n- Descarga CSV de estado de inventario hasta una fecha determinada (limitada hasta una consulta de 1000 registros).\n- Descarga CSV de movimientos de un rango de fecha determinado.\n### Corregido\n- Error que reiniciaba las vistas de notas de ventas y clientes cuando se sal\xeda de una ventana de detalles.\n- Error en campo de texto de ventana de b\xfasquedas de productos que mov\xeda el cursor al final de la linea cuando se intentaba editar en otra posici\xf3n.\n- En el formulario de traspasos, se elimino de la lista de almacenes destino el almac\xe9n de origen, para as\xed evitar hacer traspasos al mismo almac\xe9n por error.\n\n## [1.0.10] - 2024-05-01\n### A\xf1adido\n- Filtro por clave en notas de ventas y remisiones. Al escribir en el buscador "clave:" y luego el n\xfamero de la nota, se filtrara dicha nota; puede filtrar una lista de notas en especifico escribiendo cada n\xfamero de nota separado por una coma; tambi\xe9n puede filtrar un rango escribiendo un gui\xf3n entre dos n\xfameros de notas.\n- Descarga en csv de tabla con los datos de las notas de ventas y remisiones filtrados en el momento.\n\n## [1.0.9] - 2024-05-01\n### Modificado\n- Vista responsiva en modulo de reportes de venta.\n- Formato pdf de notas de venta.\n### Corregido\n- Formato a dos decimales del peso de nota de venta.\n\n## [1.0.8] - 2024-04-28\n### A\xf1adido\n- Tipo de cuenta con permiso de lectura.\n- Modulo de inventario para cuenta de vendedor.\n### Corregido\n- Error en formula para restar reportes de ventas a inventarios.\n### Modificado\n- Vista responsiva en modulo de inventarios.\n- Vista responsiva en modulo de ventas.\n- Vista responsiva en modulo de listas pata cartas porte.\n\n## [1.0.7] - 2024-04-21\n### A\xf1adido\n- Descarga de archivos csv de estado de inventario del almac\xe9n seleccionado.\n- Ahora es posible editar las listas para cartas porte y reportes de venta hasta 24 horas despu\xe9s de haber sido creadas.\n### Modificado\n- Se agreg\xf3 nombre de almac\xe9n a vista de inventario.\n- Cambio en formato de archivo csv para estado de inventario.\n### Corregido\n- Error en calculo de estado de inventario con descuento de reporte de ventas, el cual no sumaba las cantidades de los productos con la misma clave.\n\n## [1.0.6] - 2024-04-17\n### A\xf1adido\n- Ventana emergente de confirmaci\xf3n de guardado para nueva lista de carta porte y nuevo reporte de venta.\n- Descarga de archivos csv para reportes de ventas.\n- Descarga de archivos csv de estado de inventario descontando ventas del reporte seleccionado.\n### Corregido\n- Formula de calculo para valor total de mercanc\xeda en listas para cartas porte.\n\n## [1.0.5] - 2024-04-15\n### Corregido\n- Error en buscadores de las vistas de inventario que no reiniciaba el contador de p\xe1ginas de la listas consultadas en la base de datos.\n- Error en buscadores de las vistas de notas de venta que imped\xeda actualizar el n\xfamero de p\xe1gina y de registros consultados.\n### A\xf1adido\n- Bot\xf3n para cerrar sesi\xf3n en la barra de navegaci\xf3n lateral.\n- Bot\xf3n para eliminar elemento del formulario para nueva lista de carta porte, ubicado en vista de detalles de fila de carta porte. Se accede a dicha vista al dejar presionado la fila que se requiere revisar.\n### Pr\xf3ximos cambios\n- En proceso para agregar reportes de ventas.\n\n## [1.0.4] - 2024-04-11\n### A\xf1adido\n- Agregado buscador para formulario de nuevo elemento en listas de carta porte.\n- Agregado soporte en markdown para notas de versi\xf3n.\n### Modificado\n- Se ajustaron los tama\xf1os de las celdas en el formulario de nuevo movimiento al inventario, y se agreg\xf3 peso total de los movimientos agregados.\n### Corregido\n- Correcci\xf3n de error que imped\xeda guardar movimientos al inventario cuando la cantidad era menor a uno.\n\n## [1.0.3] - 2024-04-07\n### A\xf1adido\n- Se agregaron la creaci\xf3n de listas para cartas porte.\n### Modificado\n- Se cambio el dise\xf1o de la barra de navegaci\xf3n para agregar sus respectivas etiquetas.\n\n## [1.0.2] - 2024-03-26\n### Corregido\n- Correcci\xf3n en formulario de notas de ventas de error que indicaba stock insuficiente cuando la cantidad era la misma que la stock existente.\n- Correcci\xf3n de error en campo de texto de almac\xe9n, el cual al escribir directamente con teclado el n\xfamero del almac\xe9n, no guardaban el almac\xe9n consultado en la base de datos.\n\n## [1.0.1] - 2024-03-25\n### Corregido\n- Correcci\xf3n de error en formulario de nuevas notas de venta y remisiones, el cual indicaba que no hab\xeda stock suficiente en cualquier situaci\xf3n o dejaba la p\xe1gina cargando todo el tiempo. \n- Ahora al cancelar una nota de venta o remisi\xf3n tambi\xe9n se guarda el movimiento en el historial de movimientos.\n### Modificado\n- Se cambi\xf3 el t\xedtulo de la vista de inventario, antes se llamaba "Men\xfa de almacenes", ahora "Inventario".\n',!0,A.ayS(p,p,p,B.a9,p,p,p,p,B.a9,p,p,p,p,B.b43,B.a9,p,B.o1,B.a9,p,B.as,B.a9,p,p,B.a9,p,p,B.a9,p,p,B.a9,p,p,p,B.b1r,p,p,B.a9,B.af,p,p,p,p,p,p,p,p,p,B.uc,B.a9,p,B.a9),p,p,p,p,p,p,p,p,p,p,p,B.aRM,B.aRP,!0,B.aRZ,!1,p),p)],q),p,p,!1),1)],q),B.j,B.i,B.h),p,r),B.bz],q),B.C,B.i,B.h,p),1/0,1/0),p)},
 a7x(a,b,c){return this.a7y(a,b,null,c)}}
 A.aud.prototype={
 $2(a,b){var s,r,q=this

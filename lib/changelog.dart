@@ -2,6 +2,10 @@ class Changelog {
   static String get main => '''
 # Registro de cambios
 
+## [1.0.16] - 2024-08-02
+### Corregido
+- Corregido error al mostrar importe total en notas de ventas y remisiones.
+
 ## [1.0.15] - 2024-06-02
 ### Corregido
 - Error en vista de teléfono en donde no aparecía botón de puntos decimales en teclados de tipo numérico.
