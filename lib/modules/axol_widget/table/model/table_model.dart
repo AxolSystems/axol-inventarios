@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 
 import '../../../../models/data_response_model.dart';
@@ -59,6 +60,13 @@ class TableModel extends DataObject {
           row[key] = CellText(
               text: FormatDate.dmyHm(
                   DateTime.fromMillisecondsSinceEpoch(obj.map[key] ?? 0)));
+        } else if (prop == Prop.referenceObject) {
+          /*ReferenceObjectModel refObj = ReferenceObjectModel(
+            idEntity: obj.map[key][ReferenceObjectModel.entity],
+            idObject: obj.map[key][ReferenceObjectModel.object],
+            idProperty: obj.map[key][ReferenceObjectModel]
+          );
+          row[key] = CellText(text: refObj.idProperty);*/
         }
       }
       rowList.add(row);

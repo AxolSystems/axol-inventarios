@@ -115,7 +115,11 @@ class FilterCubit extends Cubit<FilterState> {
             propertyType: entity.propertyList
                 .firstWhere((x) => x.key == value.toString())
                 .propertyType,
-            key: value.toString());
+            key: value.toString(),
+            dynamicValues: entity.propertyList
+                .firstWhere((x) => x.key == value.toString())
+                .dynamicValues,
+            );
         if (prop.propertyType == Prop.text) {
           form.filterList[index] = TextFilterModel(
             ctrlValue: TextEditingController(),

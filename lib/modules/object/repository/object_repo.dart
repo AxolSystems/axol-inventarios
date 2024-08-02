@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -40,6 +41,8 @@ class ObjectRepo {
     final String keyAscending_;
     final DataResponseModel dataResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    List<Map<String, dynamic>> referencesResponse = [];
+    List<Map<String, dynamic>> entityResponse = [];
 
     if (keyAscending == null) {
       keyAscending_ = _createAt;
@@ -125,6 +128,34 @@ class ObjectRepo {
     objsDB = postgrestResponse.data ?? [];
 
     if (objsDB.isNotEmpty) {
+      List<String> idObjects = [];
+      List<String> idEntities = [];
+      for (var prop in link.entity.propertyList) {
+        if (prop.propertyType == Prop.referenceObject) {
+          if (!idEntities.contains(prop.dynamicValues[PropertyModel.dvRefEntity])) {
+            idEntities.add(prop.dynamicValues[PropertyModel.dvRefEntity]);
+          }
+          for (var objDB in objsDB) {
+            final String? idObject =
+                objDB[_object][prop.key][ReferenceObjectModel.object];
+            if (idObject != null && idObject != '') {
+              idObjects.add(idObject);
+            }
+          }
+          /*referencesResponse = await _supabase
+              .from(prop.dynamicValues[PropertyModel.dvRefTable])
+              .select<List<Map<String, dynamic>>>()
+              .in_('id', idObjects);*/
+          print(referencesResponse); //Siguiente: mostrar propiedad referenciada en tabla.
+        }
+      }
+      entityResponse = await _supabase
+              .from()
+              .select<List<Map<String, dynamic>>>()
+              .in_('id', idObjects);
+      for (String idEntity in idEntities) {
+      }
+      
       for (var objDB in objsDB) {
         obj = ObjectModel(
           id: objDB[_id],
@@ -144,22 +175,19 @@ class ObjectRepo {
   }
 
   /// Actualiza un objeto de la base de datos.
-  static Future<void> update(
-      ObjectModel object, WidgetLinkModel link) async {
+  static Future<void> update(ObjectModel object, WidgetLinkModel link) async {
     await _supabase
         .from(link.entity.tableName)
         .update({_object: object.map}).eq(_id, object.id);
   }
 
   /// Elimina un objeto de la base de datos.
-  static Future<void> delete(
-      ObjectModel object, WidgetLinkModel link) async {
+  static Future<void> delete(ObjectModel object, WidgetLinkModel link) async {
     await _supabase.from(link.entity.tableName).delete().eq(_id, object.id);
   }
 
   /// Inserta un objeto en la base de datos.
-  static Future<void> insert(
-      ObjectModel object, WidgetLinkModel link) async {
+  static Future<void> insert(ObjectModel object, WidgetLinkModel link) async {
     await _supabase.from(link.entity.tableName).insert({
       _id: object.id,
       _object: object.map,

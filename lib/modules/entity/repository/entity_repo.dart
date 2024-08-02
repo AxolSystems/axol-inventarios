@@ -14,20 +14,45 @@ class EntityRepo {
   static const String property = 'property';
   static final _supabase = Supabase.instance.client;
 
-  /// Devuelve una lista con todos los bloques o tablas en la
+  /// Devuelve una lista con todas las entidades en la
   /// base de datos disponibles para almacenar objetos.
-  static Future<List<EntityModel>> fetchAllEntitys() async {
-    List<Map<String, dynamic>> entitysDB = [];
+  static Future<List<EntityModel>> fetchAllEntities() async {
+    List<Map<String, dynamic>> entitiesDB = [];
     List<EntityModel> entityList = [];
     EntityModel entity;
 
-    entitysDB = await _supabase
+    entitiesDB = await _supabase
         .from(table)
         .select<List<Map<String, dynamic>>>('*')
         .order(tableName, ascending: true);
 
-    if (entitysDB.isNotEmpty) {
-      for (var element in entitysDB) {
+    if (entitiesDB.isNotEmpty) {
+      for (var element in entitiesDB) {
+        entity = EntityModel(
+          entityName: element[entityName] ?? '',
+          propertyList: PropertyModel.mapToProperty(element[property] ?? {}),
+          tableName: element[tableName] ?? '',
+          uuid: element[id].toString(),
+        );
+        entityList.add(entity);
+      }
+    }
+
+    return entityList;
+  }
+
+  static Future<List<EntityModel>> fetchEntities(List<String> idList) async {
+    List<Map<String, dynamic>> entitiesDB = [];
+    List<EntityModel> entityList = [];
+    EntityModel entity;
+
+    entitiesDB = await _supabase
+        .from(table)
+        .select<List<Map<String, dynamic>>>('*')
+        .in_(id, idList);
+
+    if (entitiesDB.isNotEmpty) {
+      for (var element in entitiesDB) {
         entity = EntityModel(
           entityName: element[entityName] ?? '',
           propertyList: PropertyModel.mapToProperty(element[property] ?? {}),

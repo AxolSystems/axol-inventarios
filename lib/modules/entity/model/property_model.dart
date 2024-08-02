@@ -4,17 +4,26 @@ class PropertyModel {
   final String name;
   final Prop propertyType;
   final String key;
+  final Map<String, dynamic> dynamicValues;
 
-  PropertyModel(
-      {required this.name, required this.propertyType, required this.key});
+  PropertyModel({
+    required this.name,
+    required this.propertyType,
+    required this.key,
+    required this.dynamicValues,
+  });
 
   PropertyModel.empty()
       : name = '',
         propertyType = Prop.empty,
-        key = '';
+        key = '',
+        dynamicValues = {};
 
   static String get dataType => 'dataType';
   static String get propName => 'propName';
+  static String get tDynamicValues => 'dynamic_values';
+  static String get dvRefEntity => 'reference_entity';
+  static String get dvRefTable => 'reference_table';
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
     List<PropertyModel> propertyList = [];
@@ -23,10 +32,11 @@ class PropertyModel {
     for (var key in map.keys.toList()) {
       final Map<String, dynamic> value = map[key];
       property = PropertyModel(
-          name: value[PropertyModel.propName],
-          propertyType:
-              PropertyModel.getPropToInt(value[PropertyModel.dataType]),
-          key: key);
+        name: value[PropertyModel.propName],
+        propertyType: PropertyModel.getPropToInt(value[PropertyModel.dataType]),
+        key: key,
+        dynamicValues: value[PropertyModel.tDynamicValues],
+      );
       propertyList.add(property);
     }
 

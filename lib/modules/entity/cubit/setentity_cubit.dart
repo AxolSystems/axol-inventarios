@@ -10,7 +10,7 @@ import 'setentity_state.dart';
 class SetEntityCubit extends Cubit<SetEntityState> {
   SetEntityCubit() : super(InitialSetEntityState());
 
-  /// Obtiene todos los datos necesarios para iniciar la vista. 
+  /// Obtiene todos los datos necesarios para iniciar la vista.
   /// Dichos datos son proporcionados a al form.
   Future<void> initLoad(SetEntityFormModel form, int theme) async {
     try {
@@ -19,7 +19,7 @@ class SetEntityCubit extends Cubit<SetEntityState> {
       emit(LoadingSetEntityState());
       List<EntityModel> entitysDB;
 
-      entitysDB = await EntityRepo.fetchAllEntitys();
+      entitysDB = await EntityRepo.fetchAllEntities();
       form.entityList = entitysDB;
 
       form.cEntity = form.select >= 0 ? form.entityList[form.select] : null;
@@ -45,8 +45,8 @@ class SetEntityCubit extends Cubit<SetEntityState> {
     }
   }
 
-  /// Método utilizado para realizar una recarga de la vista sin 
-  /// necesidad de pasar por algún proceso. Suele utilizarse desde 
+  /// Método utilizado para realizar una recarga de la vista sin
+  /// necesidad de pasar por algún proceso. Suele utilizarse desde
   /// SetEntityWidget.
   Future<void> load() async {
     try {
@@ -60,7 +60,7 @@ class SetEntityCubit extends Cubit<SetEntityState> {
     }
   }
 
-  /// Lógica utilizada para hacer el cambio de bloque en la barra de 
+  /// Lógica utilizada para hacer el cambio de bloque en la barra de
   /// bloques disponibles.
   Future<void> switchEntity(SetEntityFormModel form) async {
     try {
@@ -108,7 +108,7 @@ class SetEntityCubit extends Cubit<SetEntityState> {
     }
   }
 
-  /// Lógica al seleccionar una nueva propiedad en el drop down 
+  /// Lógica al seleccionar una nueva propiedad en el drop down
   /// de nueva propiedad.
   Future<void> selectProp(
     SetEntityFormModel form,
@@ -129,7 +129,7 @@ class SetEntityCubit extends Cubit<SetEntityState> {
     }
   }
 
-  /// Proceso de guardado de un bloque en la base datos. Si hay cambios 
+  /// Proceso de guardado de un bloque en la base datos. Si hay cambios
   /// en el bloque seleccionado, actualiza sus objetos.
   Future<void> save(SetEntityFormModel form) async {
     try {
@@ -142,7 +142,11 @@ class SetEntityCubit extends Cubit<SetEntityState> {
 
       for (var element in form.properties) {
         prop = PropertyModel(
-            name: element.ctrlProp.text, propertyType: element.property, key: element.key);
+          name: element.ctrlProp.text,
+          propertyType: element.property,
+          key: element.key,
+          dynamicValues: {},
+        );
         if (prop.name.contains('~') ||
             prop.name.contains('\\') ||
             prop.name.contains('/')) {
@@ -175,7 +179,7 @@ class SetEntityCubit extends Cubit<SetEntityState> {
 
         await EntityRepo.update(entity);
 
-        entitysDB = await EntityRepo.fetchAllEntitys();
+        entitysDB = await EntityRepo.fetchAllEntities();
         form.entityList = entitysDB;
 
         form.cEntity = form.select >= 0 ? form.entityList[form.select] : null;
