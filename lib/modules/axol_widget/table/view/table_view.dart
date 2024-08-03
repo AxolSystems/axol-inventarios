@@ -364,7 +364,7 @@ class TableViewBuild extends AxolWidget {
     List<Widget> widgetList = [];
     Widget widget;
     for (int i = 0; i < headerTitles.length; i++) {
-      var prop = headerTitles[i];
+      PropertyModel prop = headerTitles[i];
       widget = Container(
         decoration: BoxDecoration(
           border: Border.all(color: ColorTheme.item30(form.theme)),
@@ -374,15 +374,28 @@ class TableViewBuild extends AxolWidget {
         child: Stack(
           children: [
             Padding(
-              padding: form.edit
-                  ? const EdgeInsets.fromLTRB(4, 4, 32, 4)
-                  : const EdgeInsets.all(4),
-              child: Text(
-                prop.name,
-                style: Typo.subtitle(form.theme),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+                padding: form.edit
+                    ? const EdgeInsets.fromLTRB(4, 4, 24, 4)
+                    : const EdgeInsets.all(4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        child: Text(
+                      prop.name,
+                      style: Typo.subtitle(form.theme),
+                      overflow: TextOverflow.ellipsis,
+                    )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Icon(
+                        PropertyModel.iconProp(prop.propertyType),
+                        color: ColorTheme.item10(form.theme),
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -390,6 +403,7 @@ class TableViewBuild extends AxolWidget {
                 Visibility(
                     visible: form.edit,
                     child: IconButton(
+                      constraints: const BoxConstraints(maxWidth: 32, maxHeight: 20),
                       onPressed: (state is SavingTableState) ||
                               (state is LoadingTableState)
                           ? () {}

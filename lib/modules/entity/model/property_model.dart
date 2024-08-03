@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum Prop { text, int, double, time, bool, empty, referenceObject }
 
 class PropertyModel {
@@ -101,6 +103,25 @@ class PropertyModel {
         return 'Objeto relacional';
       default:
         return 'Texto';
+    }
+  }
+
+  static IconData iconProp(Prop prop) {
+    switch (prop) {
+      case Prop.text:
+        return Icons.text_fields;
+      case Prop.int:
+        return Icons.numbers;
+      case Prop.double:
+        return Icons.numbers;
+      case Prop.time:
+        return Icons.calendar_month;
+      case Prop.bool:
+        return Icons.check_box_outlined;
+      case Prop.referenceObject:
+        return Icons.arrow_outward;
+      default:
+        return Icons.square;
     }
   }
 }
