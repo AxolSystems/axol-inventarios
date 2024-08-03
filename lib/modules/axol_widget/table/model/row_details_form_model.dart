@@ -1,6 +1,8 @@
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../../object/model/reference_object_model.dart';
+
 /// Modelo de datos con propiedades mutables a traves
 /// de los estados del drawer de detalles del objeto.
 class RowDetailsFormModel {
@@ -38,5 +40,11 @@ class RDBoolController extends RowDetailsController {
 class RDDateController extends RowDetailsController {
   DateTime controller;
   RDDateController({required this.controller});
-  RDDateController.empty() :  controller = DateTime(0);
+  RDDateController.empty() : controller = DateTime(0);
+}
+
+class RDReferenceObject extends RowDetailsController {
+  ReferenceObjectModel refObject;
+  RDReferenceObject({required this.refObject});
+  RDReferenceObject.empty() : refObject = ReferenceObjectModel.empty();
 }

@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,6 +42,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
         final String cellText;
         final bool cellBool;
         final DateTime cellTime;
+        final ReferenceObjectModel cellRefObj;
         if ((form.object.map[prop.key] is String ||
                 form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.text) {
@@ -66,6 +68,8 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           cellTime = DateTime.fromMillisecondsSinceEpoch(
               form.object.map[prop.key] ?? 0);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
+        } else if (prop.propertyType == Prop.referenceObject) {
+          form.controllers[prop.key] = RDReferenceObject(refObject: refObject);
         }
       }
 
