@@ -61,12 +61,31 @@ class TableModel extends DataObject {
               text: FormatDate.dmyHm(
                   DateTime.fromMillisecondsSinceEpoch(obj.map[key] ?? 0)));
         } else if (prop == Prop.referenceObject) {
-          /*ReferenceObjectModel refObj = ReferenceObjectModel(
-            idEntity: obj.map[key][ReferenceObjectModel.entity],
-            idObject: obj.map[key][ReferenceObjectModel.object],
-            idProperty: obj.map[key][ReferenceObjectModel]
+          final ReferenceObjectModel refObj =
+              obj.map[key][ReferenceObjectModel.refObj];
+          final PropertyModel propRef = refObj.propertyList.firstWhere(
+            (x) => x.key == obj.map[key][ReferenceObjectModel.property],
+            orElse: () => PropertyModel.empty(),
           );
-          row[key] = CellText(text: refObj.idProperty);*/
+          if (propRef.propertyType == Prop.empty) {
+            row[key] =
+                CellReference(text: refObj.referenceObject.id);
+          } else if (propRef.propertyType == Prop.text) {
+            row[key] = CellReference(
+                text: refObj.referenceObject.map[propRef.key] ?? '');
+          } else if (propRef.propertyType == Prop.double ||
+              propRef.propertyType == Prop.int) {
+            row[key] = CellReference(
+                text: '${refObj.referenceObject.map[propRef.key] ?? ''}');
+          } else if (propRef.propertyType == Prop.bool) {
+            row[key] = CellReference(
+                valueBool: refObj.referenceObject.map[propRef.key] ?? false);
+          } else if (propRef.propertyType == Prop.time) {
+            row[key] = CellReference(
+                text: FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
+                    refObj.referenceObject.map[propRef.key] ?? 0)));
+          }
+          
         }
       }
       rowList.add(row);

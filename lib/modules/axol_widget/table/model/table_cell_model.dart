@@ -18,3 +18,10 @@ class CellCheck extends TableCellModel {
 
   CellCheck.init() : value = false;
 }
+
+class CellReference extends TableCellModel {
+  final String? text;
+  final bool? valueBool;
+
+  CellReference({this.text, this.valueBool});
+}

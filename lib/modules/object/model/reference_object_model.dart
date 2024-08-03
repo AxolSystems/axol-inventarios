@@ -1,21 +1,34 @@
 import '../../entity/model/property_model.dart';
+import 'object_model.dart';
 
 class ReferenceObjectModel {
   final String idEntity;
-  final String idObject;
-  final String? idProperty;
-  final dynamic data;
-  final Prop? prop;
+  final ObjectModel referenceObject;
+  final List<PropertyModel> propertyList;
 
   ReferenceObjectModel({
     required this.idEntity,
-    required this.idObject,
-    required this.idProperty,
-    required this.data,
-    required this.prop,
+    required this.referenceObject,
+    required this.propertyList,
   });
 
+  ReferenceObjectModel.empty()
+      : idEntity = '',
+        referenceObject = ObjectModel.empty(),
+        propertyList = [];
+
+  /// get: 'id_entity'
   static String get entity => 'id_entity';
+
+  /// get: 'id_object'
   static String get object => 'id_object';
-  static String get property => 'id_property'; 
+
+  /// get: 'id_property'
+  static String get property => 'id_property';
+
+  /// get: 'reference_object'
+  static String get refObj => 'reference_object';
+
+  /// get: 'object_property'
+  static String get objProp => 'object_property';
 }

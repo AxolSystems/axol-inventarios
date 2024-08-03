@@ -479,6 +479,33 @@ class TableViewBuild extends AxolWidget {
                 value: cell.value,
                 theme: form.theme,
               ));
+        } else if (cell is CellReference) {
+          final Widget elementWidget;
+          if (cell.text != null) {
+            elementWidget = Text(
+              cell.text!,
+              style: Typo.body(form.theme),
+              overflow: TextOverflow.ellipsis,
+            );
+          } else if (cell.valueBool != null) {
+            elementWidget = CheckboxView(
+              value: cell.valueBool!,
+              theme: form.theme,
+            );
+          } else {
+            elementWidget = const SizedBox();
+          }
+          widget = Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  border: Border.all(color: ColorTheme.item30(form.theme))),
+              height: 30,
+              width: form.columnWidth[prop.key],
+              child: Row(
+                children: [
+                  elementWidget,
+                ],
+              ));
         } else {
           widget = Container(
             padding: const EdgeInsets.all(4),

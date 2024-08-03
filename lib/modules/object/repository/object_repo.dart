@@ -5,11 +5,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/data_response_model.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
+import '../../entity/repository/entity_repo.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
 
 class ObjectRepo {
-  static const String _id = 'id';
+  static const String id = 'id';
   static const String _object = 'object';
   static const String _createAt = 'create_at';
   static final _supabase = Supabase.instance.client;
@@ -41,8 +42,6 @@ class ObjectRepo {
     final String keyAscending_;
     final DataResponseModel dataResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
-    List<Map<String, dynamic>> referencesResponse = [];
-    List<Map<String, dynamic>> entityResponse = [];
 
     if (keyAscending == null) {
       keyAscending_ = _createAt;
@@ -130,9 +129,14 @@ class ObjectRepo {
     if (objsDB.isNotEmpty) {
       List<String> idObjects = [];
       List<String> idEntities = [];
+      List<PropertyModel> propsRef = [];
+      List<ReferenceObjectModel> objsRef = [];
+
       for (var prop in link.entity.propertyList) {
         if (prop.propertyType == Prop.referenceObject) {
-          if (!idEntities.contains(prop.dynamicValues[PropertyModel.dvRefEntity])) {
+          propsRef.add(prop);
+          if (!idEntities
+              .contains(prop.dynamicValues[PropertyModel.dvRefEntity])) {
             idEntities.add(prop.dynamicValues[PropertyModel.dvRefEntity]);
           }
           for (var objDB in objsDB) {
@@ -142,23 +146,48 @@ class ObjectRepo {
               idObjects.add(idObject);
             }
           }
-          /*referencesResponse = await _supabase
-              .from(prop.dynamicValues[PropertyModel.dvRefTable])
-              .select<List<Map<String, dynamic>>>()
-              .in_('id', idObjects);*/
-          print(referencesResponse); //Siguiente: mostrar propiedad referenciada en tabla.
         }
       }
-      entityResponse = await _supabase
-              .from()
+
+      if (idEntities.isNotEmpty) {
+        final List<EntityModel> entityRefList =
+            await EntityRepo.fetchEntities(idEntities);
+        for (EntityModel entity in entityRefList) {
+          //mapObjRef[entity.uuid] =
+          final List<Map<String, dynamic>> objRefDb = await _supabase
+              .from(entity.tableName)
               .select<List<Map<String, dynamic>>>()
-              .in_('id', idObjects);
-      for (String idEntity in idEntities) {
+              .in_(id, idObjects);
+          for (Map<String, dynamic> element in objRefDb) {
+            objsRef.add(ReferenceObjectModel(
+              idEntity: entity.uuid,
+              referenceObject: ObjectModel(
+                  createAt: DateTime.parse(element[_createAt]),
+                  id: element[id],
+                  map: element[_object]),
+              propertyList: entity.propertyList,
+            ));
+          }
+        }
       }
-      
-      for (var objDB in objsDB) {
+
+      for (Map<String, dynamic> objDB in objsDB) {
+        final Map<String, dynamic> objMap = objDB[_object];
+
+        for (PropertyModel prop in propsRef) {
+          final String idObjRef;
+          if (objMap.containsKey(prop.key)) {
+            idObjRef = objMap[prop.key][ReferenceObjectModel.object];
+            objMap[prop.key][ReferenceObjectModel.refObj] = objsRef.firstWhere(
+              (x) => x.referenceObject.id == idObjRef,
+              orElse: () => ReferenceObjectModel.empty(),
+            );
+            objDB[_object] = objMap;
+          }
+        }
+
         obj = ObjectModel(
-          id: objDB[_id],
+          id: objDB[id],
           map: objDB[_object],
           createAt: DateTime.parse(objDB[_createAt]),
         );
@@ -170,7 +199,6 @@ class ObjectRepo {
       dataList: objList,
       count: postgrestResponse.count ?? 0,
     );
-
     return dataResponse;
   }
 
@@ -178,18 +206,18 @@ class ObjectRepo {
   static Future<void> update(ObjectModel object, WidgetLinkModel link) async {
     await _supabase
         .from(link.entity.tableName)
-        .update({_object: object.map}).eq(_id, object.id);
+        .update({_object: object.map}).eq(id, object.id);
   }
 
   /// Elimina un objeto de la base de datos.
   static Future<void> delete(ObjectModel object, WidgetLinkModel link) async {
-    await _supabase.from(link.entity.tableName).delete().eq(_id, object.id);
+    await _supabase.from(link.entity.tableName).delete().eq(id, object.id);
   }
 
   /// Inserta un objeto en la base de datos.
   static Future<void> insert(ObjectModel object, WidgetLinkModel link) async {
     await _supabase.from(link.entity.tableName).insert({
-      _id: object.id,
+      id: object.id,
       _object: object.map,
       _createAt: object.createAt.toIso8601String(),
     });
