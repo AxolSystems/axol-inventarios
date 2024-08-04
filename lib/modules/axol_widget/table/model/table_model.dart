@@ -63,10 +63,7 @@ class TableModel extends DataObject {
         } else if (prop == Prop.referenceObject) {
           final ReferenceObjectModel refObj =
               obj.map[key][ReferenceObjectModel.refObj];
-          final PropertyModel propRef = refObj.propertyList.firstWhere(
-            (x) => x.key == obj.map[key][ReferenceObjectModel.property],
-            orElse: () => PropertyModel.empty(),
-          );
+          final PropertyModel propRef = refObj.getPropView();
           if (propRef.propertyType == Prop.empty) {
             row[key] =
                 CellReference(text: refObj.referenceObject.id);

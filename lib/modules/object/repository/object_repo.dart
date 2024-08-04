@@ -166,6 +166,7 @@ class ObjectRepo {
                   id: element[id],
                   map: element[_object]),
               propertyList: entity.propertyList,
+              idPropertyView: '',
             ));
           }
         }
@@ -175,13 +176,17 @@ class ObjectRepo {
         final Map<String, dynamic> objMap = objDB[_object];
 
         for (PropertyModel prop in propsRef) {
+          final ReferenceObjectModel refObj;
           final String idObjRef;
           if (objMap.containsKey(prop.key)) {
             idObjRef = objMap[prop.key][ReferenceObjectModel.object];
-            objMap[prop.key][ReferenceObjectModel.refObj] = objsRef.firstWhere(
-              (x) => x.referenceObject.id == idObjRef,
-              orElse: () => ReferenceObjectModel.empty(),
-            );
+            refObj = ReferenceObjectModel.setPropView(
+                objsRef.firstWhere(
+                  (x) => x.referenceObject.id == idObjRef,
+                  orElse: () => ReferenceObjectModel.empty(),
+                ),
+                objMap[prop.key][ReferenceObjectModel.property]);
+            objMap[prop.key][ReferenceObjectModel.refObj] = refObj;
             objDB[_object] = objMap;
           }
         }

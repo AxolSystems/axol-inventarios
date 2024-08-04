@@ -2,43 +2,52 @@ import 'package:axol_inventarios/modules/object/model/reference_object_model.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../entity/model/property_model.dart';
-import '../../../../object/model/object_model.dart';
-import '../../../../object/repository/object_repo.dart';
-import '../../../../widget_link/model/widgetlink_model.dart';
-import '../../model/row_details_form_model.dart';
-import 'row_details_state.dart';
+import '../../../entity/model/property_model.dart';
+import '../../../object/model/object_model.dart';
+import '../../../object/repository/object_repo.dart';
+import '../../../widget_link/model/widgetlink_model.dart';
+import '../../../widget_link/repository/widgetlink_repo.dart';
+import '../model/object_details_form_model.dart';
+import 'object_details_state.dart';
 
 /// Cubit con lógica del negocio de drawer de detalles
 /// del objeto recibido.
-class RowDetailsCubit extends Cubit<RowDetailsState> {
-  RowDetailsCubit() : super(InitialRowDetailsState());
+class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
+  ObjectDetailsCubit() : super(InitialObjectDetailsState());
 
   /// Recarga los estados para mostrar un cambio en los parámetros
   /// mutables. Util si se requiere recargar la pantalla desde fuera
   /// del cubit.
   Future<void> load() async {
     try {
-      emit(InitialRowDetailsState());
-      emit(LoadingRowDetailsState());
+      emit(InitialObjectDetailsState());
+      emit(LoadingObjectDetailsState());
 
-      emit(LoadedRowDetailsState());
+      emit(LoadedObjectDetailsState());
     } catch (e) {
-      emit(InitialRowDetailsState());
+      emit(InitialObjectDetailsState());
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
 
   /// Carga el estado inicial de los parámetros de form.
-  Future<void> initLoad(RowDetailsFormModel form, WidgetLinkModel link,
-      ObjectModel object) async {
+  Future<void> initLoad(ObjectDetailsFormModel form, WidgetLinkModel link,
+      ObjectModel object, ReferenceObjectModel? referenceObject) async {
     try {
-      emit(InitialRowDetailsState());
-      emit(LoadingRowDetailsState());
+      emit(InitialObjectDetailsState());
+      emit(LoadingObjectDetailsState());
+      final List<PropertyModel> propList;
+
+      if (referenceObject != null) {
+        propList = referenceObject.propertyList;
+      } else {
+        propList = link.entity.propertyList;
+      }
+      print(propList.length);
 
       form.object = ObjectModel(
           id: object.id, map: object.map, createAt: object.createAt);
-      for (PropertyModel prop in link.entity.propertyList) {
+      for (PropertyModel prop in propList) {
         final String cellText;
         final bool cellBool;
         final DateTime cellTime;
@@ -69,35 +78,37 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
               form.object.map[prop.key] ?? 0);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         } else if (prop.propertyType == Prop.referenceObject) {
-          form.controllers[prop.key] = RDReferenceObject(refObject: refObject);
+          cellRefObj =
+              form.object.map[prop.key] ?? ReferenceObjectModel.empty();
+          form.controllers[prop.key] = RDReferenceObject(refObject: cellRefObj);
         }
       }
 
-      emit(LoadedRowDetailsState());
+      emit(LoadedObjectDetailsState());
     } catch (e) {
-      emit(InitialRowDetailsState());
+      emit(InitialObjectDetailsState());
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
 
   /// Cambia al estado de edición.
-  Future<void> edit(RowDetailsFormModel form) async {
+  Future<void> edit(ObjectDetailsFormModel form) async {
     try {
-      emit(InitialRowDetailsState());
-      emit(LoadingRowDetailsState());
+      emit(InitialObjectDetailsState());
+      emit(LoadingObjectDetailsState());
       form.edit = !form.edit;
-      emit(LoadedRowDetailsState());
+      emit(LoadedObjectDetailsState());
     } catch (e) {
-      emit(InitialRowDetailsState());
+      emit(InitialObjectDetailsState());
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
 
   /// Proceso para guardar los cambios realizados en el objeto.
-  Future<void> save(RowDetailsFormModel form, WidgetLinkModel link) async {
+  Future<void> save(ObjectDetailsFormModel form, WidgetLinkModel link) async {
     try {
-      emit(InitialRowDetailsState());
-      emit(SavingRowDetailsState());
+      emit(InitialObjectDetailsState());
+      emit(SavingObjectDetailsState());
       ObjectModel object;
       Map<String, dynamic> map = {};
       PropertyModel property;
@@ -106,6 +117,7 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
         final RDTextEditingController textController;
         final RDBoolController boolController;
         final RDDateController dateController;
+        final RDReferenceObject referenceObject;
 
         if (form.controllers[key] is RDTextEditingController) {
           textController = form.controllers[key] as RDTextEditingController;
@@ -125,6 +137,13 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           dateController = RDDateController(controller: DateTime.now());
         }
 
+        if (form.controllers[key] is RDReferenceObject) {
+          referenceObject = form.controllers[key] as RDReferenceObject;
+        } else {
+          referenceObject =
+              RDReferenceObject(refObject: ReferenceObjectModel.empty());
+        }
+
         property = link.entity.propertyList.firstWhere((x) => x.key == key);
 
         if (form.controllers[key] is RDTextEditingController &&
@@ -140,6 +159,14 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
+        } else if (form.controllers[key] is RDReferenceObject &&
+            property.propertyType == Prop.referenceObject) {
+          map[key] = {
+            ReferenceObjectModel.object:
+                referenceObject.refObject.referenceObject.id,
+            ReferenceObjectModel.property:
+                referenceObject.refObject.idPropertyView,
+          };
         }
       }
 
@@ -149,26 +176,26 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
       await ObjectRepo.update(object, link);
       form.object = object;
 
-      emit(SavedRowDetailsState());
-      emit(LoadedRowDetailsState());
+      emit(SavedObjectDetailsState());
+      emit(LoadedObjectDetailsState());
     } catch (e) {
-      emit(InitialRowDetailsState());
+      emit(InitialObjectDetailsState());
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
 
   /// Función para eliminar objeto actual en form.
-  Future<void> delete(RowDetailsFormModel form, WidgetLinkModel link) async {
+  Future<void> delete(ObjectDetailsFormModel form, WidgetLinkModel link) async {
     try {
-      emit(InitialRowDetailsState());
-      emit(DeletingRowDetailsState());
+      emit(InitialObjectDetailsState());
+      emit(DeletingObjectDetailsState());
 
       await ObjectRepo.delete(form.object, link);
 
-      emit(DeletedRowDetailsState());
-      emit(LoadedRowDetailsState());
+      emit(DeletedObjectDetailsState());
+      emit(LoadedObjectDetailsState());
     } catch (e) {
-      emit(InitialRowDetailsState());
+      emit(InitialObjectDetailsState());
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
@@ -176,11 +203,11 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
   Future<void> thenDateTimePick(
       {DateTime? date,
       TimeOfDay? time,
-      required RowDetailsFormModel form,
+      required ObjectDetailsFormModel form,
       required PropertyModel prop}) async {
     try {
-      emit(InitialRowDetailsState());
-      emit(LoadingRowDetailsState());
+      emit(InitialObjectDetailsState());
+      emit(LoadingObjectDetailsState());
       final RDDateController dateController =
           form.controllers[prop.key] as RDDateController;
       final DateTime dateTime = dateController.controller;
@@ -203,9 +230,9 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
           time.minute,
         ));
       }
-      emit(LoadedRowDetailsState());
+      emit(LoadedObjectDetailsState());
     } catch (e) {
-      emit(InitialRowDetailsState());
+      emit(InitialObjectDetailsState());
       emit(ErrorRowDetailsState(error: e.toString()));
     }
   }
@@ -213,6 +240,6 @@ class RowDetailsCubit extends Cubit<RowDetailsState> {
 
 /// Cubit que mantiene modelo de datos del formulario en segundo planto
 /// respecto al cambio de estados.
-class RowDetailsForm extends Cubit<RowDetailsFormModel> {
-  RowDetailsForm() : super(RowDetailsFormModel.empty());
+class RowDetailsForm extends Cubit<ObjectDetailsFormModel> {
+  RowDetailsForm() : super(ObjectDetailsFormModel.empty());
 }

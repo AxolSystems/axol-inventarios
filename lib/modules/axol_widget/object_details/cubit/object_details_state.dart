@@ -1,54 +1,54 @@
 import 'package:equatable/equatable.dart';
 
 /// Estados de cubit para drawer de detalles de objetos.
-abstract class RowDetailsState extends Equatable {
-  const RowDetailsState();
+abstract class ObjectDetailsState extends Equatable {
+  const ObjectDetailsState();
 }
 
 /// Estado inicial del cubit.
-class InitialRowDetailsState extends RowDetailsState {
+class InitialObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
 /// Estado de espera cuando se desarrolla un proceso.
-class LoadingRowDetailsState extends RowDetailsState {
+class LoadingObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
 /// Estado al que pasa una vez finaliza el estado de carga y muestra 
 /// los resultados obtenidos de los procesos anteriores.
-class LoadedRowDetailsState extends RowDetailsState {
+class LoadedObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
 /// Estado de al que pasa una vez finalizado el proceso de guardado.
-class SavedRowDetailsState extends RowDetailsState {
+class SavedObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
 /// Estado de espera cuando se encuentra en el estado de guardado.
-class SavingRowDetailsState extends RowDetailsState {
+class SavingObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
-class DeletingRowDetailsState extends RowDetailsState {
+class DeletingObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
-class DeletedRowDetailsState extends RowDetailsState {
+class DeletedObjectDetailsState extends ObjectDetailsState {
   @override
   List<Object?> get props => [];
 }
 
 
 /// Estado de error que aparece cuando se llega aun conflicto.
-class ErrorRowDetailsState extends RowDetailsState {
+class ErrorRowDetailsState extends ObjectDetailsState {
   final String error;
   const ErrorRowDetailsState({required this.error});
   @override

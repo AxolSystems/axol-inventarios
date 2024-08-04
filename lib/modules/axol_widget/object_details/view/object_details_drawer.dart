@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/utilities/widgets/button.dart';
 import 'package:axol_inventarios/utilities/widgets/checkbox_view.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
@@ -13,57 +14,63 @@ import '../../../../utilities/widgets/textfield.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
-import '../cubit/row_details/row_details_cubit.dart';
-import '../cubit/row_details/row_details_state.dart';
-import '../model/row_details_form_model.dart';
+import '../cubit/object_details_cubit.dart';
+import '../cubit/object_details_state.dart';
+import '../model/object_details_form_model.dart';
 
 /// Un drawer que se abre para mostrar los detalles
 /// de los parámetros seleccionados. Se da la opción
 /// para entrar a un modo de edición de los parámetros,
 /// y eliminar el objeto.
-class RowDetailsDrawer extends AxolWidget {
+class ObjectDetailsDrawer extends AxolWidget {
   final WidgetLinkModel link;
   final ObjectModel object;
-  const RowDetailsDrawer({
+  final ReferenceObjectModel? referenceObject;
+  const ObjectDetailsDrawer({
     super.key,
     super.theme,
     required this.link,
     required this.object,
+    this.referenceObject,
   });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => RowDetailsCubit()),
+        BlocProvider(create: (_) => ObjectDetailsCubit()),
         BlocProvider(create: (_) => RowDetailsForm()),
       ],
-      child: RowDetailsDrawerBuild(
+      child: ObjectDetailsDrawerBuild(
         theme: theme,
         link: link,
         object: object,
+        referenceObject: referenceObject,
       ),
     );
   }
 }
 
-class RowDetailsDrawerBuild extends AxolWidget {
+class ObjectDetailsDrawerBuild extends AxolWidget {
   final WidgetLinkModel link;
   final ObjectModel object;
-  const RowDetailsDrawerBuild({
+  final ReferenceObjectModel? referenceObject;
+  const ObjectDetailsDrawerBuild({
     super.key,
     super.theme,
     required this.link,
     required this.object,
+    this.referenceObject,
   });
 
   /// Construcción de drawer con el resto de su contenido.
   @override
   Widget build(BuildContext context) {
     int theme_ = theme ?? 0;
-    RowDetailsFormModel form = context.read<RowDetailsForm>().state;
-    return BlocConsumer<RowDetailsCubit, RowDetailsState>(
-        bloc: context.read<RowDetailsCubit>()..initLoad(form, link, object),
+    ObjectDetailsFormModel form = context.read<RowDetailsForm>().state;
+    return BlocConsumer<ObjectDetailsCubit, ObjectDetailsState>(
+        bloc: context.read<ObjectDetailsCubit>()
+          ..initLoad(form, link, object, referenceObject),
         listener: (context, state) {
           if (state is ErrorRowDetailsState) {
             showDialog(
@@ -73,8 +80,8 @@ class RowDetailsDrawerBuild extends AxolWidget {
               ),
             );
           }
-          if (state is SavedRowDetailsState) {
-            context.read<RowDetailsCubit>().edit(form);
+          if (state is SavedObjectDetailsState) {
+            context.read<ObjectDetailsCubit>().edit(form);
           }
         },
         builder: (context, state) {
@@ -104,16 +111,16 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Cancelar',
                       onPressed: () {
-                        context.read<RowDetailsCubit>().edit(form);
+                        context.read<ObjectDetailsCubit>().edit(form);
                       },
                     ),
                     PrimaryButton(
-                      isLoading: state is SavingRowDetailsState,
+                      isLoading: state is SavingObjectDetailsState,
                       theme: theme_,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Guardar',
                       onPressed: () {
-                        context.read<RowDetailsCubit>().save(
+                        context.read<ObjectDetailsCubit>().save(
                               form,
                               link,
                             );
@@ -121,30 +128,36 @@ class RowDetailsDrawerBuild extends AxolWidget {
                     ),
                   ]
                 : [
-                    AlertButton(
-                      text: 'Eliminar',
-                      theme: theme_,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => BlocProvider(
-                            create: (_) => RowDetailsCubit(),
-                            child: AlertDialogObjectDelete(
-                              form: form,
-                              link: link,
-                              theme: theme_,
+                    Visibility(
+                      visible: referenceObject == null,
+                      child: AlertButton(
+                        text: 'Eliminar',
+                        theme: theme_,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => BlocProvider(
+                              create: (_) => ObjectDetailsCubit(),
+                              child: AlertDialogObjectDelete(
+                                form: form,
+                                link: link,
+                                theme: theme_,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                    SecondaryButton(
-                      theme: theme_,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      text: 'Editar',
-                      onPressed: () {
-                        context.read<RowDetailsCubit>().edit(form);
-                      },
+                    Visibility(
+                      visible: referenceObject == null,
+                      child: SecondaryButton(
+                        theme: theme_,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        text: 'Editar',
+                        onPressed: () {
+                          context.read<ObjectDetailsCubit>().edit(form);
+                        },
+                      ),
                     ),
                     SecondaryButton(
                       theme: theme_,
@@ -157,13 +170,17 @@ class RowDetailsDrawerBuild extends AxolWidget {
                   ],
             child: Expanded(
               child: ListView.builder(
-                itemCount: link.entity.propertyList.length,
+                itemCount: referenceObject != null
+                    ? referenceObject!.propertyList.length
+                    : link.entity.propertyList.length,
                 itemBuilder: (context, index) {
-                  final PropertyModel prop = link.entity.propertyList[index];
+                  final PropertyModel prop = referenceObject != null
+                      ? referenceObject!.propertyList[index]
+                      : link.entity.propertyList[index];
                   final Widget widgetRead;
                   final Widget widgetWrite;
                   final List<TextInputFormatter> inputFormatters;
-
+                  final Widget refWidget;
                   if (prop.propertyType == Prop.text) {
                     widgetRead = Text(
                       form.object.map[prop.key] ?? '',
@@ -195,6 +212,65 @@ class RowDetailsDrawerBuild extends AxolWidget {
                       FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
                           form.object.map[prop.key] ?? 0)),
                       style: Typo.body(theme_),
+                    );
+                  } else if (prop.propertyType == Prop.referenceObject) {
+                    final ReferenceObjectModel refObj =
+                        form.object.map[prop.key][ReferenceObjectModel.refObj];
+                    if (refObj.getPropView().propertyType == Prop.double ||
+                        refObj.getPropView().propertyType == Prop.int) {
+                      refWidget = Text(
+                        '${refObj.referenceObject.map[refObj.getPropView().key] ?? ''}',
+                        style: Typo.body(theme_),
+                      );
+                    } else if (refObj.getPropView().propertyType == Prop.text) {
+                      refWidget = Text(
+                        refObj.referenceObject.map[refObj.getPropView().key] ??
+                            '',
+                        style: Typo.body(theme_),
+                      );
+                    } else if (refObj.getPropView().propertyType == Prop.bool) {
+                      refWidget = Align(
+                        alignment: Alignment.centerLeft,
+                        child: CheckboxView(
+                          value: refObj.referenceObject
+                                  .map[refObj.getPropView().key] ??
+                              false,
+                          theme: theme_,
+                        ),
+                      );
+                    } else if (refObj.getPropView().propertyType == Prop.time) {
+                      refWidget = Text(
+                        FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
+                            refObj.referenceObject
+                                    .map[refObj.getPropView().key] ??
+                                0)),
+                        style: Typo.body(theme_),
+                      );
+                    } else {
+                      refWidget = const SizedBox();
+                    }
+
+                    widgetRead = Row(
+                      children: [
+                        refWidget,
+                        const Expanded(child: SizedBox()),
+                        IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => ObjectDetailsDrawer(
+                                  link: WidgetLinkModel.empty(),
+                                  object: refObj.referenceObject,
+                                  referenceObject: refObj,
+                                  theme: theme_,
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.arrow_outward,
+                              color: ColorTheme.item10(theme_),
+                            )),
+                      ],
                     );
                   } else {
                     widgetRead = const SizedBox();
@@ -248,7 +324,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                             form.controllers[prop.key] =
                                 RDBoolController(controller: value);
                           }
-                          context.read<RowDetailsCubit>().load();
+                          context.read<ObjectDetailsCubit>().load();
                         },
                       ),
                     );
@@ -288,7 +364,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                                   ).then(
                                     (value) {
                                       context
-                                          .read<RowDetailsCubit>()
+                                          .read<ObjectDetailsCubit>()
                                           .thenDateTimePick(
                                               form: form,
                                               prop: prop,
@@ -335,7 +411,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
                                   ).then(
                                     (value) {
                                       context
-                                          .read<RowDetailsCubit>()
+                                          .read<ObjectDetailsCubit>()
                                           .thenDateTimePick(
                                               form: form,
                                               prop: prop,
@@ -399,7 +475,7 @@ class RowDetailsDrawerBuild extends AxolWidget {
 
 /// Clase que contiene widget dialogo de alerta para confirmación de eliminación de objeto.
 class AlertDialogObjectDelete extends AxolWidget {
-  final RowDetailsFormModel form;
+  final ObjectDetailsFormModel form;
   final WidgetLinkModel link;
   const AlertDialogObjectDelete({
     super.key,
@@ -411,10 +487,10 @@ class AlertDialogObjectDelete extends AxolWidget {
   @override
   Widget build(BuildContext context) {
     int theme_ = theme ?? 0;
-    return BlocConsumer<RowDetailsCubit, RowDetailsState>(
-      bloc: context.read<RowDetailsCubit>()..load(),
+    return BlocConsumer<ObjectDetailsCubit, ObjectDetailsState>(
+      bloc: context.read<ObjectDetailsCubit>()..load(),
       listener: (context, state) {
-        if (state is DeletedRowDetailsState) {
+        if (state is DeletedObjectDetailsState) {
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -435,7 +511,7 @@ class AlertDialogObjectDelete extends AxolWidget {
                   text: 'Regresar',
                   textAlign: TextAlign.center,
                   onPressed: () {
-                    if (state is LoadedRowDetailsState) {
+                    if (state is LoadedObjectDetailsState) {
                       Navigator.pop(context);
                     }
                   },
@@ -449,10 +525,10 @@ class AlertDialogObjectDelete extends AxolWidget {
                   padding: const EdgeInsetsDirectional.symmetric(
                       horizontal: 8, vertical: 8),
                   text: 'Eliminar',
-                  isLoading: state is DeletingRowDetailsState,
+                  isLoading: state is DeletingObjectDetailsState,
                   onPressed: () {
-                    if (state is LoadedRowDetailsState) {
-                      context.read<RowDetailsCubit>().delete(form, link);
+                    if (state is LoadedObjectDetailsState) {
+                      context.read<ObjectDetailsCubit>().delete(form, link);
                     }
                   },
                 ),

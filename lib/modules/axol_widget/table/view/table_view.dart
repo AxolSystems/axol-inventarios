@@ -19,7 +19,7 @@ import '../cubit/table/table_cubit.dart';
 import '../cubit/table/table_state.dart';
 import '../model/table_form_model.dart';
 import 'filter_drawer.dart';
-import 'row_details_drawer.dart';
+import '../../object_details/view/object_details_drawer.dart';
 
 /// Vista que contiene el widget de tabla. Las tablas son el medio donde
 /// se presentan en pantalla los objetos de un bloque consultado. Permitiendo
@@ -263,7 +263,7 @@ class TableViewBuild extends AxolWidget {
                                     onPressed: () {
                                       showDialog(
                                         context: context,
-                                        builder: (context) => RowDetailsDrawer(
+                                        builder: (context) => ObjectDetailsDrawer(
                                           theme: form.theme,
                                           link: link,
                                           object: form.table.objects[index],

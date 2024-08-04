@@ -3,6 +3,7 @@ import 'object_model.dart';
 
 class ReferenceObjectModel {
   final String idEntity;
+  final String idPropertyView;
   final ObjectModel referenceObject;
   final List<PropertyModel> propertyList;
 
@@ -10,12 +11,20 @@ class ReferenceObjectModel {
     required this.idEntity,
     required this.referenceObject,
     required this.propertyList,
+    required this.idPropertyView,
   });
 
   ReferenceObjectModel.empty()
       : idEntity = '',
         referenceObject = ObjectModel.empty(),
-        propertyList = [];
+        propertyList = [],
+        idPropertyView = '';
+
+  ReferenceObjectModel.setPropView(
+      ReferenceObjectModel refObj, this.idPropertyView)
+      : idEntity = refObj.idEntity,
+        referenceObject = refObj.referenceObject,
+        propertyList = refObj.propertyList;
 
   /// get: 'id_entity'
   static String get entity => 'id_entity';
@@ -31,4 +40,9 @@ class ReferenceObjectModel {
 
   /// get: 'object_property'
   static String get objProp => 'object_property';
+
+  PropertyModel getPropView() => propertyList.firstWhere(
+        (x) => x.key == idPropertyView,
+        orElse: () => PropertyModel.empty(),
+      );
 }

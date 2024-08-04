@@ -5,19 +5,19 @@ import '../../../object/model/reference_object_model.dart';
 
 /// Modelo de datos con propiedades mutables a traves
 /// de los estados del drawer de detalles del objeto.
-class RowDetailsFormModel {
+class ObjectDetailsFormModel {
   Map<String, RowDetailsController> controllers;
   bool edit;
   ObjectModel object;
 
-  RowDetailsFormModel({
+  ObjectDetailsFormModel({
     required this.controllers,
     required this.edit,
     required this.object,
   });
 
   /// Estado inicial del form.
-  RowDetailsFormModel.empty()
+  ObjectDetailsFormModel.empty()
       : controllers = {},
         edit = false,
         object = ObjectModel.empty();
