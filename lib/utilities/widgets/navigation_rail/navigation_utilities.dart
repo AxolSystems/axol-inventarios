@@ -6,7 +6,7 @@ import '../../../modules/sale/sale_note/view/sale_view.dart';
 import '../../../modules/sale_report/view/salereport_view.dart';
 import '../../../modules/user/view/views/home_view.dart';
 import '../../../modules/waybill/view/waybill_view.dart';
-import '../button.dart';
+import '../buttons/button.dart';
 
 class NavigationUtilities {
   static const NavigationRailDestination _destinationHome =

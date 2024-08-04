@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../modules/inventory_/movements/model/movement_model.dart';
 import '../../theme/theme.dart';
-import '../button.dart';
+import '../buttons/button.dart';
 import '../loading_indicator/progress_indicator.dart';
 
 abstract class TableView extends StatelessWidget {

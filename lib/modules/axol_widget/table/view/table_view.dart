@@ -1,6 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
-import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

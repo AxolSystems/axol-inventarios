@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/widgets/dialog.dart';
-import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/buttons/button.dart';
 import '../../../../utilities/widgets/loading_indicator/progress_indicator.dart';
 import '../cubit/vendor_delete/vendor_delete_cubit.dart';
 import '../cubit/vendor_delete/vendor_delete_state.dart';

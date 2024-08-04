@@ -1,7 +1,7 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
+import '../../theme/theme.dart';
 
 class PrimaryDropDownButton extends AxolWidget {
   final dynamic value;

@@ -3,7 +3,7 @@ import 'package:axol_inventarios/utilities/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/buttons/button.dart';
 import '../cubit/snt_down_dialog.dart/snt_down_dialog_cubit.dart';
 import '../cubit/snt_down_dialog.dart/snt_down_dialog_state.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
-import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/buttons/button.dart';
 import '../cubit/inventory_dialog_save/inventory_dialog_save_cubit.dart';
 import '../cubit/inventory_dialog_save/inventory_dialog_save_state.dart';
 import '../model/report_inventory_move_model.dart';

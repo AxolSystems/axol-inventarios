@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utilities/format.dart';

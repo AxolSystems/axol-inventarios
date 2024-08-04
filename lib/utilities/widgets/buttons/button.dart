@@ -1,7 +1,7 @@
 import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/theme.dart';
+import '../../theme/theme.dart';
 
 class PrimaryButtonDialog extends StatefulWidget {
   final Function()? onPressed;

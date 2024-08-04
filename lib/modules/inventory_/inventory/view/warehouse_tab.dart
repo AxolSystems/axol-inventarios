@@ -1,5 +1,5 @@
 import 'package:axol_inventarios/modules/inventory_/inventory/cubit/warehouse_tab/warehouse_tab_state.dart';
-import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

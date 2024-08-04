@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
-import '../../../utilities/widgets/button.dart';
+import '../../../utilities/widgets/buttons/button.dart';
 import '../../../utilities/widgets/textfield.dart';
 import '../../main_/cubit/main_view/mainview_cubit.dart';
 import '../../main_/cubit/main_view/mainview_state.dart';

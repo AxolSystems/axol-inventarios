@@ -1,6 +1,6 @@
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:axol_inventarios/utilities/format.dart';
-import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

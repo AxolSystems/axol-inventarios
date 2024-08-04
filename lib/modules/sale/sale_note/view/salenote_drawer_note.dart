@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/dialog.dart';
-import '../../../../utilities/widgets/button.dart';
+import '../../../../utilities/widgets/buttons/button.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../cubit/salenote_note/salenote_note_cubit.dart';
 import '../cubit/salenote_note/salenote_note_state.dart';

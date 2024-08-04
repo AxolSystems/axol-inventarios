@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/format.dart';
 import '../../../utilities/theme/theme.dart';
-import '../../../utilities/widgets/button.dart';
+import '../../../utilities/widgets/buttons/button.dart';
 import '../cubit/add/srp_add_state.dart';
 import '../cubit/doc_details/srp_doc_details_cubit.dart';
 import '../cubit/doc_details/srp_doc_details_state.dart';

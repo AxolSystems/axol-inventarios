@@ -1,5 +1,5 @@
 import 'package:axol_inventarios/utilities/widgets/appbar_axol/leading_appbar_axol.dart';
-import 'package:axol_inventarios/utilities/widgets/button.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
