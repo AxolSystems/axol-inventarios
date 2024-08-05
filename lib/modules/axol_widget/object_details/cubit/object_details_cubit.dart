@@ -43,7 +43,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       } else {
         propList = link.entity.propertyList;
       }
-      print(propList.length);
 
       form.object = ObjectModel(
           id: object.id, map: object.map, createAt: object.createAt);

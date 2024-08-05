@@ -24,7 +24,7 @@ class PropertyModel {
   static String get dataType => 'dataType';
   static String get propName => 'propName';
   static String get tDynamicValues => 'dynamic_values';
-  static String get dvRefEntity => 'reference_entity';
+  static String get dvRefLink => 'reference_link';
   static String get dvRefTable => 'reference_table';
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {

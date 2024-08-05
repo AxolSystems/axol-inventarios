@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../models/data_response_model.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
-import '../../entity/repository/entity_repo.dart';
+import '../../widget_link/repository/widgetlink_repo.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
 
@@ -128,16 +128,16 @@ class ObjectRepo {
 
     if (objsDB.isNotEmpty) {
       List<String> idObjects = [];
-      List<String> idEntities = [];
+      List<String> idLinks = [];
       List<PropertyModel> propsRef = [];
       List<ReferenceObjectModel> objsRef = [];
-
+      
       for (var prop in link.entity.propertyList) {
         if (prop.propertyType == Prop.referenceObject) {
           propsRef.add(prop);
-          if (!idEntities
-              .contains(prop.dynamicValues[PropertyModel.dvRefEntity])) {
-            idEntities.add(prop.dynamicValues[PropertyModel.dvRefEntity]);
+          if (!idLinks
+              .contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
+            idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
           }
           for (var objDB in objsDB) {
             final String? idObject =
@@ -149,23 +149,23 @@ class ObjectRepo {
         }
       }
 
-      if (idEntities.isNotEmpty) {
-        final List<EntityModel> entityRefList =
-            await EntityRepo.fetchEntities(idEntities);
-        for (EntityModel entity in entityRefList) {
+      if (idLinks.isNotEmpty) {
+        final List<WidgetLinkModel> linkRefList =
+            await WidgetLinkRepo.fetchWidgetLik(idLinks);
+        for (WidgetLinkModel link in linkRefList) {
           //mapObjRef[entity.uuid] =
           final List<Map<String, dynamic>> objRefDb = await _supabase
-              .from(entity.tableName)
+              .from(link.entity.tableName)
               .select<List<Map<String, dynamic>>>()
               .in_(id, idObjects);
           for (Map<String, dynamic> element in objRefDb) {
             objsRef.add(ReferenceObjectModel(
-              idEntity: entity.uuid,
+              idLink: link.id,
               referenceObject: ObjectModel(
                   createAt: DateTime.parse(element[_createAt]),
                   id: element[id],
                   map: element[_object]),
-              propertyList: entity.propertyList,
+              propertyList: link.entity.propertyList,
               idPropertyView: '',
             ));
           }

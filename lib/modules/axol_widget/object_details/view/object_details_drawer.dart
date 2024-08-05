@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/buttons/search_button/view/search_button.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../../entity/model/property_model.dart';
@@ -441,6 +442,23 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                             ],
                           ),
                         ));
+                  } else if (prop.propertyType == Prop.referenceObject) {
+                    final ReferenceObjectModel refObj =
+                        form.object.map[prop.key][ReferenceObjectModel.refObj];
+                    widgetWrite = SearchButton(
+                      referenceObject: refObj,
+                      theme: theme_,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => SearchReferenceObject(
+                            theme: theme_,
+                            idRefLink: refObj.idLink,
+                            initIdRefObject: refObj.referenceObject.id,
+                          ),
+                        );
+                      },
+                    );
                   } else {
                     widgetWrite = const SizedBox();
                   }
