@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../modules/object/model/object_model.dart';
-import '../../../../../modules/widget_link/model/widgetlink_model.dart';
+import '../../../object/model/object_model.dart';
+import '../../../widget_link/model/widgetlink_model.dart';
+import 'filter_property_form_model.dart';
 
 class SearchRefObjFormModel {
   TextEditingController finderController;
   List<ObjectModel> objectList;
+  List<PropChecked> propCheckedList;
   WidgetLinkModel link;
   int currentPage;
   int totalPage;
@@ -20,12 +22,14 @@ class SearchRefObjFormModel {
     required this.totalPage,
     required this.limitRows,
     required this.totalReg,
+    required this.propCheckedList,
   });
 
   SearchRefObjFormModel.empty()
       : finderController = TextEditingController(),
         objectList = [],
         link = WidgetLinkModel.empty(),
+        propCheckedList = [],
         currentPage = 1,
         totalPage = 0,
         limitRows = 50,

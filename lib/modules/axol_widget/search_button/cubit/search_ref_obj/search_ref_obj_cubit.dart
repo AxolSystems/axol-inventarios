@@ -1,11 +1,13 @@
+import 'package:axol_inventarios/modules/axol_widget/search_button/model/filter_property_form_model.dart';
+import 'package:axol_inventarios/modules/entity/model/property_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../models/data_response_model.dart';
-import '../../../../../modules/object/model/object_model.dart';
-import '../../../../../modules/object/repository/object_repo.dart';
-import '../../../../../modules/widget_link/model/widgetlink_model.dart';
-import '../../../../../modules/widget_link/repository/widgetlink_repo.dart';
-import '../model/search_ref_obj_form_model.dart';
+import '../../../../object/model/object_model.dart';
+import '../../../../object/repository/object_repo.dart';
+import '../../../../widget_link/model/widgetlink_model.dart';
+import '../../../../widget_link/repository/widgetlink_repo.dart';
+import '../../model/search_ref_obj_form_model.dart';
 import 'search_ref_obj_state.dart';
 
 class SearchRefObjCubit extends Cubit<SearchRefObjState> {
@@ -31,21 +33,11 @@ class SearchRefObjCubit extends Cubit<SearchRefObjState> {
 
       links = await WidgetLinkRepo.fetchWidgetLik([idLink]);
 
-      /*rangeMin = (form.currentPage * form.limitRows) - form.limitRows;
-      rangeMax = (form.currentPage * form.limitRows) - 1;
-
-      dataResponse = await ObjectRepo.fetchObject(
-        filters: [],
-        link: links.first,
-        rangeMin: rangeMin,
-        rangeMax: rangeMax,
-      );
-
-      countReg = dataResponse.count;
-      form.totalPage = (countReg / form.limitRows).ceil();
-      form.totalReg = countReg;*/
       await getData(form: form, link: links.first);
       form.link = links.first;
+      for (PropertyModel prop in links.first.entity.propertyList) {
+        form.propCheckedList.add(PropChecked(checked: true, property: prop));
+      }
 
       emit(LoadedSearchRefObjState());
     } catch (e) {

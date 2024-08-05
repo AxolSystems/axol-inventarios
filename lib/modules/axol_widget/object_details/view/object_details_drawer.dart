@@ -9,7 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
-import '../../../../utilities/widgets/buttons/search_button/view/search_button.dart';
+import '../../search_button/view/search_button.dart';
+import '../../search_button/view/search_reference_object.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../../entity/model/property_model.dart';

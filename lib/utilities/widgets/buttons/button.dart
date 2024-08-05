@@ -460,6 +460,7 @@ class SecondaryButton extends StatelessWidget {
   final String? text;
   final TextAlign? textAlign;
   final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
   final int? theme;
   final double? width;
   final double? height;
@@ -473,68 +474,72 @@ class SecondaryButton extends StatelessWidget {
     this.theme,
     this.width,
     this.height,
+    this.margin,
   });
 
   /// Construye el widget del botón secundario.
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height ?? 28,
-      width: width,
-      child: Stack(
-        children: [
-          OutlinedButton(
-            style: ButtonStyle(
-              side: WidgetStateProperty.all(
-                  BorderSide(color: ColorTheme.item30(theme ?? 0))),
-              shape: WidgetStateProperty.all(const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(6)))),
-              padding: WidgetStateProperty.all(EdgeInsets.zero),
-              overlayColor:
-                  WidgetStateProperty.all(ColorTheme.fill(theme ?? 0)),
-              backgroundColor: WidgetStateProperty.all(Colors.transparent),
-              foregroundColor:
-                  WidgetStateProperty.all(ColorTheme.text(theme ?? 0)),
-              textStyle: WidgetStateProperty.all(Typo.systemDark),
-              splashFactory: NoSplash.splashFactory,
-            ),
-            onPressed: onPressed,
-            child: Padding(
-              padding: padding ?? EdgeInsets.zero,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Visibility(
-                      visible: icon != null,
-                      child: Icon(
-                        icon,
-                        size: 15,
-                      )),
-                  Visibility(
-                    visible: icon != null && text != null,
-                    child: const SizedBox(width: 8),
-                  ),
-                  Visibility(
-                    child: Text(
-                      text ?? '',
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: SizedBox(
+        height: height ?? 28,
+        width: width,
+        child: Stack(
+          children: [
+            OutlinedButton(
+              style: ButtonStyle(
+                side: WidgetStateProperty.all(
+                    BorderSide(color: ColorTheme.item30(theme ?? 0))),
+                shape: WidgetStateProperty.all(const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(6)))),
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+                overlayColor:
+                    WidgetStateProperty.all(ColorTheme.fill(theme ?? 0)),
+                backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                foregroundColor:
+                    WidgetStateProperty.all(ColorTheme.text(theme ?? 0)),
+                textStyle: WidgetStateProperty.all(Typo.systemDark),
+                splashFactory: NoSplash.splashFactory,
+              ),
+              onPressed: onPressed,
+              child: Padding(
+                padding: padding ?? EdgeInsets.zero,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Visibility(
+                        visible: icon != null,
+                        child: Icon(
+                          icon,
+                          size: 15,
+                        )),
+                    Visibility(
+                      visible: icon != null && text != null,
+                      child: const SizedBox(width: 8),
                     ),
-                  ),
-                ],
+                    Visibility(
+                      child: Text(
+                        text ?? '',
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Visibility(
-            visible: onPressed == null,
-            replacement: const SizedBox(),
-            child: Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: ColorTheme.enabledButton(theme ?? 0),
-                    borderRadius: const BorderRadius.all(Radius.circular(6))),
+            Visibility(
+              visible: onPressed == null,
+              replacement: const SizedBox(),
+              child: Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: ColorTheme.enabledButton(theme ?? 0),
+                      borderRadius: const BorderRadius.all(Radius.circular(6))),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
