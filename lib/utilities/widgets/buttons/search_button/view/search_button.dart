@@ -1,6 +1,7 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
+import 'package:axol_inventarios/utilities/widgets/loading_indicator/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -202,61 +203,70 @@ class SearchReferenceObjectBuild extends AxolWidget {
             ),
           ),
         ],
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: form.objectList.length,
-            itemBuilder: (context, index) {
-              final ObjectModel obj = form.objectList[index];
-              List<Widget> objectSchema = [];
-              for (PropertyModel prop in form.link.entity.propertyList) {
-                objectSchema.add(Row(
-                  children: [
-                    const SizedBox(width: 12),
-                    Text(
-                      '${prop.name}: ',
-                      style: Typo.subtitle(theme_),
-                    ),
-                    Text(
-                      obj.dataViewText(prop),
-                      style: Typo.body(theme_),
-                    ),
-                  ],
-                ));
-              }
-              return Card(
-                shadowColor: ColorTheme.item10(theme_),
-                shape: ContinuousRectangleBorder(
-                    side: BorderSide(color: ColorTheme.item30(theme_)),
-                    borderRadius: const BorderRadius.all(Radius.circular(6))),
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                color: ColorTheme.background(theme_),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+        child: state is LoadingSearchRefObjState
+            ? const Expanded(
+                child: Column(
+                children: [
+                  LinearProgressIndicatorAxol(),
+                  Expanded(child: SizedBox()),
+                ],
+              ))
+            : Expanded(
+                child: ListView.builder(
+                  itemCount: form.objectList.length,
+                  itemBuilder: (context, index) {
+                    final ObjectModel obj = form.objectList[index];
+                    List<Widget> objectSchema = [];
+                    for (PropertyModel prop in form.link.entity.propertyList) {
+                      objectSchema.add(Row(
                         children: [
-                          Text('Id: ', style: Typo.subtitle(theme_)),
+                          const SizedBox(width: 12),
                           Text(
-                            obj.id,
+                            '${prop.name}: ',
+                            style: Typo.subtitle(theme_),
+                          ),
+                          Text(
+                            obj.dataViewText(prop),
                             style: Typo.body(theme_),
-                          )
+                          ),
                         ],
+                      ));
+                    }
+                    return Card(
+                      shadowColor: ColorTheme.item10(theme_),
+                      shape: ContinuousRectangleBorder(
+                          side: BorderSide(color: ColorTheme.item30(theme_)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(6))),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
                       ),
-                      Column(
-                        children: objectSchema,
-                      )
-                    ],
-                  ),
+                      color: ColorTheme.background(theme_),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text('Id: ', style: Typo.subtitle(theme_)),
+                                Text(
+                                  obj.id,
+                                  style: Typo.body(theme_),
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: objectSchema,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
+              ),
       ),
     );
   }
