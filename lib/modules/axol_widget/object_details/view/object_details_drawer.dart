@@ -173,11 +173,11 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
             child: Expanded(
               child: ListView.builder(
                 itemCount: referenceObject != null
-                    ? referenceObject!.propertyList.length
+                    ? referenceObject!.referenceLink.entity.propertyList.length
                     : link.entity.propertyList.length,
                 itemBuilder: (context, index) {
                   final PropertyModel prop = referenceObject != null
-                      ? referenceObject!.propertyList[index]
+                      ? referenceObject!.referenceLink.entity.propertyList[index]
                       : link.entity.propertyList[index];
                   final Widget widgetRead;
                   final Widget widgetWrite;
@@ -217,7 +217,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     );
                   } else if (prop.propertyType == Prop.referenceObject) {
                     final ReferenceObjectModel refObj =
-                        form.object.map[prop.key][ReferenceObjectModel.refObj];
+                        form.object.map[prop.key];
                     if (refObj.getPropView().propertyType == Prop.double ||
                         refObj.getPropView().propertyType == Prop.int) {
                       refWidget = Text(
@@ -445,7 +445,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                         ));
                   } else if (prop.propertyType == Prop.referenceObject) {
                     final ReferenceObjectModel refObj =
-                        form.object.map[prop.key][ReferenceObjectModel.refObj];
+                        form.object.map[prop.key];
                     widgetWrite = SearchButton(
                       referenceObject: refObj,
                       theme: theme_,
@@ -454,9 +454,19 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           context: context,
                           builder: (context) => SearchReferenceObject(
                             theme: theme_,
-                            idRefLink: refObj.idLink,
+                            idRefLink: refObj.referenceLink.id,
                             initIdRefObject: refObj.referenceObject.id,
+                            idRefPropView: refObj.idPropertyView,
                           ),
+                        ).then(
+                          (value) {
+                            if (value is ReferenceObjectModel) {
+                              form.object.map[prop.key] = value;
+                              form.controllers[prop.key] =
+                                  RDReferenceObject(refObject: value);
+                              context.read<ObjectDetailsCubit>().load();
+                            }
+                          },
                         );
                       },
                     );

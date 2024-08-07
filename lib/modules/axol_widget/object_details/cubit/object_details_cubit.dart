@@ -6,7 +6,6 @@ import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
-import '../../../widget_link/repository/widgetlink_repo.dart';
 import '../model/object_details_form_model.dart';
 import 'object_details_state.dart';
 
@@ -39,7 +38,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       final List<PropertyModel> propList;
 
       if (referenceObject != null) {
-        propList = referenceObject.propertyList;
+        propList = referenceObject.referenceLink.entity.propertyList;
       } else {
         propList = link.entity.propertyList;
       }
@@ -116,7 +115,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         final RDTextEditingController textController;
         final RDBoolController boolController;
         final RDDateController dateController;
-        final RDReferenceObject referenceObject;
+        final RDReferenceObject refObjController;
 
         if (form.controllers[key] is RDTextEditingController) {
           textController = form.controllers[key] as RDTextEditingController;
@@ -137,9 +136,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         }
 
         if (form.controllers[key] is RDReferenceObject) {
-          referenceObject = form.controllers[key] as RDReferenceObject;
+          refObjController = form.controllers[key] as RDReferenceObject;
         } else {
-          referenceObject =
+          refObjController =
               RDReferenceObject(refObject: ReferenceObjectModel.empty());
         }
 
@@ -148,24 +147,33 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         if (form.controllers[key] is RDTextEditingController &&
             property.propertyType == Prop.text) {
           map[key] = textController.controller.text;
+          form.object.map[key] = textController.controller.text;
         } else if (form.controllers[key] is RDTextEditingController &&
             (property.propertyType == Prop.int ||
                 property.propertyType == Prop.double)) {
           map[key] = double.parse(textController.controller.text);
+          form.object.map[key] = double.parse(textController.controller.text);
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
           map[key] = dateController.controller.millisecondsSinceEpoch;
+          form.object.map[key] =
+              dateController.controller.millisecondsSinceEpoch;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
+          form.object.map[key] = boolController.controller;
         } else if (form.controllers[key] is RDReferenceObject &&
             property.propertyType == Prop.referenceObject) {
-          map[key] = {
+          map[key] = refObjController.refObject.referenceObject.id;
+          form.object.map[key] = ReferenceObjectModel.setRefObj(
+              form.object.map[key], refObjController.refObject.referenceObject);
+          /*{
             ReferenceObjectModel.object:
                 referenceObject.refObject.referenceObject.id,
             ReferenceObjectModel.property:
                 referenceObject.refObject.idPropertyView,
-          };
+            ReferenceObjectModel.refObj: referenceObject.refObject,
+          };*/
         }
       }
 
@@ -173,7 +181,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           createAt: form.object.createAt, id: form.object.id, map: map);
 
       await ObjectRepo.update(object, link);
-      form.object = object;
 
       emit(SavedObjectDetailsState());
       emit(LoadedObjectDetailsState());

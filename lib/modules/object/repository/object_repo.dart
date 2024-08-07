@@ -131,17 +131,15 @@ class ObjectRepo {
       List<String> idLinks = [];
       List<PropertyModel> propsRef = [];
       List<ReferenceObjectModel> objsRef = [];
-      
+
       for (var prop in link.entity.propertyList) {
         if (prop.propertyType == Prop.referenceObject) {
           propsRef.add(prop);
-          if (!idLinks
-              .contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
+          if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
             idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
           }
           for (var objDB in objsDB) {
-            final String? idObject =
-                objDB[_object][prop.key][ReferenceObjectModel.object];
+            final String? idObject = objDB[_object][prop.key];
             if (idObject != null && idObject != '') {
               idObjects.add(idObject);
             }
@@ -160,12 +158,13 @@ class ObjectRepo {
               .in_(id, idObjects);
           for (Map<String, dynamic> element in objRefDb) {
             objsRef.add(ReferenceObjectModel(
-              idLink: link.id,
+              //idLink: link.id,
+              referenceLink: link,
               referenceObject: ObjectModel(
                   createAt: DateTime.parse(element[_createAt]),
                   id: element[id],
                   map: element[_object]),
-              propertyList: link.entity.propertyList,
+              //propertyList: link.entity.propertyList,
               idPropertyView: '',
             ));
           }
@@ -179,14 +178,19 @@ class ObjectRepo {
           final ReferenceObjectModel refObj;
           final String idObjRef;
           if (objMap.containsKey(prop.key)) {
-            idObjRef = objMap[prop.key][ReferenceObjectModel.object];
+            idObjRef = objMap[prop.key];
             refObj = ReferenceObjectModel.setPropView(
                 objsRef.firstWhere(
                   (x) => x.referenceObject.id == idObjRef,
                   orElse: () => ReferenceObjectModel.empty(),
                 ),
-                objMap[prop.key][ReferenceObjectModel.property]);
-            objMap[prop.key][ReferenceObjectModel.refObj] = refObj;
+                link.entity.propertyList
+                    .firstWhere(
+                      (x) => x.key == prop.key,
+                      orElse: () => PropertyModel.empty(),
+                    )
+                    .dynamicValues[ReferenceObjectModel.property] ?? '');
+            objMap[prop.key] = refObj;
             objDB[_object] = objMap;
           }
         }

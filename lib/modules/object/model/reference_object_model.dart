@@ -1,31 +1,42 @@
 import '../../../utilities/format.dart';
 import '../../entity/model/property_model.dart';
+import '../../widget_link/model/widgetlink_model.dart';
 import 'object_model.dart';
 
+/// TODO: La propiedad referenciada a visualizar debe determinarse a nivel
+/// de columna, no por fila.
+
 class ReferenceObjectModel {
-  final String idLink;
+  //final String idLink;
   final String idPropertyView;
   final ObjectModel referenceObject;
-  final List<PropertyModel> propertyList;
+  //final List<PropertyModel> propertyList;
+  final WidgetLinkModel referenceLink;
 
   ReferenceObjectModel({
-    required this.idLink,
+    //required this.idLink,
     required this.referenceObject,
-    required this.propertyList,
+    //required this.propertyList,
     required this.idPropertyView,
+    required this.referenceLink,
   });
 
   ReferenceObjectModel.empty()
-      : idLink = '',
+      : //idLink = '',
+        referenceLink = WidgetLinkModel.empty(),
         referenceObject = ObjectModel.empty(),
-        propertyList = [],
+        //propertyList = [],
         idPropertyView = '';
 
   ReferenceObjectModel.setPropView(
       ReferenceObjectModel refObj, this.idPropertyView)
-      : idLink = refObj.idLink,
-        referenceObject = refObj.referenceObject,
-        propertyList = refObj.propertyList;
+      : referenceLink = refObj.referenceLink,
+        referenceObject = refObj.referenceObject;
+
+  ReferenceObjectModel.setRefObj(
+      ReferenceObjectModel refObj, this.referenceObject)
+      : referenceLink = refObj.referenceLink,
+        idPropertyView = refObj.idPropertyView;
 
   /// get: 'id_entity'
   static String get entity => 'id_entity';
@@ -42,7 +53,7 @@ class ReferenceObjectModel {
   /// get: 'object_property'
   static String get objProp => 'object_property';
 
-  PropertyModel getPropView() => propertyList.firstWhere(
+  PropertyModel getPropView() => referenceLink.entity.propertyList.firstWhere(
         (x) => x.key == idPropertyView,
         orElse: () => PropertyModel.empty(),
       );

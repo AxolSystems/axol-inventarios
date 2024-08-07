@@ -62,7 +62,7 @@ class TableModel extends DataObject {
                   DateTime.fromMillisecondsSinceEpoch(obj.map[key] ?? 0)));
         } else if (prop == Prop.referenceObject) {
           final ReferenceObjectModel refObj =
-              obj.map[key][ReferenceObjectModel.refObj];
+              obj.map[key];
           final PropertyModel propRef = refObj.getPropView();
           if (propRef.propertyType == Prop.empty) {
             row[key] =

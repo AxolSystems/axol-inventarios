@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/axol_widget/search_button/model/filter_
 import 'package:axol_inventarios/modules/axol_widget/search_button/view/filter_property_drawer.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:axol_inventarios/modules/axol_widget/search_button/cubit/search_ref_obj/search_ref_obj_state.dart';
@@ -18,12 +19,14 @@ import '../cubit/search_ref_obj/search_ref_obj_cubit.dart';
 
 class SearchReferenceObject extends AxolWidget {
   final String idRefLink;
+  final String idRefPropView;
   final String initIdRefObject;
   const SearchReferenceObject({
     super.key,
     super.theme,
     required this.idRefLink,
     required this.initIdRefObject,
+    required this.idRefPropView,
   });
 
   @override
@@ -35,6 +38,7 @@ class SearchReferenceObject extends AxolWidget {
       ],
       child: SearchReferenceObjectBuild(
         idRefLink: idRefLink,
+        idRefPropView: idRefPropView,
         initIdRefObject: initIdRefObject,
         theme: theme,
       ),
@@ -45,11 +49,13 @@ class SearchReferenceObject extends AxolWidget {
 class SearchReferenceObjectBuild extends AxolWidget {
   final String idRefLink;
   final String initIdRefObject;
+  final String idRefPropView;
   const SearchReferenceObjectBuild({
     super.key,
     super.theme,
     required this.idRefLink,
     required this.initIdRefObject,
+    required this.idRefPropView,
   });
 
   @override
@@ -115,12 +121,14 @@ class SearchReferenceObjectBuild extends AxolWidget {
                       builder: (context) => FilterPropDrawer(
                         propCheckedList: form.propCheckedList,
                       ),
-                    ).then((value) {
-                      if (value is List<PropChecked>) {
-                        form.propCheckedList = value;
-                        context.read<SearchRefObjCubit>().load();
-                      }
-                    },);
+                    ).then(
+                      (value) {
+                        if (value is List<PropChecked>) {
+                          form.propCheckedList = value;
+                          context.read<SearchRefObjCubit>().load();
+                        }
+                      },
+                    );
                   },
                 ),
               ],
@@ -184,22 +192,23 @@ class SearchReferenceObjectBuild extends AxolWidget {
                     final ObjectModel obj = form.objectList[index];
                     List<Widget> objectSchema = [];
                     for (PropertyModel prop in form.link.entity.propertyList) {
-                      if (form.propCheckedList.indexWhere((x) => ,)) {
-
+                      if (form.propCheckedList.indexWhere((x) =>
+                              x.checked == true && x.property.key == prop.key) >
+                          -1) {
+                        objectSchema.add(Row(
+                          children: [
+                            const SizedBox(width: 12),
+                            Text(
+                              '${prop.name}: ',
+                              style: Typo.subtitle(theme_),
+                            ),
+                            Text(
+                              obj.dataViewText(prop),
+                              style: Typo.body(theme_),
+                            ),
+                          ],
+                        ));
                       }
-                      objectSchema.add(Row(
-                        children: [
-                          const SizedBox(width: 12),
-                          Text(
-                            '${prop.name}: ',
-                            style: Typo.subtitle(theme_),
-                          ),
-                          Text(
-                            obj.dataViewText(prop),
-                            style: Typo.body(theme_),
-                          ),
-                        ],
-                      ));
                     }
                     return Card(
                       shadowColor: ColorTheme.item10(theme_),
@@ -212,24 +221,40 @@ class SearchReferenceObjectBuild extends AxolWidget {
                         vertical: 4,
                       ),
                       color: ColorTheme.background(theme_),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text('Id: ', style: Typo.subtitle(theme_)),
-                                Text(
-                                  obj.id,
-                                  style: Typo.body(theme_),
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: objectSchema,
-                            )
-                          ],
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide.none,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(
+                              context,
+                              ReferenceObjectModel(
+                                referenceLink: form.link,
+                                //idLink: form.link.id,
+                                referenceObject: obj,
+                                //propertyList: form.link.entity.propertyList,
+                                idPropertyView: idRefPropView,
+                              ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text('Id: ', style: Typo.subtitle(theme_)),
+                                  Text(
+                                    obj.id,
+                                    style: Typo.body(theme_),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: objectSchema,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
