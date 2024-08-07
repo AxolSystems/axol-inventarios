@@ -167,13 +167,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           map[key] = refObjController.refObject.referenceObject.id;
           form.object.map[key] = ReferenceObjectModel.setRefObj(
               form.object.map[key], refObjController.refObject.referenceObject);
-          /*{
-            ReferenceObjectModel.object:
-                referenceObject.refObject.referenceObject.id,
-            ReferenceObjectModel.property:
-                referenceObject.refObject.idPropertyView,
-            ReferenceObjectModel.refObj: referenceObject.refObject,
-          };*/
         }
       }
 

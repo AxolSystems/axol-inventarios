@@ -74,6 +74,15 @@ class FilterCubit extends Cubit<FilterState> {
                 operatorList: FilterObjModel.operDateTimeList,
                 operator: flt.operator),
           );
+        } else if (flt.property.propertyType == Prop.referenceObject) {
+          form.filterList.insert(
+            form.filterList.length - 1,
+            TextFilterModel(
+                ctrlValue: TextEditingController(text: flt.value.toString()),
+                property: flt.property,
+                operatorList: FilterObjModel.operTextList,
+                operator: flt.operator),
+          );
         }
       }
       form.entity = EntityModel(
