@@ -472,6 +472,43 @@ class FilterDrawerBuild extends AxolWidget {
           ),
         ],
       );*/
+    } else if (form.filterList[index] is RefObjFilterModel) {
+      final RefObjFilterModel refObjFilter =
+          form.filterList[index] as RefObjFilterModel;
+
+      //TODO: modificar a metodos.
+      if (refObjFilter.refObjController.getPropView().propertyType ==
+          Prop.text) {
+        final TextFilterModel textFilterModel =
+            refObjFilter.referenceFilter as TextFilterModel;
+
+        for (FilterOperator oper in textFilterModel.operatorList) {
+          items.add(
+            DropdownMenuItem(
+              value: oper,
+              child: Text(
+                FilterObjModel.operatorToText(oper),
+                style: Typo.body(theme),
+              ),
+            ),
+          );
+        }
+
+        operatorValue = textFilterModel.operator;
+
+        subWidget = SizedBox(
+          height: 56,
+          width: ((constraintWidth - 50) / 2) - 65,
+          child: PrimaryTextField(
+            isDense: false,
+            theme: theme,
+            controller: textFilterModel.ctrlValue,
+            margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            hintText: 'Ingrese el valor',
+          ),
+        );
+      }
     }
 
     if (form.filterList[index] is! AddFilterModel &&

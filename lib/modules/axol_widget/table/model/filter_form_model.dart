@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../entity/model/entity_model.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/filter_obj_model.dart';
+import '../../../object/model/reference_object_model.dart';
 
 class FilterFormModel {
   List<FilterModel> filterList;
@@ -122,4 +123,16 @@ class DateFilterModel extends FilterModel {
           operatorList: FilterObjModel.operNumberList,
           operator: FilterOperator.eq,
         );
+}
+
+class RefObjFilterModel extends FilterModel {
+  ReferenceObjectModel refObjController;
+  FilterModel referenceFilter;
+  RefObjFilterModel({
+    required this.refObjController,
+    required this.referenceFilter,
+    required super.operator,
+    required super.operatorList,
+    required super.property,
+  });
 }

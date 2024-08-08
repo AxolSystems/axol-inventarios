@@ -3,9 +3,6 @@ import '../../entity/model/property_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import 'object_model.dart';
 
-/// TODO: La propiedad referenciada a visualizar debe determinarse a nivel
-/// de columna, no por fila.
-
 class ReferenceObjectModel {
   //final String idLink;
   final String idPropertyView;

@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,55 +37,15 @@ class FilterCubit extends Cubit<FilterState> {
 
       form.filterList.add(AddFilterModel());
       for (FilterObjModel flt in filters) {
-        if (flt.property.propertyType == Prop.text) {
-          form.filterList.insert(
+        form.filterList.insert(
             form.filterList.length - 1,
-            TextFilterModel(
-                ctrlValue: TextEditingController(text: flt.value.toString()),
-                property: flt.property,
-                operatorList: FilterObjModel.operTextList,
-                operator: flt.operator),
-          );
-        } else if (flt.property.propertyType == Prop.double ||
-            flt.property.propertyType == Prop.int) {
-          form.filterList.insert(
-            form.filterList.length - 1,
-            NumberFilterModel(
-                ctrlValue: TextEditingController(text: flt.value.toString()),
-                property: flt.property,
-                operatorList: FilterObjModel.operNumberList,
-                operator: flt.operator),
-          );
-        } else if (flt.property.propertyType == Prop.bool) {
-          form.filterList.insert(
-            form.filterList.length - 1,
-            BooleanFilterModel(
-                value: flt.value,
-                property: flt.property,
-                operatorList: FilterObjModel.operBoolList,
-                operator: flt.operator),
-          );
-        } else if (flt.property.propertyType == Prop.time) {
-          form.filterList.insert(
-            form.filterList.length - 1,
-            DateFilterModel(
-                dateTime: FormatDate.secondZero(
-                    DateTime.fromMillisecondsSinceEpoch(flt.value)),
-                property: flt.property,
-                operatorList: FilterObjModel.operDateTimeList,
-                operator: flt.operator),
-          );
-        } else if (flt.property.propertyType == Prop.referenceObject) {
-          form.filterList.insert(
-            form.filterList.length - 1,
-            TextFilterModel(
-                ctrlValue: TextEditingController(text: flt.value.toString()),
-                property: flt.property,
-                operatorList: FilterObjModel.operTextList,
-                operator: flt.operator),
-          );
-        }
+            getFilterModel(
+              property: flt.property,
+              value: flt.value,
+              filterOperator: flt.operator,
+            ));
       }
+
       form.entity = EntityModel(
         entityName: entity.entityName,
         propertyList: properties,
@@ -118,47 +79,22 @@ class FilterCubit extends Cubit<FilterState> {
       emit(LoadingFilterState());
       if (value != null) {
         final PropertyModel prop = PropertyModel(
-            name: entity.propertyList
-                .firstWhere((x) => x.key == value.toString())
-                .name,
-            propertyType: entity.propertyList
-                .firstWhere((x) => x.key == value.toString())
-                .propertyType,
-            key: value.toString(),
-            dynamicValues: entity.propertyList
-                .firstWhere((x) => x.key == value.toString())
-                .dynamicValues,
-            );
-        if (prop.propertyType == Prop.text) {
-          form.filterList[index] = TextFilterModel(
-            ctrlValue: TextEditingController(),
-            property: prop,
-            operatorList: FilterObjModel.operTextList,
-            operator: FilterOperator.eq,
-          );
-        } else if (prop.propertyType == Prop.double ||
-            prop.propertyType == Prop.int) {
-          form.filterList[index] = NumberFilterModel(
-            ctrlValue: TextEditingController(),
-            property: prop,
-            operatorList: FilterObjModel.operNumberList,
-            operator: FilterOperator.eq,
-          );
-        } else if (prop.propertyType == Prop.bool) {
-          form.filterList[index] = BooleanFilterModel(
-            value: false,
-            property: prop,
-            operatorList: FilterObjModel.operBoolList,
-            operator: FilterOperator.eq,
-          );
-        } else if (prop.propertyType == Prop.time) {
-          form.filterList[index] = DateFilterModel(
-            dateTime: FormatDate.secondZero(DateTime.now()),
-            property: prop,
-            operatorList: FilterObjModel.operDateTimeList,
-            operator: FilterOperator.eq,
-          );
-        }
+          name: entity.propertyList
+              .firstWhere((x) => x.key == value.toString())
+              .name,
+          propertyType: entity.propertyList
+              .firstWhere((x) => x.key == value.toString())
+              .propertyType,
+          key: value.toString(),
+          dynamicValues: entity.propertyList
+              .firstWhere((x) => x.key == value.toString())
+              .dynamicValues,
+        );
+        form.filterList[index] = getFilterModel(
+          property: prop,
+          value: null,
+          filterOperator: FilterOperator.eq,
+        );
       }
       emit(LoadedFilterState());
     } catch (e) {
@@ -172,11 +108,42 @@ class FilterCubit extends Cubit<FilterState> {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
-      if (value is FilterOperator &&
+
+      if (value is FilterOperator) {
+        final dynamic filterValue;
+        if (form.filterList[index] is TextFilterModel) {
+          final TextFilterModel flt = form.filterList[index] as TextFilterModel;
+          filterValue = flt.ctrlValue.text;
+        } else if (form.filterList[index] is NumberFilterModel) {
+          final NumberFilterModel flt =
+              form.filterList[index] as NumberFilterModel;
+          filterValue = double.parse(flt.ctrlValue.text);
+        } else if (form.filterList[index] is BooleanFilterModel) {
+          final BooleanFilterModel flt =
+              form.filterList[index] as BooleanFilterModel;
+          filterValue = flt.value;
+        } else if (form.filterList[index] is DateFilterModel) {
+          final DateFilterModel flt = form.filterList[index] as DateFilterModel;
+          filterValue = flt.dateTime.millisecondsSinceEpoch;
+        } else if (form.filterList[index] is RefObjFilterModel) {
+          final RefObjFilterModel flt = form.filterList[index] as RefObjFilterModel;
+          filterValue = flt.refObjController;
+        } else {
+          filterValue = null;
+        }
+        form.filterList[index] = getFilterModel(
+          property: form.filterList[index].property,
+          value: filterValue,
+          filterOperator: value,
+        );
+      }
+
+      /*if (value is FilterOperator &&
           form.filterList[index] is TextFilterModel) {
         final TextFilterModel textFilter =
             form.filterList[index] as TextFilterModel;
-        form.filterList[index] = TextFilterModel(
+
+        TextFilterModel(
             ctrlValue: textFilter.ctrlValue,
             property: textFilter.property,
             operatorList: textFilter.operatorList,
@@ -210,7 +177,8 @@ class FilterCubit extends Cubit<FilterState> {
           operatorList: dateFilter.operatorList,
           operator: value,
         );
-      }
+      }*/
+
       emit(LoadedFilterState());
     } catch (e) {
       emit(InitialFilterState());
@@ -234,6 +202,8 @@ class FilterCubit extends Cubit<FilterState> {
           value = flt.value;
         } else if (flt is DateFilterModel) {
           value = flt.dateTime.millisecondsSinceEpoch;
+        } else if (flt is RefObjFilterModel) {
+          value = flt.refObjController;
         }
         if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
           filter = FilterObjModel(
@@ -281,8 +251,7 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   Future<void> thenDateTimePick(
-      {
-      required DateTime dateTime,
+      {required DateTime dateTime,
       required FilterFormModel form,
       required int index}) async {
     try {
@@ -302,6 +271,113 @@ class FilterCubit extends Cubit<FilterState> {
       emit(InitialFilterState());
       emit(ErrorFilterState(error: e.toString()));
     }
+  }
+
+  /// Obtiene el modelo de filtro según la propiedad y tipo de dato de [value].
+  /// El valor dinámico deber ser alguno de los siguientes tipos de dato:
+  /// - Texto: [String]
+  /// - Número: [double]
+  /// - Booleano: [bool]
+  /// - Fecha: [int]
+  /// - Objeto relacional: [ReferenceObjectModel]
+  FilterModel getFilterModel(
+      {required PropertyModel property,
+      required dynamic value,
+      required FilterOperator filterOperator}) {
+    FilterModel filter = EmptyFilterModel.empty();
+    if (property.propertyType == Prop.text) {
+      filter = TextFilterModel(
+          ctrlValue: TextEditingController(text: value ?? ''),
+          property: property,
+          operatorList: FilterObjModel.operTextList,
+          operator: filterOperator);
+    } else if (property.propertyType == Prop.double ||
+        property.propertyType == Prop.int) {
+      filter = NumberFilterModel(
+          ctrlValue: TextEditingController(text: '${value ?? 0}'),
+          property: property,
+          operatorList: FilterObjModel.operNumberList,
+          operator: filterOperator);
+    } else if (property.propertyType == Prop.bool) {
+      filter = BooleanFilterModel(
+          value: value ?? false,
+          property: property,
+          operatorList: FilterObjModel.operBoolList,
+          operator: filterOperator);
+    } else if (property.propertyType == Prop.time) {
+      filter = DateFilterModel(
+          dateTime: FormatDate.secondZero(
+              DateTime.fromMillisecondsSinceEpoch(value ?? DateTime.now())),
+          property: property,
+          operatorList: FilterObjModel.operDateTimeList,
+          operator: filterOperator);
+    } else if (property.propertyType == Prop.referenceObject) {
+      final ReferenceObjectModel refObj;
+      if (value == null) {
+        refObj = ReferenceObjectModel.empty();
+      } else {
+        refObj = value as ReferenceObjectModel;
+      }
+      final FilterModel referenceFilter;
+      if (refObj.getPropView().propertyType == Prop.text) {
+        final String valueText =
+            refObj.referenceObject.map[refObj.getPropView().key] ?? '';
+        referenceFilter = TextFilterModel(
+            ctrlValue: TextEditingController(text: valueText),
+            property: refObj.getPropView(),
+            operatorList: FilterObjModel.operTextList,
+            operator: FilterObjModel.operTextList.contains(filterOperator)
+                ? filterOperator
+                : FilterObjModel.operTextList.first);
+      } else if (refObj.getPropView().propertyType == Prop.int ||
+          refObj.getPropView().propertyType == Prop.double) {
+        final double valueNum =
+            refObj.referenceObject.map[refObj.getPropView().key] ?? 0;
+        referenceFilter = NumberFilterModel(
+          ctrlValue: TextEditingController(text: valueNum.toString()),
+          property: refObj.getPropView(),
+          operatorList: FilterObjModel.operNumberList,
+          operator: FilterObjModel.operNumberList.contains(filterOperator)
+              ? filterOperator
+              : FilterObjModel.operNumberList.first,
+        );
+      } else if (refObj.getPropView().propertyType == Prop.bool) {
+        final bool valueBool =
+            refObj.referenceObject.map[refObj.getPropView().key] ?? false;
+        referenceFilter = BooleanFilterModel(
+          value: valueBool,
+          property: refObj.getPropView(),
+          operatorList: FilterObjModel.operBoolList,
+          operator: FilterObjModel.operBoolList.contains(filterOperator)
+              ? filterOperator
+              : FilterObjModel.operBoolList.first,
+        );
+      } else if (refObj.getPropView().propertyType == Prop.time) {
+        final int valueIntDate =
+            refObj.referenceObject.map[refObj.getPropView().key] ??
+                DateTime.fromMillisecondsSinceEpoch(
+                    DateTime.now().millisecondsSinceEpoch);
+        referenceFilter = DateFilterModel(
+          dateTime: FormatDate.secondZero(
+              DateTime.fromMillisecondsSinceEpoch(valueIntDate)),
+          property: refObj.getPropView(),
+          operatorList: FilterObjModel.operDateTimeList,
+          operator: FilterObjModel.operDateTimeList.contains(filterOperator)
+              ? filterOperator
+              : FilterObjModel.operDateTimeList.first,
+        );
+      } else {
+        referenceFilter = EmptyFilterModel.empty();
+      }
+      filter = RefObjFilterModel(
+        refObjController: refObj,
+        referenceFilter: referenceFilter,
+        operator: filterOperator,
+        operatorList: [],
+        property: property,
+      );
+    }
+    return filter;
   }
 }
 
