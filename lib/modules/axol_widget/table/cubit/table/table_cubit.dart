@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_model.dart';
 import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,7 +83,6 @@ class TableCubit extends Cubit<TableState> {
         form.ascending = false;
         form.keyAscending = null;
       }
-
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());
@@ -291,6 +291,8 @@ class TableCubit extends Cubit<TableState> {
     form.totalPage = (countReg / form.limitRows).ceil();
     form.totalReg = countReg;
     form.table = TableModel.dataObject(dataResponse, link.entity);
+    form.referenceLinks =
+        dataResponse.dynamicValues?[ReferenceObjectModel.tRefLink] ?? [];
   }
 }
 

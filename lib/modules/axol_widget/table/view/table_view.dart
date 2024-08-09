@@ -192,6 +192,7 @@ class TableViewBuild extends AxolWidget {
                                 theme: form.theme,
                                 entity: link.entity,
                                 filters: form.filters,
+                                referenceLink: form.referenceLinks,
                               ),
                             ).then(
                               (value) {

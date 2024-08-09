@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/format.dart';
 import '../../../../object/model/filter_obj_model.dart';
+import '../../../../object/model/object_model.dart';
+import '../../../../widget_link/model/widgetlink_model.dart';
 import '../../model/filter_form_model.dart';
 import 'filter_state.dart';
 
@@ -73,10 +75,11 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   Future<void> changeDropdownProp(FilterFormModel form, EntityModel entity,
-      dynamic value, int index) async {
+      dynamic value, int index, List<WidgetLinkModel> refLinks) async {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
+      final WidgetLinkModel referenceLink;
       if (value != null) {
         final PropertyModel prop = PropertyModel(
           name: entity.propertyList
@@ -90,11 +93,28 @@ class FilterCubit extends Cubit<FilterState> {
               .firstWhere((x) => x.key == value.toString())
               .dynamicValues,
         );
-        form.filterList[index] = getFilterModel(
-          property: prop,
-          value: null,
-          filterOperator: FilterOperator.eq,
-        );
+
+        if (prop.propertyType == Prop.referenceObject) {
+          referenceLink = refLinks.firstWhere(
+            (x) => x.id == prop.dynamicValues[PropertyModel.dvRefLink],
+            orElse: () => WidgetLinkModel.empty(),
+          );
+          form.filterList[index] = getFilterModel(
+            property: prop,
+            value: ReferenceObjectModel(
+              referenceObject: ObjectModel.empty(),
+              idPropertyView: prop.dynamicValues[ReferenceObjectModel.property],
+              referenceLink: referenceLink,
+            ),
+            filterOperator: FilterOperator.eq,
+          );
+        } else {
+          form.filterList[index] = getFilterModel(
+            property: prop,
+            value: null,
+            filterOperator: FilterOperator.eq,
+          );
+        }
       }
       emit(LoadedFilterState());
     } catch (e) {
@@ -126,7 +146,8 @@ class FilterCubit extends Cubit<FilterState> {
           final DateFilterModel flt = form.filterList[index] as DateFilterModel;
           filterValue = flt.dateTime.millisecondsSinceEpoch;
         } else if (form.filterList[index] is RefObjFilterModel) {
-          final RefObjFilterModel flt = form.filterList[index] as RefObjFilterModel;
+          final RefObjFilterModel flt =
+              form.filterList[index] as RefObjFilterModel;
           filterValue = flt.refObjController;
         } else {
           filterValue = null;
@@ -137,47 +158,6 @@ class FilterCubit extends Cubit<FilterState> {
           filterOperator: value,
         );
       }
-
-      /*if (value is FilterOperator &&
-          form.filterList[index] is TextFilterModel) {
-        final TextFilterModel textFilter =
-            form.filterList[index] as TextFilterModel;
-
-        TextFilterModel(
-            ctrlValue: textFilter.ctrlValue,
-            property: textFilter.property,
-            operatorList: textFilter.operatorList,
-            operator: value);
-      } else if (value is FilterOperator &&
-          form.filterList[index] is NumberFilterModel) {
-        final NumberFilterModel numberFilter =
-            form.filterList[index] as NumberFilterModel;
-        form.filterList[index] = NumberFilterModel(
-            ctrlValue: numberFilter.ctrlValue,
-            property: numberFilter.property,
-            operatorList: numberFilter.operatorList,
-            operator: value);
-      } else if (value is FilterOperator &&
-          form.filterList[index] is BooleanFilterModel) {
-        final BooleanFilterModel booleanFilter =
-            form.filterList[index] as BooleanFilterModel;
-        form.filterList[index] = BooleanFilterModel(
-          value: booleanFilter.value,
-          property: booleanFilter.property,
-          operatorList: booleanFilter.operatorList,
-          operator: value,
-        );
-      } else if (value is FilterOperator &&
-          form.filterList[index] is DateFilterModel) {
-        final DateFilterModel dateFilter =
-            form.filterList[index] as DateFilterModel;
-        form.filterList[index] = DateFilterModel(
-          dateTime: dateFilter.dateTime,
-          property: dateFilter.property,
-          operatorList: dateFilter.operatorList,
-          operator: value,
-        );
-      }*/
 
       emit(LoadedFilterState());
     } catch (e) {
@@ -306,8 +286,8 @@ class FilterCubit extends Cubit<FilterState> {
           operator: filterOperator);
     } else if (property.propertyType == Prop.time) {
       filter = DateFilterModel(
-          dateTime: FormatDate.secondZero(
-              DateTime.fromMillisecondsSinceEpoch(value ?? DateTime.now())),
+          dateTime: FormatDate.secondZero(DateTime.fromMillisecondsSinceEpoch(
+              value ?? DateTime.now().millisecondsSinceEpoch)),
           property: property,
           operatorList: FilterObjModel.operDateTimeList,
           operator: filterOperator);
@@ -373,7 +353,7 @@ class FilterCubit extends Cubit<FilterState> {
         refObjController: refObj,
         referenceFilter: referenceFilter,
         operator: filterOperator,
-        operatorList: [],
+        operatorList: referenceFilter.operatorList,
         property: property,
       );
     }

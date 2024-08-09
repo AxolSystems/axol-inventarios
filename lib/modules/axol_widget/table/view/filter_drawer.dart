@@ -13,6 +13,7 @@ import '../../../../utilities/widgets/buttons/dropdown_button.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../../entity/model/entity_model.dart';
 import '../../../entity/model/property_model.dart';
+import '../../../widget_link/model/widgetlink_model.dart';
 import '../cubit/filter/filter_cubit.dart';
 import '../cubit/filter/filter_state.dart';
 import '../model/filter_form_model.dart';
@@ -20,11 +21,13 @@ import '../model/filter_form_model.dart';
 class FilterDrawer extends AxolWidget {
   final EntityModel entity;
   final List<FilterObjModel> filters;
+  final List<WidgetLinkModel> referenceLink;
   const FilterDrawer({
     super.key,
     super.theme,
     required this.entity,
     required this.filters,
+    required this.referenceLink,
   });
 
   @override
@@ -38,6 +41,7 @@ class FilterDrawer extends AxolWidget {
         theme: theme,
         entity: entity,
         filters: filters,
+        referenceLink: referenceLink,
       ),
     );
   }
@@ -46,8 +50,14 @@ class FilterDrawer extends AxolWidget {
 class FilterDrawerBuild extends AxolWidget {
   final EntityModel entity;
   final List<FilterObjModel> filters;
-  const FilterDrawerBuild(
-      {super.key, super.theme, required this.entity, required this.filters});
+  final List<WidgetLinkModel> referenceLink;
+  const FilterDrawerBuild({
+    super.key,
+    super.theme,
+    required this.entity,
+    required this.filters,
+    required this.referenceLink,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -196,9 +206,13 @@ class FilterDrawerBuild extends AxolWidget {
           value: form.filterList[index].property.key,
           items: items,
           onChanged: (value) {
-            context
-                .read<FilterCubit>()
-                .changeDropdownProp(form, entity, value, index);
+            context.read<FilterCubit>().changeDropdownProp(
+                  form,
+                  entity,
+                  value,
+                  index,
+                  referenceLink,
+                );
           },
         ),
         widget is SizedBox
@@ -242,275 +256,27 @@ class FilterDrawerBuild extends AxolWidget {
       int theme, double constraintWidth) {
     Widget widget = const SizedBox();
     Widget subWidget = const SizedBox();
-    FilterOperator operatorValue = FilterOperator.eq;
-    List<DropdownMenuItem> items = [];
+    final FilterModel filter = form.filterList[index];
 
-    if (form.filterList[index] is TextFilterModel) {
-      final TextFilterModel textFilterModel =
-          form.filterList[index] as TextFilterModel;
-
-      for (FilterOperator oper in textFilterModel.operatorList) {
-        items.add(
-          DropdownMenuItem(
-            value: oper,
-            child: Text(
-              FilterObjModel.operatorToText(oper),
-              style: Typo.body(theme),
-            ),
-          ),
-        );
-      }
-
-      operatorValue = textFilterModel.operator;
-
-      subWidget = SizedBox(
-        height: 56,
-        width: ((constraintWidth - 50) / 2) - 65,
-        child: PrimaryTextField(
-          isDense: false,
-          theme: theme,
-          controller: textFilterModel.ctrlValue,
-          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          hintText: 'Ingrese el valor',
-        ),
-      );
-    } else if (form.filterList[index] is NumberFilterModel) {
-      final NumberFilterModel numberFilter =
-          form.filterList[index] as NumberFilterModel;
-
-      for (FilterOperator oper in numberFilter.operatorList) {
-        items.add(
-          DropdownMenuItem(
-            value: oper,
-            child: Text(
-              FilterObjModel.operatorToText(oper),
-              style: Typo.body(theme),
-            ),
-          ),
-        );
-      }
-
-      operatorValue = numberFilter.operator;
-
-      subWidget = SizedBox(
-        height: 56,
-        width: ((constraintWidth - 50) / 2) - 65,
-        child: PrimaryTextField(
-          isDense: false,
-          theme: theme,
-          controller: numberFilter.ctrlValue,
-          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          inputFormatters: [DecimalTextInputFormatter()],
-          hintText: 'Ingrese el número',
-        ),
-      );
-    } else if (form.filterList[index] is BooleanFilterModel) {
-      final BooleanFilterModel booleanFilter =
-          form.filterList[index] as BooleanFilterModel;
-      List<DropdownMenuItem<bool>> boolItems = [
-        DropdownMenuItem(
-          value: true,
-          child: Text('TRUE', style: Typo.body(theme)),
-        ),
-        DropdownMenuItem(
-          value: false,
-          child: Text('FALSE', style: Typo.body(theme)),
-        ),
-      ];
-
-      for (FilterOperator oper in booleanFilter.operatorList) {
-        items.add(
-          DropdownMenuItem(
-            value: oper,
-            child: Text(
-              FilterObjModel.operatorToText(oper),
-              style: Typo.body(theme),
-            ),
-          ),
-        );
-      }
-
-      operatorValue = booleanFilter.operator;
-
-      subWidget = PrimaryDropDownButton(
-        theme: theme,
-        margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-        width: ((constraintWidth - 50) / 2) - 77,
-        value: booleanFilter.value,
-        items: boolItems,
-        onChanged: (value) {
-          context
-              .read<FilterCubit>()
-              .changeDropdownBool(form, index, booleanFilter, value);
-        },
-      );
-    } else if (form.filterList[index] is DateFilterModel) {
-      final DateFilterModel dateFilter =
-          form.filterList[index] as DateFilterModel;
-
-      for (FilterOperator oper in dateFilter.operatorList) {
-        items.add(
-          DropdownMenuItem(
-            value: oper,
-            child: Text(
-              FilterObjModel.operatorToText(oper),
-              style: Typo.body(theme),
-            ),
-          ),
-        );
-      }
-
-      subWidget = DateTimeButton(
-        dateTime: dateFilter.dateTime,
-        theme: theme,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: ((constraintWidth - 50) / 2) - 73,
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => DateTimeDialog(
-              dateTime: dateFilter.dateTime,
-              theme: theme,
-            ),
-          ).then(
-            (value) {
-              if (value is DateTime) {
-                context.read<FilterCubit>().thenDateTimePick(
-                    dateTime: value, form: form, index: index);
-              }
-            },
-          );
-        },
-      );
-
-      /*subWidget = Row(
-        children: [
-          const SizedBox(width: 4),
-          OutlinedButton(
-            style: ButtonStyle(
-              alignment: Alignment.centerLeft,
-              side: WidgetStatePropertyAll(
-                  BorderSide(color: ColorTheme.item20(theme))),
-              shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(6)))),
-              backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme)),
-            ),
-            onPressed: () {
-              showDatePicker(
-                context: context,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              ).then(
-                (value) {
-                  context.read<FilterCubit>().thenDateTimePick(
-                        form: form,
-                        index: index,
-                        date: value,
-                      );
-                },
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Text(
-                    FormatDate.dmy(dateFilter.dateTime),
-                    style: Typo.body(theme),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    Icons.calendar_month,
-                    color: ColorTheme.item10(theme),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          OutlinedButton(
-            style: ButtonStyle(
-              alignment: Alignment.centerLeft,
-              side: WidgetStatePropertyAll(
-                  BorderSide(color: ColorTheme.item20(theme))),
-              shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(6)))),
-              backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme)),
-            ),
-            onPressed: () {
-              showTimePicker(
-                context: context,
-                initialTime: TimeOfDay.now(),
-              ).then(
-                (value) {
-                  context.read<FilterCubit>().thenDateTimePick(
-                        form: form,
-                        index: index,
-                        time: value,
-                      );
-                },
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Text(
-                    FormatDate.hm(TimeOfDay.fromDateTime(dateFilter.dateTime)),
-                    style: Typo.body(theme),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    Icons.watch_later_outlined,
-                    color: ColorTheme.item10(theme),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );*/
+    if (filter is TextFilterModel ||
+        filter is NumberFilterModel ||
+        filter is BooleanFilterModel ||
+        filter is DateFilterModel) {
+      subWidget = primaryControllers(
+          context, form, index, theme, constraintWidth, form.filterList[index]);
     } else if (form.filterList[index] is RefObjFilterModel) {
       final RefObjFilterModel refObjFilter =
           form.filterList[index] as RefObjFilterModel;
+      final FilterModel refFilter = refObjFilter.referenceFilter;
 
-      //TODO: modificar a metodos.
-      if (refObjFilter.refObjController.getPropView().propertyType ==
-          Prop.text) {
-        final TextFilterModel textFilterModel =
-            refObjFilter.referenceFilter as TextFilterModel;
-
-        for (FilterOperator oper in textFilterModel.operatorList) {
-          items.add(
-            DropdownMenuItem(
-              value: oper,
-              child: Text(
-                FilterObjModel.operatorToText(oper),
-                style: Typo.body(theme),
-              ),
-            ),
-          );
-        }
-
-        operatorValue = textFilterModel.operator;
-
-        subWidget = SizedBox(
-          height: 56,
-          width: ((constraintWidth - 50) / 2) - 65,
-          child: PrimaryTextField(
-            isDense: false,
-            theme: theme,
-            controller: textFilterModel.ctrlValue,
-            margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            hintText: 'Ingrese el valor',
-          ),
-        );
+      if (refFilter is TextFilterModel ||
+          refFilter is NumberFilterModel ||
+          refFilter is BooleanFilterModel ||
+          refFilter is DateFilterModel) {
+        subWidget = primaryControllers(
+            context, form, index, theme, constraintWidth, refFilter);
       }
     }
-
     if (form.filterList[index] is! AddFilterModel &&
         form.filterList[index] is! EmptyFilterModel) {
       widget = Row(
@@ -519,8 +285,8 @@ class FilterDrawerBuild extends AxolWidget {
             theme: theme,
             margin: const EdgeInsets.fromLTRB(4, 8, 4, 8),
             width: 80,
-            value: operatorValue,
-            items: items,
+            value: form.filterList[index].operator,
+            items: form.getMenuItem(index, theme),
             onChanged: (value) {
               if (value != null) {
                 context
@@ -535,5 +301,92 @@ class FilterDrawerBuild extends AxolWidget {
     }
 
     return widget;
+  }
+
+  Widget primaryControllers(BuildContext context, FilterFormModel form,
+      int index, int theme, double constraintWidth, FilterModel filter) {
+    final Widget subWidget;
+
+    if (filter is TextFilterModel) {
+      subWidget = SizedBox(
+        height: 56,
+        width: ((constraintWidth - 50) / 2) - 65,
+        child: PrimaryTextField(
+          isDense: false,
+          theme: theme,
+          controller: filter.ctrlValue,
+          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          hintText: 'Ingrese el valor',
+          hintStyle: Typo.hint(theme),
+        ),
+      );
+    } else if (filter is NumberFilterModel) {
+      subWidget = SizedBox(
+        height: 56,
+        width: ((constraintWidth - 50) / 2) - 65,
+        child: PrimaryTextField(
+          isDense: false,
+          theme: theme,
+          controller: filter.ctrlValue,
+          margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          inputFormatters: [DecimalTextInputFormatter()],
+          hintText: 'Ingrese el número',
+          hintStyle: Typo.hint(theme),
+        ),
+      );
+    } else if (filter is BooleanFilterModel) {
+      List<DropdownMenuItem<bool>> boolItems = [
+        DropdownMenuItem(
+          value: true,
+          child: Text('TRUE', style: Typo.body(theme)),
+        ),
+        DropdownMenuItem(
+          value: false,
+          child: Text('FALSE', style: Typo.body(theme)),
+        ),
+      ];
+
+      subWidget = PrimaryDropDownButton(
+        theme: theme,
+        margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+        width: ((constraintWidth - 50) / 2) - 77,
+        value: filter.value,
+        items: boolItems,
+        onChanged: (value) {
+          context
+              .read<FilterCubit>()
+              .changeDropdownBool(form, index, filter, value);
+        },
+      );
+    } else if (filter is DateFilterModel) {
+      subWidget = DateTimeButton(
+        dateTime: filter.dateTime,
+        theme: theme,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        width: ((constraintWidth - 50) / 2) - 73,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => DateTimeDialog(
+              dateTime: filter.dateTime,
+              theme: theme,
+            ),
+          ).then(
+            (value) {
+              if (value is DateTime) {
+                context.read<FilterCubit>().thenDateTimePick(
+                    dateTime: value, form: form, index: index);
+              }
+            },
+          );
+        },
+      );
+    } else {
+      subWidget = const SizedBox();
+    }
+
+    return subWidget;
   }
 }

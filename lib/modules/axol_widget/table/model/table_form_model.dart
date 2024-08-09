@@ -3,6 +3,8 @@ import 'package:axol_inventarios/modules/object/model/filter_obj_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../widget_link/model/widgetlink_model.dart';
+
 /// Modelo de datos de la vista de tabla.
 class TableFormModel {
   int theme;
@@ -19,6 +21,7 @@ class TableFormModel {
   bool ascending;
   String? keyAscending;
   List<FilterObjModel> filters;
+  List<WidgetLinkModel> referenceLinks;
 
   TableFormModel({
     required this.theme,
@@ -35,6 +38,7 @@ class TableFormModel {
     required this.keyAscending,
     required this.ctrlSearch,
     required this.filters,
+    required this.referenceLinks,
   });
 
   /// Estado inicial del form de la vista de tabla.
@@ -52,7 +56,8 @@ class TableFormModel {
         table = TableModel.empty(),
         ascending = false,
         keyAscending = null,
-        filters = [];
+        filters = [],
+        referenceLinks = [];
 
   /// Suma los valores de *columnWidth* y devuelve el total.
   double sum() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../utilities/theme/theme.dart';
 import '../../../entity/model/entity_model.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/filter_obj_model.dart';
@@ -14,6 +15,22 @@ class FilterFormModel {
   FilterFormModel.empty()
       : filterList = [],
         entity = EntityModel.empty();
+
+  List<DropdownMenuItem> getMenuItem(int index, int theme) {
+    List<DropdownMenuItem> items = [];
+    for (FilterOperator oper in filterList[index].operatorList) {
+      items.add(
+        DropdownMenuItem(
+          value: oper,
+          child: Text(
+            FilterObjModel.operatorToText(oper),
+            style: Typo.body(theme),
+          ),
+        ),
+      );
+    }
+    return items;
+  }
 }
 
 abstract class FilterModel {

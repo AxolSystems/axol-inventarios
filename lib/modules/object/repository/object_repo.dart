@@ -42,6 +42,7 @@ class ObjectRepo {
     final String keyAscending_;
     final DataResponseModel dataResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    List<WidgetLinkModel> linkRefList = [];
 
     if (keyAscending == null) {
       keyAscending_ = _createAt;
@@ -93,6 +94,11 @@ class ObjectRepo {
 
     for (FilterObjModel filter in filters) {
       if (filter.operator == FilterOperator.eq) {
+        if (filter.property.propertyType == Prop.referenceObject) {
+          //filter.value is ReferenceObjectModel
+          final ReferenceObjectModel refObj = filter.value;
+          //refObj.
+        }
         query = query.eq('$_object->>"${filter.property.key}"', filter.value);
       }
       if (filter.operator == FilterOperator.like) {
@@ -148,23 +154,19 @@ class ObjectRepo {
       }
 
       if (idLinks.isNotEmpty) {
-        final List<WidgetLinkModel> linkRefList =
-            await WidgetLinkRepo.fetchWidgetLik(idLinks);
+        linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
         for (WidgetLinkModel link in linkRefList) {
-          //mapObjRef[entity.uuid] =
           final List<Map<String, dynamic>> objRefDb = await _supabase
               .from(link.entity.tableName)
               .select<List<Map<String, dynamic>>>()
               .in_(id, idObjects);
           for (Map<String, dynamic> element in objRefDb) {
             objsRef.add(ReferenceObjectModel(
-              //idLink: link.id,
               referenceLink: link,
               referenceObject: ObjectModel(
                   createAt: DateTime.parse(element[_createAt]),
                   id: element[id],
                   map: element[_object]),
-              //propertyList: link.entity.propertyList,
               idPropertyView: '',
             ));
           }
@@ -185,11 +187,12 @@ class ObjectRepo {
                   orElse: () => ReferenceObjectModel.empty(),
                 ),
                 link.entity.propertyList
-                    .firstWhere(
-                      (x) => x.key == prop.key,
-                      orElse: () => PropertyModel.empty(),
-                    )
-                    .dynamicValues[ReferenceObjectModel.property] ?? '');
+                        .firstWhere(
+                          (x) => x.key == prop.key,
+                          orElse: () => PropertyModel.empty(),
+                        )
+                        .dynamicValues[ReferenceObjectModel.property] ??
+                    '');
             objMap[prop.key] = refObj;
             objDB[_object] = objMap;
           }
@@ -207,6 +210,7 @@ class ObjectRepo {
     dataResponse = DataResponseModel(
       dataList: objList,
       count: postgrestResponse.count ?? 0,
+      dynamicValues: {ReferenceObjectModel.tRefLink: linkRefList},
     );
     return dataResponse;
   }

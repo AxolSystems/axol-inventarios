@@ -4,25 +4,19 @@ import '../../widget_link/model/widgetlink_model.dart';
 import 'object_model.dart';
 
 class ReferenceObjectModel {
-  //final String idLink;
   final String idPropertyView;
   final ObjectModel referenceObject;
-  //final List<PropertyModel> propertyList;
   final WidgetLinkModel referenceLink;
 
   ReferenceObjectModel({
-    //required this.idLink,
     required this.referenceObject,
-    //required this.propertyList,
     required this.idPropertyView,
     required this.referenceLink,
   });
 
   ReferenceObjectModel.empty()
-      : //idLink = '',
-        referenceLink = WidgetLinkModel.empty(),
+      : referenceLink = WidgetLinkModel.empty(),
         referenceObject = ObjectModel.empty(),
-        //propertyList = [],
         idPropertyView = '';
 
   ReferenceObjectModel.setPropView(
@@ -49,6 +43,9 @@ class ReferenceObjectModel {
 
   /// get: 'object_property'
   static String get objProp => 'object_property';
+
+  /// get: 'reference_link'
+  static String get tRefLink => 'reference_link';
 
   PropertyModel getPropView() => referenceLink.entity.propertyList.firstWhere(
         (x) => x.key == idPropertyView,
