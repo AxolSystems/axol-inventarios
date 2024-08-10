@@ -183,7 +183,16 @@ class FilterCubit extends Cubit<FilterState> {
         } else if (flt is DateFilterModel) {
           value = flt.dateTime.millisecondsSinceEpoch;
         } else if (flt is RefObjFilterModel) {
-          value = flt.refObjController;
+          final FilterModel fltRef = flt.referenceFilter;
+          if (fltRef is TextFilterModel) {
+            value = fltRef.ctrlValue.text;
+          } else if (fltRef is NumberFilterModel) {
+            value = fltRef.ctrlValue.text;
+          } else if (fltRef is BooleanFilterModel) {
+            value = fltRef.value;
+          } else if (fltRef is DateFilterModel) {
+            value = fltRef.dateTime.millisecondsSinceEpoch;
+          }
         }
         if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
           filter = FilterObjModel(

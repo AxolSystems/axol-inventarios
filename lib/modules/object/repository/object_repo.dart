@@ -32,6 +32,7 @@ class ObjectRepo {
     String? keyAscending,
     String? search,
   }) async {
+    List<FilterObjModel> upFilters = [];
     List<Map<String, dynamic>> objsDB;
     List<ObjectModel> objList = [];
     ObjectModel obj;
@@ -41,15 +42,21 @@ class ObjectRepo {
     final bool ascending_ = ascending ?? false;
     final String keyAscending_;
     final DataResponseModel dataResponse;
+    Map<String, List<Map<String, dynamic>>> responseRef = {};
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     List<WidgetLinkModel> linkRefList = [];
+    List<PropertyModel> propsRef = [];
+    List<String> idLinks = [];
 
+    /// Si no está ordenado por una propiedad, ordenar po fecha de
+    /// creación.
     if (keyAscending == null) {
       keyAscending_ = _createAt;
     } else {
       keyAscending_ = '$_object->"$keyAscending"';
     }
 
+    /// Si se escribió algo en el buscador, lo anexa a [textOr].
     if (search != null) {
       if (search.contains(':')) {
         final String key = link.entity.propertyList
@@ -83,67 +90,86 @@ class ObjectRepo {
       }
     }
 
+    /// Consulta objetos referenciados cuando hay un filtro activo.
+    for (var prop in link.entity.propertyList) {
+      if (prop.propertyType == Prop.referenceObject) {
+        propsRef.add(prop);
+        if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
+          idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
+        }
+      }
+    }
+    if (idLinks.isNotEmpty) {
+      linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
+      
+      //TODO: Cambiar para filtrar objetos referenciados -->
+      for (var linkRef in linkRefList) {
+        var queryRef = _supabase
+            .from(linkRef.entity.tableName)
+            .select<List<Map<String, dynamic>>>();
+        for (FilterObjModel filter in filters) {
+          queryRef = filterQuery(filter, queryRef);
+        }
+        responseRef[linkRef.id] = await queryRef
+        .range(rangeMin_, rangeMax_)
+        .order(keyAscending_, ascending: ascending_);
+      }
+    }
+
+    for (FilterObjModel filter in filters) {
+      if (filter.property.propertyType == Prop.referenceObject) {
+        final valueRef = filter.value;
+        upFilters.add(FilterObjModel(
+          property: filter.property,
+          value: responseRef[
+                  filter.property.dynamicValues[PropertyModel.dvRefLink]]
+              .firstWhere((x) => x[_object][refObj.idPropertyView] == ),
+          operator: filter.operator,
+        ));
+      }
+    }
+    // <--
+
+    /// Inicializa la estancia de la consulta indicando la tabla donde se
+    /// realizará.
     var query = _supabase
         .from(link.entity.tableName)
         .select<PostgrestResponse<List<Map<String, dynamic>>>>(
             '*', const FetchOptions(count: CountOption.estimated));
 
+    /// Agrega a la consulta el contenido de la barra de búsqueda con [textOr].
     if (search != null) {
       query = query.or(textOr);
     }
 
+    /// Agrega los filtros a la consulta.
     for (FilterObjModel filter in filters) {
-      if (filter.operator == FilterOperator.eq) {
-        if (filter.property.propertyType == Prop.referenceObject) {
-          //filter.value is ReferenceObjectModel
-          final ReferenceObjectModel refObj = filter.value;
-          //refObj.
-        }
-        query = query.eq('$_object->>"${filter.property.key}"', filter.value);
-      }
-      if (filter.operator == FilterOperator.like) {
-        query = query.like(
-            '$_object->>"${filter.property.key}"', '%${filter.value}%');
-      }
-      if (filter.operator == FilterOperator.ilike) {
-        query = query.ilike(
-            '$_object->>"${filter.property.key}"', '%${filter.value}%');
-      }
-      if (filter.operator == FilterOperator.gt) {
-        query = query.gt('$_object->>"${filter.property.key}"', filter.value);
-      }
-      if (filter.operator == FilterOperator.gte) {
-        query = query.gte('$_object->>"${filter.property.key}"', filter.value);
-      }
-      if (filter.operator == FilterOperator.lt) {
-        query = query.lt('$_object->>"${filter.property.key}"', filter.value);
-      }
-      if (filter.operator == FilterOperator.lte) {
-        query = query.lte('$_object->>"${filter.property.key}"', filter.value);
-      }
-      if (filter.operator == FilterOperator.neq) {
-        query = query.neq('$_object->>"${filter.property.key}"', filter.value);
-      }
+      query = filterQuery(filter, query);
     }
 
+    /// Realiza la consulta de objetos.
     postgrestResponse = await query
         .range(rangeMin_, rangeMax_)
         .order(keyAscending_, ascending: ascending_);
 
     objsDB = postgrestResponse.data ?? [];
 
+    /// Si la consulta de objetos dio algún resultado...
     if (objsDB.isNotEmpty) {
       List<String> idObjects = [];
       List<String> idLinks = [];
-      List<PropertyModel> propsRef = [];
       List<ReferenceObjectModel> objsRef = [];
 
+      /// Si ha alguna propiedad referenciada, enlista los id de links de referencia
+      /// y id de objetos referenciados.
       for (var prop in link.entity.propertyList) {
         if (prop.propertyType == Prop.referenceObject) {
-          propsRef.add(prop);
+          // Modificar -->
+          /*propsRef.add(prop);
           if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
             idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
-          }
+          }*/
+          // <--
           for (var objDB in objsDB) {
             final String? idObject = objDB[_object][prop.key];
             if (idObject != null && idObject != '') {
@@ -153,8 +179,10 @@ class ObjectRepo {
         }
       }
 
+      /// Si hay links referenciados, realiza una consulta con la lista de id de links
+      /// y de la lista de id de objetos, para obtener links y objetos referenciados.
       if (idLinks.isNotEmpty) {
-        linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
+        //linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks); // Modificar
         for (WidgetLinkModel link in linkRefList) {
           final List<Map<String, dynamic>> objRefDb = await _supabase
               .from(link.entity.tableName)
@@ -173,9 +201,11 @@ class ObjectRepo {
         }
       }
 
+      /// Por cada objeto consultado que sea un objeto relacional,
+      /// agrega el objeto referenciado a la propiedad que le
+      /// pertenece.
       for (Map<String, dynamic> objDB in objsDB) {
         final Map<String, dynamic> objMap = objDB[_object];
-
         for (PropertyModel prop in propsRef) {
           final ReferenceObjectModel refObj;
           final String idObjRef;
@@ -198,6 +228,7 @@ class ObjectRepo {
           }
         }
 
+        /// Crea una lista de objetos a partir de las consultas realizadas.
         obj = ObjectModel(
           id: objDB[id],
           map: objDB[_object],
@@ -207,6 +238,7 @@ class ObjectRepo {
       }
     }
 
+    /// Agrega la lista de objetos resultado al modelo "DataResponse".
     dataResponse = DataResponseModel(
       dataList: objList,
       count: postgrestResponse.count ?? 0,
@@ -234,5 +266,42 @@ class ObjectRepo {
       _object: object.map,
       _createAt: object.createAt.toIso8601String(),
     });
+  }
+
+  static dynamic filterQuery(FilterObjModel filter, var query) {
+    dynamic queryFlt = query;
+    if (filter.operator == FilterOperator.eq) {
+      queryFlt =
+          queryFlt.eq('$_object->>"${filter.property.key}"', filter.value);
+    }
+    if (filter.operator == FilterOperator.like) {
+      queryFlt = queryFlt.like(
+          '$_object->>"${filter.property.key}"', '%${filter.value}%');
+    }
+    if (filter.operator == FilterOperator.ilike) {
+      queryFlt = queryFlt.ilike(
+          '$_object->>"${filter.property.key}"', '%${filter.value}%');
+    }
+    if (filter.operator == FilterOperator.gt) {
+      queryFlt =
+          queryFlt.gt('$_object->>"${filter.property.key}"', filter.value);
+    }
+    if (filter.operator == FilterOperator.gte) {
+      queryFlt =
+          queryFlt.gte('$_object->>"${filter.property.key}"', filter.value);
+    }
+    if (filter.operator == FilterOperator.lt) {
+      queryFlt =
+          queryFlt.lt('$_object->>"${filter.property.key}"', filter.value);
+    }
+    if (filter.operator == FilterOperator.lte) {
+      queryFlt =
+          queryFlt.lte('$_object->>"${filter.property.key}"', filter.value);
+    }
+    if (filter.operator == FilterOperator.neq) {
+      queryFlt =
+          queryFlt.neq('$_object->>"${filter.property.key}"', filter.value);
+    }
+    return queryFlt;
   }
 }
