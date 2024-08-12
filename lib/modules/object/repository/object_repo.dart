@@ -101,22 +101,25 @@ class ObjectRepo {
     }
     if (idLinks.isNotEmpty) {
       linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
-      
+
       //TODO: Cambiar para filtrar objetos referenciados -->
       for (var linkRef in linkRefList) {
         var queryRef = _supabase
             .from(linkRef.entity.tableName)
-            .select<List<Map<String, dynamic>>>();
+            .select<List<Map<String, dynamic>>>('''
+              ${linkRef.entity.tableName}!inner(id)
+            ''');
         for (FilterObjModel filter in filters) {
           queryRef = filterQuery(filter, queryRef);
         }
         responseRef[linkRef.id] = await queryRef
-        .range(rangeMin_, rangeMax_)
-        .order(keyAscending_, ascending: ascending_);
+            .range(rangeMin_, rangeMax_)
+            .order(keyAscending_, ascending: ascending_);
       }
+      print(responseRef);
     }
 
-    for (FilterObjModel filter in filters) {
+    /*for (FilterObjModel filter in filters) {
       if (filter.property.propertyType == Prop.referenceObject) {
         final valueRef = filter.value;
         upFilters.add(FilterObjModel(
@@ -127,7 +130,7 @@ class ObjectRepo {
           operator: filter.operator,
         ));
       }
-    }
+    }*/
     // <--
 
     /// Inicializa la estancia de la consulta indicando la tabla donde se
@@ -157,7 +160,7 @@ class ObjectRepo {
     /// Si la consulta de objetos dio algún resultado...
     if (objsDB.isNotEmpty) {
       List<String> idObjects = [];
-      List<String> idLinks = [];
+      //List<String> idLinks = [];
       List<ReferenceObjectModel> objsRef = [];
 
       /// Si ha alguna propiedad referenciada, enlista los id de links de referencia
