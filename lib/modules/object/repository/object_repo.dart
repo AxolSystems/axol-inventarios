@@ -8,11 +8,13 @@ import '../../entity/model/property_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
+import '../model/object_relation.dart';
 
 class ObjectRepo {
   static const String id = 'id';
   static const String _object = 'object';
   static const String _createAt = 'create_at';
+  static const String _references = 'references';
   static final _supabase = Supabase.instance.client;
 
   /// Obtiene una lista de objetos de la base de datos.
@@ -106,9 +108,7 @@ class ObjectRepo {
       for (var linkRef in linkRefList) {
         var queryRef = _supabase
             .from(linkRef.entity.tableName)
-            .select<List<Map<String, dynamic>>>('''
-              ${linkRef.entity.tableName}!inner(id)
-            ''');
+            .select<List<Map<String, dynamic>>>();
         for (FilterObjModel filter in filters) {
           queryRef = filterQuery(filter, queryRef);
         }
@@ -116,7 +116,6 @@ class ObjectRepo {
             .range(rangeMin_, rangeMax_)
             .order(keyAscending_, ascending: ascending_);
       }
-      print(responseRef);
     }
 
     /*for (FilterObjModel filter in filters) {
@@ -269,6 +268,72 @@ class ObjectRepo {
       _object: object.map,
       _createAt: object.createAt.toIso8601String(),
     });
+  }
+
+  /// Inserta mediante una actualización un nuevo link a columna de referencias
+  /// de la tabla en la base de datos. Primero realiza la consulta para obtener
+  /// el jsonb de referencia y verificar si ya contiene el id del link a referenciar.
+  /// En caso de que ya existe, se salta la actualización.
+  static Future<void> insertReference(String idLink,
+      WidgetLinkModel referenceLink, List<ObjectRelation> idObjList) async {
+    Map<String, dynamic> referencesMap = {};
+    List<Map<String, dynamic>> upsertList = [];
+    bool isChange = false;
+    bool existChild = false;
+    final List<Map<String, dynamic>> objRefDb = await _supabase
+        .from(referenceLink.entity.tableName)
+        .select<List<Map<String, dynamic>>>('$id,$_references')
+        .in_(id, ObjectRelation.listParent(idObjList));
+
+    for (ObjectRelation idObject in idObjList) {
+      final Map<String, dynamic> row =
+          objRefDb.firstWhere((x) => x[id] == idObject.newIdParentObject);
+      final int iUpsert =
+          upsertList.indexWhere((x) => x[id] == idObject.newIdParentObject);
+      if (iUpsert > -1) {
+        referencesMap = upsertList.elementAt(iUpsert)[_references];
+      } else {
+        referencesMap = row[_references] ?? {};
+      }
+
+      //Verifica si existe el id hijo.
+      existChild = false;
+      for (String key in referencesMap.keys) {
+        if (referencesMap[key][ReferenceObjectModel.tRefLink] == idLink &&
+            referencesMap[key][ReferenceObjectModel.object] ==
+                idObject.idChildObject) {
+          existChild = true;
+        }
+      }
+      //Si no existe el id hijo en la fila, inserta las id.
+      if (!existChild) {
+        for (int i2 = 0; i2 <= referencesMap.keys.length; i2++) {
+          if (!referencesMap.containsKey(i2.toString())) {
+            referencesMap[i2.toString()] = {
+              ReferenceObjectModel.tRefLink: idLink,
+              ReferenceObjectModel.object: idObject.idChildObject
+            };
+            isChange = true;
+            i2++;
+          }
+        }
+        if (iUpsert > -1) {
+          upsertList[iUpsert] = {
+            id: idObject.newIdParentObject,
+            _references: referencesMap
+          };
+        } else {
+          upsertList.add(
+              {id: idObject.newIdParentObject, _references: referencesMap});
+        }
+      }
+      //TODO: Agregar para oldIdParentObject
+    }
+
+    if (isChange) {
+      print(upsertList);
+      await _supabase.from(referenceLink.entity.tableName).upsert(upsertList);
+    }
   }
 
   static dynamic filterQuery(FilterObjModel filter, var query) {

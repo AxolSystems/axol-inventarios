@@ -21,6 +21,7 @@
         "setentity",
         "supabase",
         "tableview",
+        "upsert",
         "uuid",
         "widgetlink"
     ],
