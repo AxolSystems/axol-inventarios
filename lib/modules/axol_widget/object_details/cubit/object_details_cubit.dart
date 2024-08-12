@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
+import '../../../object/model/object_relation.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../model/object_details_form_model.dart';
@@ -78,7 +79,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if (prop.propertyType == Prop.referenceObject) {
           cellRefObj =
               form.object.map[prop.key] ?? ReferenceObjectModel.empty();
-          form.controllers[prop.key] = RDReferenceObject(refObject: cellRefObj);
+          form.controllers[prop.key] = RDReferenceObject(refObject: cellRefObj, oldIdRefObject: cellRefObj.referenceObject.id);
         }
       }
 
@@ -103,7 +104,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
   }
 
   /// Proceso para guardar los cambios realizados en el objeto.
-  Future<void> save(ObjectDetailsFormModel form, WidgetLinkModel link) async {
+  Future<void> save(ObjectDetailsFormModel form, WidgetLinkModel link,) async {
     try {
       emit(InitialObjectDetailsState());
       emit(SavingObjectDetailsState());
@@ -113,6 +114,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       ObjectModel object;
       Map<String, dynamic> map = {};
       PropertyModel property;
+      List<ObjectRelation> objRelationList = [];
 
       for (String key in form.object.map.keys) {
         final RDTextEditingController textController;
@@ -142,7 +144,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           refObjController = form.controllers[key] as RDReferenceObject;
         } else {
           refObjController =
-              RDReferenceObject(refObject: ReferenceObjectModel.empty());
+              RDReferenceObject.empty();
         }
 
         property = link.entity.propertyList.firstWhere((x) => x.key == key);
@@ -170,9 +172,16 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           map[key] = refObjController.refObject.referenceObject.id;
           form.object.map[key] = ReferenceObjectModel.setRefObj(
               form.object.map[key], refObjController.refObject.referenceObject);
-          idRefObjList.add(refObjController.refObject.referenceObject.id);
+          //idRefObjList.add(refObjController.refObject.referenceObject.id);
           existReference = true;
           referenceLink = refObjController.refObject.referenceLink;
+          objRelationList.add(
+            ObjectRelation(
+              idChildObject: form.object.id,
+              newIdParentObject: refObjController.refObject.referenceObject.id,
+              oldIdParentObject: refObjController.oldIdRefObject,
+            ),
+          );
         }
       }
 
@@ -181,7 +190,11 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
 
       await ObjectRepo.update(object, link);
       if (existReference) {
-        await ObjectRepo.insertReference(link.id, referenceLink, idRefObjList);
+        await ObjectRepo.insertReference(
+          link.id,
+          referenceLink,
+          objRelationList,
+        );
       }
 
       emit(SavedObjectDetailsState());

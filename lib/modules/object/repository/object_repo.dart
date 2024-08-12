@@ -278,7 +278,6 @@ class ObjectRepo {
       WidgetLinkModel referenceLink, List<ObjectRelation> idObjList) async {
     Map<String, dynamic> referencesMap = {};
     List<Map<String, dynamic>> upsertList = [];
-    bool isChange = false;
     bool existChild = false;
     final List<Map<String, dynamic>> objRefDb = await _supabase
         .from(referenceLink.entity.tableName)
@@ -313,7 +312,6 @@ class ObjectRepo {
               ReferenceObjectModel.tRefLink: idLink,
               ReferenceObjectModel.object: idObject.idChildObject
             };
-            isChange = true;
             i2++;
           }
         }
@@ -329,8 +327,39 @@ class ObjectRepo {
       }
       //TODO: Agregar para oldIdParentObject
     }
+    // Actualiza eliminando los ObjectRelation de los oldIdParentObject.
+    for (ObjectRelation idObject in idObjList) {
+      final Map<String, dynamic> row =
+          objRefDb.firstWhere((x) => x[id] == idObject.oldIdParentObject);
+      final int iUpsert =
+          upsertList.indexWhere((x) => x[id] == idObject.oldIdParentObject);
+      if (iUpsert > -1) {
+        referencesMap = upsertList.elementAt(iUpsert)[_references];
+      } else {
+        referencesMap = row[_references] ?? {};
+      }
 
-    if (isChange) {
+      //Verifica si existe el id hijo.
+      existChild = false;
+      for (String key in referencesMap.keys) {
+        if (referencesMap[key][ReferenceObjectModel.tRefLink] == idLink &&
+            referencesMap[key][ReferenceObjectModel.object] ==
+                idObject.idChildObject) {
+                  referencesMap.remove(key);
+        }
+      }
+      if (iUpsert > -1) {
+          upsertList[iUpsert] = {
+            id: idObject.oldIdParentObject,
+            _references: referencesMap
+          };
+        } else {
+          upsertList.add(
+              {id: idObject.oldIdParentObject, _references: referencesMap});
+        }
+    }
+
+    if (upsertList.isNotEmpty) {
       print(upsertList);
       await _supabase.from(referenceLink.entity.tableName).upsert(upsertList);
     }

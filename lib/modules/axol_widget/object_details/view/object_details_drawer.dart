@@ -463,7 +463,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                             if (value is ReferenceObjectModel) {
                               form.object.map[prop.key] = value;
                               form.controllers[prop.key] =
-                                  RDReferenceObject(refObject: value);
+                                  RDReferenceObject(refObject: value, oldIdRefObject: refObj.referenceObject.id);
                               context.read<ObjectDetailsCubit>().load();
                             }
                           },

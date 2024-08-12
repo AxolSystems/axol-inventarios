@@ -45,6 +45,9 @@ class RDDateController extends RowDetailsController {
 
 class RDReferenceObject extends RowDetailsController {
   ReferenceObjectModel refObject;
-  RDReferenceObject({required this.refObject});
-  RDReferenceObject.empty() : refObject = ReferenceObjectModel.empty();
+  String oldIdRefObject;
+  RDReferenceObject({required this.refObject, required this.oldIdRefObject});
+  RDReferenceObject.empty()
+      : refObject = ReferenceObjectModel.empty(),
+        oldIdRefObject = '';
 }
