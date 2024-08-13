@@ -93,43 +93,13 @@ class ObjectRepo {
     }
 
     /// Consulta objetos referenciados cuando hay un filtro activo.
-    for (var prop in link.entity.propertyList) {
-      if (prop.propertyType == Prop.referenceObject) {
-        propsRef.add(prop);
-        if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
-          idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
-        }
-      }
+   for (FilterObjModel filter in filters) {
+    if (filter.property.propertyType == Prop.referenceObject) {
+      //init query
+      //queryFilter
+      //
     }
-    if (idLinks.isNotEmpty) {
-      linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
-
-      //TODO: Cambiar para filtrar objetos referenciados -->
-      for (var linkRef in linkRefList) {
-        var queryRef = _supabase
-            .from(linkRef.entity.tableName)
-            .select<List<Map<String, dynamic>>>();
-        for (FilterObjModel filter in filters) {
-          queryRef = filterQuery(filter, queryRef);
-        }
-        responseRef[linkRef.id] = await queryRef
-            .range(rangeMin_, rangeMax_)
-            .order(keyAscending_, ascending: ascending_);
-      }
-    }
-
-    /*for (FilterObjModel filter in filters) {
-      if (filter.property.propertyType == Prop.referenceObject) {
-        final valueRef = filter.value;
-        upFilters.add(FilterObjModel(
-          property: filter.property,
-          value: responseRef[
-                  filter.property.dynamicValues[PropertyModel.dvRefLink]]
-              .firstWhere((x) => x[_object][refObj.idPropertyView] == ),
-          operator: filter.operator,
-        ));
-      }
-    }*/
+   }
     // <--
 
     /// Inicializa la estancia de la consulta indicando la tabla donde se
@@ -279,6 +249,7 @@ class ObjectRepo {
     Map<String, dynamic> referencesMap = {};
     List<Map<String, dynamic>> upsertList = [];
     bool existChild = false;
+    String? removeKey;
     final List<Map<String, dynamic>> objRefDb = await _supabase
         .from(referenceLink.entity.tableName)
         .select<List<Map<String, dynamic>>>('$id,$_references')
@@ -294,7 +265,6 @@ class ObjectRepo {
       } else {
         referencesMap = row[_references] ?? {};
       }
-
       //Verifica si existe el id hijo.
       existChild = false;
       for (String key in referencesMap.keys) {
@@ -325,8 +295,8 @@ class ObjectRepo {
               {id: idObject.newIdParentObject, _references: referencesMap});
         }
       }
-      //TODO: Agregar para oldIdParentObject
     }
+
     // Actualiza eliminando los ObjectRelation de los oldIdParentObject.
     for (ObjectRelation idObject in idObjList) {
       final Map<String, dynamic> row =
@@ -339,16 +309,22 @@ class ObjectRepo {
         referencesMap = row[_references] ?? {};
       }
 
-      //Verifica si existe el id hijo.
-      existChild = false;
-      for (String key in referencesMap.keys) {
-        if (referencesMap[key][ReferenceObjectModel.tRefLink] == idLink &&
-            referencesMap[key][ReferenceObjectModel.object] ==
-                idObject.idChildObject) {
-                  referencesMap.remove(key);
+      if (referencesMap.isNotEmpty) {
+        //Verifica si existe el id hijo.
+        existChild = false;
+        removeKey = null;
+        for (String key in referencesMap.keys) {
+          if (referencesMap[key][ReferenceObjectModel.tRefLink] == idLink &&
+              referencesMap[key][ReferenceObjectModel.object] ==
+                  idObject.idChildObject) {
+            removeKey = key;
+          }
         }
-      }
-      if (iUpsert > -1) {
+        if (removeKey != null) {
+          referencesMap.remove(removeKey);
+        }
+
+        if (iUpsert > -1) {
           upsertList[iUpsert] = {
             id: idObject.oldIdParentObject,
             _references: referencesMap
@@ -357,10 +333,10 @@ class ObjectRepo {
           upsertList.add(
               {id: idObject.oldIdParentObject, _references: referencesMap});
         }
+      }
     }
 
     if (upsertList.isNotEmpty) {
-      print(upsertList);
       await _supabase.from(referenceLink.entity.tableName).upsert(upsertList);
     }
   }
