@@ -48,7 +48,6 @@ class TableCubit extends Cubit<TableState> {
       final UserModel user = await LocalUser().getLocalUser();
 
       form.theme = user.theme;
-
       if (view.properties.containsKey(WidgetViewModel.propNumRows)) {
         form.limitRows = view.properties[WidgetViewModel.propNumRows];
         form.ctrlLimitRow = TextEditingController(
@@ -58,13 +57,12 @@ class TableCubit extends Cubit<TableState> {
         form.ctrlLimitRow = TextEditingController(text: "50");
       }
       form.currentPage = 1;
-
       await getData(
           form: form, link: link, rangeMin: 0, rangeMax: form.limitRows - 1);
-
       for (var prop in form.table.header) {
         widthColumns[prop.key] = 150;
       }
+
       if (view.properties.containsKey(WidgetViewModel.propColumnWidth)) {
         columnWidthDB = view.properties[WidgetViewModel.propColumnWidth];
         for (var prop in form.table.header) {
@@ -83,6 +81,7 @@ class TableCubit extends Cubit<TableState> {
         form.ascending = false;
         form.keyAscending = null;
       }
+
       emit(LoadedTableState());
     } catch (e) {
       emit(InitialTableState());

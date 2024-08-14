@@ -46,7 +46,6 @@ class TableModel extends DataObject {
     }
     for (var obj in objects) {
       row = {};
-
       for (var key in obj.map.keys) {
         final Prop prop =
             entity.propertyList.firstWhere((x) => x.key == key).propertyType;
@@ -61,12 +60,10 @@ class TableModel extends DataObject {
               text: FormatDate.dmyHm(
                   DateTime.fromMillisecondsSinceEpoch(obj.map[key] ?? 0)));
         } else if (prop == Prop.referenceObject) {
-          final ReferenceObjectModel refObj =
-              obj.map[key];
+          final ReferenceObjectModel refObj = obj.map[key];
           final PropertyModel propRef = refObj.getPropView();
           if (propRef.propertyType == Prop.empty) {
-            row[key] =
-                CellReference(text: refObj.referenceObject.id);
+            row[key] = CellReference(text: refObj.referenceObject.id);
           } else if (propRef.propertyType == Prop.text) {
             row[key] = CellReference(
                 text: refObj.referenceObject.map[propRef.key] ?? '');
@@ -82,7 +79,6 @@ class TableModel extends DataObject {
                 text: FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
                     refObj.referenceObject.map[propRef.key] ?? 0)));
           }
-          
         }
       }
       rowList.add(row);
