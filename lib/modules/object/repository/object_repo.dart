@@ -46,9 +46,13 @@ class ObjectRepo {
     final DataResponseModel dataResponse;
     Map<String, List<Map<String, dynamic>>> responseRef = {};
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
+    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponseRef;
     List<WidgetLinkModel> linkRefList = [];
     List<PropertyModel> propsRef = [];
     List<String> idLinks = [];
+    List<PropertyModel> idRefProps = [];
+    Map<String, List<FilterObjModel>> refFilters = {};
+    List<FilterObjModel> refFilterList;
 
     /// Si no está ordenado por una propiedad, ordenar po fecha de
     /// creación.
@@ -93,13 +97,51 @@ class ObjectRepo {
     }
 
     /// Consulta objetos referenciados cuando hay un filtro activo.
-   for (FilterObjModel filter in filters) {
-    if (filter.property.propertyType == Prop.referenceObject) {
-      //init query
-      //queryFilter
-      //
+    // 1. Enlista links de referencia y propiedades de entidad hijo que son referenciadas.
+    idLinks = [];
+    for (PropertyModel prop in link.entity.propertyList) {
+      if (prop.dynamicValues.containsKey(PropertyModel.dvRefLink)) {
+        if (idRefProps.indexWhere(
+                (x) => x.dynamicValues.containsKey(PropertyModel.dvRefLink)) >
+            -1) {
+          idRefProps.add(prop);
+        }
+        if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
+          idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
+        }
+      }
     }
-   }
+    linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
+
+    // 2. Enlista filtros de referencia y los mapea para filtros que son de la misma propiedad.
+    for (PropertyModel prop in idRefProps) {
+      refFilterList = [];
+      for (FilterObjModel filter in filters) {
+        if (filter.property.propertyType == Prop.referenceObject &&
+            filter.property.key == prop.key) {
+          refFilterList.add(filter);
+        }
+      }
+      if (refFilterList.isNotEmpty) {
+        refFilters[prop.key] = refFilterList;
+      }
+    }
+
+    //3. Realiza la consulta en tabla padre.
+    for (String key in refFilters.keys) {
+      final WidgetLinkModel refLink =
+          linkRefList.firstWhere((x) => x.id == key);
+      var queryRef = _supabase
+          .from(refLink.entity.tableName)
+          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+              '$id,$_object->>${refFilters[key]!.first.property.key}',
+              const FetchOptions(count: CountOption.estimated));
+      for (FilterObjModel filter in refFilters[key]!) {
+        queryRef = filterQuery(filter, queryRef);
+      }
+      postgrestResponseRef = await queryRef.range(from, to);
+    }
+
     // <--
 
     /// Inicializa la estancia de la consulta indicando la tabla donde se
