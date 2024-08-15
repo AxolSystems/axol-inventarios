@@ -8,13 +8,11 @@ import '../../entity/model/property_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
-import '../model/object_relation.dart';
 
 class ObjectRepo {
   static const String id = 'id';
   static const String _object = 'object';
   static const String _createAt = 'create_at';
-  static const String _references = 'references';
   static final _supabase = Supabase.instance.client;
 
   /// Obtiene una lista de objetos de la base de datos.
@@ -34,7 +32,6 @@ class ObjectRepo {
     String? keyAscending,
     String? search,
   }) async {
-    List<FilterObjModel> upFilters = [];
     List<Map<String, dynamic>> objsDB;
     List<ObjectModel> objList = [];
     ObjectModel obj;
@@ -44,10 +41,8 @@ class ObjectRepo {
     final bool ascending_ = ascending ?? false;
     final String keyAscending_;
     final DataResponseModel dataResponse;
-    Map<String, List<Map<String, dynamic>>> responseRef = {};
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponse;
     PostgrestResponse<List<Map<String, dynamic>>> postgrestResponseRef;
-    PostgrestResponse<List<Map<String, dynamic>>> postgrestResponseChild;
     List<WidgetLinkModel> linkRefList = [];
     List<PropertyModel> propsRef = [];
     List<String> idLinks = [];
@@ -137,46 +132,6 @@ class ObjectRepo {
       }
     }
 
-    //3. Realiza la consulta en tabla padre.
-    for (String key in refFilters.keys) {
-      final WidgetLinkModel refLink = linkRefList.firstWhere((x) =>
-          x.id ==
-          link.entity.propertyList
-              .firstWhere((y) => y.key == key)
-              .dynamicValues[PropertyModel.dvRefLink]);
-      var queryRef = _supabase
-          .from(refLink.entity.tableName)
-          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              id, const FetchOptions(count: CountOption.estimated));
-
-      for (FilterObjModel filter in refFilters[key]!) {
-        queryRef = filterQuery(filter, queryRef);
-        print('${filter.operator}, ${filter.property.name}, ${filter.value}');
-      }
-
-      postgrestResponseRef = await queryRef.range(0, 999);
-      print(postgrestResponseRef.data);
-      for (var element in postgrestResponseRef.data ?? []) {
-        if (element != null) {
-          idRefLinks.add(element[id]);
-        }
-      }
-
-      /// TODO: Se esta agregando propertyRef en PropertyModel, 
-      /// hacer los cambios faltantes.
-      postgrestResponseChild = await _supabase
-          .from(link.entity.tableName)
-          .select<PostgrestResponse<List<Map<String, dynamic>>>>(
-              '*', const FetchOptions(count: CountOption.estimated))
-          //.contains(_object, )
-          .in_('$_object->>"${refFilters[key]!.first.property.key}"',
-              idRefLinks);
-      print('refFilters.first: ${refFilters[key]!.first.property.key}');
-      print(idRefLinks);
-      print(postgrestResponseChild.data);
-    }
-    // <--
-
     /// Inicializa la estancia de la consulta indicando la tabla donde se
     /// realizará.
     var query = _supabase
@@ -191,7 +146,46 @@ class ObjectRepo {
 
     /// Agrega los filtros a la consulta.
     for (FilterObjModel filter in filters) {
-      query = filterQuery(filter, query);
+      if (filter.property.propertyType != Prop.referenceObject) {
+        query = filterQuery(filter, query);
+      }
+    }
+
+    /// Si hay filtros de referenciados, consulta las tablas padre y obtiene
+    /// las id a mostrar que estén relacionados en la tabla hijo.
+    if (refFilters.isNotEmpty) {
+      for (String key in refFilters.keys) {
+        final WidgetLinkModel refLink = linkRefList.firstWhere((x) =>
+            x.id ==
+            link.entity.propertyList
+                .firstWhere((y) => y.key == key)
+                .dynamicValues[PropertyModel.dvRefLink]);
+        var queryRef = _supabase
+            .from(refLink.entity.tableName)
+            .select<PostgrestResponse<List<Map<String, dynamic>>>>(
+                id, const FetchOptions(count: CountOption.estimated));
+
+        for (FilterObjModel filter in refFilters[key]!) {
+          queryRef = filterQuery(
+              FilterObjModel(
+                  property: filter.propertyRef!,
+                  value: filter.value,
+                  operator: filter.operator),
+              queryRef);
+        }
+
+        /// TODO: Cambiar para que revise la tabla padre de mil en mil, en caso de 
+        /// que tenga más filas.
+        postgrestResponseRef = await queryRef.range(0, 999);
+        idRefLinks = [];
+        for (var element in postgrestResponseRef.data ?? []) {
+          if (element != null) {
+            idRefLinks.add(element[id]);
+          }
+        }
+        query = query.in_(
+            '$_object->>"${refFilters[key]!.first.property.key}"', idRefLinks);
+      }
     }
 
     /// Realiza la consulta de objetos.
@@ -313,107 +307,6 @@ class ObjectRepo {
       _object: object.map,
       _createAt: object.createAt.toIso8601String(),
     });
-  }
-
-  /// Inserta mediante una actualización un nuevo link a columna de referencias
-  /// de la tabla en la base de datos. Primero realiza la consulta para obtener
-  /// el jsonb de referencia y verificar si ya contiene el id del link a referenciar.
-  /// En caso de que ya existe, se salta la actualización.
-  static Future<void> insertReference(String idLink,
-      WidgetLinkModel referenceLink, List<ObjectRelation> idObjList) async {
-    Map<String, dynamic> referencesMap = {};
-    List<Map<String, dynamic>> upsertList = [];
-    bool existChild = false;
-    String? removeKey;
-    final List<Map<String, dynamic>> objRefDb = await _supabase
-        .from(referenceLink.entity.tableName)
-        .select<List<Map<String, dynamic>>>('$id,$_references')
-        .in_(id, ObjectRelation.listParent(idObjList));
-
-    for (ObjectRelation idObject in idObjList) {
-      final Map<String, dynamic> row =
-          objRefDb.firstWhere((x) => x[id] == idObject.newIdParentObject);
-      final int iUpsert =
-          upsertList.indexWhere((x) => x[id] == idObject.newIdParentObject);
-      if (iUpsert > -1) {
-        referencesMap = upsertList.elementAt(iUpsert)[_references];
-      } else {
-        referencesMap = row[_references] ?? {};
-      }
-      //Verifica si existe el id hijo.
-      existChild = false;
-      for (String key in referencesMap.keys) {
-        if (referencesMap[key][ReferenceObjectModel.tRefLink] == idLink &&
-            referencesMap[key][ReferenceObjectModel.object] ==
-                idObject.idChildObject) {
-          existChild = true;
-        }
-      }
-      //Si no existe el id hijo en la fila, inserta las id.
-      if (!existChild) {
-        for (int i2 = 0; i2 <= referencesMap.keys.length; i2++) {
-          if (!referencesMap.containsKey(i2.toString())) {
-            referencesMap[i2.toString()] = {
-              ReferenceObjectModel.tRefLink: idLink,
-              ReferenceObjectModel.object: idObject.idChildObject
-            };
-            i2++;
-          }
-        }
-        if (iUpsert > -1) {
-          upsertList[iUpsert] = {
-            id: idObject.newIdParentObject,
-            _references: referencesMap
-          };
-        } else {
-          upsertList.add(
-              {id: idObject.newIdParentObject, _references: referencesMap});
-        }
-      }
-    }
-
-    // Actualiza eliminando los ObjectRelation de los oldIdParentObject.
-    for (ObjectRelation idObject in idObjList) {
-      final Map<String, dynamic> row =
-          objRefDb.firstWhere((x) => x[id] == idObject.oldIdParentObject);
-      final int iUpsert =
-          upsertList.indexWhere((x) => x[id] == idObject.oldIdParentObject);
-      if (iUpsert > -1) {
-        referencesMap = upsertList.elementAt(iUpsert)[_references];
-      } else {
-        referencesMap = row[_references] ?? {};
-      }
-
-      if (referencesMap.isNotEmpty) {
-        //Verifica si existe el id hijo.
-        existChild = false;
-        removeKey = null;
-        for (String key in referencesMap.keys) {
-          if (referencesMap[key][ReferenceObjectModel.tRefLink] == idLink &&
-              referencesMap[key][ReferenceObjectModel.object] ==
-                  idObject.idChildObject) {
-            removeKey = key;
-          }
-        }
-        if (removeKey != null) {
-          referencesMap.remove(removeKey);
-        }
-
-        if (iUpsert > -1) {
-          upsertList[iUpsert] = {
-            id: idObject.oldIdParentObject,
-            _references: referencesMap
-          };
-        } else {
-          upsertList.add(
-              {id: idObject.oldIdParentObject, _references: referencesMap});
-        }
-      }
-    }
-
-    if (upsertList.isNotEmpty) {
-      await _supabase.from(referenceLink.entity.tableName).upsert(upsertList);
-    }
   }
 
   static dynamic filterQuery(FilterObjModel filter, var query) {

@@ -189,13 +189,13 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           createAt: form.object.createAt, id: form.object.id, map: map);
 
       await ObjectRepo.update(object, link);
-      if (existReference) {
+      /*if (existReference) {
         await ObjectRepo.insertReference(
           link.id,
           referenceLink,
           objRelationList,
         );
-      }
+      }*/
 
       emit(SavedObjectDetailsState());
       emit(LoadedObjectDetailsState());
