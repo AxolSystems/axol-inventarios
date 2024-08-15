@@ -4,6 +4,7 @@ enum FilterOperator { eq, neq, gt, gte, lt, lte, like, ilike }
 
 class FilterObjModel {
   final PropertyModel property;
+  final PropertyModel? propertyRef;
   final dynamic value;
   final FilterOperator operator;
 
@@ -11,6 +12,7 @@ class FilterObjModel {
     required this.property,
     required this.value,
     required this.operator,
+    this.propertyRef,
   });
 
   static String get tProperty => 'property';
@@ -43,10 +45,11 @@ class FilterObjModel {
         FilterOperator.lte,
       ];
 
-  FilterObjModel setProperty(PropertyModel property) => FilterObjModel(
+  FilterObjModel setProperty(PropertyModel propertyRef_) => FilterObjModel(
         operator: operator,
         value: value,
         property: property,
+        propertyRef: propertyRef_,
       );
 
   static List<FilterObjModel> mapToFilters(Map<String, dynamic> map) {

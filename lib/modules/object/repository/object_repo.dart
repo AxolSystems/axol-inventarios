@@ -162,12 +162,16 @@ class ObjectRepo {
         }
       }
 
+      /// TODO: Se esta agregando propertyRef en PropertyModel, 
+      /// hacer los cambios faltantes.
       postgrestResponseChild = await _supabase
           .from(link.entity.tableName)
           .select<PostgrestResponse<List<Map<String, dynamic>>>>(
               '*', const FetchOptions(count: CountOption.estimated))
+          //.contains(_object, )
           .in_('$_object->>"${refFilters[key]!.first.property.key}"',
               idRefLinks);
+      print('refFilters.first: ${refFilters[key]!.first.property.key}');
       print(idRefLinks);
       print(postgrestResponseChild.data);
     }
