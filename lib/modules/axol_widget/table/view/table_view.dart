@@ -264,16 +264,20 @@ class TableViewBuild extends AxolWidget {
                                     onPressed: () {
                                       showDialog(
                                         context: context,
-                                        builder: (context) => ObjectDetailsDrawer(
+                                        builder: (context) =>
+                                            ObjectDetailsDrawer(
                                           theme: form.theme,
                                           link: link,
                                           object: form.table.objects[index],
                                         ),
                                       ).then(
                                         (value) {
-                                          context
-                                              .read<TableCubit>()
-                                              .initLoad(form, link, viewId);
+                                          print(value);
+                                          if (value == true) {
+                                            context
+                                                .read<TableCubit>()
+                                                .initLoad(form, link, viewId);
+                                          }
                                         },
                                       );
                                     },
@@ -404,7 +408,8 @@ class TableViewBuild extends AxolWidget {
                 Visibility(
                     visible: form.edit,
                     child: IconButton(
-                      constraints: const BoxConstraints(maxWidth: 32, maxHeight: 20),
+                      constraints:
+                          const BoxConstraints(maxWidth: 32, maxHeight: 20),
                       onPressed: (state is SavingTableState) ||
                               (state is LoadingTableState)
                           ? () {}

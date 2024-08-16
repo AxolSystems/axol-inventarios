@@ -166,7 +166,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Regresar',
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, form.isEdited);
                       },
                     ),
                   ],
@@ -521,7 +521,7 @@ class AlertDialogObjectDelete extends AxolWidget {
       listener: (context, state) {
         if (state is DeletedObjectDetailsState) {
           Navigator.pop(context);
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }
       },
       builder: (context, state) => AlertDialogAxol(

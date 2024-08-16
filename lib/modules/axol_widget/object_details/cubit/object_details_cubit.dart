@@ -108,9 +108,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
     try {
       emit(InitialObjectDetailsState());
       emit(SavingObjectDetailsState());
-      WidgetLinkModel referenceLink = WidgetLinkModel.empty();
-      bool existReference = false;
-      List<String> idRefObjList = [];
       ObjectModel object;
       Map<String, dynamic> map = {};
       PropertyModel property;
@@ -172,9 +169,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           map[key] = refObjController.refObject.referenceObject.id;
           form.object.map[key] = ReferenceObjectModel.setRefObj(
               form.object.map[key], refObjController.refObject.referenceObject);
-          //idRefObjList.add(refObjController.refObject.referenceObject.id);
-          existReference = true;
-          referenceLink = refObjController.refObject.referenceLink;
           objRelationList.add(
             ObjectRelation(
               idChildObject: form.object.id,
@@ -189,13 +183,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           createAt: form.object.createAt, id: form.object.id, map: map);
 
       await ObjectRepo.update(object, link);
-      /*if (existReference) {
-        await ObjectRepo.insertReference(
-          link.id,
-          referenceLink,
-          objRelationList,
-        );
-      }*/
+      form.isEdited = true;
 
       emit(SavedObjectDetailsState());
       emit(LoadedObjectDetailsState());
@@ -212,6 +200,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       emit(DeletingObjectDetailsState());
 
       await ObjectRepo.delete(form.object, link);
+      form.isEdited;
 
       emit(DeletedObjectDetailsState());
       emit(LoadedObjectDetailsState());

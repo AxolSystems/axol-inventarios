@@ -8,19 +8,22 @@ import '../../../object/model/reference_object_model.dart';
 class ObjectDetailsFormModel {
   Map<String, RowDetailsController> controllers;
   bool edit;
+  bool isEdited;
   ObjectModel object;
 
   ObjectDetailsFormModel({
     required this.controllers,
     required this.edit,
     required this.object,
+    required this.isEdited,
   });
 
   /// Estado inicial del form.
   ObjectDetailsFormModel.empty()
       : controllers = {},
         edit = false,
-        object = ObjectModel.empty();
+        object = ObjectModel.empty(),
+        isEdited = false;
 }
 
 abstract class RowDetailsController {}
