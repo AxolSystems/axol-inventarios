@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/form/model/form_form_model.dart';
 import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
+import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -8,6 +9,7 @@ import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
+import '../../../widget_link/repository/widgetlink_repo.dart';
 import 'form_state.dart';
 
 class FormCubit extends Cubit<FormDrawerState> {
@@ -52,6 +54,19 @@ class FormCubit extends Cubit<FormDrawerState> {
             dateTime: DateTime.now(),
             property: prop,
           ));
+        } else if (prop.propertyType == Prop.referenceObject) {
+          final List<WidgetLinkModel> refLinks =
+              await WidgetLinkRepo.fetchWidgetLik(
+                  [prop.dynamicValues[PropertyModel.dvRefLink] ?? '']);
+          final ReferenceObjectModel refObjInit = ReferenceObjectModel(
+            referenceObject: ObjectModel.empty(),
+            idPropertyView: prop.dynamicValues[ReferenceObjectModel.property],
+            referenceLink: refLinks.first,
+          );
+          form.fields.add(ReferenceObjectFieldModel(
+            refObj: refObjInit,
+            property: prop,
+          ));
         }
       }
 
@@ -87,6 +102,10 @@ class FormCubit extends Cubit<FormDrawerState> {
           } else if (form.fields[i] is DateFieldModel) {
             final DateFieldModel dateField = form.fields[i] as DateFieldModel;
             map[prop.key] = dateField.dateTime.millisecondsSinceEpoch;
+          } else if (form.fields[i] is ReferenceObjectFieldModel) {
+            final ReferenceObjectFieldModel refObjField =
+                form.fields[i] as ReferenceObjectFieldModel;
+            map[prop.key] = refObjField.refObj.referenceObject.id;
           } else {
             map[prop.key] = null;
           }

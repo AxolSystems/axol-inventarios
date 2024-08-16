@@ -9,7 +9,10 @@ import '../../../../utilities/widgets/buttons/date_time_button.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
 import '../../../../utilities/widgets/textfield.dart';
+import '../../../object/model/reference_object_model.dart';
 import '../../generic/view/axol_widget.dart';
+import '../../search_button/view/search_button.dart';
+import '../../search_button/view/search_reference_object.dart';
 import '../cubit/form_cubit.dart';
 import '../cubit/form_state.dart';
 import '../model/form_form_model.dart';
@@ -133,6 +136,34 @@ class FormDrawerBuild extends AxolWidget {
                 );
               },
             ));
+          } else if (field is ReferenceObjectFieldModel) {
+            widgetList.add(
+              SearchButton(
+                theme: theme_,
+                referenceObject: field.refObj,
+                margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => SearchReferenceObject(
+                      theme: theme_,
+                      idRefLink: field.refObj.referenceLink.id,
+                      initIdRefObject: field.refObj.referenceObject.id,
+                      idRefPropView: field.refObj.idPropertyView,
+                    ),
+                  ).then(
+                    (value) {
+                      if (value is ReferenceObjectModel) {
+                        form.fields[i] = ReferenceObjectFieldModel(
+                            refObj: value, property: field.property);
+                        context.read<FormCubit>().load();
+                      }
+                    },
+                  );
+                },
+              ),
+            );
           }
         }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../entity/model/property_model.dart';
+import '../../../object/model/reference_object_model.dart';
 
 class FormFormModel {
   List<FormFieldModel> fields;
@@ -33,4 +34,9 @@ class BooleanFieldModel extends FormFieldModel {
 class DateFieldModel extends FormFieldModel {
   DateTime dateTime;
   DateFieldModel({required this.dateTime, required super.property});
+}
+
+class ReferenceObjectFieldModel extends FormFieldModel {
+  ReferenceObjectModel refObj;
+  ReferenceObjectFieldModel({required this.refObj, required super.property});
 }
