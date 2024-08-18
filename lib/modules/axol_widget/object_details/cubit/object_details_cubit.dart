@@ -37,6 +37,11 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       emit(InitialObjectDetailsState());
       emit(LoadingObjectDetailsState());
       final List<PropertyModel> propList;
+      Map<String, dynamic> objectMap = {};
+
+      for (String key in object.map.keys) {
+        objectMap[key] = object.map[key];
+      }
 
       if (referenceObject != null) {
         propList = referenceObject.referenceLink.entity.propertyList;
@@ -44,8 +49,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         propList = link.entity.propertyList;
       }
 
-      form.object = ObjectModel(
-          id: object.id, map: object.map, createAt: object.createAt);
+      form.object =
+          ObjectModel(id: object.id, map: objectMap, createAt: object.createAt);
       for (PropertyModel prop in propList) {
         final String cellText;
         final bool cellBool;
@@ -77,9 +82,16 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               form.object.map[prop.key] ?? 0);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         } else if (prop.propertyType == Prop.referenceObject) {
-          cellRefObj =
-              form.object.map[prop.key] ?? ReferenceObjectModel.empty();
-          form.controllers[prop.key] = RDReferenceObject(refObject: cellRefObj, oldIdRefObject: cellRefObj.referenceObject.id);
+          
+          cellRefObj = form.object.map[prop.key] ??
+              ReferenceObjectModel(
+                  idPropertyView:
+                      prop.dynamicValues[ReferenceObjectModel.property],
+                  referenceLink: prop.dynamicValues[PropertyModel.dvRefLink],
+                  referenceObject: ObjectModel.empty());
+          form.controllers[prop.key] = RDReferenceObject(
+              refObject: cellRefObj,
+              oldIdRefObject: cellRefObj.referenceObject.id);
         }
       }
 
@@ -104,7 +116,10 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
   }
 
   /// Proceso para guardar los cambios realizados en el objeto.
-  Future<void> save(ObjectDetailsFormModel form, WidgetLinkModel link,) async {
+  Future<void> save(
+    ObjectDetailsFormModel form,
+    WidgetLinkModel link,
+  ) async {
     try {
       emit(InitialObjectDetailsState());
       emit(SavingObjectDetailsState());
@@ -140,8 +155,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         if (form.controllers[key] is RDReferenceObject) {
           refObjController = form.controllers[key] as RDReferenceObject;
         } else {
-          refObjController =
-              RDReferenceObject.empty();
+          refObjController = RDReferenceObject.empty();
         }
 
         property = link.entity.propertyList.firstWhere((x) => x.key == key);

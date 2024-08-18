@@ -30,7 +30,7 @@ class SearchRefObjCubit extends Cubit<SearchRefObjState> {
       emit(InitialSearchRefObjState());
       emit(LoadingSearchRefObjState());
       final List<WidgetLinkModel> links;
-
+      
       links = await WidgetLinkRepo.fetchWidgetLik([idLink]);
 
       await getData(form: form, link: links.first);
@@ -38,7 +38,7 @@ class SearchRefObjCubit extends Cubit<SearchRefObjState> {
       for (PropertyModel prop in links.first.entity.propertyList) {
         form.propCheckedList.add(PropChecked(checked: true, property: prop));
       }
-
+      
       emit(LoadedSearchRefObjState());
     } catch (e) {
       emit(InitialSearchRefObjState());
@@ -107,7 +107,7 @@ class SearchRefObjCubit extends Cubit<SearchRefObjState> {
 
     rangeMin ??= (form.currentPage * form.limitRows) - form.limitRows;
     rangeMax ??= (form.currentPage * form.limitRows) - 1;
-
+    
     dataResponse = await ObjectRepo.fetchObject(
       filters: [],
       link: link,

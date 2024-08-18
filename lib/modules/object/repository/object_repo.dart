@@ -174,7 +174,7 @@ class ObjectRepo {
               queryRef);
         }
 
-        /// TODO: Cambiar para que revise la tabla padre de mil en mil, en caso de 
+        /// TODO: Cambiar para que revise la tabla padre de mil en mil, en caso de
         /// que tenga más filas.
         postgrestResponseRef = await queryRef.range(0, 999);
         idRefLinks = [];
@@ -255,7 +255,15 @@ class ObjectRepo {
             refObj = ReferenceObjectModel.setPropView(
                 objsRef.firstWhere(
                   (x) => x.referenceObject.id == idObjRef,
-                  orElse: () => ReferenceObjectModel.empty(),
+                  orElse: () => ReferenceObjectModel(
+                    idPropertyView:
+                        prop.dynamicValues[ReferenceObjectModel.property],
+                    referenceLink: linkRefList.firstWhere(
+                      (x) =>
+                          x.id == prop.dynamicValues[PropertyModel.dvRefLink],
+                    ),
+                    referenceObject: ObjectModel.empty(),
+                  ),
                 ),
                 link.entity.propertyList
                         .firstWhere(

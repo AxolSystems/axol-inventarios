@@ -263,6 +263,7 @@ class TableViewBuild extends AxolWidget {
                                     ),
                                     onPressed: () {
                                       showDialog(
+                                        barrierDismissible: false,
                                         context: context,
                                         builder: (context) =>
                                             ObjectDetailsDrawer(
@@ -272,7 +273,6 @@ class TableViewBuild extends AxolWidget {
                                         ),
                                       ).then(
                                         (value) {
-                                          print(value);
                                           if (value == true) {
                                             context
                                                 .read<TableCubit>()

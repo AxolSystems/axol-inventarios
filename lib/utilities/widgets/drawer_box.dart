@@ -1,9 +1,9 @@
 import 'package:axol_inventarios/utilities/theme/theme.dart';
 import 'package:flutter/material.dart';
 
-/// Widget utilizado para mostrar un drawer con estructura genérica, 
-/// con las propiedades para realizar sus cambios necesarios. 
-/// 
+/// Widget utilizado para mostrar un drawer con estructura genérica,
+/// con las propiedades para realizar sus cambios necesarios.
+///
 /// TODO: Falta docuemntar los demás metodos de DrawerBox.
 class DrawerBox extends StatelessWidget {
   final double? width;
@@ -13,6 +13,7 @@ class DrawerBox extends StatelessWidget {
   final Widget? child;
   final EdgeInsetsGeometry? padding;
   final int? theme;
+  final Function()? onPressedOutside;
 
   const DrawerBox({
     super.key,
@@ -23,6 +24,7 @@ class DrawerBox extends StatelessWidget {
     this.child,
     this.padding,
     this.theme,
+    this.onPressedOutside,
   });
 
   /// Construye el widget central de DrawerBox.
@@ -57,7 +59,10 @@ class DrawerBox extends StatelessWidget {
     if (child == null) {
       return Row(
         children: [
-          const Expanded(child: SizedBox()),
+          Expanded(
+              child: GestureDetector(
+            onTap: onPressedOutside,
+          )),
           Material(
             child: Container(
               color: ColorTheme.background(theme ?? 0),
@@ -83,7 +88,10 @@ class DrawerBox extends StatelessWidget {
     } else {
       return Row(
         children: [
-          const Expanded(child: SizedBox()),
+          Expanded(
+              child: GestureDetector(
+            onTap: onPressedOutside,
+          )),
           Material(
             child: Container(
               color: ColorTheme.background(theme ?? 0),
@@ -108,7 +116,7 @@ class DrawerBox extends StatelessWidget {
       );
     }
   }
-  
+
   static Widget rowKeyValue(String key, String value) => Row(
         children: [
           Expanded(

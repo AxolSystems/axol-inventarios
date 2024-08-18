@@ -88,6 +88,9 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
         },
         builder: (context, state) {
           return DrawerBox(
+            onPressedOutside: () {
+              Navigator.pop(context, form.isEdited);
+            },
             theme: theme_,
             header: Row(
               children: [
@@ -177,7 +180,8 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     : link.entity.propertyList.length,
                 itemBuilder: (context, index) {
                   final PropertyModel prop = referenceObject != null
-                      ? referenceObject!.referenceLink.entity.propertyList[index]
+                      ? referenceObject!
+                          .referenceLink.entity.propertyList[index]
                       : link.entity.propertyList[index];
                   final Widget widgetRead;
                   final Widget widgetWrite;
@@ -462,8 +466,9 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           (value) {
                             if (value is ReferenceObjectModel) {
                               form.object.map[prop.key] = value;
-                              form.controllers[prop.key] =
-                                  RDReferenceObject(refObject: value, oldIdRefObject: refObj.referenceObject.id);
+                              form.controllers[prop.key] = RDReferenceObject(
+                                  refObject: value,
+                                  oldIdRefObject: refObj.referenceObject.id);
                               context.read<ObjectDetailsCubit>().load();
                             }
                           },
