@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum Prop { text, int, double, time, bool, empty, referenceObject }
+enum Prop { text, int, double, time, bool, empty, referenceObject, atomicObjects }
 
 class PropertyModel {
   final String name;
@@ -61,6 +61,8 @@ class PropertyModel {
         return Prop.bool;
       case 5:
         return Prop.referenceObject;
+      case 6:
+        return Prop.atomicObjects;
       default:
         return Prop.empty;
     }
@@ -82,6 +84,8 @@ class PropertyModel {
         return 4;
       case Prop.referenceObject:
         return 5;
+      case Prop.atomicObjects:
+        return 6;
       default:
         return -1;
     }
@@ -101,6 +105,8 @@ class PropertyModel {
         return 'Booleano';
       case Prop.referenceObject:
         return 'Objeto relacional';
+      case Prop.atomicObjects:
+        return 'Objetos atómicos';
       default:
         return 'Texto';
     }
@@ -120,6 +126,8 @@ class PropertyModel {
         return Icons.check_box_outlined;
       case Prop.referenceObject:
         return Icons.arrow_outward;
+      case Prop.atomicObjects:
+        return Icons.list;
       default:
         return Icons.square;
     }

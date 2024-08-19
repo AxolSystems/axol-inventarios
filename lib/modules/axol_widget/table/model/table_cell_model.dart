@@ -1,3 +1,5 @@
+import '../../../object/model/atomic_object_model.dart';
+
 /// Clase abstracta de donde heredan los diferentes modelos de datos de celdas.
 abstract class TableCellModel {}
 
@@ -24,4 +26,9 @@ class CellReference extends TableCellModel {
   final bool? valueBool;
 
   CellReference({this.text, this.valueBool});
+}
+
+class CellAtomicObjects extends TableCellModel {
+  final List<AtomicObjectModel> atomicObjectList;
+  CellAtomicObjects({required this.atomicObjectList});
 }

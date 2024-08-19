@@ -6,6 +6,7 @@ import '../../../models/data_response_model.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
+import '../model/atomic_object_model.dart';
 import '../model/filter_obj_model.dart';
 import '../model/object_model.dart';
 
@@ -50,6 +51,7 @@ class ObjectRepo {
     Map<String, List<FilterObjModel>> refFilters = {};
     List<String> idRefLinks = [];
     List<FilterObjModel> refFilterList;
+    List<String> idAtomicProps = [];
 
     /// Si no está ordenado por una propiedad, ordenar po fecha de
     /// creación.
@@ -107,6 +109,9 @@ class ObjectRepo {
         if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
           idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
         }
+      }
+      if (prop.propertyType == Prop.atomicObjects) {
+        idAtomicProps.add(prop.key);
       }
     }
     linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
@@ -275,6 +280,15 @@ class ObjectRepo {
             objMap[prop.key] = refObj;
             objDB[_object] = objMap;
           }
+        }
+
+        if (idAtomicProps.isNotEmpty) {
+          for (String idProp in idAtomicProps) {
+            if (objMap.containsKey(idProp)) {
+              objMap[idProp] = AtomicObjectModel.mapToAtomObjs(objMap[idProp]);
+            }
+          }
+          objDB[_object] = objMap;
         }
 
         /// Crea una lista de objetos a partir de las consultas realizadas.
