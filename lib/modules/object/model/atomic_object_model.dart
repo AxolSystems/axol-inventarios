@@ -28,16 +28,19 @@ class AtomicObjectModel {
   /// get 'prop_value'
   static String get tValue => 'value';
 
-  static List<AtomicObjectModel> mapToAtomObjs(Map<String, Map<String, dynamic>> map) {
+  static List<AtomicObjectModel> mapToAtomObjs(Map<String, dynamic>? map) {
     List<AtomicObjectModel> atomicObjectList = [];
-    for (String key in map.keys) {
-      atomicObjectList.add(AtomicObjectModel(
-        id: key,
-        propertyName: map[key]![tPropName],
-        propertyType: map[key]![tPropType],
-        value: map[key]![tValue],
-      ));
+    if (map != null && map.isNotEmpty) {
+      for (String key in map.keys) {
+        atomicObjectList.add(AtomicObjectModel(
+          id: key,
+          propertyName: map[key]![tPropName],
+          propertyType: map[key]![tPropType],
+          value: map[key]![tValue],
+        ));
+      }
     }
+
     return atomicObjectList;
   }
 }
