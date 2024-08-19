@@ -79,9 +79,10 @@ class TableModel extends DataObject {
                 text: FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
                     refObj.referenceObject.map[propRef.key] ?? 0)));
           }
-        } else if (prop == Prop.atomicObjects) {
+        } 
+        /*else if (prop == Prop.atomicObjects) {
           row[key] = CellAtomicObjects(atomicObjectList: obj.map[key] ?? []);
-        }
+        }*/
       }
       rowList.add(row);
     }

@@ -282,14 +282,14 @@ class ObjectRepo {
           }
         }
 
-        if (idAtomicProps.isNotEmpty) {
+        /*if (idAtomicProps.isNotEmpty) {
           for (String idProp in idAtomicProps) {
             if (objMap.containsKey(idProp)) {
               objMap[idProp] = AtomicObjectModel.mapToAtomObjs(objMap[idProp]);
             }
           }
           objDB[_object] = objMap;
-        }
+        }*/
 
         /// Crea una lista de objetos a partir de las consultas realizadas.
         obj = ObjectModel(

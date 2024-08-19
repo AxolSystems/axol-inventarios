@@ -120,6 +120,7 @@ class SearchReferenceObjectBuild extends AxolWidget {
                       context: context,
                       builder: (context) => FilterPropDrawer(
                         propCheckedList: form.propCheckedList,
+                        theme: theme_,
                       ),
                     ).then(
                       (value) {

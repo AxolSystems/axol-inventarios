@@ -152,8 +152,8 @@ class DateTimeDialogBuild extends AxolWidget {
                             value.year,
                             value.month,
                             value.day,
-                            dateTime.hour,
-                            dateTime.minute,
+                            form.hour,
+                            form.minute,
                           );
                           context.read<DateTimeDialogCubit>().load();
                         }
@@ -196,9 +196,9 @@ class DateTimeDialogBuild extends AxolWidget {
                       (value) {
                         if (value != null) {
                           form = DateTime(
-                            dateTime.year,
-                            dateTime.month,
-                            dateTime.day,
+                            form.year,
+                            form.month,
+                            form.day,
                             value.hour,
                             value.minute,
                           );
