@@ -39,11 +39,17 @@ class FilterCubit extends Cubit<FilterState> {
 
       form.filterList.add(AddFilterModel());
       for (FilterObjModel flt in filters) {
+        final dynamic value;
+        if (flt.refObject != null) {
+          value = flt.refObject;
+        } else {
+          value = flt.value;
+        }
         form.filterList.insert(
             form.filterList.length - 1,
             getFilterModel(
               property: flt.property,
-              value: flt.value,
+              value: value,
               filterOperator: flt.operator,
             ));
       }
@@ -195,9 +201,23 @@ class FilterCubit extends Cubit<FilterState> {
           }
         }
         if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
-          filter = FilterObjModel(
-              property: flt.property, value: value, operator: flt.operator);
-          filters.add(filter);
+          if (flt is RefObjFilterModel) {
+            final RefObjFilterModel refObjFilter = flt;
+            filter = FilterObjModel(
+                property: flt.property,
+                value: value,
+                operator: flt.operator,
+                refObject: ReferenceObjectModel(
+                  idPropertyView: refObjFilter.refObjController.idPropertyView,
+                  referenceLink: refObjFilter.refObjController.referenceLink,
+                  referenceObject: ObjectModel(id: '', map: {refObjFilter.refObjController.getPropView().key: value}, createAt: DateTime(0))
+                ));
+            filters.add(filter);
+          } else {
+            filter = FilterObjModel(
+                property: flt.property, value: value, operator: flt.operator);
+            filters.add(filter);
+          }
         }
       }
       emit(ApplyFilterState(filters: filters));
@@ -307,6 +327,7 @@ class FilterCubit extends Cubit<FilterState> {
       } else {
         refObj = value as ReferenceObjectModel;
       }
+
       final FilterModel referenceFilter;
       if (refObj.getPropView().propertyType == Prop.text) {
         final String valueText =

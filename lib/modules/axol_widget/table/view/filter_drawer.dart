@@ -257,7 +257,6 @@ class FilterDrawerBuild extends AxolWidget {
     Widget widget = const SizedBox();
     Widget subWidget = const SizedBox();
     final FilterModel filter = form.filterList[index];
-
     if (filter is TextFilterModel ||
         filter is NumberFilterModel ||
         filter is BooleanFilterModel ||

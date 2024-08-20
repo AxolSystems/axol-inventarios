@@ -1,10 +1,12 @@
 import '../../entity/model/property_model.dart';
+import 'reference_object_model.dart';
 
 enum FilterOperator { eq, neq, gt, gte, lt, lte, like, ilike }
 
 class FilterObjModel {
   final PropertyModel property;
   final PropertyModel? propertyRef;
+  final ReferenceObjectModel? refObject;
   final dynamic value;
   final FilterOperator operator;
 
@@ -13,6 +15,7 @@ class FilterObjModel {
     required this.value,
     required this.operator,
     this.propertyRef,
+    this.refObject,
   });
 
   static String get tProperty => 'property';
