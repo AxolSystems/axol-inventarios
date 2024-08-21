@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
-enum Prop { text, int, double, time, bool, empty, referenceObject, atomicObjects }
+enum Prop {
+  text,
+  int,
+  double,
+  time,
+  bool,
+  empty,
+  referenceObject,
+  atomicObjList,
+  atomicObject,
+}
 
 class PropertyModel {
   final String name;
@@ -21,11 +31,26 @@ class PropertyModel {
         key = '',
         dynamicValues = {};
 
+  ///get "dataType"
   static String get dataType => 'dataType';
+
+  ///get "propName"
   static String get propName => 'propName';
+
+  ///get "dynamic_values"
   static String get tDynamicValues => 'dynamic_values';
+
+  ///get reference_link
   static String get dvRefLink => 'reference_link';
+
+  ///get reference_table
   static String get dvRefTable => 'reference_table';
+
+  ///get external_ref
+  static String get dvExternalRef => 'external_ref';
+
+  ///get props_atomic_object
+  static String get dvPropsAtomObj => 'props_atomic_object';
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
     List<PropertyModel> propertyList = [];
@@ -62,7 +87,9 @@ class PropertyModel {
       case 5:
         return Prop.referenceObject;
       case 6:
-        return Prop.atomicObjects;
+        return Prop.atomicObjList;
+      case 7:
+        return Prop.atomicObject;
       default:
         return Prop.empty;
     }
@@ -84,8 +111,10 @@ class PropertyModel {
         return 4;
       case Prop.referenceObject:
         return 5;
-      case Prop.atomicObjects:
+      case Prop.atomicObjList:
         return 6;
+      case Prop.atomicObject:
+        return 7;
       default:
         return -1;
     }
@@ -105,8 +134,10 @@ class PropertyModel {
         return 'Booleano';
       case Prop.referenceObject:
         return 'Objeto relacional';
-      case Prop.atomicObjects:
-        return 'Objetos atómicos';
+      case Prop.atomicObjList:
+        return 'Lista de objetos atómicos';
+      case Prop.atomicObject:
+        return 'Objeto atómico';
       default:
         return 'Texto';
     }
@@ -126,8 +157,10 @@ class PropertyModel {
         return Icons.check_box_outlined;
       case Prop.referenceObject:
         return Icons.arrow_outward;
-      case Prop.atomicObjects:
+      case Prop.atomicObjList:
         return Icons.list;
+      case Prop.atomicObject:
+        return Icons.data_object;
       default:
         return Icons.square;
     }

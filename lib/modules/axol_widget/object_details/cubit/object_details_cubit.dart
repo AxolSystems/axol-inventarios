@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
-import '../../../object/model/object_relation.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
 import '../model/object_details_form_model.dart';
@@ -126,7 +125,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       ObjectModel object;
       Map<String, dynamic> map = {};
       PropertyModel property;
-      List<ObjectRelation> objRelationList = [];
 
       for (String key in form.object.map.keys) {
         final RDTextEditingController textController;
@@ -183,13 +181,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           map[key] = refObjController.refObject.referenceObject.id;
           form.object.map[key] = ReferenceObjectModel.setRefObj(
               form.object.map[key], refObjController.refObject.referenceObject);
-          objRelationList.add(
-            ObjectRelation(
-              idChildObject: form.object.id,
-              newIdParentObject: refObjController.refObject.referenceObject.id,
-              oldIdParentObject: refObjController.oldIdRefObject,
-            ),
-          );
         }
       }
 

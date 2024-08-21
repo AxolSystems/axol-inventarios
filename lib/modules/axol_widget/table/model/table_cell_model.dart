@@ -28,7 +28,12 @@ class CellReference extends TableCellModel {
   CellReference({this.text, this.valueBool});
 }
 
-class CellAtomicObjects extends TableCellModel {
+class CellAtomicObjList extends TableCellModel {
   final List<AtomicObjectModel> atomicObjectList;
-  CellAtomicObjects({required this.atomicObjectList});
+  CellAtomicObjList({required this.atomicObjectList});
+}
+
+class CellAtomicObject extends TableCellModel {
+  final AtomicObjectModel atomicObject;
+  CellAtomicObject({required this.atomicObject});
 }

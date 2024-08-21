@@ -5,7 +5,6 @@ import 'package:axol_inventarios/utilities/format.dart';
 
 import '../../../../models/data_response_model.dart';
 import '../../../entity/model/entity_model.dart';
-import '../../../object/model/atomic_object_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../generic/model/data_object.dart';
 
@@ -80,8 +79,10 @@ class TableModel extends DataObject {
                 text: FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
                     refObj.referenceObject.map[propRef.key] ?? 0)));
           }
-        } else if (prop == Prop.atomicObjects) {
-          row[key] = CellAtomicObjects(atomicObjectList: obj.map[key] ?? []);
+        } else if (prop == Prop.atomicObjList) {
+          row[key] = CellAtomicObjList(atomicObjectList: obj.map[key] ?? []);
+        } else if (prop == Prop.atomicObject) {
+          row[key] = CellAtomicObject(atomicObject: obj.map[key] ?? []);
         }
       }
       rowList.add(row);

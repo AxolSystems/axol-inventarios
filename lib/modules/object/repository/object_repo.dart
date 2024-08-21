@@ -51,6 +51,7 @@ class ObjectRepo {
     Map<String, List<FilterObjModel>> refFilters = {};
     List<String> idRefLinks = [];
     List<FilterObjModel> refFilterList;
+    List<String> idAtomicListProps = [];
     List<String> idAtomicProps = [];
 
     /// Si no está ordenado por una propiedad, ordenar po fecha de
@@ -110,7 +111,10 @@ class ObjectRepo {
           idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
         }
       }
-      if (prop.propertyType == Prop.atomicObjects) {
+      if (prop.propertyType == Prop.atomicObjList) {
+        idAtomicListProps.add(prop.key);
+      }
+      if (prop.propertyType == Prop.atomicObject) {
         idAtomicProps.add(prop.key);
       }
     }
@@ -282,10 +286,20 @@ class ObjectRepo {
           }
         }
 
+        if (idAtomicListProps.isNotEmpty) {
+          for (String idProp in idAtomicListProps) {
+            if (objMap.containsKey(idProp)) {
+              objMap[idProp] =
+                  []; //Modificar para usar con listas de objetos atómicos.
+            }
+          }
+          objDB[_object] = objMap;
+        }
+
         if (idAtomicProps.isNotEmpty) {
           for (String idProp in idAtomicProps) {
             if (objMap.containsKey(idProp)) {
-              objMap[idProp] = AtomicObjectModel.mapToAtomObjs(objMap[idProp]);
+              objMap[idProp] = AtomicObjectModel.mapToAtomObj(objMap[idProp]);
             }
           }
           objDB[_object] = objMap;
