@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../entity/model/property_model.dart';
+import '../../../object/model/atomic_object_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
@@ -55,6 +56,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         final bool cellBool;
         final DateTime cellTime;
         final ReferenceObjectModel cellRefObj;
+        final AtomicObjectModel cellAtmObj;
         if ((form.object.map[prop.key] is String ||
                 form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.text) {
@@ -81,7 +83,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               form.object.map[prop.key] ?? 0);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         } else if (prop.propertyType == Prop.referenceObject) {
-          
           cellRefObj = form.object.map[prop.key] ??
               ReferenceObjectModel(
                   idPropertyView:
@@ -91,6 +92,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           form.controllers[prop.key] = RDReferenceObject(
               refObject: cellRefObj,
               oldIdRefObject: cellRefObj.referenceObject.id);
+        } else if (prop.propertyType == Prop.referenceObject) {
+          cellAtmObj = form.object.map[prop.key] ?? AtomicObjectModel.empty();
         }
       }
 
@@ -131,6 +134,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         final RDBoolController boolController;
         final RDDateController dateController;
         final RDReferenceObject refObjController;
+        final RDAtomicObject atmObjController;
 
         if (form.controllers[key] is RDTextEditingController) {
           textController = form.controllers[key] as RDTextEditingController;
@@ -154,6 +158,12 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           refObjController = form.controllers[key] as RDReferenceObject;
         } else {
           refObjController = RDReferenceObject.empty();
+        }
+
+        if (form.controllers[key] is RDAtomicObject) {
+          atmObjController = form.controllers[key] as RDAtomicObject;
+        } else {
+          atmObjController = RDAtomicObject.empty();
         }
 
         property = link.entity.propertyList.firstWhere((x) => x.key == key);
@@ -181,6 +191,12 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           map[key] = refObjController.refObject.referenceObject.id;
           form.object.map[key] = ReferenceObjectModel.setRefObj(
               form.object.map[key], refObjController.refObject.referenceObject);
+        } else if (form.controllers[key] is RDAtomicObject && property.propertyType == Prop.atomicObject) {
+          map[key] = {
+            AtomicObjectModel.tId: atmObjController.atmObject.id,
+            AtomicObjectModel.tObject: atmObjController.atmObject.values,
+          };
+          form.object.map[key] = atmObjController.atmObject;
         }
       }
 

@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:flutter/material.dart';
 
@@ -53,4 +54,10 @@ class RDReferenceObject extends RowDetailsController {
   RDReferenceObject.empty()
       : refObject = ReferenceObjectModel.empty(),
         oldIdRefObject = '';
+}
+
+class RDAtomicObject extends RowDetailsController {
+  AtomicObjectModel atmObject;
+  RDAtomicObject({required this.atmObject});
+  RDAtomicObject.empty() : atmObject = AtomicObjectModel.empty();
 }

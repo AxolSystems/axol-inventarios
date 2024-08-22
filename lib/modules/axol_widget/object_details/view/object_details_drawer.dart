@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
+import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:axol_inventarios/utilities/widgets/checkbox_view.dart';
@@ -277,6 +278,13 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                               color: ColorTheme.item10(theme_),
                             )),
                       ],
+                    );
+                  } else if (prop.propertyType == Prop.atomicObject &&
+                      form.object.map[prop.key] is AtomicObjectModel) {
+                    final AtomicObjectModel atmObj = form.object.map[prop.key];
+                    widgetRead = Text(
+                      atmObj.id,
+                      style: Typo.body(theme_),
                     );
                   } else {
                     widgetRead = const SizedBox();
