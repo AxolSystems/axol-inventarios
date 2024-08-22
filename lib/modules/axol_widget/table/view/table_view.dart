@@ -526,6 +526,19 @@ class TableViewBuild extends AxolWidget {
                   elementWidget,
                 ],
               ));
+        } else if (cell is CellAtomicObject) {
+          widget = Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+                border: Border.all(color: ColorTheme.item30(form.theme))),
+            height: 30,
+            width: form.columnWidth[prop.key],
+            child: Text(
+              cell.atomicObject.id,
+              style: Typo.body(form.theme),
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
         } else {
           widget = Container(
             padding: const EdgeInsets.all(4),

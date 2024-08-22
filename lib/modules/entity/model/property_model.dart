@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum Prop {
@@ -160,7 +161,7 @@ class PropertyModel {
       case Prop.atomicObjList:
         return Icons.list;
       case Prop.atomicObject:
-        return Icons.data_object;
+        return Icons.data_object_sharp;
       default:
         return Icons.square;
     }
