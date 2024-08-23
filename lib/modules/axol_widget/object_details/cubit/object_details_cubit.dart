@@ -38,7 +38,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       emit(LoadingObjectDetailsState());
       final List<PropertyModel> propList;
       Map<String, dynamic> objectMap = {};
-
+      
       for (String key in object.map.keys) {
         objectMap[key] = object.map[key];
       }
@@ -94,6 +94,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               oldIdRefObject: cellRefObj.referenceObject.id);
         } else if (prop.propertyType == Prop.referenceObject) {
           cellAtmObj = form.object.map[prop.key] ?? AtomicObjectModel.empty();
+          form.controllers[prop.key] = RDAtomicObject(atmObject: cellAtmObj);
         }
       }
 
@@ -191,7 +192,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           map[key] = refObjController.refObject.referenceObject.id;
           form.object.map[key] = ReferenceObjectModel.setRefObj(
               form.object.map[key], refObjController.refObject.referenceObject);
-        } else if (form.controllers[key] is RDAtomicObject && property.propertyType == Prop.atomicObject) {
+        } else if (form.controllers[key] is RDAtomicObject &&
+            property.propertyType == Prop.atomicObject) {
           map[key] = {
             AtomicObjectModel.tId: atmObjController.atmObject.id,
             AtomicObjectModel.tObject: atmObjController.atmObject.values,

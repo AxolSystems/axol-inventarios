@@ -188,6 +188,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   final Widget widgetWrite;
                   final List<TextInputFormatter> inputFormatters;
                   final Widget refWidget;
+                  List<Widget> widgetList = [];
                   if (prop.propertyType == Prop.text) {
                     widgetRead = Text(
                       form.object.map[prop.key] ?? '',
@@ -282,9 +283,89 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   } else if (prop.propertyType == Prop.atomicObject &&
                       form.object.map[prop.key] is AtomicObjectModel) {
                     final AtomicObjectModel atmObj = form.object.map[prop.key];
-                    widgetRead = Text(
-                      atmObj.id,
-                      style: Typo.body(theme_),
+                    print(atmObj.values);
+                    for (String key in atmObj.values.keys) {
+                      final value = atmObj.values[key];
+                      final PropertyModel propEntity = link.entity.propertyList
+                          .firstWhere((x) => x.key == prop.key,
+                              orElse: () => PropertyModel.empty());
+                      final PropertyModel propAtm =
+                          PropertyModel.mapToSingleProp(
+                              propEntity.dynamicValues[
+                                  PropertyModel.dvPropsAtomObj][key],
+                              key);
+                      print(
+                          'key: ${propAtm.key}, propType: ${propAtm.propertyType}, value: ${value.runtimeType}');
+                      if (propAtm.key != '' &&
+                          propAtm.propertyType == Prop.text &&
+                          value is String) {
+                        widgetList.add(Row(
+                          children: [
+                            Text(
+                              propAtm.name,
+                              style: Typo.body(theme_),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              value,
+                              style: Typo.body(theme_),
+                            ),
+                          ],
+                        ));
+                      } else if (propAtm.key != '' &&
+                          (propAtm.propertyType == Prop.int ||
+                              propAtm.propertyType == Prop.double) &&
+                          (value is int || value is double)) {
+                        widgetList.add(Row(
+                          children: [
+                            Text(
+                              propAtm.name,
+                              style: Typo.body(theme_),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              value.toString(),
+                              style: Typo.body(theme_),
+                            ),
+                          ],
+                        ));
+                      } else if (propAtm.key != '' &&
+                          propAtm.propertyType == Prop.bool &&
+                          value is bool) {
+                        widgetList.add(Row(
+                          children: [
+                            Text(
+                              propAtm.name,
+                              style: Typo.body(theme_),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              value.toString(),
+                              style: Typo.body(theme_),
+                            ),
+                          ],
+                        ));
+                      } else if (propAtm.key != '' &&
+                          propAtm.propertyType == Prop.time &&
+                          value is int) {
+                        widgetList.add(Row(
+                          children: [
+                            Text(
+                              propAtm.name,
+                              style: Typo.body(theme_),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              FormatDate.dmyHm(
+                                  DateTime.fromMillisecondsSinceEpoch(value)),
+                              style: Typo.body(theme_),
+                            ),
+                          ],
+                        ));
+                      }
+                    }
+                    widgetRead = Column(
+                      children: widgetList,
                     );
                   } else {
                     widgetRead = const SizedBox();
@@ -483,7 +564,12 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                         );
                       },
                     );
-                  } else {
+                  }
+                  /*else if (prop.propertyType == Prop.atomicObject) {
+                    final AtomicObjectModel atmObj = form.object.map[prop.key];
+                    //widgetWrite = 
+                  }*/
+                  else {
                     widgetWrite = const SizedBox();
                   }
 

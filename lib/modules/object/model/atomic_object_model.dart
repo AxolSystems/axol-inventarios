@@ -82,7 +82,7 @@ class AtomicObjectModel {
       }
       if (map.containsKey(tObject)) {
         for (String key in map[tObject].keys) {
-          values[key] = map[key];
+          values[key] = map[tObject][key];
         }
       }
     }

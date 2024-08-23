@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum Prop {
@@ -69,6 +68,17 @@ class PropertyModel {
     }
 
     return propertyList;
+  }
+
+  static PropertyModel mapToSingleProp(Map<String, dynamic> map, String key) {
+    PropertyModel property;
+    property = PropertyModel(
+      name: map[PropertyModel.propName],
+      propertyType: PropertyModel.getPropToInt(map[PropertyModel.dataType]),
+      key: key,
+      dynamicValues: map[PropertyModel.tDynamicValues],
+    );
+    return property;
   }
 
   static Prop getPropToInt(int n) {

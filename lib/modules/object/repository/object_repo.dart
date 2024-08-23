@@ -296,6 +296,7 @@ class ObjectRepo {
           objDB[_object] = objMap;
         }
 
+        print(objDB[_object]["5"]);
         if (idAtomicProps.isNotEmpty) {
           for (String idProp in idAtomicProps) {
             if (objMap.containsKey(idProp)) {
