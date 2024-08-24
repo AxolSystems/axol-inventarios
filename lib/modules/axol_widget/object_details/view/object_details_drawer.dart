@@ -283,7 +283,6 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   } else if (prop.propertyType == Prop.atomicObject &&
                       form.object.map[prop.key] is AtomicObjectModel) {
                     final AtomicObjectModel atmObj = form.object.map[prop.key];
-                    print(atmObj.values);
                     for (String key in atmObj.values.keys) {
                       final value = atmObj.values[key];
                       final PropertyModel propEntity = link.entity.propertyList
@@ -294,8 +293,6 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                               propEntity.dynamicValues[
                                   PropertyModel.dvPropsAtomObj][key],
                               key);
-                      print(
-                          'key: ${propAtm.key}, propType: ${propAtm.propertyType}, value: ${value.runtimeType}');
                       if (propAtm.key != '' &&
                           propAtm.propertyType == Prop.text &&
                           value is String) {
