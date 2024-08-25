@@ -153,3 +153,13 @@ class RefObjFilterModel extends FilterModel {
     required super.property,
   });
 }
+
+class AtmObjFilterModel extends FilterModel {
+  List<FilterModel> filterList;
+  AtmObjFilterModel({
+    required super.property,
+    required super.operatorList,
+    required super.operator,
+    required this.filterList,
+  });
+}
