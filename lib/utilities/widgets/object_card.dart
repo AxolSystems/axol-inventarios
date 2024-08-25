@@ -18,24 +18,20 @@ class ObjectCard extends AxolWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
     final int theme_ = theme ?? 0;
     List<Widget> widgetList = [];
 
     for (String key in object.map.keys) {
       final value = object.map[key];
-      final PropertyModel propEntity = propertyList.firstWhere(
-          (x) => x.key == prop.key,
+      final PropertyModel prop = propertyList.firstWhere((x) => x.key == key,
           orElse: () => PropertyModel.empty());
-      final PropertyModel propAtm = PropertyModel.mapToSingleProp(
-          propEntity.dynamicValues[PropertyModel.dvPropsAtomObj][key], key);
-      if (propAtm.key != '' &&
-          propAtm.propertyType == Prop.text &&
-          value is String) {
+      if (prop.key != '' && prop.propertyType == Prop.text && value is String) {
         widgetList.add(Row(
           children: [
             Text(
-              propAtm.name,
-              style: Typo.body(theme_),
+              '${prop.name}:',
+              style: Typo.subtitle(theme_),
             ),
             const SizedBox(width: 8),
             Text(
@@ -44,15 +40,14 @@ class ObjectCard extends AxolWidget {
             ),
           ],
         ));
-      } else if (propAtm.key != '' &&
-          (propAtm.propertyType == Prop.int ||
-              propAtm.propertyType == Prop.double) &&
+      } else if (prop.key != '' &&
+          (prop.propertyType == Prop.int || prop.propertyType == Prop.double) &&
           (value is int || value is double)) {
         widgetList.add(Row(
           children: [
             Text(
-              propAtm.name,
-              style: Typo.body(theme_),
+              '${prop.name}:',
+              style: Typo.subtitle(theme_),
             ),
             const SizedBox(width: 8),
             Text(
@@ -61,14 +56,14 @@ class ObjectCard extends AxolWidget {
             ),
           ],
         ));
-      } else if (propAtm.key != '' &&
-          propAtm.propertyType == Prop.bool &&
+      } else if (prop.key != '' &&
+          prop.propertyType == Prop.bool &&
           value is bool) {
         widgetList.add(Row(
           children: [
             Text(
-              propAtm.name,
-              style: Typo.body(theme_),
+              '${prop.name}:',
+              style: Typo.subtitle(theme_),
             ),
             const SizedBox(width: 8),
             Text(
@@ -77,14 +72,14 @@ class ObjectCard extends AxolWidget {
             ),
           ],
         ));
-      } else if (propAtm.key != '' &&
-          propAtm.propertyType == Prop.time &&
+      } else if (prop.key != '' &&
+          prop.propertyType == Prop.time &&
           value is int) {
         widgetList.add(Row(
           children: [
             Text(
-              propAtm.name,
-              style: Typo.body(theme_),
+              '${prop.name}:',
+              style: Typo.subtitle(theme_),
             ),
             const SizedBox(width: 8),
             Text(
@@ -96,6 +91,28 @@ class ObjectCard extends AxolWidget {
       }
     }
 
-    return Card();
+    return Card(
+      color: ColorTheme.background(theme_),
+      shape: ContinuousRectangleBorder(
+        side: BorderSide(
+          color: ColorTheme.item30(theme_),
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: RawScrollbar(
+          controller: scrollController,
+          scrollbarOrientation: ScrollbarOrientation.bottom,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widgetList,
+              ),
+            ),
+          )),
+    );
   }
 }

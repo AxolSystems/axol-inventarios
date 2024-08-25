@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/object_card.dart';
 import '../../search_button/view/search_button.dart';
 import '../../search_button/view/search_reference_object.dart';
 import '../../../../utilities/widgets/dialog.dart';
@@ -262,28 +263,33 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       children: [
                         refWidget,
                         const Expanded(child: SizedBox()),
-                        IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => ObjectDetailsDrawer(
-                                  link: WidgetLinkModel.empty(),
-                                  object: refObj.referenceObject,
-                                  referenceObject: refObj,
-                                  theme: theme_,
-                                ),
-                              );
-                            },
-                            icon: Icon(
-                              Icons.arrow_outward,
-                              color: ColorTheme.item10(theme_),
-                            )),
+                        SizedBox(
+                          height: 20,
+                          child: IconButton(
+                              padding: const EdgeInsets.all(0),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ObjectDetailsDrawer(
+                                    link: WidgetLinkModel.empty(),
+                                    object: refObj.referenceObject,
+                                    referenceObject: refObj,
+                                    theme: theme_,
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.arrow_outward,
+                                color: ColorTheme.item10(theme_),
+                                size: 20,
+                              )),
+                        ),
                       ],
                     );
                   } else if (prop.propertyType == Prop.atomicObject &&
                       form.object.map[prop.key] is AtomicObjectModel) {
                     final AtomicObjectModel atmObj = form.object.map[prop.key];
-                    for (String key in atmObj.values.keys) {
+                    /*for (String key in atmObj.values.keys) {
                       final value = atmObj.values[key];
                       final PropertyModel propEntity = link.entity.propertyList
                           .firstWhere((x) => x.key == prop.key,
@@ -360,10 +366,19 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           ],
                         ));
                       }
-                    }
-                    widgetRead = Column(
-                      children: widgetList,
+                    }*/
+                    widgetRead = ObjectCard(
+                      theme: theme_,
+                      object: ObjectModel(
+                          createAt: DateTime(0),
+                          id: atmObj.id,
+                          map: atmObj.values),
+                      propertyList: PropertyModel.mapToProperty(
+                          prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
                     );
+                    /*Column(
+                      children: widgetList,
+                    );*/
                   } else {
                     widgetRead = const SizedBox();
                   }
@@ -573,6 +588,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 1,
