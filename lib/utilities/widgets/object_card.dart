@@ -9,18 +9,34 @@ import '../theme/theme.dart';
 class ObjectCard extends AxolWidget {
   final ObjectModel object;
   final List<PropertyModel> propertyList;
+  final Function()? onPressed;
   const ObjectCard({
     super.key,
     super.theme,
     required this.object,
     required this.propertyList,
+    this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
     final int theme_ = theme ?? 0;
-    List<Widget> widgetList = [];
+    List<Widget> widgetList = [
+      Row(
+        children: [
+          Text(
+            'Id:',
+            style: Typo.subtitle(theme_),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            object.id,
+            style: Typo.body(theme_),
+          ),
+        ],
+      )
+    ];
 
     for (String key in object.map.keys) {
       final value = object.map[key];
@@ -99,20 +115,26 @@ class ObjectCard extends AxolWidget {
         ),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: RawScrollbar(
-          controller: scrollController,
-          scrollbarOrientation: ScrollbarOrientation.bottom,
-          child: SingleChildScrollView(
-            controller: scrollController,
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widgetList,
-              ),
-            ),
-          )),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide.none,
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.all(0)),
+          onPressed: onPressed,
+          child: RawScrollbar(
+              controller: scrollController,
+              scrollbarOrientation: ScrollbarOrientation.bottom,
+              child: SingleChildScrollView(
+                controller: scrollController,
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: widgetList,
+                  ),
+                ),
+              ))),
     );
   }
 }

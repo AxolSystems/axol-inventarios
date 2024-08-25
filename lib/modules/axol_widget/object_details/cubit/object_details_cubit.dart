@@ -1,6 +1,7 @@
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/atomic_object_model.dart';
@@ -32,13 +33,14 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
 
   /// Carga el estado inicial de los parámetros de form.
   Future<void> initLoad(ObjectDetailsFormModel form, WidgetLinkModel link,
-      ObjectModel object, ReferenceObjectModel? referenceObject) async {
+      ObjectModel object, ReferenceObjectModel? referenceObject,
+      [List<PropertyModel>? propsAtmObj]) async {
     try {
       emit(InitialObjectDetailsState());
       emit(LoadingObjectDetailsState());
       final List<PropertyModel> propList;
       Map<String, dynamic> objectMap = {};
-      
+
       for (String key in object.map.keys) {
         objectMap[key] = object.map[key];
       }
@@ -46,7 +48,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       if (referenceObject != null) {
         propList = referenceObject.referenceLink.entity.propertyList;
       } else {
-        propList = link.entity.propertyList;
+        propList = propsAtmObj ?? link.entity.propertyList;
       }
 
       form.object =
@@ -207,6 +209,100 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
 
       await ObjectRepo.update(object, link);
       form.isEdited = true;
+
+      emit(SavedObjectDetailsState());
+      emit(LoadedObjectDetailsState());
+    } catch (e) {
+      emit(InitialObjectDetailsState());
+      emit(ErrorRowDetailsState(error: e.toString()));
+    }
+  }
+
+  /// Proceso para guardar los cambios realizados en objeto atómico.
+  Future<void> saveAtmObj(
+      ObjectDetailsFormModel form, List<PropertyModel> propsAtmObj) async {
+    try {
+      emit(InitialObjectDetailsState());
+      emit(SavingObjectDetailsState());
+      Map<String, dynamic> map = {};
+
+      for (PropertyModel prop in propsAtmObj) {
+        final RDTextEditingController textController;
+        final RDBoolController boolController;
+        final RDDateController dateController;
+        final RDReferenceObject refObjController;
+        final RDAtomicObject atmObjController;
+
+        if (form.controllers[prop.key] is RDTextEditingController) {
+          textController =
+              form.controllers[prop.key] as RDTextEditingController;
+        } else {
+          textController = RDTextEditingController.empty();
+        }
+
+        if (form.controllers[prop.key] is RDBoolController) {
+          boolController = form.controllers[prop.key] as RDBoolController;
+        } else {
+          boolController = RDBoolController.init();
+        }
+
+        if (form.controllers[prop.key] is RDDateController) {
+          dateController = form.controllers[prop.key] as RDDateController;
+        } else {
+          dateController = RDDateController(controller: DateTime.now());
+        }
+
+        if (form.controllers[prop.key] is RDReferenceObject) {
+          refObjController = form.controllers[prop.key] as RDReferenceObject;
+        } else {
+          refObjController = RDReferenceObject.empty();
+        }
+
+        if (form.controllers[prop.key] is RDAtomicObject) {
+          atmObjController = form.controllers[prop.key] as RDAtomicObject;
+        } else {
+          atmObjController = RDAtomicObject.empty();
+        }
+
+        if (form.controllers[prop.key] is RDTextEditingController &&
+            prop.propertyType == Prop.text) {
+          map[prop.key] = textController.controller.text;
+          form.object.map[prop.key] = textController.controller.text;
+        } else if (form.controllers[prop.key] is RDTextEditingController &&
+            (prop.propertyType == Prop.int ||
+                prop.propertyType == Prop.double)) {
+          map[prop.key] = double.parse(textController.controller.text);
+          form.object.map[prop.key] =
+              double.parse(textController.controller.text);
+        } else if (form.controllers[prop.key] is RDDateController &&
+            prop.propertyType == Prop.time) {
+          map[prop.key] = dateController.controller.millisecondsSinceEpoch;
+          form.object.map[prop.key] =
+              dateController.controller.millisecondsSinceEpoch;
+        } else if (form.controllers[prop.key] is RDBoolController &&
+            prop.propertyType == Prop.bool) {
+          map[prop.key] = boolController.controller;
+          form.object.map[prop.key] = boolController.controller;
+        } else if (form.controllers[prop.key] is RDReferenceObject &&
+            prop.propertyType == Prop.referenceObject) {
+          map[prop.key] = refObjController.refObject.referenceObject.id;
+          form.object.map[prop.key] = ReferenceObjectModel.setRefObj(
+              form.object.map[prop.key],
+              refObjController.refObject.referenceObject);
+        } else if (form.controllers[prop.key] is RDAtomicObject &&
+            prop.propertyType == Prop.atomicObject) {
+          map[prop.key] = {
+            AtomicObjectModel.tId: atmObjController.atmObject.id,
+            AtomicObjectModel.tObject: atmObjController.atmObject.values,
+          };
+          form.object.map[prop.key] = atmObjController.atmObject;
+        }
+      }
+
+      form.isEdited = true;
+      if (form.object.id == '') {
+        form.object = ObjectModel.setId(form.object, const Uuid().v4());
+      }
 
       emit(SavedObjectDetailsState());
       emit(LoadedObjectDetailsState());

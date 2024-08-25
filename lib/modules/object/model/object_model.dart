@@ -25,6 +25,8 @@ class ObjectModel {
   map = {},
   createAt = DateTime(0);
 
+  static ObjectModel setId(ObjectModel object, String id_) => ObjectModel(id: id_, map: object.map, createAt: object.createAt);
+
   String dataViewText(PropertyModel property) {
     String text;
 

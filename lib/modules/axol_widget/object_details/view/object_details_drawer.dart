@@ -30,12 +30,14 @@ class ObjectDetailsDrawer extends AxolWidget {
   final WidgetLinkModel link;
   final ObjectModel object;
   final ReferenceObjectModel? referenceObject;
+  final List<PropertyModel>? propsAtmObj;
   const ObjectDetailsDrawer({
     super.key,
     super.theme,
     required this.link,
     required this.object,
     this.referenceObject,
+    this.propsAtmObj,
   });
 
   @override
@@ -50,6 +52,7 @@ class ObjectDetailsDrawer extends AxolWidget {
         link: link,
         object: object,
         referenceObject: referenceObject,
+        propsAtmObj: propsAtmObj,
       ),
     );
   }
@@ -59,12 +62,14 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
   final WidgetLinkModel link;
   final ObjectModel object;
   final ReferenceObjectModel? referenceObject;
+  final List<PropertyModel>? propsAtmObj;
   const ObjectDetailsDrawerBuild({
     super.key,
     super.theme,
     required this.link,
     required this.object,
     this.referenceObject,
+    this.propsAtmObj,
   });
 
   /// Construcción de drawer con el resto de su contenido.
@@ -74,7 +79,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
     ObjectDetailsFormModel form = context.read<RowDetailsForm>().state;
     return BlocConsumer<ObjectDetailsCubit, ObjectDetailsState>(
         bloc: context.read<ObjectDetailsCubit>()
-          ..initLoad(form, link, object, referenceObject),
+          ..initLoad(form, link, object, referenceObject, propsAtmObj),
         listener: (context, state) {
           if (state is ErrorRowDetailsState) {
             showDialog(
@@ -86,6 +91,9 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
           }
           if (state is SavedObjectDetailsState) {
             context.read<ObjectDetailsCubit>().edit(form);
+            if (propsAtmObj != null) {
+              Navigator.pop(context, form.object);
+            }
           }
         },
         builder: (context, state) {
@@ -127,10 +135,16 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       text: 'Guardar',
                       onPressed: () {
-                        context.read<ObjectDetailsCubit>().save(
-                              form,
-                              link,
-                            );
+                        if (propsAtmObj == null) {
+                          context.read<ObjectDetailsCubit>().save(
+                                form,
+                                link,
+                              );
+                        } else {
+                          context
+                              .read<ObjectDetailsCubit>()
+                              .saveAtmObj(form, propsAtmObj!);
+                        }
                       },
                     ),
                   ]
@@ -179,17 +193,20 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
               child: ListView.builder(
                 itemCount: referenceObject != null
                     ? referenceObject!.referenceLink.entity.propertyList.length
-                    : link.entity.propertyList.length,
+                    : propsAtmObj != null
+                        ? propsAtmObj!.length
+                        : link.entity.propertyList.length,
                 itemBuilder: (context, index) {
                   final PropertyModel prop = referenceObject != null
                       ? referenceObject!
                           .referenceLink.entity.propertyList[index]
-                      : link.entity.propertyList[index];
+                      : propsAtmObj != null
+                          ? propsAtmObj![index]
+                          : link.entity.propertyList[index];
                   final Widget widgetRead;
                   final Widget widgetWrite;
                   final List<TextInputFormatter> inputFormatters;
                   final Widget refWidget;
-                  List<Widget> widgetList = [];
                   if (prop.propertyType == Prop.text) {
                     widgetRead = Text(
                       form.object.map[prop.key] ?? '',
@@ -289,84 +306,6 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   } else if (prop.propertyType == Prop.atomicObject &&
                       form.object.map[prop.key] is AtomicObjectModel) {
                     final AtomicObjectModel atmObj = form.object.map[prop.key];
-                    /*for (String key in atmObj.values.keys) {
-                      final value = atmObj.values[key];
-                      final PropertyModel propEntity = link.entity.propertyList
-                          .firstWhere((x) => x.key == prop.key,
-                              orElse: () => PropertyModel.empty());
-                      final PropertyModel propAtm =
-                          PropertyModel.mapToSingleProp(
-                              propEntity.dynamicValues[
-                                  PropertyModel.dvPropsAtomObj][key],
-                              key);
-                      if (propAtm.key != '' &&
-                          propAtm.propertyType == Prop.text &&
-                          value is String) {
-                        widgetList.add(Row(
-                          children: [
-                            Text(
-                              propAtm.name,
-                              style: Typo.body(theme_),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              value,
-                              style: Typo.body(theme_),
-                            ),
-                          ],
-                        ));
-                      } else if (propAtm.key != '' &&
-                          (propAtm.propertyType == Prop.int ||
-                              propAtm.propertyType == Prop.double) &&
-                          (value is int || value is double)) {
-                        widgetList.add(Row(
-                          children: [
-                            Text(
-                              propAtm.name,
-                              style: Typo.body(theme_),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              value.toString(),
-                              style: Typo.body(theme_),
-                            ),
-                          ],
-                        ));
-                      } else if (propAtm.key != '' &&
-                          propAtm.propertyType == Prop.bool &&
-                          value is bool) {
-                        widgetList.add(Row(
-                          children: [
-                            Text(
-                              propAtm.name,
-                              style: Typo.body(theme_),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              value.toString(),
-                              style: Typo.body(theme_),
-                            ),
-                          ],
-                        ));
-                      } else if (propAtm.key != '' &&
-                          propAtm.propertyType == Prop.time &&
-                          value is int) {
-                        widgetList.add(Row(
-                          children: [
-                            Text(
-                              propAtm.name,
-                              style: Typo.body(theme_),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              FormatDate.dmyHm(
-                                  DateTime.fromMillisecondsSinceEpoch(value)),
-                              style: Typo.body(theme_),
-                            ),
-                          ],
-                        ));
-                      }
-                    }*/
                     widgetRead = ObjectCard(
                       theme: theme_,
                       object: ObjectModel(
@@ -376,9 +315,6 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       propertyList: PropertyModel.mapToProperty(
                           prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
                     );
-                    /*Column(
-                      children: widgetList,
-                    );*/
                   } else {
                     widgetRead = const SizedBox();
                   }
@@ -576,12 +512,53 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                         );
                       },
                     );
-                  }
-                  /*else if (prop.propertyType == Prop.atomicObject) {
+                  } else if (prop.propertyType == Prop.atomicObject &&
+                      form.object.map[prop.key] is AtomicObjectModel) {
                     final AtomicObjectModel atmObj = form.object.map[prop.key];
-                    //widgetWrite = 
-                  }*/
-                  else {
+                    widgetWrite = ObjectCard(
+                      theme: theme_,
+                      onPressed: () {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => ObjectDetailsDrawer(
+                            theme: theme_,
+                            link: link,
+                            object: ObjectModel(
+                              createAt: DateTime(0),
+                              id: atmObj.id,
+                              map: atmObj.values,
+                            ),
+                            propsAtmObj: PropertyModel.mapToProperty(link
+                                .entity.propertyList
+                                .firstWhere((x) => x.key == prop.key)
+                                .dynamicValues[PropertyModel.dvPropsAtomObj]),
+                          ),
+                        ).then(
+                          (value) {
+                            if (value is ObjectModel) {
+                              final AtomicObjectModel thenAtmObj =
+                                  AtomicObjectModel(
+                                id: value.id,
+                                values: value.map,
+                              );
+                              form.controllers[prop.key] = RDAtomicObject(
+                                atmObject: thenAtmObj,
+                              );
+                              form.object.map[prop.key] = thenAtmObj;
+                              context.read<ObjectDetailsCubit>().load();
+                            }
+                          },
+                        );
+                      },
+                      object: ObjectModel(
+                          createAt: DateTime(0),
+                          id: atmObj.id,
+                          map: atmObj.values),
+                      propertyList: PropertyModel.mapToProperty(
+                          prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
+                    );
+                  } else {
                     widgetWrite = const SizedBox();
                   }
 
