@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
+import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -176,50 +177,9 @@ class FilterCubit extends Cubit<FilterState> {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
-      List<FilterObjModel> filters = [];
-      FilterObjModel filter;
-      dynamic value;
-      for (FilterModel flt in form.filterList) {
-        if (flt is TextFilterModel) {
-          value = flt.ctrlValue.text;
-        } else if (flt is NumberFilterModel) {
-          value = flt.ctrlValue.text;
-        } else if (flt is BooleanFilterModel) {
-          value = flt.value;
-        } else if (flt is DateFilterModel) {
-          value = flt.dateTime.millisecondsSinceEpoch;
-        } else if (flt is RefObjFilterModel) {
-          final FilterModel fltRef = flt.referenceFilter;
-          if (fltRef is TextFilterModel) {
-            value = fltRef.ctrlValue.text;
-          } else if (fltRef is NumberFilterModel) {
-            value = fltRef.ctrlValue.text;
-          } else if (fltRef is BooleanFilterModel) {
-            value = fltRef.value;
-          } else if (fltRef is DateFilterModel) {
-            value = fltRef.dateTime.millisecondsSinceEpoch;
-          }
-        }
-        if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
-          if (flt is RefObjFilterModel) {
-            final RefObjFilterModel refObjFilter = flt;
-            filter = FilterObjModel(
-                property: flt.property,
-                value: value,
-                operator: flt.operator,
-                refObject: ReferenceObjectModel(
-                  idPropertyView: refObjFilter.refObjController.idPropertyView,
-                  referenceLink: refObjFilter.refObjController.referenceLink,
-                  referenceObject: ObjectModel(id: '', map: {refObjFilter.refObjController.getPropView().key: value}, createAt: DateTime(0))
-                ));
-            filters.add(filter);
-          } else {
-            filter = FilterObjModel(
-                property: flt.property, value: value, operator: flt.operator);
-            filters.add(filter);
-          }
-        }
-      }
+
+      final List<FilterObjModel> filters =
+          FilterObjModel.filterToObjFilter(form.filterList);
       emit(ApplyFilterState(filters: filters));
       emit(LoadedFilterState());
     } catch (e) {
@@ -274,6 +234,37 @@ class FilterCubit extends Cubit<FilterState> {
         property: dateFilter.property,
         operatorList: dateFilter.operatorList,
         operator: dateFilter.operator,
+      );
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
+  Future<void> thenAtmObj(FilterFormModel form, List<FilterObjModel> filters, int index) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      final AtmObjFilterModel atmObj =
+          form.filterList[index] as AtmObjFilterModel;
+      List<FilterModel> filterList = [];
+
+      for (FilterObjModel flt in filters) {
+        filterList.insert(
+            filterList.length,
+            getFilterModel(
+              property: flt.property,
+              value: flt.value,
+              filterOperator: flt.operator,
+            ));
+      }
+
+      form.filterList[index] = AtmObjFilterModel(
+        property: atmObj.property,
+        operatorList: atmObj.operatorList,
+        operator: atmObj.operator,
+        filterList: filterList,
       );
       emit(LoadedFilterState());
     } catch (e) {
@@ -385,6 +376,13 @@ class FilterCubit extends Cubit<FilterState> {
         operator: filterOperator,
         operatorList: referenceFilter.operatorList,
         property: property,
+      );
+    } else if (property.propertyType == Prop.atomicObject) {
+      filter = AtmObjFilterModel(
+        property: property,
+        operatorList: [],
+        operator: FilterOperator.eq,
+        filterList: value ?? [],
       );
     }
     return filter;

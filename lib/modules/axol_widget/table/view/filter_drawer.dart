@@ -277,7 +277,8 @@ class FilterDrawerBuild extends AxolWidget {
       }
     }
     if (form.filterList[index] is! AddFilterModel &&
-        form.filterList[index] is! EmptyFilterModel) {
+        form.filterList[index] is! EmptyFilterModel &&
+        form.filterList[index] is! AtmObjFilterModel) {
       widget = Row(
         children: [
           PrimaryDropDownButton(
@@ -297,6 +298,55 @@ class FilterDrawerBuild extends AxolWidget {
           subWidget,
         ],
       );
+    } else if (form.filterList[index] is AtmObjFilterModel) {
+      final AtmObjFilterModel atmObjFilter =
+          form.filterList[index] as AtmObjFilterModel;
+      final List<FilterObjModel> filterList =
+          FilterObjModel.filterToObjFilter(atmObjFilter.filterList);
+      subWidget = OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(6))),
+            side: BorderSide(color: ColorTheme.item20(theme)),
+            backgroundColor: ColorTheme.fill(theme)),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => FilterDrawer(
+              theme: theme,
+              entity: EntityModel(
+                  entityName: entity.entityName,
+                  propertyList: PropertyModel.mapToProperty(entity.propertyList
+                      .firstWhere((x) => x.key == '5')
+                      .dynamicValues[PropertyModel.dvPropsAtomObj]),
+                  tableName: entity.tableName,
+                  uuid: entity.uuid),
+              filters: filterList,
+              referenceLink: referenceLink,
+            ),
+          ).then(
+            (value) {
+              if (value is List<FilterObjModel>) {
+                context.read<FilterCubit>().thenAtmObj(form, value, index);
+              }
+            },
+          );
+        },
+        child: SizedBox(
+          height: 40,
+          width: constraintWidth < 546 ? 238 : null,
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Filtros activos: ${atmObjFilter.filterList.length}',
+              style: Typo.body(theme),
+              overflow: TextOverflow.clip,
+              maxLines: 1,
+            ),
+          ),
+        ),
+      );
+      widget = constraintWidth < 546 ? subWidget : Expanded(child: subWidget);
     }
 
     return widget;
