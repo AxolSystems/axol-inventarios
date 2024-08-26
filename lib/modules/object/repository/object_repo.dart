@@ -155,8 +155,14 @@ class ObjectRepo {
 
     /// Agrega los filtros a la consulta.
     for (FilterObjModel filter in filters) {
-      if (filter.property.propertyType != Prop.referenceObject) {
+      if (filter.property.propertyType != Prop.referenceObject &&
+          filter.property.propertyType != Prop.atomicObject) {
         query = filterQuery(filter, query);
+      } else if (filter.property.propertyType == Prop.atomicObject) {
+        for (FilterObjModel fltAtm
+            in FilterObjModel.filterToObjFilter(filter.value)) {
+          query = filterQueryAtm(filter, fltAtm, query);
+        }
       }
     }
 
@@ -296,7 +302,6 @@ class ObjectRepo {
           objDB[_object] = objMap;
         }
 
-        print(objDB[_object]["5"]);
         if (idAtomicProps.isNotEmpty) {
           for (String idProp in idAtomicProps) {
             if (objMap.containsKey(idProp)) {
@@ -379,6 +384,55 @@ class ObjectRepo {
     if (filter.operator == FilterOperator.neq) {
       queryFlt =
           queryFlt.neq('$_object->>"${filter.property.key}"', filter.value);
+    }
+    return queryFlt;
+  }
+
+  static dynamic filterQueryAtm(
+    FilterObjModel filter,
+    FilterObjModel filterAtm,
+    var query,
+  ) {
+    dynamic queryFlt = query;
+    if (filterAtm.operator == FilterOperator.eq) {
+      queryFlt = queryFlt.eq(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          filterAtm.value);
+    }
+    if (filterAtm.operator == FilterOperator.like) {
+      queryFlt = queryFlt.like(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          '%${filterAtm.value}%');
+    }
+    if (filterAtm.operator == FilterOperator.ilike) {
+      queryFlt = queryFlt.ilike(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          '%${filterAtm.value}%');
+    }
+    if (filterAtm.operator == FilterOperator.gt) {
+      queryFlt = queryFlt.gt(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          filterAtm.value);
+    }
+    if (filterAtm.operator == FilterOperator.gte) {
+      queryFlt = queryFlt.gte(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          filterAtm.value);
+    }
+    if (filterAtm.operator == FilterOperator.lt) {
+      queryFlt = queryFlt.lt(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          filterAtm.value);
+    }
+    if (filterAtm.operator == FilterOperator.lte) {
+      queryFlt = queryFlt.lte(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          filterAtm.value);
+    }
+    if (filterAtm.operator == FilterOperator.neq) {
+      queryFlt = queryFlt.neq(
+          '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
+          filterAtm.value);
     }
     return queryFlt;
   }

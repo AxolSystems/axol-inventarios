@@ -317,7 +317,8 @@ class FilterDrawerBuild extends AxolWidget {
               entity: EntityModel(
                   entityName: entity.entityName,
                   propertyList: PropertyModel.mapToProperty(entity.propertyList
-                      .firstWhere((x) => x.key == '5')
+                      .firstWhere(
+                          (x) => x.key == form.filterList[index].property.key)
                       .dynamicValues[PropertyModel.dvPropsAtomObj]),
                   tableName: entity.tableName,
                   uuid: entity.uuid),
