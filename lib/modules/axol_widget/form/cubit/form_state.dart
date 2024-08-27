@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../object/model/object_model.dart';
+
 abstract class FormDrawerState extends Equatable {
   const FormDrawerState();
 }
@@ -26,8 +28,10 @@ class SavingFormState extends FormDrawerState {
 }
 
 class SavedFormState extends FormDrawerState {
+  final ObjectModel object;
+  const SavedFormState({required this.object});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [object];
 }
 
 /// Estado de error. Estado al que pasa si se

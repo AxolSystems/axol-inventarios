@@ -28,12 +28,20 @@ class FormCubit extends Cubit<FormDrawerState> {
     }
   }
 
-  Future<void> initLoad(FormFormModel form, EntityModel entity) async {
+  Future<void> initLoad(FormFormModel form, EntityModel entity,
+      [List<PropertyModel>? atmPropertyList]) async {
     try {
       emit(InitialFormState());
       emit(LoadingFormState());
+      final List<PropertyModel> propertyList;
 
-      for (PropertyModel prop in entity.propertyList) {
+      if (atmPropertyList != null) {
+        propertyList = atmPropertyList;
+      } else {
+        propertyList = entity.propertyList;
+      }
+
+      for (PropertyModel prop in propertyList) {
         if (prop.propertyType == Prop.text) {
           form.fields.add(TextFieldModel(
             ctrlText: TextEditingController(),
@@ -69,12 +77,10 @@ class FormCubit extends Cubit<FormDrawerState> {
             property: prop,
           ));
         } else if (prop.propertyType == Prop.atomicObject) {
-          form.fields.add(
-            AtmObjFieldModel(
-              atomicObject: AtomicObjectModel.empty(),
-              property: prop,
-            )
-          );
+          form.fields.add(AtmObjFieldModel(
+            atomicObject: AtomicObjectModel.empty(),
+            property: prop,
+          ));
         }
       }
 
@@ -85,15 +91,23 @@ class FormCubit extends Cubit<FormDrawerState> {
     }
   }
 
-  Future<void> save(FormFormModel form, WidgetLinkModel link) async {
+  Future<void> save(FormFormModel form, WidgetLinkModel link,
+      [List<PropertyModel>? atmPropertyList]) async {
     try {
       emit(InitialFormState());
       emit(SavingFormState());
+      final List<PropertyModel> propertyList;
       ObjectModel object;
       Map<String, dynamic> map = {};
       int i;
 
-      for (PropertyModel prop in link.entity.propertyList) {
+      if (atmPropertyList != null) {
+        propertyList = atmPropertyList;
+      } else {
+        propertyList = link.entity.propertyList;
+      }
+
+      for (PropertyModel prop in propertyList) {
         i = form.fields.indexWhere((x) => x.property.key == prop.key);
         if (i > -1) {
           if (form.fields[i] is TextFieldModel) {
@@ -115,7 +129,8 @@ class FormCubit extends Cubit<FormDrawerState> {
                 form.fields[i] as ReferenceObjectFieldModel;
             map[prop.key] = refObjField.refObj.referenceObject.id;
           } else if (form.fields[i] is AtmObjFieldModel) {
-            final AtmObjFieldModel atmObjField = form.fields[i] as AtmObjFieldModel;
+            final AtmObjFieldModel atmObjField =
+                form.fields[i] as AtmObjFieldModel;
             map[prop.key] = atmObjField.atomicObject.values;
           } else {
             map[prop.key] = null;
@@ -130,10 +145,12 @@ class FormCubit extends Cubit<FormDrawerState> {
         map: map,
         createAt: DateTime.now(),
       );
+      if (atmPropertyList != null) {
+      } else {
+        await ObjectRepo.insert(object, link);
+      }
 
-      await ObjectRepo.insert(object, link);
-
-      emit(SavedFormState());
+      emit(SavedFormState(object: object));
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());
@@ -166,6 +183,23 @@ class FormCubit extends Cubit<FormDrawerState> {
       final DateFieldModel dateField = form.fields[index] as DateFieldModel;
       form.fields[index] =
           DateFieldModel(dateTime: dateTime, property: dateField.property);
+      emit(LoadedFormState());
+    } catch (e) {
+      emit(InitialFormState());
+      emit(ErrorFormState(error: e.toString()));
+    }
+  }
+
+  Future<void> thenAtmObj(
+      FormFormModel form, int index, ObjectModel object) async {
+    try {
+      emit(InitialFormState());
+      emit(LoadingFormState());
+      final AtmObjFieldModel atmObjField =
+          form.fields[index] as AtmObjFieldModel;
+      form.fields[index] = AtmObjFieldModel(
+          atomicObject: AtomicObjectModel(id: object.id, values: object.map),
+          property: atmObjField.property);
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());

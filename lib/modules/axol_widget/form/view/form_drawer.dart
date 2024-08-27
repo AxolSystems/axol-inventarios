@@ -22,7 +22,9 @@ import '../model/form_form_model.dart';
 
 class FormDrawer extends AxolWidget {
   final WidgetLinkModel link;
-  const FormDrawer({super.key, super.theme, required this.link});
+  final List<PropertyModel>? atmPropertyList;
+  const FormDrawer(
+      {super.key, super.theme, required this.link, this.atmPropertyList});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class FormDrawer extends AxolWidget {
       child: FormDrawerBuild(
         theme: theme,
         link: link,
+        atmPropertyList: atmPropertyList,
       ),
     );
   }
@@ -41,14 +44,17 @@ class FormDrawer extends AxolWidget {
 
 class FormDrawerBuild extends AxolWidget {
   final WidgetLinkModel link;
-  const FormDrawerBuild({super.key, super.theme, required this.link});
+  final List<PropertyModel>? atmPropertyList;
+  const FormDrawerBuild(
+      {super.key, super.theme, required this.link, this.atmPropertyList});
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
     FormFormModel form = context.read<FormForm>().state;
     return BlocConsumer<FormCubit, FormDrawerState>(
-      bloc: context.read<FormCubit>()..initLoad(form, link.entity),
+      bloc: context.read<FormCubit>()
+        ..initLoad(form, link.entity, atmPropertyList),
       listener: (context, state) {
         if (state is ErrorFormState) {
           showDialog(
@@ -60,7 +66,7 @@ class FormDrawerBuild extends AxolWidget {
           );
         }
         if (state is SavedFormState) {
-          Navigator.pop(context, true);
+          Navigator.pop(context, state.object);
         }
       },
       builder: (context, state) {
@@ -168,6 +174,10 @@ class FormDrawerBuild extends AxolWidget {
               ),
             );
           } else if (field is AtmObjFieldModel) {
+            final List<PropertyModel> atmPropertyList =
+                PropertyModel.mapToProperty(link.entity.propertyList
+                    .firstWhere((x) => x.key == field.property.key)
+                    .dynamicValues[PropertyModel.dvPropsAtomObj]);
             widgetList.add(
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -178,17 +188,21 @@ class FormDrawerBuild extends AxolWidget {
                     id: field.atomicObject.id,
                     map: field.atomicObject.values,
                   ),
-                  propertyList: PropertyModel.mapToProperty(link
-                      .entity.propertyList
-                      .firstWhere((x) => x.key == field.property.key)
-                      .dynamicValues[PropertyModel.dvPropsAtomObj]),
+                  propertyList: atmPropertyList,
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (context) => FormDrawer(
                         theme: theme_,
                         link: link,
+                        atmPropertyList: atmPropertyList,
                       ),
+                    ).then(
+                      (value) {
+                        if (value is ObjectModel) {
+                          context.read<FormCubit>().thenAtmObj(form, i, value);
+                        }
+                      },
                     );
                   },
                 ),
@@ -233,7 +247,7 @@ class FormDrawerBuild extends AxolWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               text: 'Guardar',
               onPressed: () {
-                context.read<FormCubit>().save(form, link); //Seguir aquí...
+                context.read<FormCubit>().save(form, link, atmPropertyList);
               },
             ),
           ],
