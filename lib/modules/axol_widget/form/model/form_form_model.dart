@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../entity/model/property_model.dart';
+import '../../../object/model/atomic_object_model.dart';
 import '../../../object/model/reference_object_model.dart';
 
 class FormFormModel {
@@ -39,4 +40,9 @@ class DateFieldModel extends FormFieldModel {
 class ReferenceObjectFieldModel extends FormFieldModel {
   ReferenceObjectModel refObj;
   ReferenceObjectFieldModel({required this.refObj, required super.property});
+}
+
+class AtmObjFieldModel extends FormFieldModel {
+  AtomicObjectModel atomicObject;
+  AtmObjFieldModel({required this.atomicObject, required super.property});
 }

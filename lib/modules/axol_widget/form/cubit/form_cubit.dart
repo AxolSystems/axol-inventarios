@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/form/model/form_form_model.dart';
 import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
+import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,6 +68,13 @@ class FormCubit extends Cubit<FormDrawerState> {
             refObj: refObjInit,
             property: prop,
           ));
+        } else if (prop.propertyType == Prop.atomicObject) {
+          form.fields.add(
+            AtmObjFieldModel(
+              atomicObject: AtomicObjectModel.empty(),
+              property: prop,
+            )
+          );
         }
       }
 
@@ -106,6 +114,9 @@ class FormCubit extends Cubit<FormDrawerState> {
             final ReferenceObjectFieldModel refObjField =
                 form.fields[i] as ReferenceObjectFieldModel;
             map[prop.key] = refObjField.refObj.referenceObject.id;
+          } else if (form.fields[i] is AtmObjFieldModel) {
+            final AtmObjFieldModel atmObjField = form.fields[i] as AtmObjFieldModel;
+            map[prop.key] = atmObjField.atomicObject.values;
           } else {
             map[prop.key] = null;
           }

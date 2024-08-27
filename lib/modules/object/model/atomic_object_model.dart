@@ -4,14 +4,12 @@ import '../../entity/model/property_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 
 class AtomicObjectModel {
-  //final List<PropertyModel> properties;
   final String id;
   final Map<String, dynamic> values;
   final String? referenceLinkId;
   final String? referenceObjectId;
 
   AtomicObjectModel({
-    //required this.properties,
     required this.id,
     required this.values,
     this.referenceLinkId,
@@ -19,8 +17,7 @@ class AtomicObjectModel {
   });
 
   AtomicObjectModel.empty()
-      : //properties = [],
-        id = '',
+      : id = '',
         values = {},
         referenceLinkId = '',
         referenceObjectId = '';
@@ -42,41 +39,10 @@ class AtomicObjectModel {
     AtomicObjectModel atomicObject;
     String id = '';
     Map<String, dynamic> values = {};
-    //List<PropertyModel> propertyList = [];
     String? referenceLinkId = linkRef?.id;
     String? referenceObjectId = objectRef?.id;
 
     if (map != null && map.isNotEmpty) {
-      /*if (map.containsKey(tProperties) &&
-          map[tProperties][PropertyModel.dataType] == 7) {
-        if (objectRef != null && linkRef != null) {
-          values = objectRef.map;
-          for (PropertyModel property in linkRef.entity.propertyList) {
-            propertyList.add(property);
-          }
-        } else if (map[tProperties][PropertyModel.tDynamicValues]
-            .containsKey(PropertyModel.dvPropsAtomObj)) {
-          for (String key in map[tObject].keys) {
-            if (map[tProperties][PropertyModel.tDynamicValues]
-                    [PropertyModel.dvPropsAtomObj]
-                .containsKey[key]) {
-              values[key] = map[tObject][key];
-            }
-          }
-          for (String key in map[tProperties][PropertyModel.tDynamicValues]
-                  [PropertyModel.dvPropsAtomObj]
-              .keys) {
-            final Map<String, dynamic> mapProp = map[tProperties]
-                    [PropertyModel.tDynamicValues][PropertyModel.dvPropsAtomObj]
-                [key];
-            propertyList.add(PropertyModel(
-                name: mapProp[PropertyModel.propName],
-                propertyType: mapProp[PropertyModel.dataType],
-                key: key,
-                dynamicValues: mapProp[PropertyModel.tDynamicValues]));
-          }
-        }
-      }*/
       if (map.containsKey(tId)) {
         id = map[tId];
       }
@@ -88,7 +54,6 @@ class AtomicObjectModel {
     }
 
     atomicObject = AtomicObjectModel(
-      //properties: propertyList,
       id: id,
       values: values,
       referenceLinkId: referenceLinkId,

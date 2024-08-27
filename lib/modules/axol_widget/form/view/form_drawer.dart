@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,9 @@ import '../../../../utilities/widgets/buttons/button.dart';
 import '../../../../utilities/widgets/buttons/date_time_button.dart';
 import '../../../../utilities/widgets/dialog.dart';
 import '../../../../utilities/widgets/drawer_box.dart';
+import '../../../../utilities/widgets/object_card.dart';
 import '../../../../utilities/widgets/textfield.dart';
+import '../../../entity/model/property_model.dart';
 import '../../../object/model/reference_object_model.dart';
 import '../../generic/view/axol_widget.dart';
 import '../../search_button/view/search_button.dart';
@@ -164,6 +167,33 @@ class FormDrawerBuild extends AxolWidget {
                 },
               ),
             );
+          } else if (field is AtmObjFieldModel) {
+            widgetList.add(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: ObjectCard(
+                  theme: theme_,
+                  object: ObjectModel(
+                    createAt: DateTime(0),
+                    id: field.atomicObject.id,
+                    map: field.atomicObject.values,
+                  ),
+                  propertyList: PropertyModel.mapToProperty(link
+                      .entity.propertyList
+                      .firstWhere((x) => x.key == field.property.key)
+                      .dynamicValues[PropertyModel.dvPropsAtomObj]),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => FormDrawer(
+                        theme: theme_,
+                        link: link,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
           }
         }
 
@@ -203,7 +233,7 @@ class FormDrawerBuild extends AxolWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               text: 'Guardar',
               onPressed: () {
-                context.read<FormCubit>().save(form, link);
+                context.read<FormCubit>().save(form, link); //Seguir aquí...
               },
             ),
           ],
