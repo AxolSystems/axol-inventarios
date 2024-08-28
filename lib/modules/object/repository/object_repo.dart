@@ -1,8 +1,10 @@
+import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
+import '../../array/repository/array_repo.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
@@ -53,6 +55,9 @@ class ObjectRepo {
     List<FilterObjModel> refFilterList;
     List<String> idAtomicListProps = [];
     List<String> idAtomicProps = [];
+    List<PropertyModel> arrayProps = [];
+    List<String> idArrays = [];
+    List<ArrayModel> arrayList = [];
 
     /// Si no está ordenado por una propiedad, ordenar po fecha de
     /// creación.
@@ -117,8 +122,15 @@ class ObjectRepo {
       if (prop.propertyType == Prop.atomicObject) {
         idAtomicProps.add(prop.key);
       }
+      if (prop.propertyType == Prop.array) {
+        arrayProps.add(prop);
+        idArrays.add(prop.dynamicValues[PropertyModel.dvIdArray]);
+      }
     }
     linkRefList = await WidgetLinkRepo.fetchWidgetLik(idLinks);
+    if (idArrays.isNotEmpty) {
+      arrayList = await ArrayRepo.fetchArray(idArrays);
+    }
 
     // 2. Enlista filtros de referencia y los mapea para filtros que son de la misma propiedad.
     for (PropertyModel prop in idRefProps) {
@@ -220,12 +232,6 @@ class ObjectRepo {
       /// y id de objetos referenciados.
       for (var prop in link.entity.propertyList) {
         if (prop.propertyType == Prop.referenceObject) {
-          // Modificar -->
-          /*propsRef.add(prop);
-          if (!idLinks.contains(prop.dynamicValues[PropertyModel.dvRefLink])) {
-            idLinks.add(prop.dynamicValues[PropertyModel.dvRefLink]);
-          }*/
-          // <--
           for (var objDB in objsDB) {
             final String? idObject = objDB[_object][prop.key];
             if (idObject != null && idObject != '') {
@@ -309,6 +315,19 @@ class ObjectRepo {
             }
           }
           objDB[_object] = objMap;
+        }
+
+        if (arrayProps.isNotEmpty) {
+          for (PropertyModel arrayProp in arrayProps) {
+            if (objMap.containsKey(arrayProp.key)) {
+              final String value = objMap[arrayProp.key];
+              final ArrayModel array = arrayList
+                  .firstWhere((x) =>
+                      x.id == arrayProp.dynamicValues[PropertyModel.dvIdArray])
+                  .setValue(value);
+              objMap[arrayProp.key] = array;
+            }
+          }
         }
 
         /// Crea una lista de objetos a partir de las consultas realizadas.

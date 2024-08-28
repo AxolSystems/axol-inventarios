@@ -148,8 +148,7 @@ class FormCubit extends Cubit<FormDrawerState> {
         map: map,
         createAt: DateTime.now(),
       );
-      if (atmPropertyList != null) {
-      } else {
+      if (atmPropertyList == null) {
         await ObjectRepo.insert(object, link);
       }
 

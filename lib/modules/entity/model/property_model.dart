@@ -10,6 +10,7 @@ enum Prop {
   referenceObject,
   atomicObjList,
   atomicObject,
+  array,
 }
 
 class PropertyModel {
@@ -40,17 +41,20 @@ class PropertyModel {
   ///get "dynamic_values"
   static String get tDynamicValues => 'dynamic_values';
 
-  ///get reference_link
+  ///get "reference_link"
   static String get dvRefLink => 'reference_link';
 
-  ///get reference_table
+  ///get "reference_table"
   static String get dvRefTable => 'reference_table';
 
-  ///get external_ref
+  ///get "external_ref"
   static String get dvExternalRef => 'external_ref';
 
-  ///get props_atomic_object
+  ///get "props_atomic_object"
   static String get dvPropsAtomObj => 'props_atomic_object';
+
+  ///get "id_array"
+  static String get dvIdArray => "id_array";
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
     List<PropertyModel> propertyList = [];
@@ -101,6 +105,8 @@ class PropertyModel {
         return Prop.atomicObjList;
       case 7:
         return Prop.atomicObject;
+      case 8:
+        return Prop.array;
       default:
         return Prop.empty;
     }
@@ -126,6 +132,8 @@ class PropertyModel {
         return 6;
       case Prop.atomicObject:
         return 7;
+      case Prop.array:
+        return 8;
       default:
         return -1;
     }
@@ -149,6 +157,8 @@ class PropertyModel {
         return 'Lista de objetos atómicos';
       case Prop.atomicObject:
         return 'Objeto atómico';
+      case Prop.array:
+        return 'Colección';
       default:
         return 'Texto';
     }
@@ -172,6 +182,8 @@ class PropertyModel {
         return Icons.list;
       case Prop.atomicObject:
         return Icons.data_object_sharp;
+      case Prop.array:
+        return Icons.arrow_drop_down_circle_sharp;
       default:
         return Icons.square;
     }

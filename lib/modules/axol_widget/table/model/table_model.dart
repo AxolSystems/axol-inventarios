@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
+import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/utilities/format.dart';
 
@@ -83,6 +84,10 @@ class TableModel extends DataObject {
           row[key] = CellAtomicObjList(atomicObjectList: obj.map[key] ?? []);
         } else if (prop == Prop.atomicObject) {
           row[key] = CellAtomicObject(atomicObject: obj.map[key] ?? []);
+        } else if (prop == Prop.array) {
+          final ArrayModel array = obj.map[key];
+          row[key] = CellText(text: array.value);
+          print(array.value);
         }
       }
       rowList.add(row);
