@@ -131,7 +131,10 @@ class FormCubit extends Cubit<FormDrawerState> {
           } else if (form.fields[i] is AtmObjFieldModel) {
             final AtmObjFieldModel atmObjField =
                 form.fields[i] as AtmObjFieldModel;
-            map[prop.key] = atmObjField.atomicObject.values;
+            map[prop.key] = {
+              AtomicObjectModel.tId: atmObjField.atomicObject.id,
+              AtomicObjectModel.tObject: atmObjField.atomicObject.values,
+            };
           } else {
             map[prop.key] = null;
           }
