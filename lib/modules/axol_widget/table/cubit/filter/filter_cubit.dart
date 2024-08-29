@@ -120,9 +120,12 @@ class FilterCubit extends Cubit<FilterState> {
         } else if (prop.propertyType == Prop.array) {
           final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
           final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+          if (list.isEmpty) {
+            list.add('');
+          }
           form.filterList[index] = getFilterModel(
             property: prop,
-            value: ArrayModel(id: idArray, list: list, value: ''),
+            value: ArrayModel(id: idArray, list: list, value: list.first),
             filterOperator: form.filterList[index].operator,
           );
         } else {

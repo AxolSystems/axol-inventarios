@@ -572,7 +572,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final ArrayModel array = form.object.map[prop.key];
                     widgetWrite = PrimaryDropDownButton(
                       theme: theme_,
-                      value: array.value,
+                      value: array.list.contains(array.value) ? array.value : array.list.first,
                       items: array.getItems(theme_),
                       onChanged: (value) {
                         if (value is String) {

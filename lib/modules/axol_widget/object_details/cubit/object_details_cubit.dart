@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../array/model/array_model.dart';
+import '../../../array/repository/array_repo.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/atomic_object_model.dart';
 import '../../../object/model/object_model.dart';
@@ -97,11 +98,22 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               refObject: cellRefObj,
               oldIdRefObject: cellRefObj.referenceObject.id);
         } else if (prop.propertyType == Prop.atomicObject) {
-          cellAtmObj = form.object.map[prop.key] ?? AtomicObjectModel.idInit(prop.key);
+          cellAtmObj =
+              form.object.map[prop.key] ?? AtomicObjectModel.idInit(prop.key);
           form.controllers[prop.key] = RDAtomicObject(atmObject: cellAtmObj);
         } else if (prop.propertyType == Prop.array) {
-          cellArray = form.object.map[prop.key] ?? ArrayModel.empty();
-          form.controllers[prop.key] == RDArray(array: cellArray);
+          if (form.object.map[prop.key] == null) {
+            final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
+            final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+            if (list.isEmpty) {
+              list.add('');
+            }
+            cellArray = ArrayModel(id: idArray, list: list, value: '');
+            form.object.map[prop.key] = cellArray;
+          } else {
+            cellArray = form.object.map[prop.key];
+          }
+          form.controllers[prop.key] = RDArray(array: cellArray);
         }
       }
 
@@ -215,7 +227,14 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           form.object.map[key] = atmObjController.atmObject;
         } else if (form.controllers[key] is RDArray &&
             property.propertyType == Prop.array) {
-          map[key] = arrayController.array.value;
+              if (arrayController.array.value == '') {
+                final ArrayModel array = form.object.map[property.key];
+                map[key] = array.list.first;
+                form.object.map[property.key] = array.setValue(map[key]);
+              } else {
+                map[key] = arrayController.array.value;
+              }
+          
         }
       }
 
@@ -381,12 +400,11 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
     }
   }
 
-  Future<void> changeArray({
-    required ObjectDetailsFormModel form,
-    required PropertyModel prop,
-    required String value,
-    required ArrayModel array
-  }) async {
+  Future<void> changeArray(
+      {required ObjectDetailsFormModel form,
+      required PropertyModel prop,
+      required String value,
+      required ArrayModel array}) async {
     try {
       emit(InitialObjectDetailsState());
       emit(DeletingObjectDetailsState());
