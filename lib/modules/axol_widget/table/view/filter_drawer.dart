@@ -260,7 +260,8 @@ class FilterDrawerBuild extends AxolWidget {
     if (filter is TextFilterModel ||
         filter is NumberFilterModel ||
         filter is BooleanFilterModel ||
-        filter is DateFilterModel) {
+        filter is DateFilterModel ||
+        filter is ArrayFilterModel) {
       subWidget = primaryControllers(
           context, form, index, theme, constraintWidth, form.filterList[index]);
     } else if (form.filterList[index] is RefObjFilterModel) {
@@ -356,7 +357,6 @@ class FilterDrawerBuild extends AxolWidget {
   Widget primaryControllers(BuildContext context, FilterFormModel form,
       int index, int theme, double constraintWidth, FilterModel filter) {
     final Widget subWidget;
-
     if (filter is TextFilterModel) {
       subWidget = SizedBox(
         height: 56,
@@ -432,6 +432,19 @@ class FilterDrawerBuild extends AxolWidget {
             },
           );
         },
+      );
+    } else if (filter is ArrayFilterModel) {
+      subWidget = PrimaryDropDownButton(
+        theme: theme,
+        value: filter.arrayFilter.list.contains(filter.arrayFilter.value)
+            ? filter.arrayFilter.value
+            : filter.arrayFilter.list.first,
+        items: filter.arrayFilter.getItems(theme),
+        onChanged: (value) {
+          context.read<FilterCubit>().changeArray(form, index, filter, value);
+        },
+        margin: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+        width: ((constraintWidth - 50) / 2) - 77,
       );
     } else {
       subWidget = const SizedBox();

@@ -1,4 +1,5 @@
 import 'package:axol_inventarios/modules/array/model/array_model.dart';
+import 'package:axol_inventarios/modules/axol_widget/table/model/filter_form_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -372,37 +373,46 @@ class ObjectRepo {
 
   static dynamic filterQuery(FilterObjModel filter, var query) {
     dynamic queryFlt = query;
+    dynamic value;
+
+    if (filter.value is ArrayModel) {
+      final ArrayModel array = filter.value;
+      value = array.value;
+    } else {
+      value = filter.value;
+    }
+
     if (filter.operator == FilterOperator.eq) {
       queryFlt =
-          queryFlt.eq('$_object->>"${filter.property.key}"', filter.value);
+          queryFlt.eq('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.like) {
       queryFlt = queryFlt.like(
-          '$_object->>"${filter.property.key}"', '%${filter.value}%');
+          '$_object->>"${filter.property.key}"', '%$value%');
     }
     if (filter.operator == FilterOperator.ilike) {
       queryFlt = queryFlt.ilike(
-          '$_object->>"${filter.property.key}"', '%${filter.value}%');
+          '$_object->>"${filter.property.key}"', '%$value%');
     }
     if (filter.operator == FilterOperator.gt) {
       queryFlt =
-          queryFlt.gt('$_object->>"${filter.property.key}"', filter.value);
+          queryFlt.gt('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.gte) {
       queryFlt =
-          queryFlt.gte('$_object->>"${filter.property.key}"', filter.value);
+          queryFlt.gte('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.lt) {
       queryFlt =
-          queryFlt.lt('$_object->>"${filter.property.key}"', filter.value);
+          queryFlt.lt('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.lte) {
       queryFlt =
-          queryFlt.lte('$_object->>"${filter.property.key}"', filter.value);
+          queryFlt.lte('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.neq) {
       queryFlt =
-          queryFlt.neq('$_object->>"${filter.property.key}"', filter.value);
+          queryFlt.neq('$_object->>"${filter.property.key}"', value);
     }
     return queryFlt;
   }

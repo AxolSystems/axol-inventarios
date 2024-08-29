@@ -49,6 +49,10 @@ class FilterObjModel {
         FilterOperator.lt,
         FilterOperator.lte,
       ];
+  static List<FilterOperator> get operArrayList => [
+        FilterOperator.eq,
+        FilterOperator.neq,
+      ];
 
   FilterObjModel setProperty(PropertyModel propertyRef_) => FilterObjModel(
         operator: operator,
@@ -122,6 +126,8 @@ class FilterObjModel {
         }
       } else if (flt is AtmObjFilterModel) {
         value = flt.filterList;
+      } else if (flt is ArrayFilterModel) {
+        value = flt.arrayFilter;
       }
       if (flt is! EmptyFilterModel && flt is! AddFilterModel) {
         if (flt is RefObjFilterModel) {

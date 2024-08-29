@@ -31,4 +31,24 @@ class ArrayRepo {
 
     return arrays;
   }
+
+  static Future<List<String>> fetchArrayById(String id) async {
+    final List<String> array = [];
+    final List<Map<String, dynamic>> response;
+    List<dynamic> listDynamic;
+
+    response = await _supabase
+        .from(_table)
+        .select<List<Map<String, dynamic>>>()
+        .eq(_id, id);
+
+    if (response.isNotEmpty) {
+      listDynamic = response.first[_array];
+      for (var x in listDynamic) {
+        array.add(x.toString());
+      }
+    }
+
+    return array;
+  }
 }

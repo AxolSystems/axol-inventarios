@@ -570,20 +570,10 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   } else if (prop.propertyType == Prop.array &&
                       form.object.map[prop.key] is ArrayModel) {
                     final ArrayModel array = form.object.map[prop.key];
-                    List<DropdownMenuItem<String>> items = [];
-                    for (String element in array.list) {
-                      items.add(DropdownMenuItem(
-                        value: element,
-                        child: Text(
-                          element,
-                          style: Typo.body(theme_),
-                        ),
-                      ));
-                    }
                     widgetWrite = PrimaryDropDownButton(
                       theme: theme_,
                       value: array.value,
-                      items: items,
+                      items: array.getItems(theme_),
                       onChanged: (value) {
                         if (value is String) {
                           context.read<ObjectDetailsCubit>().changeArray(

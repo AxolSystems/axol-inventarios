@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+
+import '../../../utilities/theme/theme.dart';
+
 class ArrayModel {
   final String id;
   final List<String> list;
@@ -12,4 +16,18 @@ class ArrayModel {
 
   ArrayModel setValue(String value_) =>
       ArrayModel(id: id, list: list, value: value_);
+
+  List<DropdownMenuItem<String>> getItems(int theme) {
+    List<DropdownMenuItem<String>> items = [];
+    for (String element in list) {
+      items.add(DropdownMenuItem(
+        value: element,
+        child: Text(
+          element,
+          style: Typo.body(theme),
+        ),
+      ));
+    }
+    return items;
+  }
 }

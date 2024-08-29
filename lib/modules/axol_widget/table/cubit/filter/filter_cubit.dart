@@ -1,11 +1,12 @@
 import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
 import 'package:axol_inventarios/modules/entity/model/property_model.dart';
-import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../utilities/format.dart';
+import '../../../../array/model/array_model.dart';
+import '../../../../array/repository/array_repo.dart';
 import '../../../../object/model/filter_obj_model.dart';
 import '../../../../object/model/object_model.dart';
 import '../../../../widget_link/model/widgetlink_model.dart';
@@ -46,6 +47,7 @@ class FilterCubit extends Cubit<FilterState> {
         } else {
           value = flt.value;
         }
+        
         form.filterList.insert(
             form.filterList.length - 1,
             getFilterModel(
@@ -114,6 +116,14 @@ class FilterCubit extends Cubit<FilterState> {
               referenceLink: referenceLink,
             ),
             filterOperator: FilterOperator.eq,
+          );
+        } else if (prop.propertyType == Prop.array) {
+          final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
+          final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+          form.filterList[index] = getFilterModel(
+            property: prop,
+            value: ArrayModel(id: idArray, list: list, value: ''),
+            filterOperator: form.filterList[index].operator,
           );
         } else {
           form.filterList[index] = getFilterModel(
@@ -219,6 +229,26 @@ class FilterCubit extends Cubit<FilterState> {
     }
   }
 
+  Future<void> changeArray(FilterFormModel form, int index,
+      ArrayFilterModel filter, dynamic value) async {
+    try {
+      emit(InitialFilterState());
+      emit(LoadingFilterState());
+      if (value is String) {
+        form.filterList[index] = ArrayFilterModel(
+          property: filter.property,
+          operatorList: filter.operatorList,
+          operator: filter.operator,
+          arrayFilter: ArrayModel(id: filter.arrayFilter.id, list: filter.arrayFilter.list, value: value),
+        );
+      }
+      emit(LoadedFilterState());
+    } catch (e) {
+      emit(InitialFilterState());
+      emit(ErrorFilterState(error: e.toString()));
+    }
+  }
+
   Future<void> thenDateTimePick(
       {required DateTime dateTime,
       required FilterFormModel form,
@@ -242,7 +272,8 @@ class FilterCubit extends Cubit<FilterState> {
     }
   }
 
-  Future<void> thenAtmObj(FilterFormModel form, List<FilterObjModel> filters, int index) async {
+  Future<void> thenAtmObj(
+      FilterFormModel form, List<FilterObjModel> filters, int index) async {
     try {
       emit(InitialFilterState());
       emit(LoadingFilterState());
@@ -383,6 +414,15 @@ class FilterCubit extends Cubit<FilterState> {
         operatorList: [],
         operator: FilterOperator.eq,
         filterList: value ?? [],
+      );
+    } else if (property.propertyType == Prop.array) {
+      filter = ArrayFilterModel(
+        property: property,
+        operatorList: FilterObjModel.operArrayList,
+        operator: FilterObjModel.operTextList.contains(filterOperator)
+            ? filterOperator
+            : FilterObjModel.operTextList.first,
+        arrayFilter: value ?? ArrayModel.empty(),
       );
     }
     return filter;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../utilities/theme/theme.dart';
+import '../../../array/model/array_model.dart';
 import '../../../entity/model/entity_model.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/filter_obj_model.dart';
@@ -161,5 +162,15 @@ class AtmObjFilterModel extends FilterModel {
     required super.operatorList,
     required super.operator,
     required this.filterList,
+  });
+}
+
+class ArrayFilterModel extends FilterModel {
+  ArrayModel arrayFilter;
+  ArrayFilterModel({
+    required super.property,
+    required super.operatorList,
+    required super.operator,
+    required this.arrayFilter,
   });
 }
