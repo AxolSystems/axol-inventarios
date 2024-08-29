@@ -87,7 +87,6 @@ class TableModel extends DataObject {
         } else if (prop == Prop.array) {
           final ArrayModel array = obj.map[key];
           row[key] = CellText(text: array.value);
-          print(array.value);
         }
       }
       rowList.add(row);

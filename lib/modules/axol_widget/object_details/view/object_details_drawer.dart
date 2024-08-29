@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.da
 import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/dropdown_button.dart';
 import 'package:axol_inventarios/utilities/widgets/checkbox_view.dart';
 import 'package:axol_inventarios/utilities/widgets/drawer_box.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/object_card.dart';
+import '../../../array/model/array_model.dart';
 import '../../search_button/view/search_button.dart';
 import '../../search_button/view/search_reference_object.dart';
 import '../../../../utilities/widgets/dialog.dart';
@@ -315,6 +317,13 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       propertyList: PropertyModel.mapToProperty(
                           prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
                     );
+                  } else if (prop.propertyType == Prop.array &&
+                      form.object.map[prop.key] is ArrayModel) {
+                    final ArrayModel array = form.object.map[prop.key];
+                    widgetRead = Text(
+                      array.value,
+                      style: Typo.body(theme_),
+                    );
                   } else {
                     widgetRead = const SizedBox();
                   }
@@ -557,6 +566,34 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           map: atmObj.values),
                       propertyList: PropertyModel.mapToProperty(
                           prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
+                    );
+                  } else if (prop.propertyType == Prop.array &&
+                      form.object.map[prop.key] is ArrayModel) {
+                    final ArrayModel array = form.object.map[prop.key];
+                    List<DropdownMenuItem<String>> items = [];
+                    for (String element in array.list) {
+                      items.add(DropdownMenuItem(
+                        value: element,
+                        child: Text(
+                          element,
+                          style: Typo.body(theme_),
+                        ),
+                      ));
+                    }
+                    widgetWrite = PrimaryDropDownButton(
+                      theme: theme_,
+                      value: array.value,
+                      items: items,
+                      onChanged: (value) {
+                        if (value is String) {
+                          context.read<ObjectDetailsCubit>().changeArray(
+                              form: form,
+                              prop: prop,
+                              value: value,
+                              array: array);
+                        }
+                      },
+                      width: 200,
                     );
                   } else {
                     widgetWrite = const SizedBox();

@@ -22,6 +22,11 @@ class AtomicObjectModel {
         referenceLinkId = '',
         referenceObjectId = '';
 
+  AtomicObjectModel.idInit(this.id)
+      : values = {},
+        referenceLinkId = '',
+        referenceObjectId = '';
+
   /// get 'prop_value'
   static String get tValue => 'value';
 

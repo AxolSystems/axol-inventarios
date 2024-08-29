@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../array/model/array_model.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/atomic_object_model.dart';
 import '../../../object/model/object_model.dart';
@@ -59,6 +60,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         final DateTime cellTime;
         final ReferenceObjectModel cellRefObj;
         final AtomicObjectModel cellAtmObj;
+        final ArrayModel cellArray;
         if ((form.object.map[prop.key] is String ||
                 form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.text) {
@@ -94,9 +96,12 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           form.controllers[prop.key] = RDReferenceObject(
               refObject: cellRefObj,
               oldIdRefObject: cellRefObj.referenceObject.id);
-        } else if (prop.propertyType == Prop.referenceObject) {
-          cellAtmObj = form.object.map[prop.key] ?? AtomicObjectModel.empty();
+        } else if (prop.propertyType == Prop.atomicObject) {
+          cellAtmObj = form.object.map[prop.key] ?? AtomicObjectModel.idInit(prop.key);
           form.controllers[prop.key] = RDAtomicObject(atmObject: cellAtmObj);
+        } else if (prop.propertyType == Prop.array) {
+          cellArray = form.object.map[prop.key] ?? ArrayModel.empty();
+          form.controllers[prop.key] == RDArray(array: cellArray);
         }
       }
 
@@ -138,6 +143,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         final RDDateController dateController;
         final RDReferenceObject refObjController;
         final RDAtomicObject atmObjController;
+        final RDArray arrayController;
 
         if (form.controllers[key] is RDTextEditingController) {
           textController = form.controllers[key] as RDTextEditingController;
@@ -166,7 +172,13 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         if (form.controllers[key] is RDAtomicObject) {
           atmObjController = form.controllers[key] as RDAtomicObject;
         } else {
-          atmObjController = RDAtomicObject.empty();
+          atmObjController = RDAtomicObject.empty(key);
+        }
+
+        if (form.controllers[key] is RDArray) {
+          arrayController = form.controllers[key] as RDArray;
+        } else {
+          arrayController = RDArray.empty();
         }
 
         property = link.entity.propertyList.firstWhere((x) => x.key == key);
@@ -201,6 +213,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
             AtomicObjectModel.tObject: atmObjController.atmObject.values,
           };
           form.object.map[key] = atmObjController.atmObject;
+        } else if (form.controllers[key] is RDArray &&
+            property.propertyType == Prop.array) {
+          map[key] = arrayController.array.value;
         }
       }
 
@@ -261,7 +276,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         if (form.controllers[prop.key] is RDAtomicObject) {
           atmObjController = form.controllers[prop.key] as RDAtomicObject;
         } else {
-          atmObjController = RDAtomicObject.empty();
+          atmObjController = RDAtomicObject.empty(prop.key);
         }
 
         if (form.controllers[prop.key] is RDTextEditingController &&
@@ -359,6 +374,30 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           time.minute,
         ));
       }
+      emit(LoadedObjectDetailsState());
+    } catch (e) {
+      emit(InitialObjectDetailsState());
+      emit(ErrorRowDetailsState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeArray({
+    required ObjectDetailsFormModel form,
+    required PropertyModel prop,
+    required String value,
+    required ArrayModel array
+  }) async {
+    try {
+      emit(InitialObjectDetailsState());
+      emit(DeletingObjectDetailsState());
+      form.controllers[prop.key] = RDArray(
+          array: ArrayModel(id: array.id, list: array.list, value: value));
+      form.object.map[prop.key] =
+          ArrayModel(id: array.id, list: array.list, value: value);
+
+      form.isEdited = true;
+
+      emit(DeletedObjectDetailsState());
       emit(LoadedObjectDetailsState());
     } catch (e) {
       emit(InitialObjectDetailsState());

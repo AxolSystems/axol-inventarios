@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/object/model/atomic_object_model.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../../array/model/array_model.dart';
 import '../../../object/model/reference_object_model.dart';
 
 /// Modelo de datos con propiedades mutables a traves
@@ -59,5 +60,11 @@ class RDReferenceObject extends RowDetailsController {
 class RDAtomicObject extends RowDetailsController {
   AtomicObjectModel atmObject;
   RDAtomicObject({required this.atmObject});
-  RDAtomicObject.empty() : atmObject = AtomicObjectModel.empty();
+  RDAtomicObject.empty(String id) : atmObject = AtomicObjectModel.idInit(id);
+}
+
+class RDArray extends RowDetailsController {
+  ArrayModel array;
+  RDArray({required this.array});
+  RDArray.empty() : array = ArrayModel.empty();
 }
