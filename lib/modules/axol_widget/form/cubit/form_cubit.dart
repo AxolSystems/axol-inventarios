@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../array/model/array_model.dart';
+import '../../../array/repository/array_repo.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/object_model.dart';
 import '../../../object/repository/object_repo.dart';
@@ -81,6 +83,20 @@ class FormCubit extends Cubit<FormDrawerState> {
             atomicObject: AtomicObjectModel.empty(),
             property: prop,
           ));
+        } else if (prop.propertyType == Prop.array) {
+          final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
+          final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+          if (list.isEmpty) {
+            list.add('');
+          }
+          form.fields.add(ArrayFieldModel(
+            array: ArrayModel(
+              id: idArray,
+              list: list,
+              value: list.first,
+            ),
+            property: prop,
+          ));
         }
       }
 
@@ -135,6 +151,9 @@ class FormCubit extends Cubit<FormDrawerState> {
               AtomicObjectModel.tId: atmObjField.atomicObject.id,
               AtomicObjectModel.tObject: atmObjField.atomicObject.values,
             };
+          } else if (form.fields[i] is ArrayFieldModel) {
+            final ArrayFieldModel arrayField = form.fields[i] as ArrayFieldModel;
+            map[prop.key] = arrayField.array.value;
           } else {
             map[prop.key] = null;
           }

@@ -6,7 +6,7 @@ import '../../theme/theme.dart';
 class PrimaryDropDownButton extends AxolWidget {
   final dynamic value;
   final List<DropdownMenuItem> items;
-  final Function(dynamic) onChanged;
+  final Function(dynamic value) onChanged;
   final double width;
   final EdgeInsetsGeometry? margin;
   const PrimaryDropDownButton({

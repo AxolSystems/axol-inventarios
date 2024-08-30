@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../array/model/array_model.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../object/model/atomic_object_model.dart';
 import '../../../object/model/reference_object_model.dart';
@@ -45,4 +46,9 @@ class ReferenceObjectFieldModel extends FormFieldModel {
 class AtmObjFieldModel extends FormFieldModel {
   AtomicObjectModel atomicObject;
   AtmObjFieldModel({required this.atomicObject, required super.property});
+}
+
+class ArrayFieldModel extends FormFieldModel {
+  ArrayModel array;
+  ArrayFieldModel({required this.array, required super.property});
 }

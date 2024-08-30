@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
+import 'package:axol_inventarios/utilities/widgets/buttons/dropdown_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -206,6 +207,15 @@ class FormDrawerBuild extends AxolWidget {
                     );
                   },
                 ),
+              ),
+            );
+          } else if (field is ArrayFieldModel) {
+            widgetList.add(
+              PrimaryDropDownButton(
+                value: field.array.value,
+                items: field.array.getItems(theme_),
+                onChanged: (value) {},
+                width: width,
               ),
             );
           }
