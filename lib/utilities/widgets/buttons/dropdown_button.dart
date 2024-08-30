@@ -9,6 +9,7 @@ class PrimaryDropDownButton extends AxolWidget {
   final Function(dynamic value) onChanged;
   final double width;
   final EdgeInsetsGeometry? margin;
+  final bool? isDense;
   const PrimaryDropDownButton({
     super.key,
     super.theme,
@@ -17,6 +18,7 @@ class PrimaryDropDownButton extends AxolWidget {
     required this.onChanged,
     required this.width,
     this.margin,
+    this.isDense,
   });
 
   @override
@@ -28,7 +30,7 @@ class PrimaryDropDownButton extends AxolWidget {
         child: DropdownButtonFormField(
           isExpanded: true,
           decoration: InputDecoration(
-            isDense: true,
+            isDense: isDense ?? true,
             filled: true,
             fillColor: ColorTheme.fill(theme ?? 0),
             contentPadding: const EdgeInsets.all(12),

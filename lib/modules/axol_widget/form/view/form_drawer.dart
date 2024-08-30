@@ -212,10 +212,13 @@ class FormDrawerBuild extends AxolWidget {
           } else if (field is ArrayFieldModel) {
             widgetList.add(
               PrimaryDropDownButton(
+                theme: theme_,
                 value: field.array.value,
                 items: field.array.getItems(theme_),
                 onChanged: (value) {},
-                width: width,
+                width: 100,
+                margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+                isDense: false,
               ),
             );
           }
