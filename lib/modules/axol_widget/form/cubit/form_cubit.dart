@@ -152,7 +152,8 @@ class FormCubit extends Cubit<FormDrawerState> {
               AtomicObjectModel.tObject: atmObjField.atomicObject.values,
             };
           } else if (form.fields[i] is ArrayFieldModel) {
-            final ArrayFieldModel arrayField = form.fields[i] as ArrayFieldModel;
+            final ArrayFieldModel arrayField =
+                form.fields[i] as ArrayFieldModel;
             map[prop.key] = arrayField.array.value;
           } else {
             map[prop.key] = null;
@@ -189,6 +190,28 @@ class FormCubit extends Cubit<FormDrawerState> {
             value: value, property: form.fields[index].property);
         form.fields[index] = booleanField;
       }
+      emit(LoadedFormState());
+    } catch (e) {
+      emit(InitialFormState());
+      emit(ErrorFormState(error: e.toString()));
+    }
+  }
+
+  Future<void> changeArray(
+      {required FormFormModel form,
+      required String value,
+      required int index}) async {
+    try {
+      emit(InitialFormState());
+      emit(LoadingFormState());
+      final ArrayFieldModel field = form.fields[index] as ArrayFieldModel;
+      form.fields[index] = ArrayFieldModel(
+          array: ArrayModel(
+            id: field.array.id,
+            list: field.array.list,
+            value: value,
+          ),
+          property: field.property);
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());

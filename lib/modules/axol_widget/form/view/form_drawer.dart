@@ -215,7 +215,13 @@ class FormDrawerBuild extends AxolWidget {
                 theme: theme_,
                 value: field.array.value,
                 items: field.array.getItems(theme_),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  if (value is String) {
+                    context
+                        .read<FormCubit>()
+                        .changeArray(form: form, value: value, index: i);
+                  }
+                },
                 width: 100,
                 margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
                 isDense: false,
