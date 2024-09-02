@@ -71,6 +71,7 @@ class TableViewBuild extends AxolWidget {
   /// Escucha si hay un cambio en [MainViewCubit] para el cambio de tema.
   @override
   Widget build(BuildContext context) {
+    ScrollController scrollCtrlHorizontal = ScrollController();
     TableFormModel form = context.read<TableForm>().state;
     return BlocListener<MainViewCubit, MainViewState>(
       listener: (context, state) {
@@ -241,55 +242,67 @@ class TableViewBuild extends AxolWidget {
                     ),
                   ),
                   Expanded(
-                    child: ScrollViewAxol(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: headerWidget(
-                                context, form.table.header, form, state),
-                          ),
-                          SizedBox(
-                            height: (form.table.rowList.length * 30) + 30,
-                            width: form.sum(),
-                            child: ListView.builder(
-                              itemCount: form.table.rowList.length,
-                              itemBuilder: (context, index) {
-                                final row = form.table.rowList[index];
-                                return OutlinedButton(
-                                    style: ButtonStyle(
-                                      side: WidgetStateProperty.all(
-                                          BorderSide.none),
-                                      padding: const WidgetStatePropertyAll(
-                                          EdgeInsets.zero),
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (context) =>
-                                            ObjectDetailsDrawer(
-                                          theme: form.theme,
-                                          link: link,
-                                          object: form.table.objects[index],
-                                        ),
-                                      ).then(
-                                        (value) {
-                                          if (value == true) {
-                                            context
-                                                .read<TableCubit>()
-                                                .initLoad(form, link, viewId);
-                                          }
-                                        },
-                                      );
-                                    },
-                                    child: Row(
-                                      children: rowWidget(context, form, row,
-                                          form.table.header),
-                                    ));
-                              },
+                    child: RawScrollbar(
+                      controller: scrollCtrlHorizontal,
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      interactive: true,
+                      radius: const Radius.circular(8),
+                      thickness: 12,
+                      scrollbarOrientation: ScrollbarOrientation.bottom,
+                      child: SingleChildScrollView(
+                        primary: false,
+                        controller: scrollCtrlHorizontal,
+                        scrollDirection: Axis.horizontal,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: headerWidget(
+                                  context, form.table.header, form, state),
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              height: (form.table.rowList.length * 30) + 30,
+                              width: form.sum(),
+                              child: ListView.builder(
+                                itemCount: form.table.rowList.length,
+                                itemBuilder: (context, index) {
+                                  final row = form.table.rowList[index];
+                                  return OutlinedButton(
+                                      style: ButtonStyle(
+                                        side: WidgetStateProperty.all(
+                                            BorderSide.none),
+                                        padding: const WidgetStatePropertyAll(
+                                            EdgeInsets.zero),
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) =>
+                                              ObjectDetailsDrawer(
+                                            theme: form.theme,
+                                            link: link,
+                                            object: form.table.objects[index],
+                                          ),
+                                        ).then(
+                                          (value) {
+                                            if (value == true) {
+                                              context
+                                                  .read<TableCubit>()
+                                                  .initLoad(form, link, viewId);
+                                            }
+                                          },
+                                        );
+                                      },
+                                      child: Row(
+                                        children: rowWidget(context, form, row,
+                                            form.table.header),
+                                      ));
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

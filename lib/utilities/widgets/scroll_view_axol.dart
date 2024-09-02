@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 
-/// Widget contenedor con scroll vertical y horizontal. 
+/// Widget contenedor con scroll vertical y horizontal.
 /// El hijo debe tener medidas definidas para no causar conflicto.
 class ScrollViewAxol extends StatelessWidget {
   final Widget? child;
-  const ScrollViewAxol({super.key, this.child});
+  final ScrollController? scrollCtrlVertical;
+  final ScrollController? scrollCtrlHorizontal;
+  const ScrollViewAxol(
+      {super.key,
+      this.child,
+      this.scrollCtrlHorizontal,
+      this.scrollCtrlVertical});
 
   /// Crea el widget de vista scrolls.
   @override
   Widget build(BuildContext context) {
-    ScrollController scrollCtrlVertical = ScrollController();
-    ScrollController scrollCtrlHorizontal = ScrollController();
+    ScrollController scrollCtrlVertical_ =
+        scrollCtrlVertical ?? ScrollController();
+    ScrollController scrollCtrlHorizontal_ =
+        scrollCtrlHorizontal ?? ScrollController();
     return RawScrollbar(
-      controller: scrollCtrlVertical,
+      controller: scrollCtrlVertical_,
       thumbVisibility: true,
       trackVisibility: true,
       interactive: true,
@@ -21,7 +29,7 @@ class ScrollViewAxol extends StatelessWidget {
       scrollbarOrientation: ScrollbarOrientation.right,
       child: RawScrollbar(
         padding: const EdgeInsets.only(right: 12),
-        controller: scrollCtrlHorizontal,
+        controller: scrollCtrlHorizontal_,
         thumbVisibility: true,
         trackVisibility: true,
         interactive: true,
@@ -30,11 +38,11 @@ class ScrollViewAxol extends StatelessWidget {
         notificationPredicate: (ScrollNotification notify) => notify.depth == 1,
         thickness: 12,
         child: SingleChildScrollView(
-          controller: scrollCtrlVertical,
+          controller: scrollCtrlVertical_,
           scrollDirection: Axis.vertical,
           child: SingleChildScrollView(
             primary: false,
-            controller: scrollCtrlHorizontal,
+            controller: scrollCtrlHorizontal_,
             scrollDirection: Axis.horizontal,
             child: child,
           ),

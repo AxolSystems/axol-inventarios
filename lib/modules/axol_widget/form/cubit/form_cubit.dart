@@ -132,7 +132,7 @@ class FormCubit extends Cubit<FormDrawerState> {
           } else if (form.fields[i] is NumberFieldModel) {
             final NumberFieldModel numberField =
                 form.fields[i] as NumberFieldModel;
-            map[prop.key] = double.parse(numberField.ctrlNum.text);
+            map[prop.key] = double.tryParse(numberField.ctrlNum.text) ?? 0;
           } else if (form.fields[i] is BooleanFieldModel) {
             final BooleanFieldModel booleanField =
                 form.fields[i] as BooleanFieldModel;
