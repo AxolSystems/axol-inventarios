@@ -6,7 +6,8 @@ import '../../../utilities/theme/theme.dart';
 import '../../../utilities/widgets/dialog.dart';
 import '../../../utilities/widgets/buttons/button.dart';
 import '../../../utilities/widgets/popup_menu_btn_axol.dart';
-import '../../axol_widget/test/view/resizable_box.dart';
+import '../../user/repository/user_repo.dart';
+import '../../user/view/views/login_view.dart';
 import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../cubit/main_view/mainview_cubit.dart';
@@ -288,11 +289,39 @@ class MainViewBuild extends StatelessWidget {
                       value: 3,
                       child: Text("Cerrar sesión",
                           style: Typo.system(form.user.theme)),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialogAxol(
+                                  theme: form.user.theme,
+                                  text: '¿Desea cerrar sesión?',
+                                  actions: [
+                                    PrimaryButtonDialog(
+                                      text: 'Aceptar',
+                                      onPressed: () {
+                                        LocalUser()
+                                            .setLocalUser('', '', -1, 0, []);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LoginView()));
+                                      },
+                                    ),
+                                    SecondaryButtonDialog(
+                                      text: 'Cancelar',
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                ));
+                      },
                     ),
                   ],
                 ),
               ),
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                 child: MainNavButton(
                   icon: Icons.settings,
@@ -317,7 +346,7 @@ class MainViewBuild extends StatelessWidget {
                   isModule: false,
                   theme: form.user.theme,
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

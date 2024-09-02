@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/main_/view/main_view.dart';
 import 'package:axol_inventarios/modules/user/model/user_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +22,13 @@ class LoginController extends StatelessWidget {
           final rol = state.user.rol;
           if (rol == UserModel.rolAdmin) {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeView()));
+                MaterialPageRoute(builder: (context) => const MainView()));
           } else if (rol == UserModel.rolVendor) {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeView()));
+                MaterialPageRoute(builder: (context) => const MainView()));
           } else if (rol == UserModel.rolSup) {
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeView()));
+                MaterialPageRoute(builder: (context) => const MainView()));
           }
         } else if (state is LoginErrorState) {
           if (kDebugMode) {

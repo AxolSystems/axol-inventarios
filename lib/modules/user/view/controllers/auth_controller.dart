@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../main_/view/main_view.dart';
 import '../../model/user_model.dart';
 import '../views/home_view.dart';
 import '../views/login_view.dart';
@@ -21,11 +22,14 @@ class AuthController extends StatelessWidget {
         } else if (state is AuthAuthenticatedState) {
           final rol = state.user.rol;
           if (rol == UserModel.rolVendor) {
-            return const HomeView();
+            //return const HomeView();
+            return const MainView();
           } else if (rol == UserModel.rolAdmin) {
-            return const HomeView();
+            //return const HomeView();
+            return const MainView();
           } else if (rol == UserModel.rolSup) {
-            return const HomeView();
+            //return const HomeView();
+            return const MainView();
           } else {
             return const Text('Error: no entró a página.');
           }
