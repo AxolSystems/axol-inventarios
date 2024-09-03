@@ -18,9 +18,9 @@ class AuthAuthenticatedState extends AuthState {
   List<Object?> get props => [user];
 }
 
-class AuthUnuauthenticatedState extends AuthState {
+class AuthUnauthenticatedState extends AuthState {
   @override
-  String toString() => 'AuthUnuauthenticated';
+  String toString() => 'AuthUnauthenticated';
 
   @override
   List<Object?> get props => [];

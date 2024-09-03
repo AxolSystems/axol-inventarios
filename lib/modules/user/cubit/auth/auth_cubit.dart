@@ -21,7 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (authDatabaseUser != null) {
         emit(AuthAuthenticatedState(user: authDatabaseUser));
       } else {
-        emit(AuthUnuauthenticatedState());
+        emit(AuthUnauthenticatedState());
       }
     } catch (e) {
       emit(AuthErrorState(error: e.toString()));

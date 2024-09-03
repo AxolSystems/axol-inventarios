@@ -321,32 +321,7 @@ class MainViewBuild extends StatelessWidget {
                   ],
                 ),
               ),
-              /*Padding(
-                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                child: MainNavButton(
-                  icon: Icons.settings,
-                  isHover: select == -2,
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => const AlertDialog(
-                              content: ResizableBox(),
-                            ));
-                    /*if (form.moduleSelect == -2) {
-                      //form.menuVisible = !form.menuVisible;
-                      context.read<MainViewCubit>().load();
-                    } else {
-                      form.moduleSelect = -2;
-                      //context.read<MainViewCubit>().setSetting(form, 0);
-                      form.title = 'Test';
-                    }*/
-                  },
-                  text: 'Test',
-                  menuVisible: menuVisible,
-                  isModule: false,
-                  theme: form.user.theme,
-                ),
-              ),*/
+              Text('V1.1.0.6', style: Typo.label(form.user.theme))
             ],
           ),
         ),

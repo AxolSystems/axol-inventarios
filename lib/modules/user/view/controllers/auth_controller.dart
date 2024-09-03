@@ -33,7 +33,7 @@ class AuthController extends StatelessWidget {
           } else {
             return const Text('Error: no entró a página.');
           }
-        } else if (state is AuthUnuauthenticatedState) {
+        } else if (state is AuthUnauthenticatedState) {
           return const Center(child: LoginView());
         } else if (state is AuthErrorState) {
           return Center(
