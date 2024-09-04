@@ -58,8 +58,10 @@ class TableModel extends DataObject {
           row[key] = CellCheck(value: obj.map[key] ?? false);
         } else if (prop == Prop.time) {
           row[key] = CellText(
-              text: FormatDate.dmyHm(
-                  DateTime.fromMillisecondsSinceEpoch(obj.map[key] ?? 0)));
+              text: obj.map[key] == null
+                  ? ''
+                  : FormatDate.dmyHm(
+                      DateTime.fromMillisecondsSinceEpoch(obj.map[key])));
         } else if (prop == Prop.referenceObject) {
           final ReferenceObjectModel refObj = obj.map[key];
           final PropertyModel propRef = refObj.getPropView();
@@ -77,8 +79,10 @@ class TableModel extends DataObject {
                 valueBool: refObj.referenceObject.map[propRef.key] ?? false);
           } else if (propRef.propertyType == Prop.time) {
             row[key] = CellReference(
-                text: FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
-                    refObj.referenceObject.map[propRef.key] ?? 0)));
+                text: refObj.referenceObject.map[propRef.key] == null
+                    ? ''
+                    : FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
+                        refObj.referenceObject.map[propRef.key])));
           }
         } else if (prop == Prop.atomicObjList) {
           row[key] = CellAtomicObjList(atomicObjectList: obj.map[key] ?? []);

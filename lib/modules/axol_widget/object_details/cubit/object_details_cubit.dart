@@ -58,7 +58,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       for (PropertyModel prop in propList) {
         final String cellText;
         final bool cellBool;
-        final DateTime cellTime;
+        final DateTime? cellTime;
         final ReferenceObjectModel cellRefObj;
         final AtomicObjectModel cellAtmObj;
         final ArrayModel cellArray;
@@ -84,8 +84,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if ((form.object.map[prop.key] is int ||
                 form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.time) {
-          cellTime = DateTime.fromMillisecondsSinceEpoch(
-              form.object.map[prop.key] ?? 0);
+          cellTime = form.object.map[prop.key] == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(form.object.map[prop.key]);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         } else if (prop.propertyType == Prop.referenceObject) {
           cellRefObj = form.object.map[prop.key] ??
@@ -206,9 +207,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           form.object.map[key] = double.parse(textController.controller.text);
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
-          map[key] = dateController.controller.millisecondsSinceEpoch;
+          map[key] = dateController.controller?.millisecondsSinceEpoch;
           form.object.map[key] =
-              dateController.controller.millisecondsSinceEpoch;
+              dateController.controller?.millisecondsSinceEpoch;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
@@ -227,14 +228,13 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           form.object.map[key] = atmObjController.atmObject;
         } else if (form.controllers[key] is RDArray &&
             property.propertyType == Prop.array) {
-              if (arrayController.array.value == '') {
-                final ArrayModel array = form.object.map[property.key];
-                map[key] = array.list.first;
-                form.object.map[property.key] = array.setValue(map[key]);
-              } else {
-                map[key] = arrayController.array.value;
-              }
-          
+          if (arrayController.array.value == '') {
+            final ArrayModel array = form.object.map[property.key];
+            map[key] = array.list.first;
+            form.object.map[property.key] = array.setValue(map[key]);
+          } else {
+            map[key] = arrayController.array.value;
+          }
         }
       }
 
@@ -310,9 +310,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               double.parse(textController.controller.text);
         } else if (form.controllers[prop.key] is RDDateController &&
             prop.propertyType == Prop.time) {
-          map[prop.key] = dateController.controller.millisecondsSinceEpoch;
+          map[prop.key] = dateController.controller?.millisecondsSinceEpoch;
           form.object.map[prop.key] =
-              dateController.controller.millisecondsSinceEpoch;
+              dateController.controller?.millisecondsSinceEpoch;
         } else if (form.controllers[prop.key] is RDBoolController &&
             prop.propertyType == Prop.bool) {
           map[prop.key] = boolController.controller;
@@ -373,7 +373,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       emit(LoadingObjectDetailsState());
       final RDDateController dateController =
           form.controllers[prop.key] as RDDateController;
-      final DateTime dateTime = dateController.controller;
+      final DateTime dateTime = dateController.controller == null
+          ? DateTime.now()
+          : dateController.controller!;
       if (date != null) {
         form.controllers[prop.key] = RDDateController(
             controller: DateTime(

@@ -237,8 +237,11 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           form.object.map[prop.key] == null) &&
                       prop.propertyType == Prop.time) {
                     widgetRead = Text(
-                      FormatDate.dmyHm(DateTime.fromMillisecondsSinceEpoch(
-                          form.object.map[prop.key] ?? 0)),
+                      form.object.map[prop.key] == null
+                          ? ''
+                          : FormatDate.dmyHm(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  form.object.map[prop.key])),
                       style: Typo.body(theme_),
                     );
                   } else if (prop.propertyType == Prop.referenceObject) {
@@ -429,9 +432,9 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8),
-                                      child: Text(
+                                      child: Text(dateController.controller == null ? '' :
                                         FormatDate.dmy(
-                                            dateController.controller),
+                                            dateController.controller!),
                                         style: Typo.body(theme_),
                                       ),
                                     ),
@@ -476,9 +479,9 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                                       const EdgeInsets.symmetric(vertical: 8),
                                   child: Row(
                                     children: [
-                                      Text(
+                                      Text(dateController.controller == null ? '' :
                                         FormatDate.hm(TimeOfDay.fromDateTime(
-                                            dateController.controller)),
+                                            dateController.controller!)),
                                         style: Typo.body(theme_),
                                       ),
                                       const SizedBox(width: 12),
@@ -572,7 +575,9 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final ArrayModel array = form.object.map[prop.key];
                     widgetWrite = PrimaryDropDownButton(
                       theme: theme_,
-                      value: array.list.contains(array.value) ? array.value : array.list.first,
+                      value: array.list.contains(array.value)
+                          ? array.value
+                          : array.list.first,
                       items: array.getItems(theme_),
                       onChanged: (value) {
                         if (value is String) {

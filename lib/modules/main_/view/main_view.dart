@@ -321,7 +321,7 @@ class MainViewBuild extends StatelessWidget {
                   ],
                 ),
               ),
-              Text('V1.1.0.6', style: Typo.label(form.user.theme))
+              Text('V1.1.0.7', style: Typo.label(form.user.theme))
             ],
           ),
         ),

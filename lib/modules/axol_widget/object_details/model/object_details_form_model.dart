@@ -43,7 +43,7 @@ class RDBoolController extends RowDetailsController {
 }
 
 class RDDateController extends RowDetailsController {
-  DateTime controller;
+  DateTime? controller;
   RDDateController({required this.controller});
   RDDateController.empty() : controller = DateTime(0);
 }
