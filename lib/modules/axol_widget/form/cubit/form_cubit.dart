@@ -139,7 +139,7 @@ class FormCubit extends Cubit<FormDrawerState> {
             map[prop.key] = booleanField.value;
           } else if (form.fields[i] is DateFieldModel) {
             final DateFieldModel dateField = form.fields[i] as DateFieldModel;
-            map[prop.key] = dateField.dateTime.millisecondsSinceEpoch;
+            map[prop.key] = dateField.dateTime?.millisecondsSinceEpoch;
           } else if (form.fields[i] is ReferenceObjectFieldModel) {
             final ReferenceObjectFieldModel refObjField =
                 form.fields[i] as ReferenceObjectFieldModel;
@@ -220,7 +220,7 @@ class FormCubit extends Cubit<FormDrawerState> {
   }
 
   Future<void> thenDateTimePick(
-      FormFormModel form, int index, DateTime dateTime) async {
+      FormFormModel form, int index, DateTime? dateTime) async {
     try {
       emit(InitialFormState());
       emit(LoadingFormState());

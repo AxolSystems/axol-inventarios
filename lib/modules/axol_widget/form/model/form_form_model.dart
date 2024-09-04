@@ -34,7 +34,7 @@ class BooleanFieldModel extends FormFieldModel {
 }
 
 class DateFieldModel extends FormFieldModel {
-  DateTime dateTime;
+  DateTime? dateTime;
   DateFieldModel({required this.dateTime, required super.property});
 }
 

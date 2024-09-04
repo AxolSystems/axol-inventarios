@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../utilities/widgets/buttons/date_time_button.dart';
 import '../../../array/model/array_model.dart';
 import '../../../array/repository/array_repo.dart';
 import '../../../entity/model/property_model.dart';
@@ -364,37 +365,13 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
   }
 
   Future<void> thenDateTimePick(
-      {DateTime? date,
-      TimeOfDay? time,
+      {required DateTime? dateTime,
       required ObjectDetailsFormModel form,
       required PropertyModel prop}) async {
     try {
       emit(InitialObjectDetailsState());
       emit(LoadingObjectDetailsState());
-      final RDDateController dateController =
-          form.controllers[prop.key] as RDDateController;
-      final DateTime dateTime = dateController.controller == null
-          ? DateTime.now()
-          : dateController.controller!;
-      if (date != null) {
-        form.controllers[prop.key] = RDDateController(
-            controller: DateTime(
-          date.year,
-          date.month,
-          date.day,
-          dateTime.hour,
-          dateTime.minute,
-        ));
-      } else if (time != null) {
-        form.controllers[prop.key] = RDDateController(
-            controller: DateTime(
-          dateTime.year,
-          dateTime.month,
-          dateTime.day,
-          time.hour,
-          time.minute,
-        ));
-      }
+      form.controllers[prop.key] = RDDateController(controller: dateTime);
       emit(LoadedObjectDetailsState());
     } catch (e) {
       emit(InitialObjectDetailsState());

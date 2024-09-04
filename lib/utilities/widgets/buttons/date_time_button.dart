@@ -7,7 +7,7 @@ import '../../format.dart';
 import '../../theme/theme.dart';
 
 class DateTimeButton extends AxolWidget {
-  final DateTime dateTime;
+  final DateTime? dateTime;
   final Function()? onPressed;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
@@ -45,7 +45,9 @@ class DateTimeButton extends AxolWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  FormatDate.dmyHm(dateTime),
+                  dateTime == null
+                      ? ''
+                      : FormatDate.dmyHm(dateTime ?? DateTime.now()),
                   style: Typo.body(theme_),
                 ),
                 const SizedBox(width: 4),
@@ -64,10 +66,12 @@ class DateTimeButton extends AxolWidget {
 
 class DateTimeDialog extends AxolWidget {
   final DateTime dateTime;
+  final bool? isBlank;
   const DateTimeDialog({
     super.key,
     super.theme,
     required this.dateTime,
+    this.isBlank,
   });
 
   @override
@@ -75,11 +79,13 @@ class DateTimeDialog extends AxolWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => DateTimeDialogCubit()),
-        BlocProvider(create: (_) => DateTimeDialogForm(dateTime)),
+        BlocProvider(
+            create: (_) => DateTimeDialogForm(dateTime, isBlank ?? false)),
       ],
       child: DateTimeDialogBuild(
         dateTime: dateTime,
         theme: theme,
+        isBlank: isBlank,
       ),
     );
   }
@@ -87,18 +93,21 @@ class DateTimeDialog extends AxolWidget {
 
 class DateTimeDialogBuild extends AxolWidget {
   final DateTime dateTime;
+  final bool? isBlank;
   const DateTimeDialogBuild({
     super.key,
     super.theme,
     required this.dateTime,
+    required this.isBlank,
   });
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
-    DateTime form = context.read<DateTimeDialogForm>().state;
+    DateTimeDialogFormModel form = context.read<DateTimeDialogForm>().state;
     return BlocBuilder(
-        bloc: context.read<DateTimeDialogCubit>()..initLoad(form, dateTime),
+        bloc: context.read<DateTimeDialogCubit>()
+          ..initLoad(form, dateTime, isBlank ?? false),
         builder: (context, state) {
           return AlertDialog(
             backgroundColor: ColorTheme.background(theme_),
@@ -127,103 +136,178 @@ class DateTimeDialogBuild extends AxolWidget {
                 ],
               )
             ],
-            content: Row(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                OutlinedButton(
-                  style: ButtonStyle(
-                    alignment: Alignment.centerLeft,
-                    side: WidgetStatePropertyAll(
-                        BorderSide(color: ColorTheme.item20(theme_))),
-                    shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(6)))),
-                    backgroundColor:
-                        WidgetStatePropertyAll(ColorTheme.fill(theme_)),
-                  ),
-                  onPressed: () {
-                    showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1970),
-                      lastDate: DateTime.now(),
-                      initialDate: form,
-                    ).then(
-                      (value) {
-                        if (value != null) {
-                          form = DateTime(
-                            value.year,
-                            value.month,
-                            value.day,
-                            form.hour,
-                            form.minute,
-                          );
-                          context.read<DateTimeDialogCubit>().load();
-                        }
-                      },
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Row(
+                Row(
+                  children: [
+                    Stack(
                       children: [
-                        Text(
-                          FormatDate.dmy(form),
-                          style: Typo.body(theme_),
+                        OutlinedButton(
+                          style: ButtonStyle(
+                            alignment: Alignment.centerLeft,
+                            side: WidgetStatePropertyAll(
+                                BorderSide(color: ColorTheme.item20(theme_))),
+                            shape: const WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(6)))),
+                            backgroundColor:
+                                WidgetStatePropertyAll(ColorTheme.fill(theme_)),
+                          ),
+                          onPressed: form.isBlank == true
+                              ? null
+                              : () {
+                                  showDatePicker(
+                                    context: context,
+                                    firstDate: DateTime(1970),
+                                    lastDate:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            DateTime.now()
+                                                    .millisecondsSinceEpoch +
+                                                315360000000),
+                                    initialDate: form.dateTime,
+                                  ).then(
+                                    (value) {
+                                      if (value != null) {
+                                        form.dateTime = DateTime(
+                                          value.year,
+                                          value.month,
+                                          value.day,
+                                          form.dateTime.hour,
+                                          form.dateTime.minute,
+                                        );
+                                        context
+                                            .read<DateTimeDialogCubit>()
+                                            .load();
+                                      }
+                                    },
+                                  );
+                                },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Row(
+                              children: [
+                                Text(
+                                  FormatDate.dmy(form.dateTime),
+                                  style: Typo.body(theme_),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: ColorTheme.item10(theme_),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.calendar_month,
-                          color: ColorTheme.item10(theme_),
-                        ),
+                        Visibility(
+                            visible: form.isBlank == true,
+                            replacement: const SizedBox(),
+                            child: Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: ColorTheme.enabledButton(theme_),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(6))),
+                              ),
+                            )),
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                OutlinedButton(
-                  style: ButtonStyle(
-                    alignment: Alignment.centerLeft,
-                    side: WidgetStatePropertyAll(
-                        BorderSide(color: ColorTheme.item20(theme_))),
-                    shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(6)))),
-                    backgroundColor:
-                        WidgetStatePropertyAll(ColorTheme.fill(theme_)),
-                  ),
-                  onPressed: () {
-                    showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(form),
-                    ).then(
-                      (value) {
-                        if (value != null) {
-                          form = DateTime(
-                            form.year,
-                            form.month,
-                            form.day,
-                            value.hour,
-                            value.minute,
-                          );
-                          context.read<DateTimeDialogCubit>().load();
-                        }
-                      },
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Row(
+                    const SizedBox(width: 16),
+                    Stack(
                       children: [
-                        Text(
-                          FormatDate.hm(TimeOfDay.fromDateTime(form)),
-                          style: Typo.body(theme_),
+                        OutlinedButton(
+                          style: ButtonStyle(
+                            alignment: Alignment.centerLeft,
+                            side: WidgetStatePropertyAll(
+                                BorderSide(color: ColorTheme.item20(theme_))),
+                            shape: const WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(6)))),
+                            backgroundColor:
+                                WidgetStatePropertyAll(ColorTheme.fill(theme_)),
+                          ),
+                          onPressed: form.isBlank == true
+                              ? null
+                              : () {
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime:
+                                        TimeOfDay.fromDateTime(form.dateTime),
+                                  ).then(
+                                    (value) {
+                                      if (value != null) {
+                                        form.dateTime = DateTime(
+                                          form.dateTime.year,
+                                          form.dateTime.month,
+                                          form.dateTime.day,
+                                          value.hour,
+                                          value.minute,
+                                        );
+                                        context
+                                            .read<DateTimeDialogCubit>()
+                                            .load();
+                                      }
+                                    },
+                                  );
+                                },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Row(
+                              children: [
+                                Text(
+                                  FormatDate.hm(
+                                      TimeOfDay.fromDateTime(form.dateTime)),
+                                  style: Typo.body(theme_),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.access_time,
+                                  color: ColorTheme.item10(theme_),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.access_time,
-                          color: ColorTheme.item10(theme_),
-                        ),
+                        Visibility(
+                            visible: form.isBlank == true,
+                            replacement: const SizedBox(),
+                            child: Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: ColorTheme.enabledButton(theme_),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(6))),
+                              ),
+                            )),
                       ],
                     ),
-                  ),
+                  ],
                 ),
+                Visibility(
+                    visible: isBlank != null,
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          activeColor: ColorTheme.item20(theme_),
+                          side: BorderSide(
+                              color: ColorTheme.item20(theme_), width: 2),
+                          value: form.isBlank,
+                          onChanged: (value) {
+                            if (value != null) {
+                              form.isBlank = value;
+                              context.read<DateTimeDialogCubit>().load();
+                            }
+                          },
+                        ),
+                        Text(
+                          'Marcar para vaciar campo.',
+                          style: Typo.body(theme_),
+                        )
+                      ],
+                    )),
               ],
             ),
           );
@@ -250,11 +334,12 @@ class DateTimeDialogCubit extends Cubit<DateTimeDialogState> {
     }
   }
 
-  Future<void> initLoad(DateTime form, DateTime dateTime) async {
+  Future<void> initLoad(
+      DateTimeDialogFormModel form, DateTime dateTime, bool isBlank) async {
     try {
       emit(DateTimeDialogState.init);
       emit(DateTimeDialogState.loading);
-      form = dateTime;
+      form = DateTimeDialogFormModel(dateTime: dateTime, isBlank: isBlank);
       emit(DateTimeDialogState.loaded);
     } catch (e) {
       emit(DateTimeDialogState.init);
@@ -265,6 +350,14 @@ class DateTimeDialogCubit extends Cubit<DateTimeDialogState> {
   }
 }
 
-class DateTimeDialogForm extends Cubit<DateTime> {
-  DateTimeDialogForm(DateTime dateTime) : super(dateTime);
+class DateTimeDialogForm extends Cubit<DateTimeDialogFormModel> {
+  DateTimeDialogForm(DateTime dateTime, bool isBlank)
+      : super(DateTimeDialogFormModel(dateTime: dateTime, isBlank: isBlank));
+}
+
+class DateTimeDialogFormModel {
+  DateTime dateTime;
+  bool isBlank;
+
+  DateTimeDialogFormModel({required this.dateTime, required this.isBlank});
 }

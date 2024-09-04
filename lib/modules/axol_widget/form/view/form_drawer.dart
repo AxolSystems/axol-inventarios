@@ -133,14 +133,21 @@ class FormDrawerBuild extends AxolWidget {
                 showDialog(
                     context: context,
                     builder: (context) => DateTimeDialog(
-                          dateTime: field.dateTime,
+                          dateTime: field.dateTime ?? DateTime.now(),
                           theme: theme_,
+                          isBlank: field.dateTime == null,
                         )).then(
                   (value) {
-                    if (value is DateTime) {
-                      context
-                          .read<FormCubit>()
-                          .thenDateTimePick(form, i, value);
+                    if (value is DateTimeDialogFormModel) {
+                      if (value.isBlank == true) {
+                        context
+                            .read<FormCubit>()
+                            .thenDateTimePick(form, i, null);
+                      } else {
+                        context
+                            .read<FormCubit>()
+                            .thenDateTimePick(form, i, value.dateTime);
+                      }
                     }
                   },
                 );

@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
+import '../../../../utilities/widgets/buttons/date_time_button.dart';
 import '../../../../utilities/widgets/object_card.dart';
 import '../../../array/model/array_model.dart';
 import '../../search_button/view/search_button.dart';
@@ -388,114 +389,41 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       prop.propertyType == Prop.time) {
                     final RDDateController dateController =
                         form.controllers[prop.key] as RDDateController;
-                    ScrollController scrollController = ScrollController();
-                    widgetWrite = RawScrollbar(
-                        controller: scrollController,
-                        scrollbarOrientation: ScrollbarOrientation.bottom,
-                        child: SizedBox(
-                          height: 40,
-                          child: ListView(
-                            controller: scrollController,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              OutlinedButton(
-                                style: ButtonStyle(
-                                  alignment: Alignment.centerLeft,
-                                  side: WidgetStatePropertyAll(BorderSide(
-                                      color: ColorTheme.item20(theme_))),
-                                  shape: const WidgetStatePropertyAll(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6)))),
-                                  backgroundColor: WidgetStatePropertyAll(
-                                      ColorTheme.fill(theme_)),
-                                ),
-                                onPressed: () {
-                                  showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime(2000),
-                                    lastDate: DateTime.now(),
-                                  ).then(
-                                    (value) {
-                                      context
-                                          .read<ObjectDetailsCubit>()
-                                          .thenDateTimePick(
-                                              form: form,
-                                              prop: prop,
-                                              date: value);
-                                    },
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8),
-                                      child: Text(dateController.controller == null ? '' :
-                                        FormatDate.dmy(
-                                            dateController.controller!),
-                                        style: Typo.body(theme_),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Icon(
-                                      Icons.calendar_month,
-                                      color: ColorTheme.item10(theme_),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              OutlinedButton(
-                                style: ButtonStyle(
-                                  alignment: Alignment.centerLeft,
-                                  side: WidgetStatePropertyAll(BorderSide(
-                                      color: ColorTheme.item20(theme_))),
-                                  shape: const WidgetStatePropertyAll(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6)))),
-                                  backgroundColor: WidgetStatePropertyAll(
-                                      ColorTheme.fill(theme_)),
-                                ),
-                                onPressed: () {
-                                  showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay.now(),
-                                  ).then(
-                                    (value) {
-                                      context
-                                          .read<ObjectDetailsCubit>()
-                                          .thenDateTimePick(
-                                              form: form,
-                                              prop: prop,
-                                              time: value);
-                                    },
-                                  );
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  child: Row(
-                                    children: [
-                                      Text(dateController.controller == null ? '' :
-                                        FormatDate.hm(TimeOfDay.fromDateTime(
-                                            dateController.controller!)),
-                                        style: Typo.body(theme_),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Icon(
-                                        Icons.watch_later_outlined,
-                                        color: ColorTheme.item10(theme_),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
+                    //ScrollController scrollController = ScrollController();
+                    widgetWrite = DateTimeButton(
+                      theme: theme_,
+                      dateTime: dateController.controller,
+                      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => DateTimeDialog(
+                                  dateTime: dateController.controller ??
+                                      DateTime.now(),
+                                  theme: theme_,
+                                  isBlank: dateController.controller == null,
+                                )).then(
+                          (value) {
+                            if (value is DateTimeDialogFormModel) {
+                              if (value.isBlank == true) {
+                                context
+                                    .read<ObjectDetailsCubit>()
+                                    .thenDateTimePick(
+                                        form: form, prop: prop, dateTime: null);
+                              } else {
+                                context
+                                    .read<ObjectDetailsCubit>()
+                                    .thenDateTimePick(
+                                        form: form,
+                                        prop: prop,
+                                        dateTime: value.dateTime);
+                              }
+                            }
+                          },
+                        );
+                      },
+                    );
                   } else if (prop.propertyType == Prop.referenceObject) {
                     final ReferenceObjectModel refObj =
                         form.object.map[prop.key];
