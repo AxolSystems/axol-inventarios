@@ -18,6 +18,7 @@ class PrimaryTextField extends StatelessWidget {
   final bool? isDense;
   final String? labelText;
   final TextStyle? labelStyle;
+  final bool? isFocus;
   const PrimaryTextField({
     super.key,
     this.controller,
@@ -34,16 +35,22 @@ class PrimaryTextField extends StatelessWidget {
     this.isDense,
     this.labelText,
     this.labelStyle,
+    this.isFocus,
   });
 
   /// Devuelve widget general del campo de texto.
   @override
   Widget build(BuildContext context) {
+    final FocusNode focusNode = FocusNode();
+    if (isFocus == true) {
+      focusNode.requestFocus();
+    }
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: TextField(
         controller: controller,
         enabled: enabled,
+        focusNode: focusNode,
         style: Typo.body(theme ?? 0),
         cursorColor: ColorTheme.text(theme ?? 0),
         decoration: InputDecoration(

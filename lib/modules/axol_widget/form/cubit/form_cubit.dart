@@ -227,6 +227,7 @@ class FormCubit extends Cubit<FormDrawerState> {
       final DateFieldModel dateField = form.fields[index] as DateFieldModel;
       form.fields[index] =
           DateFieldModel(dateTime: dateTime, property: dateField.property);
+      form.focusIndex = index + 1;
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());

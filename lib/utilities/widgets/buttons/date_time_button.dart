@@ -12,6 +12,7 @@ class DateTimeButton extends AxolWidget {
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
   final double? width;
+  final bool? isFocus;
   const DateTimeButton({
     super.key,
     super.theme,
@@ -20,16 +21,24 @@ class DateTimeButton extends AxolWidget {
     this.margin,
     this.width,
     this.padding,
+    this.isFocus,
   });
 
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
+    final FocusNode focusNode = FocusNode();
+    if (isFocus == true) {
+      focusNode.requestFocus();
+    } else {
+      //focusNode.unfocus()
+    }
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: SizedBox(
         width: width,
         child: OutlinedButton(
+          focusNode: focusNode,
           style: ButtonStyle(
             alignment: Alignment.centerLeft,
             side: WidgetStatePropertyAll(

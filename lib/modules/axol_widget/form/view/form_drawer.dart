@@ -77,6 +77,7 @@ class FormDrawerBuild extends AxolWidget {
           final FormFieldModel field = form.fields[i];
           if (field is TextFieldModel) {
             widgetList.add(PrimaryTextField(
+              isFocus: form.focusIndex == i,
               isDense: false,
               theme: theme,
               controller: field.ctrlText,
@@ -84,9 +85,14 @@ class FormDrawerBuild extends AxolWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               labelText: field.property.name,
               labelStyle: Typo.hint(theme_),
+              onSubmitted: (value) {
+                form.focusIndex = i + 1;
+                context.read<FormCubit>().load();
+              },
             ));
           } else if (field is NumberFieldModel) {
             widgetList.add(PrimaryTextField(
+              isFocus: form.focusIndex == i,
               isDense: false,
               theme: theme,
               controller: field.ctrlNum,
@@ -95,6 +101,10 @@ class FormDrawerBuild extends AxolWidget {
               labelText: field.property.name,
               labelStyle: Typo.hint(theme_),
               inputFormatters: [DecimalTextInputFormatter()],
+              onSubmitted: (value) {
+                form.focusIndex = i + 1;
+                context.read<FormCubit>().load();
+              },
             ));
           } else if (field is BooleanFieldModel) {
             widgetList.add(Padding(
@@ -125,6 +135,7 @@ class FormDrawerBuild extends AxolWidget {
             ));
           } else if (field is DateFieldModel) {
             widgetList.add(DateTimeButton(
+              isFocus: form.focusIndex == i,
               theme: theme_,
               dateTime: field.dateTime,
               margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),

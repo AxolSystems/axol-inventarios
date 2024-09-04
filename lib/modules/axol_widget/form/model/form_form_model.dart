@@ -7,10 +7,11 @@ import '../../../object/model/reference_object_model.dart';
 
 class FormFormModel {
   List<FormFieldModel> fields;
+  int focusIndex;
 
-  FormFormModel({required this.fields});
+  FormFormModel({required this.fields, required this.focusIndex});
 
-  FormFormModel.empty() : fields = [];
+  FormFormModel.empty() : fields = [], focusIndex = 0;
 }
 
 abstract class FormFieldModel {
