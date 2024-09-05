@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../utilities/widgets/buttons/date_time_button.dart';
 import '../../../array/model/array_model.dart';
 import '../../../array/repository/array_repo.dart';
 import '../../../entity/model/property_model.dart';
@@ -367,11 +366,13 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
   Future<void> thenDateTimePick(
       {required DateTime? dateTime,
       required ObjectDetailsFormModel form,
-      required PropertyModel prop}) async {
+      required PropertyModel prop,
+      required int index}) async {
     try {
       emit(InitialObjectDetailsState());
       emit(LoadingObjectDetailsState());
       form.controllers[prop.key] = RDDateController(controller: dateTime);
+      form.focusIndex = index + 1;
       emit(LoadedObjectDetailsState());
     } catch (e) {
       emit(InitialObjectDetailsState());
@@ -379,11 +380,13 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
     }
   }
 
-  Future<void> changeArray(
-      {required ObjectDetailsFormModel form,
-      required PropertyModel prop,
-      required String value,
-      required ArrayModel array}) async {
+  Future<void> changeArray({
+    required ObjectDetailsFormModel form,
+    required PropertyModel prop,
+    required String value,
+    required ArrayModel array,
+    required int index,
+  }) async {
     try {
       emit(InitialObjectDetailsState());
       emit(DeletingObjectDetailsState());
@@ -393,6 +396,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           ArrayModel(id: array.id, list: array.list, value: value);
 
       form.isEdited = true;
+      form.focusIndex = index + 1;
 
       emit(DeletedObjectDetailsState());
       emit(LoadedObjectDetailsState());

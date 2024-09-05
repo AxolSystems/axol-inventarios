@@ -12,12 +12,14 @@ class ObjectDetailsFormModel {
   bool edit;
   bool isEdited;
   ObjectModel object;
+  int focusIndex;
 
   ObjectDetailsFormModel({
     required this.controllers,
     required this.edit,
     required this.object,
     required this.isEdited,
+    required this.focusIndex,
   });
 
   /// Estado inicial del form.
@@ -25,7 +27,8 @@ class ObjectDetailsFormModel {
       : controllers = {},
         edit = false,
         object = ObjectModel.empty(),
-        isEdited = false;
+        isEdited = false,
+        focusIndex = 0;
 }
 
 abstract class RowDetailsController {}

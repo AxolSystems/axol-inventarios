@@ -151,10 +151,12 @@ class FormDrawerBuild extends AxolWidget {
                   (value) {
                     if (value is DateTimeDialogFormModel) {
                       if (value.isBlank == true) {
+                        form.focusIndex = i + 1;
                         context
                             .read<FormCubit>()
                             .thenDateTimePick(form, i, null);
                       } else {
+                        form.focusIndex = i + 1;
                         context
                             .read<FormCubit>()
                             .thenDateTimePick(form, i, value.dateTime);
@@ -230,6 +232,7 @@ class FormDrawerBuild extends AxolWidget {
           } else if (field is ArrayFieldModel) {
             widgetList.add(
               PrimaryDropDownButton(
+                isFocus: form.focusIndex == i,
                 theme: theme_,
                 value: field.array.value,
                 items: field.array.getItems(theme_),
@@ -238,10 +241,11 @@ class FormDrawerBuild extends AxolWidget {
                     context
                         .read<FormCubit>()
                         .changeArray(form: form, value: value, index: i);
+                    
                   }
                 },
                 width: 100,
-                margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+                margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
                 isDense: false,
               ),
             );

@@ -347,9 +347,14 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final RDTextEditingController textController =
                         form.controllers[prop.key] as RDTextEditingController;
                     widgetWrite = PrimaryTextField(
+                      isFocus: form.focusIndex == index,
                       theme: theme_,
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
+                      onSubmitted: (value) {
+                        form.focusIndex = index + 1;
+                        context.read<ObjectDetailsCubit>().load();
+                      },
                     );
                   } else if ((form.object.map[prop.key] is int ||
                           form.object.map[prop.key] is double ||
@@ -359,9 +364,14 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final RDTextEditingController textController =
                         form.controllers[prop.key] as RDTextEditingController;
                     widgetWrite = PrimaryTextField(
+                      isFocus: form.focusIndex == index,
                       theme: theme_,
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
+                      onSubmitted: (value) {
+                        form.focusIndex = index + 1;
+                        context.read<ObjectDetailsCubit>().load();
+                      },
                     );
                   } else if ((form.object.map[prop.key] is bool ||
                           form.object.map[prop.key] == null) &&
@@ -389,12 +399,10 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       prop.propertyType == Prop.time) {
                     final RDDateController dateController =
                         form.controllers[prop.key] as RDDateController;
-                    //ScrollController scrollController = ScrollController();
                     widgetWrite = DateTimeButton(
                       theme: theme_,
                       dateTime: dateController.controller,
-                      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 6),
                       onPressed: () {
                         showDialog(
                             context: context,
@@ -410,14 +418,18 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                                 context
                                     .read<ObjectDetailsCubit>()
                                     .thenDateTimePick(
-                                        form: form, prop: prop, dateTime: null);
+                                        form: form,
+                                        prop: prop,
+                                        dateTime: null,
+                                        index: index);
                               } else {
                                 context
                                     .read<ObjectDetailsCubit>()
                                     .thenDateTimePick(
                                         form: form,
                                         prop: prop,
-                                        dateTime: value.dateTime);
+                                        dateTime: value.dateTime,
+                                        index: index);
                               }
                             }
                           },
@@ -502,6 +514,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       form.object.map[prop.key] is ArrayModel) {
                     final ArrayModel array = form.object.map[prop.key];
                     widgetWrite = PrimaryDropDownButton(
+                      isFocus: form.focusIndex == index,
                       theme: theme_,
                       value: array.list.contains(array.value)
                           ? array.value
@@ -510,10 +523,12 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       onChanged: (value) {
                         if (value is String) {
                           context.read<ObjectDetailsCubit>().changeArray(
-                              form: form,
-                              prop: prop,
-                              value: value,
-                              array: array);
+                                form: form,
+                                prop: prop,
+                                value: value,
+                                array: array,
+                                index: index,
+                              );
                         }
                       },
                       width: 200,

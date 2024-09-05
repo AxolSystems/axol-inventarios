@@ -10,6 +10,7 @@ class PrimaryDropDownButton extends AxolWidget {
   final double width;
   final EdgeInsetsGeometry? margin;
   final bool? isDense;
+  final bool? isFocus;
   const PrimaryDropDownButton({
     super.key,
     super.theme,
@@ -19,15 +20,21 @@ class PrimaryDropDownButton extends AxolWidget {
     required this.width,
     this.margin,
     this.isDense,
+    this.isFocus,
   });
 
   @override
   Widget build(BuildContext context) {
+    FocusNode focusNode = FocusNode();
+    if (isFocus == true) {
+      focusNode.requestFocus();
+    }
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: SizedBox(
         width: width,
         child: DropdownButtonFormField(
+          focusNode: focusNode,
           isExpanded: true,
           decoration: InputDecoration(
             isDense: isDense ?? true,

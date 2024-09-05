@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../modules/axol_widget/generic/view/axol_widget.dart';
@@ -27,18 +28,13 @@ class DateTimeButton extends AxolWidget {
   @override
   Widget build(BuildContext context) {
     final int theme_ = theme ?? 0;
-    final FocusNode focusNode = FocusNode();
-    if (isFocus == true) {
-      focusNode.requestFocus();
-    } else {
-      //focusNode.unfocus()
-    }
+    //final FocusNode focusNode = FocusNode();
+    //WidgetStatesController statesController = WidgetStatesController();
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: SizedBox(
         width: width,
         child: OutlinedButton(
-          focusNode: focusNode,
           style: ButtonStyle(
             alignment: Alignment.centerLeft,
             side: WidgetStatePropertyAll(
@@ -46,6 +42,7 @@ class DateTimeButton extends AxolWidget {
             shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(6)))),
             backgroundColor: WidgetStatePropertyAll(ColorTheme.fill(theme_)),
+            //overlayColor: const WidgetStatePropertyAll(Colors.transparent)
           ),
           onPressed: onPressed,
           child: Padding(
