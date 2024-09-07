@@ -351,6 +351,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                       theme: theme_,
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
+                      onChanged: (value) {}, //Probar si no dejar null a onChanged arregla el problema en producción
                       onSubmitted: (value) {
                         form.focusIndex = index + 1;
                         context.read<ObjectDetailsCubit>().load();
