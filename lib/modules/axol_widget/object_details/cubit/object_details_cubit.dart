@@ -315,7 +315,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
             (property.propertyType == Prop.int ||
                 property.propertyType == Prop.double)) {
           map[key] = double.tryParse(textController.controller.text) ?? 0;
-          form.object.map[key] = double.parse(textController.controller.text);
+          form.object.map[key] = double.tryParse(textController.controller.text) ?? 0;
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
           map[key] = dateController.controller?.millisecondsSinceEpoch;
