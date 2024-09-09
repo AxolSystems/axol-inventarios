@@ -12,14 +12,12 @@ class ObjectDetailsFormModel {
   bool edit;
   bool isEdited;
   ObjectModel object;
-  int focusIndex;
 
   ObjectDetailsFormModel({
     required this.controllers,
     required this.edit,
     required this.object,
     required this.isEdited,
-    required this.focusIndex,
   });
 
   /// Estado inicial del form.
@@ -27,11 +25,13 @@ class ObjectDetailsFormModel {
       : controllers = {},
         edit = false,
         object = ObjectModel.empty(),
-        isEdited = false,
-        focusIndex = 0;
+        isEdited = false;
 }
 
-abstract class RowDetailsController {}
+abstract class RowDetailsController {
+  String? error;
+  RowDetailsController({this.error});
+}
 
 class RDTextEditingController extends RowDetailsController {
   TextEditingController controller;
@@ -70,4 +70,11 @@ class RDArray extends RowDetailsController {
   ArrayModel array;
   RDArray({required this.array});
   RDArray.empty() : array = ArrayModel.empty();
+}
+
+class RDFormula extends RowDetailsController {
+  String formula;
+  String value;
+  RDFormula({required this.formula, required this.value, required super.error});
+  RDFormula.empty() : formula = '', value = '';
 }

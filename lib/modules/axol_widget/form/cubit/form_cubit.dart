@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../../../array/model/array_model.dart';
 import '../../../array/repository/array_repo.dart';
 import '../../../entity/model/property_model.dart';
+import '../../../formula/repository/formula_function.dart';
 import '../../../object/model/object_model.dart';
 import '../../../object/repository/object_repo.dart';
 import '../../../widget_link/model/widgetlink_model.dart';
@@ -168,11 +169,30 @@ class FormCubit extends Cubit<FormDrawerState> {
         map: map,
         createAt: DateTime.now(),
       );
-      if (atmPropertyList == null) {
-        await ObjectRepo.insert(object, link);
+
+      /// Hacer genérico.
+      bool isError = false;
+      for (PropertyModel prop in link.entity.propertyList) {
+        if (prop.propertyType == Prop.formula) {
+          final double value = await FormulaFunction.devExpressions(
+              prop.dynamicValues[PropertyModel.dvFormula], object, link);
+          final double total = value + map['13'] + map['14'];
+          if (total > map['12']) {
+            isError = true;
+            emit(const ErrorFormState(
+                error: 'Cantidad total supera a cantidad de trabajo.'));
+            return;
+          }
+        }
+      }
+      if (!isError) {
+        if (atmPropertyList == null) {
+          await ObjectRepo.insert(object, link);
+        }
+
+        emit(SavedFormState(object: object));
       }
 
-      emit(SavedFormState(object: object));
       emit(LoadedFormState());
     } catch (e) {
       emit(InitialFormState());

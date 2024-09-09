@@ -350,6 +350,33 @@ class ObjectRepo {
     return dataResponse;
   }
 
+  /// Obtiene valores a sumar.
+  static Future<double> querySum(WidgetLinkModel link, List<String> returnProps,
+      List<String> fetchProps) async {
+    List<Map<String, dynamic>> response;
+    double total = 0;
+
+    var query = _supabase
+        .from(link.entity.tableName)
+        .select<List<Map<String, dynamic>>>();
+
+    for (String element in fetchProps) {
+      query = query.eq('$_object->>"${element.split('==').first}"',
+          element.split('==').last);
+      //eq(element.split('==').first, element.split('==').last);
+    }
+
+    response = await query;
+    for (String idProp in returnProps) {
+      for (var element in response) {
+        total = total +
+            (double.tryParse(element[_object][idProp].toString()) ?? 0);
+      }
+    }
+
+    return total;
+  }
+
   /// Actualiza un objeto de la base de datos.
   static Future<void> update(ObjectModel object, WidgetLinkModel link) async {
     await _supabase
@@ -383,36 +410,30 @@ class ObjectRepo {
     }
 
     if (filter.operator == FilterOperator.eq) {
-      queryFlt =
-          queryFlt.eq('$_object->>"${filter.property.key}"', value);
+      queryFlt = queryFlt.eq('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.like) {
-      queryFlt = queryFlt.like(
-          '$_object->>"${filter.property.key}"', '%$value%');
+      queryFlt =
+          queryFlt.like('$_object->>"${filter.property.key}"', '%$value%');
     }
     if (filter.operator == FilterOperator.ilike) {
-      queryFlt = queryFlt.ilike(
-          '$_object->>"${filter.property.key}"', '%$value%');
+      queryFlt =
+          queryFlt.ilike('$_object->>"${filter.property.key}"', '%$value%');
     }
     if (filter.operator == FilterOperator.gt) {
-      queryFlt =
-          queryFlt.gt('$_object->>"${filter.property.key}"', value);
+      queryFlt = queryFlt.gt('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.gte) {
-      queryFlt =
-          queryFlt.gte('$_object->>"${filter.property.key}"', value);
+      queryFlt = queryFlt.gte('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.lt) {
-      queryFlt =
-          queryFlt.lt('$_object->>"${filter.property.key}"', value);
+      queryFlt = queryFlt.lt('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.lte) {
-      queryFlt =
-          queryFlt.lte('$_object->>"${filter.property.key}"', value);
+      queryFlt = queryFlt.lte('$_object->>"${filter.property.key}"', value);
     }
     if (filter.operator == FilterOperator.neq) {
-      queryFlt =
-          queryFlt.neq('$_object->>"${filter.property.key}"', value);
+      queryFlt = queryFlt.neq('$_object->>"${filter.property.key}"', value);
     }
     return queryFlt;
   }

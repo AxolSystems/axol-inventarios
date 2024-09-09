@@ -41,16 +41,17 @@ class PrimaryTextField extends StatelessWidget {
   /// Devuelve widget general del campo de texto.
   @override
   Widget build(BuildContext context) {
-    final FocusNode focusNode = FocusNode();
-    if (isFocus == true) {
+    //final FocusNode focusNode = FocusNode();
+    /*if (isFocus == true) {
       focusNode.requestFocus();
-    }
+    }*/
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: TextField(
+        //textInputAction: TextInputAction.next,
         controller: controller,
         enabled: enabled,
-        focusNode: focusNode,
+        //focusNode: focusNode,
         style: Typo.body(theme ?? 0),
         cursorColor: ColorTheme.text(theme ?? 0),
         decoration: InputDecoration(

@@ -11,6 +11,7 @@ enum Prop {
   atomicObjList,
   atomicObject,
   array,
+  formula,
 }
 
 class PropertyModel {
@@ -54,7 +55,10 @@ class PropertyModel {
   static String get dvPropsAtomObj => 'props_atomic_object';
 
   ///get "id_array"
-  static String get dvIdArray => "id_array";
+  static String get dvIdArray => 'id_array';
+
+  /// get "formula"
+  static String get dvFormula => 'formula';
 
   static List<PropertyModel> mapToProperty(Map<String, dynamic> map) {
     List<PropertyModel> propertyList = [];
@@ -107,6 +111,8 @@ class PropertyModel {
         return Prop.atomicObject;
       case 8:
         return Prop.array;
+      case 9:
+        return Prop.formula;
       default:
         return Prop.empty;
     }
@@ -134,6 +140,8 @@ class PropertyModel {
         return 7;
       case Prop.array:
         return 8;
+      case Prop.formula:
+        return 9;
       default:
         return -1;
     }
@@ -159,6 +167,8 @@ class PropertyModel {
         return 'Objeto atómico';
       case Prop.array:
         return 'Colección';
+      case Prop.formula:
+        return 'Formula';
       default:
         return 'Texto';
     }
@@ -184,6 +194,8 @@ class PropertyModel {
         return Icons.data_object_sharp;
       case Prop.array:
         return Icons.arrow_drop_down_circle_sharp;
+      case Prop.formula:
+        return Icons.functions;
       default:
         return Icons.square;
     }

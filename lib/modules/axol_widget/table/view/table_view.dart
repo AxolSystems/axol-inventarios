@@ -1,5 +1,6 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
+import 'package:axol_inventarios/modules/formula/repository/formula_function.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,10 @@ class TableViewBuild extends AxolWidget {
     ScrollController scrollCtrlHorizontal = ScrollController();
     ScrollController scrollCtrlVertical = ScrollController();
     TableFormModel form = context.read<TableForm>().state;
+    /*final dynamic valueFormula = FormulaFunction.devExpressions(
+        '[if:[prop:0]==2,true,false]',
+        ObjectModel(createAt: DateTime.now(), id: '', map: {'0': 2}));
+    print(valueFormula);*/
     return BlocListener<MainViewCubit, MainViewState>(
       listener: (context, state) {
         if (state is SetThemeMainViewState) {

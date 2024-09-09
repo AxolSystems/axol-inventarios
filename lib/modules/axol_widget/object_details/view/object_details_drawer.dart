@@ -12,8 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/format.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/buttons/date_time_button.dart';
+import '../../../../utilities/widgets/label_field.dart';
 import '../../../../utilities/widgets/object_card.dart';
 import '../../../array/model/array_model.dart';
+import '../../../formula/repository/formula_function.dart';
 import '../../search_button/view/search_button.dart';
 import '../../search_button/view/search_reference_object.dart';
 import '../../../../utilities/widgets/dialog.dart';
@@ -88,6 +90,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
             showDialog(
               context: context,
               builder: (context) => AlertDialogAxol(
+                theme: theme_,
                 text: state.error,
               ),
             );
@@ -142,6 +145,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           context.read<ObjectDetailsCubit>().save(
                                 form,
                                 link,
+                                object,
                               );
                         } else {
                           context
@@ -322,10 +326,22 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
                     );
                   } else if (prop.propertyType == Prop.array &&
-                      form.object.map[prop.key] is ArrayModel) {
-                    final ArrayModel array = form.object.map[prop.key];
+                      form.controllers[prop.key] is RDArray) {
+                    final RDArray arrayController =
+                        form.controllers[prop.key] as RDArray;
                     widgetRead = Text(
-                      array.value,
+                      arrayController.array.value,
+                      style: Typo.body(theme_),
+                    );
+                  } else if (prop.propertyType == Prop.formula) {
+                    final RDFormula formulaController;
+                    if (form.controllers[prop.key] is RDFormula) {
+                      formulaController = form.controllers[prop.key] as RDFormula;
+                    } else {
+                      formulaController = RDFormula.empty();
+                    }
+                    widgetRead = Text(
+                      formulaController.value,
                       style: Typo.body(theme_),
                     );
                   } else {
@@ -347,14 +363,17 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final RDTextEditingController textController =
                         form.controllers[prop.key] as RDTextEditingController;
                     widgetWrite = PrimaryTextField(
-                      isFocus: form.focusIndex == index,
                       theme: theme_,
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
-                      onChanged: (value) {}, //Probar si no dejar null a onChanged arregla el problema en producción
                       onSubmitted: (value) {
-                        form.focusIndex = index + 1;
                         context.read<ObjectDetailsCubit>().load();
+                        nextFocus(context, index);
+                      },
+                      onChanged: (value) {
+                        context
+                            .read<ObjectDetailsCubit>()
+                            .updateObjectForm(form, link.entity.propertyList);
                       },
                     );
                   } else if ((form.object.map[prop.key] is int ||
@@ -365,13 +384,17 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final RDTextEditingController textController =
                         form.controllers[prop.key] as RDTextEditingController;
                     widgetWrite = PrimaryTextField(
-                      isFocus: form.focusIndex == index,
                       theme: theme_,
                       controller: textController.controller,
                       inputFormatters: inputFormatters,
                       onSubmitted: (value) {
-                        form.focusIndex = index + 1;
+                        nextFocus(context, index);
                         context.read<ObjectDetailsCubit>().load();
+                      },
+                      onChanged: (value) {
+                        context
+                            .read<ObjectDetailsCubit>()
+                            .updateObjectForm(form, link.entity.propertyList);
                       },
                     );
                   } else if ((form.object.map[prop.key] is bool ||
@@ -423,6 +446,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                                         prop: prop,
                                         dateTime: null,
                                         index: index);
+                                nextFocus(context, index);
                               } else {
                                 context
                                     .read<ObjectDetailsCubit>()
@@ -431,6 +455,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                                         prop: prop,
                                         dateTime: value.dateTime,
                                         index: index);
+                                nextFocus(context, index);
                               }
                             }
                           },
@@ -512,27 +537,41 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                           prop.dynamicValues[PropertyModel.dvPropsAtomObj]),
                     );
                   } else if (prop.propertyType == Prop.array &&
-                      form.object.map[prop.key] is ArrayModel) {
-                    final ArrayModel array = form.object.map[prop.key];
+                      form.controllers[prop.key] is RDArray) {
+                    final RDArray arrayController =
+                        form.controllers[prop.key] as RDArray;
                     widgetWrite = PrimaryDropDownButton(
-                      isFocus: form.focusIndex == index,
                       theme: theme_,
-                      value: array.list.contains(array.value)
-                          ? array.value
-                          : array.list.first,
-                      items: array.getItems(theme_),
+                      value: arrayController.array.list
+                              .contains(arrayController.array.value)
+                          ? arrayController.array.value
+                          : arrayController.array.list.first,
+                      items: arrayController.array.getItems(theme_),
                       onChanged: (value) {
                         if (value is String) {
                           context.read<ObjectDetailsCubit>().changeArray(
                                 form: form,
                                 prop: prop,
                                 value: value,
-                                array: array,
+                                array: arrayController.array,
                                 index: index,
                               );
+                          nextFocus(context, index);
                         }
                       },
                       width: 200,
+                    );
+                  } else if (prop.propertyType == Prop.formula) {
+                    final RDFormula formulaController;
+                    if (form.controllers[prop.key] is RDFormula) {
+                      formulaController =
+                        form.controllers[prop.key] as RDFormula;
+                    } else {
+                      formulaController = RDFormula.empty();
+                    }
+                    widgetWrite = LabelField(
+                      theme: theme_,
+                      text: formulaController.value,
                     );
                   } else {
                     widgetWrite = const SizedBox();
@@ -564,6 +603,16 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
             ),
           );
         });
+  }
+
+  void nextFocus(BuildContext context, int index) {
+    if (FocusScope.of(context).focusedChild == null) {
+      for (int i = 0; i <= index + 1; i++) {
+        FocusScope.of(context).nextFocus();
+      }
+    } else {
+      FocusScope.of(context).nextFocus();
+    }
   }
 }
 

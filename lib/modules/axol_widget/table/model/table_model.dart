@@ -6,6 +6,7 @@ import 'package:axol_inventarios/utilities/format.dart';
 
 import '../../../../models/data_response_model.dart';
 import '../../../entity/model/entity_model.dart';
+import '../../../formula/repository/formula_function.dart';
 import '../../../object/model/object_model.dart';
 import '../../generic/model/data_object.dart';
 
@@ -35,6 +36,7 @@ class TableModel extends DataObject {
     List<Map<String, TableCellModel>> rowList = [];
     Map<String, TableCellModel> row;
     List<ObjectModel> objects;
+    List<PropertyModel> propFormulas = [];
 
     if (dataResponse.dataList is List<ObjectModel>) {
       objects = dataResponse.dataList as List<ObjectModel>;
@@ -44,12 +46,18 @@ class TableModel extends DataObject {
 
     for (var prop in entity.propertyList) {
       header.add(prop);
+      if (prop.propertyType == Prop.formula &&
+          !prop.dynamicValues[PropertyModel.dvFormula].contains('[query')) {
+        propFormulas.add(prop);
+      }
     }
+
     for (var obj in objects) {
       row = {};
       for (var key in obj.map.keys) {
-        final Prop prop =
-            entity.propertyList.firstWhere((x) => x.key == key).propertyType;
+        final PropertyModel property =
+            entity.propertyList.firstWhere((x) => x.key == key);
+        final Prop prop = property.propertyType;
         if (prop == Prop.text) {
           row[key] = CellText(text: obj.map[key] ?? '');
         } else if (prop == Prop.double || prop == Prop.int) {
@@ -91,6 +99,19 @@ class TableModel extends DataObject {
         } else if (prop == Prop.array) {
           final ArrayModel array = obj.map[key];
           row[key] = CellText(text: array.value);
+        }
+      }
+      if (propFormulas.isNotEmpty) {
+        for (PropertyModel propFormula in propFormulas) {
+          final result = FormulaFunction.devExpressions(
+              propFormula.dynamicValues[PropertyModel.dvFormula], obj);
+          final String value;
+          if (result is String) {
+            value = result as String;
+          } else {
+            value = result.toString();
+          }
+          row[propFormula.key] = CellText(text: value);
         }
       }
       rowList.add(row);

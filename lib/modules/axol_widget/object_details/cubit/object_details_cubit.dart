@@ -1,3 +1,4 @@
+import 'package:axol_inventarios/modules/formula/repository/formula_function.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,8 +116,117 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
             cellArray = form.object.map[prop.key];
           }
           form.controllers[prop.key] = RDArray(array: cellArray);
+        } else if (prop.propertyType == Prop.formula) {
+          double value = 0;
+          value = await FormulaFunction.devExpressions(
+              prop.dynamicValues[PropertyModel.dvFormula], form.object, link);
+          form.controllers[prop.key] = RDFormula(
+              formula: prop.dynamicValues[PropertyModel.dvFormula],
+              value: '$value',
+              error: '');
         }
       }
+
+      emit(LoadedObjectDetailsState());
+    } catch (e) {
+      emit(InitialObjectDetailsState());
+      emit(ErrorRowDetailsState(error: e.toString()));
+    }
+  }
+
+  /// Actualiza objeto de form.
+  Future<void> updateObjectForm(
+      ObjectDetailsFormModel form, List<PropertyModel> propertyList) async {
+    try {
+      emit(InitialObjectDetailsState());
+      emit(LoadingObjectDetailsState());
+      Map<String, dynamic> map = {};
+      PropertyModel property;
+
+      for (String key in form.object.map.keys) {
+        final RDTextEditingController textController;
+        final RDBoolController boolController;
+        final RDDateController dateController;
+        final RDReferenceObject refObjController;
+        final RDAtomicObject atmObjController;
+        final RDArray arrayController;
+
+        if (form.controllers[key] is RDTextEditingController) {
+          textController = form.controllers[key] as RDTextEditingController;
+        } else {
+          textController = RDTextEditingController.empty();
+        }
+
+        if (form.controllers[key] is RDBoolController) {
+          boolController = form.controllers[key] as RDBoolController;
+        } else {
+          boolController = RDBoolController.init();
+        }
+
+        if (form.controllers[key] is RDDateController) {
+          dateController = form.controllers[key] as RDDateController;
+        } else {
+          dateController = RDDateController(controller: DateTime.now());
+        }
+
+        if (form.controllers[key] is RDReferenceObject) {
+          refObjController = form.controllers[key] as RDReferenceObject;
+        } else {
+          refObjController = RDReferenceObject.empty();
+        }
+
+        if (form.controllers[key] is RDAtomicObject) {
+          atmObjController = form.controllers[key] as RDAtomicObject;
+        } else {
+          atmObjController = RDAtomicObject.empty(key);
+        }
+
+        if (form.controllers[key] is RDArray) {
+          arrayController = form.controllers[key] as RDArray;
+        } else {
+          arrayController = RDArray.empty();
+        }
+
+        property = propertyList.firstWhere((x) => x.key == key);
+
+        if (form.controllers[key] is RDTextEditingController &&
+            property.propertyType == Prop.text) {
+          map[key] = textController.controller.text;
+          form.object.map[key] = textController.controller.text;
+        } else if (form.controllers[key] is RDTextEditingController &&
+            (property.propertyType == Prop.int ||
+                property.propertyType == Prop.double)) {
+          map[key] = double.tryParse(textController.controller.text) ?? 0;
+          //form.object.map[key] = double.parse(textController.controller.text);
+        } else if (form.controllers[key] is RDDateController &&
+            property.propertyType == Prop.time) {
+          map[key] = dateController.controller?.millisecondsSinceEpoch;
+          form.object.map[key] =
+              dateController.controller?.millisecondsSinceEpoch;
+        } else if (form.controllers[key] is RDBoolController &&
+            property.propertyType == Prop.bool) {
+          map[key] = boolController.controller;
+          form.object.map[key] = boolController.controller;
+        } else if (form.controllers[key] is RDReferenceObject &&
+            property.propertyType == Prop.referenceObject) {
+          map[key] = refObjController;
+        } else if (form.controllers[key] is RDAtomicObject &&
+            property.propertyType == Prop.atomicObject) {
+          map[key] = atmObjController;
+          form.object.map[key] = atmObjController.atmObject;
+        } else if (form.controllers[key] is RDArray &&
+            property.propertyType == Prop.array) {
+          if (arrayController.array.value == '') {
+            final ArrayModel array = form.object.map[property.key];
+            map[key] = array.list.first;
+            form.object.map[property.key] = array.setValue(map[key]);
+          } else {
+            map[key] = arrayController.array;
+          }
+        }
+      }
+      form.object = ObjectModel(
+          createAt: form.object.createAt, id: form.object.id, map: map);
 
       emit(LoadedObjectDetailsState());
     } catch (e) {
@@ -142,6 +252,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
   Future<void> save(
     ObjectDetailsFormModel form,
     WidgetLinkModel link,
+    ObjectModel initObject,
   ) async {
     try {
       emit(InitialObjectDetailsState());
@@ -238,13 +349,38 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         }
       }
 
-      object = ObjectModel(
-          createAt: form.object.createAt, id: form.object.id, map: map);
+      /// Volver genérico.
+      bool isError = false;
+      for (PropertyModel prop in link.entity.propertyList) {
+        if (prop.propertyType == Prop.formula &&
+            prop.dynamicValues[PropertyModel.dvFormula].contains('[query')) {
+          final double value = await FormulaFunction.devExpressions(
+              prop.dynamicValues[PropertyModel.dvFormula], form.object, link);
+          final double total = value -
+              initObject.map['13'] -
+              initObject.map['14'] +
+              map['13'] +
+              map['14'];
+          if (total > map['12']) {
+            isError = true;
+            emit(const ErrorRowDetailsState(
+                error: 'Cantidad total supera a cantidad de trabajo.'));
+            return;
+          }
+        }
+      }
 
-      await ObjectRepo.update(object, link);
-      form.isEdited = true;
+      ///--------------------
+      if (!isError) {
+        object = ObjectModel(
+            createAt: form.object.createAt, id: form.object.id, map: map);
 
-      emit(SavedObjectDetailsState());
+        await ObjectRepo.update(object, link);
+        form.isEdited = true;
+
+        emit(SavedObjectDetailsState());
+      }
+
       emit(LoadedObjectDetailsState());
     } catch (e) {
       emit(InitialObjectDetailsState());
@@ -372,7 +508,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       emit(InitialObjectDetailsState());
       emit(LoadingObjectDetailsState());
       form.controllers[prop.key] = RDDateController(controller: dateTime);
-      form.focusIndex = index + 1;
       emit(LoadedObjectDetailsState());
     } catch (e) {
       emit(InitialObjectDetailsState());
@@ -394,9 +529,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           array: ArrayModel(id: array.id, list: array.list, value: value));
       form.object.map[prop.key] =
           ArrayModel(id: array.id, list: array.list, value: value);
-
-      form.isEdited = true;
-      form.focusIndex = index + 1;
 
       emit(DeletedObjectDetailsState());
       emit(LoadedObjectDetailsState());
