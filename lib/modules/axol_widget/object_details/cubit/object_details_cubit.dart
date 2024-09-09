@@ -314,7 +314,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if (form.controllers[key] is RDTextEditingController &&
             (property.propertyType == Prop.int ||
                 property.propertyType == Prop.double)) {
-          map[key] = double.parse(textController.controller.text);
+          map[key] = double.tryParse(textController.controller.text) ?? 0;
           form.object.map[key] = double.parse(textController.controller.text);
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
