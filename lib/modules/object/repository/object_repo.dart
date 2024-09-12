@@ -369,8 +369,8 @@ class ObjectRepo {
     response = await query;
     for (String idProp in returnProps) {
       for (var element in response) {
-        total = total +
-            (double.tryParse(element[_object][idProp].toString()) ?? 0);
+        total =
+            total + (double.tryParse(element[_object][idProp].toString()) ?? 0);
       }
     }
 

@@ -54,7 +54,7 @@ class MovementFileCubit extends Cubit<MovementPdfState> {
     try {
       emit(InitialMovePdfState());
       emit(LoadingMoveFileState());
-      await MovementPdfRepo.movementPdfSave(movementList);
+      //await MovementPdfRepo.movementPdfSave(movementList);
       emit(LoadedMoveFileState());
     } catch (e) {
       emit(ErrorMoveFileState(error: e.toString()));
@@ -166,9 +166,9 @@ class MovementFileCubit extends Cubit<MovementPdfState> {
       }
 
       if (dataReport.concept.id == 58) {
-        InventoryPdfRepo.transferPdf(dataReport);
+        //InventoryPdfRepo.transferPdf(dataReport);
       } else {
-        await InventoryPdfRepo.singleMove(dataReport);
+        //await InventoryPdfRepo.singleMove(dataReport);
       }
 
       emit(LoadedMoveFileState());
@@ -319,7 +319,7 @@ class MovementFileCubit extends Cubit<MovementPdfState> {
       }
 
       //Descarga pdf
-      InventoryPdfRepo.multiMove(dataReport);
+      //InventoryPdfRepo.multiMove(dataReport);
 
       emit(LoadedMoveFileState());
     } catch (e) {
@@ -347,7 +347,7 @@ class MovementFileCubit extends Cubit<MovementPdfState> {
       );
       movementList = movementResponse.movementList;
 
-      await MovementCsvRepo.movementCsvSave(movementList);
+      //await MovementCsvRepo.movementCsvSave(movementList);
 
       emit(LoadedMoveFileState());
     } catch (e) {

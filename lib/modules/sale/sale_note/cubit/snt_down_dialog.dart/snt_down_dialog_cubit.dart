@@ -107,7 +107,7 @@ class SntDownDialogCubit extends Cubit<SntDownDialogState> {
           }
         }
       }
-      await SaleFileRepo.saleListCsv(salenoteListDB);
+      //await SaleFileRepo.saleListCsv(salenoteListDB);
       emit(DownloadedSntDownDialogState());
     } catch (e) {
       emit(InitialSntDownDialogState());

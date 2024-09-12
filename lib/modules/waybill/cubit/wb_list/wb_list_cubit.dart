@@ -111,7 +111,7 @@ class WbListCubit extends Cubit<WbListState> {
 
       waybill = await WaybillRepo.fetchWaybill(id);
 
-      await WaybillCsv.waybillCsvSave(waybill);
+      //await WaybillCsv.waybillCsvSave(waybill);
       emit(LoadedWbListState());
     } catch (e) {
       emit(ErrorWbListState(error: e.toString()));

@@ -1,4 +1,4 @@
-import 'package:axol_inventarios/utilities/format.dart';
+/*import 'package:axol_inventarios/utilities/format.dart';
 import 'package:csv/csv.dart';
 import 'dart:convert';
 
@@ -131,4 +131,4 @@ class SaleReportCsv {
     html.document.body!.children.add(anchor);
     anchor.click();
   }
-}
+}*/

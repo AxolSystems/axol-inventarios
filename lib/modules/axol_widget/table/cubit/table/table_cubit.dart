@@ -46,7 +46,6 @@ class TableCubit extends Cubit<TableState> {
       final WidgetViewModel view =
           link.views.firstWhere((x) => x.key == viewId);
       final UserModel user = await LocalUser().getLocalUser();
-
       form.theme = user.theme;
       if (view.properties.containsKey(WidgetViewModel.propNumRows)) {
         form.limitRows = view.properties[WidgetViewModel.propNumRows];
@@ -56,13 +55,13 @@ class TableCubit extends Cubit<TableState> {
         form.limitRows = 50;
         form.ctrlLimitRow = TextEditingController(text: "50");
       }
+
       form.currentPage = 1;
       await getData(
           form: form, link: link, rangeMin: 0, rangeMax: form.limitRows - 1);
       for (var prop in form.table.header) {
         widthColumns[prop.key] = 150;
       }
-
       if (view.properties.containsKey(WidgetViewModel.propColumnWidth)) {
         columnWidthDB = view.properties[WidgetViewModel.propColumnWidth];
         for (var prop in form.table.header) {
@@ -289,6 +288,7 @@ class TableCubit extends Cubit<TableState> {
     countReg = dataResponse.count;
     form.totalPage = (countReg / form.limitRows).ceil();
     form.totalReg = countReg;
+    //Error en versión de escritorio.
     form.table = TableModel.dataObject(dataResponse, link.entity);
     form.referenceLinks =
         dataResponse.dynamicValues?[ReferenceObjectModel.tRefLink] ?? [];

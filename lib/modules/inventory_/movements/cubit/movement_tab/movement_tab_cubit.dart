@@ -65,7 +65,7 @@ class MovementTabCubit extends Cubit<MovementTabState> {
     try {
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
-      await MovementPdfRepo.movementPdfSave(movementList);
+      //await MovementPdfRepo.movementPdfSave(movementList);
       emit(LoadedMovementTabState(movementList: movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));
@@ -76,7 +76,7 @@ class MovementTabCubit extends Cubit<MovementTabState> {
     try {
       emit(InitialMovementTabState());
       emit(LoadingMovementTabState());
-      await MovementCsvRepo.movementCsvSave(movementList);
+      //await MovementCsvRepo.movementCsvSave(movementList);
       emit(LoadedMovementTabState(movementList: movementList));
     } catch (e) {
       emit(ErrorMovementTabState(error: e.toString()));

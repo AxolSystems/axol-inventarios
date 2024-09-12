@@ -58,7 +58,7 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
       }
 
       reportList = await SaleReportRepo.fetchSaleReportById(idList);
-      await InventoryCsv.invSubSaleCsv(inventoryRowList, reportList);
+      //await InventoryCsv.invSubSaleCsv(inventoryRowList, reportList);
 
       emit(LoadedInvDownloadDrawerState());
     } catch (e) {
@@ -78,7 +78,7 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
       dataResponse =
           await InventoryRepo().fetchInventoryList('', warehouse.name);
       inventoryList = dataResponse.dataList as List<InventoryRowModel>;
-      await InventoryCsv.inventoryCsv(inventoryList, warehouse);
+      //await InventoryCsv.inventoryCsv(inventoryList, warehouse);
 
       emit(LoadedInvDownloadDrawerState());
     } catch (e) {
@@ -139,7 +139,7 @@ class InvDownloadDrawerCubit extends Cubit<InvDownloadDrawerState> {
       }
 
       //Descarga archivo csv
-      await InventoryCsv.inventoryCsv(inventoryList, warehouse);
+      //await InventoryCsv.inventoryCsv(inventoryList, warehouse);
 
       emit(LoadedInvDownloadDrawerState());
     } catch (e) {

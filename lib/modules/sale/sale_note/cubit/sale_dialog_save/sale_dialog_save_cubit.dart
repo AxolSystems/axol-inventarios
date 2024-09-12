@@ -25,7 +25,7 @@ class SaleDialogSaveCubit extends Cubit<SaleDialogSaveState> {
     try {
       emit(InitialSaleDialogSaveState());
       emit(LoadingSaleDialogSaveState());
-      await SaleFileRepo.saleNotePdf(saleNote, productList, saleType);
+      //await SaleFileRepo.saleNotePdf(saleNote, productList, saleType);
       emit(LoadedSaleDialogSaveState());
     } catch (e) {
       emit(InitialSaleDialogSaveState());

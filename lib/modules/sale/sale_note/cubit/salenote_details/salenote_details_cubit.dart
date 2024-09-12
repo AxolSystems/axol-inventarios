@@ -42,7 +42,7 @@ class SaleNoteDetailsCubit extends Cubit<SaleNoteDetailsState> {
     try {
       emit(InitialSaleNoteDetailsState());
       emit(LoadingSaleNoteDetailsState());
-      await SaleFileRepo.saleNotePdf(saleNote, productList, saleType);
+      //await SaleFileRepo.saleNotePdf(saleNote, productList, saleType);
       emit(LoadedSaleNoteDetailsState(productList: productList));
     } catch (e) {
       emit(InitialSaleNoteDetailsState());

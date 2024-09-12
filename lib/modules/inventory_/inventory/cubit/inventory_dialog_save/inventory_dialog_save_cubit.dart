@@ -23,7 +23,7 @@ class InventoryDialogSaveCubit extends Cubit<InventoryDialogSaveState> {
     try {
       emit(InitialInventoryDialogSaveState());
       emit(LoadingInventoryDialogSaveState());
-      await InventoryPdfRepo.transferPdf(dataReport);
+      //await InventoryPdfRepo.transferPdf(dataReport);
       emit(LoadedInventoryDialogSaveState());
     } catch (e) {
       emit(InitialInventoryDialogSaveState());
@@ -35,7 +35,7 @@ class InventoryDialogSaveCubit extends Cubit<InventoryDialogSaveState> {
     try {
       emit(InitialInventoryDialogSaveState());
       emit(LoadingInventoryDialogSaveState());
-      await InventoryPdfRepo.singleMove(dataReport);
+      //await InventoryPdfRepo.singleMove(dataReport);
       emit(LoadedInventoryDialogSaveState());
     } catch (e) {
       emit(InitialInventoryDialogSaveState());

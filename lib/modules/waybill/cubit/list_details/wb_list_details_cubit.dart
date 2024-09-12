@@ -34,7 +34,7 @@ class WbListDetailsCubit extends Cubit<WbListDetailsState> {
       emit(InitialWbListDetailsState());
       emit(const LoadingWbListDetailsState(loadingState: LoadingWbListDetails.downCsv));
 
-      await WaybillCsv.waybillCsvSave(waybill);
+      //await WaybillCsv.waybillCsvSave(waybill);
 
       emit(LoadedWbListDetailsState());
     } catch (e) {
