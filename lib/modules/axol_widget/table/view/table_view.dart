@@ -118,7 +118,7 @@ class TableViewBuild extends AxolWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 40,
+                    height: 40.0,
                     decoration: BoxDecoration(
                       border: Border(
                         bottom:
@@ -129,13 +129,13 @@ class TableViewBuild extends AxolWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: SizedBox(
-                            height: 32,
-                            width: 300,
+                            height: 32.0,
+                            width: 300.0,
                             child: PrimaryTextField(
                               controller: form.ctrlSearch,
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8.0),
                               theme: form.theme,
                               prefixIcon: Icon(Icons.search,
                                   color: ColorTheme.item10(form.theme)),
@@ -148,9 +148,9 @@ class TableViewBuild extends AxolWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          padding: const EdgeInsets.symmetric(vertical: 0.0),
                           child: PrimaryButton(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             theme: form.theme,
                             icon: Icons.add,
                             text: 'Nuevo',
@@ -236,9 +236,9 @@ class TableViewBuild extends AxolWidget {
                             ),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 8),
+                            padding: const EdgeInsets.only(right: 8.0),
                             child: SizedBox.square(
-                              dimension: 15,
+                              dimension: 15.0,
                               child: CircularProgressIndicator(
                                   color: ColorTheme.item10(form.theme)),
                             ),
@@ -254,20 +254,20 @@ class TableViewBuild extends AxolWidget {
                         thumbVisibility: true,
                         trackVisibility: true,
                         interactive: true,
-                        radius: const Radius.circular(8),
+                        radius: const Radius.circular(8.0),
                         thickness: 12,
                         scrollbarOrientation: ScrollbarOrientation.bottom,
                         child: RawScrollbar(
-                          padding: const EdgeInsets.fromLTRB(0, 30, 0, -18),
+                          padding: const EdgeInsets.fromLTRB(0.0, 30.0, 0.0, -18.0),
                           notificationPredicate: (ScrollNotification notify) =>
-                              notify.depth == 1,
+                              notify.depth == 1.0,
                           controller: scrollCtrlVertical,
                           thumbVisibility: true,
                           trackVisibility: true,
                           interactive: true,
                           scrollbarOrientation: ScrollbarOrientation.right,
-                          radius: const Radius.circular(8),
-                          thickness: 12,
+                          radius: const Radius.circular(8.0),
+                          thickness: 12.0,
                           child: SingleChildScrollView(
                             controller: scrollCtrlHorizontal,
                             scrollDirection: Axis.horizontal,
@@ -278,7 +278,7 @@ class TableViewBuild extends AxolWidget {
                                       context, form.table.header, form, state),
                                 ),
                                 SizedBox(
-                                  height: constraints.maxHeight - 30,
+                                  height: constraints.maxHeight - 30.0,
                                   child: ScrollConfiguration(
                                     behavior: ScrollConfiguration.of(context)
                                         .copyWith(scrollbars: false),
@@ -288,8 +288,8 @@ class TableViewBuild extends AxolWidget {
                                       scrollDirection: Axis.vertical,
                                       child: SizedBox(
                                         height:
-                                            (form.table.rowList.length * 30) +
-                                                30,
+                                            (form.table.rowList.length * 30.0) +
+                                                30.0,
                                         width: form.sum(),
                                         child: ListView.builder(
                                           itemCount: form.table.rowList.length,
@@ -347,8 +347,8 @@ class TableViewBuild extends AxolWidget {
                     ),
                   ),
                   Container(
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    height: 40.0,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
                       border: Border(
                         top: BorderSide(color: ColorTheme.item30(form.theme)),
@@ -366,10 +366,10 @@ class TableViewBuild extends AxolWidget {
                                 context.read<TableCubit>().prevPage(form, link);
                               },
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 8.0),
                             Text('${form.currentPage} de ${form.totalPage}',
                                 style: Typo.body(form.theme)),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 8.0),
                             SecondaryButton(
                               icon: Icons.chevron_right,
                               theme: form.theme,
@@ -377,7 +377,7 @@ class TableViewBuild extends AxolWidget {
                                 context.read<TableCubit>().nextPage(form, link);
                               },
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 8.0),
                             Row(
                               children: [
                                 Visibility(
@@ -385,12 +385,12 @@ class TableViewBuild extends AxolWidget {
                                   replacement: Text('${form.limitRows}',
                                       style: Typo.body(form.theme)),
                                   child: SizedBox(
-                                    height: 28,
-                                    width: 60,
+                                    height: 28.0,
+                                    width: 60.0,
                                     child: PrimaryTextField(
                                       controller: form.ctrlLimitRow,
                                       theme: form.theme,
-                                      padding: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8.0),
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly
                                       ],
@@ -400,7 +400,7 @@ class TableViewBuild extends AxolWidget {
                                 Text(' filas', style: Typo.body(form.theme)),
                               ],
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 8.0),
                             Text('${form.totalReg} registros',
                                 style: Typo.body(form.theme)),
                           ],
@@ -428,14 +428,14 @@ class TableViewBuild extends AxolWidget {
         decoration: BoxDecoration(
           border: Border.all(color: ColorTheme.item30(form.theme)),
         ),
-        height: 30,
-        width: form.columnWidth[prop.key] ?? 150,
+        height: 30.0,
+        width: form.columnWidth[prop.key] ?? 150.0,
         child: Stack(
           children: [
             Padding(
                 padding: form.edit
-                    ? const EdgeInsets.fromLTRB(4, 4, 24, 4)
-                    : const EdgeInsets.all(4),
+                    ? const EdgeInsets.fromLTRB(4.0, 4.0, 24.0, 4.0)
+                    : const EdgeInsets.all(4.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -446,11 +446,11 @@ class TableViewBuild extends AxolWidget {
                       overflow: TextOverflow.ellipsis,
                     )),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Icon(
                         PropertyModel.iconProp(prop.propertyType),
                         color: ColorTheme.item10(form.theme),
-                        size: 20,
+                        size: 20.0,
                       ),
                     ),
                   ],
@@ -463,7 +463,7 @@ class TableViewBuild extends AxolWidget {
                     visible: form.edit,
                     child: IconButton(
                       constraints:
-                          const BoxConstraints(maxWidth: 32, maxHeight: 20),
+                          const BoxConstraints(maxWidth: 32.0, maxHeight: 20.0),
                       onPressed: (state is SavingTableState) ||
                               (state is LoadingTableState)
                           ? () {}
@@ -478,7 +478,7 @@ class TableViewBuild extends AxolWidget {
                         color: form.keyAscending == prop.key
                             ? ColorPalette.primary
                             : ColorTheme.item20(form.theme),
-                        size: 20,
+                        size: 20.0,
                       ),
                     )),
                 Visibility(
@@ -487,8 +487,8 @@ class TableViewBuild extends AxolWidget {
                   child: GestureDetector(
                     onHorizontalDragUpdate: (details) {
                       final double value =
-                          (form.columnWidth[prop.key] ?? 0) + details.delta.dx;
-                      if (value > 100 && form.hover) {
+                          (form.columnWidth[prop.key] ?? 0.0) + details.delta.dx;
+                      if (value > 100.0 && form.hover) {
                         form.columnWidth[prop.key] = value;
                         context.read<TableCubit>().load();
                       } else {
@@ -501,8 +501,8 @@ class TableViewBuild extends AxolWidget {
                         form.hover = true;
                       },
                       child: Container(
-                        height: 30,
-                        width: 4,
+                        height: 30.0,
+                        width: 4.0,
                         decoration: BoxDecoration(
                           color: ColorTheme.item30(form.theme),
                         ),
@@ -525,16 +525,16 @@ class TableViewBuild extends AxolWidget {
       Map<String, TableCellModel> tableRow, List<PropertyModel> header) {
     List<Widget> widgetList = [];
     Widget widget;
-    for (var i = 0; i < header.length; i++) {
-      var prop = header[i];
+    for (int i = 0; i < header.length; i++) {
+      var prop = header.elementAt(i);
       if (tableRow.keys.contains(prop.key)) {
         final cell = tableRow[prop.key]!;
         if (cell is CellText) {
           widget = Container(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(4.0),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorTheme.item30(form.theme))),
-            height: 30,
+            height: 30.0,
             width: form.columnWidth[prop.key],
             child: Text(
               cell.text,
@@ -544,10 +544,10 @@ class TableViewBuild extends AxolWidget {
           );
         } else if (cell is CellCheck) {
           widget = Container(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4.0),
               decoration: BoxDecoration(
                   border: Border.all(color: ColorTheme.item30(form.theme))),
-              height: 30,
+              height: 30.0,
               width: form.columnWidth[prop.key],
               child: CheckboxView(
                 value: cell.value,
@@ -570,10 +570,10 @@ class TableViewBuild extends AxolWidget {
             elementWidget = const SizedBox();
           }
           widget = Container(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4.0),
               decoration: BoxDecoration(
                   border: Border.all(color: ColorTheme.item30(form.theme))),
-              height: 30,
+              height: 30.0,
               width: form.columnWidth[prop.key],
               child: Row(
                 children: [
@@ -582,10 +582,10 @@ class TableViewBuild extends AxolWidget {
               ));
         } else if (cell is CellAtomicObject) {
           widget = Container(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(4.0),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorTheme.item30(form.theme))),
-            height: 30,
+            height: 30.0,
             width: form.columnWidth[prop.key],
             child: Text(
               cell.atomicObject.id,
@@ -595,19 +595,19 @@ class TableViewBuild extends AxolWidget {
           );
         } else {
           widget = Container(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(4.0),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorTheme.item30(form.theme))),
-            height: 30,
+            height: 30.0,
             width: form.columnWidth[prop.key],
           );
         }
       } else {
         widget = Container(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(4.0),
           decoration: BoxDecoration(
               border: Border.all(color: ColorTheme.item30(form.theme))),
-          height: 30,
+          height: 30.0,
           width: form.columnWidth[prop.key],
         );
       }

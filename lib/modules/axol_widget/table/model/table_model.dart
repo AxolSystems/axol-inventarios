@@ -35,7 +35,7 @@ class TableModel extends DataObject {
     List<PropertyModel> header = [];
     List<Map<String, TableCellModel>> rowList = [];
     Map<String, TableCellModel> row;
-    List<ObjectModel> objects;
+    List<ObjectModel> objects = [];
     List<PropertyModel> propFormulas = [];
 
     if (dataResponse.dataList is List<ObjectModel>) {
@@ -44,11 +44,12 @@ class TableModel extends DataObject {
       objects = [];
     }
 
-    for (var prop in entity.propertyList) {
-      header.add(prop);
-      if (prop.propertyType == Prop.formula &&
-          !prop.dynamicValues[PropertyModel.dvFormula].contains('[query')) {
-        propFormulas.add(prop);
+    /// Aquí está error int double de windows
+    for (PropertyModel property in entity.propertyList) {
+      header.add(property);
+      if (property.propertyType == Prop.formula &&
+          !property.dynamicValues[PropertyModel.dvFormula].contains('[query')) {
+        propFormulas.add(property);
       }
     }
 
