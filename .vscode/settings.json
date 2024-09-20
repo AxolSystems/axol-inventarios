@@ -18,6 +18,7 @@
         "objs",
         "oper",
         "Overscroll",
+        "postgres",
         "postgrest",
         "Postgrest",
         "scrollbars",
