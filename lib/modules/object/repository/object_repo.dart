@@ -2,6 +2,7 @@ import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/filter_form_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
+import 'package:postgres/postgres.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
@@ -18,6 +19,18 @@ class ObjectRepo {
   static const String _object = 'object';
   static const String _createAt = 'create_at';
   static final _supabase = Supabase.instance.client;
+
+  static Future<void> postgresFetch() async {
+    final conn = await Connection.open(Endpoint(
+      host: 'localhost',
+      database: 'test_db',
+      username: 'daniel_lozano',
+      password: '2195',
+    ));
+    /*final result = await conn.execute("SELECT 'foo'");
+    print(result[0][0]);
+    print(result.runtimeType);*/
+  }
 
   /// Obtiene una lista de objetos de la base de datos.
   ///
