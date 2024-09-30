@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/filter_form_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
 import 'package:postgres/postgres.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../models/data_response_model.dart';
 import '../../array/repository/array_repo.dart';
@@ -21,15 +24,24 @@ class ObjectRepo {
   static final _supabase = Supabase.instance.client;
 
   static Future<void> postgresFetch() async {
-    final conn = await Connection.open(Endpoint(
-      host: 'localhost',
-      database: 'test_db',
-      username: 'daniel_lozano',
-      password: '2195',
-    ));
-    /*final result = await conn.execute("SELECT 'foo'");
-    print(result[0][0]);
-    print(result.runtimeType);*/
+    final response = await http.get(
+      Uri.parse('http://192.168.1.74:3000/api/elements')
+    );
+    if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        print(data);
+        /*final List<Product> productList = data
+            .map((item) => Product(
+                id: item['id'],
+                code: item['code'],
+                description: item['description'],
+                price: (item['price'] as num).toDouble(),
+                quantity: item['quantity']))
+            .toList();
+        state = AsyncValue.data(productList);*/
+      } else {
+        throw Exception('Error load element');
+      }
   }
 
   /// Obtiene una lista de objetos de la base de datos.
