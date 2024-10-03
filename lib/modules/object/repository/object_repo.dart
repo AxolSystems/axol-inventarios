@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../models/data_response_model.dart';
+import '../../../utilities/postgresql/postgres_client.dart';
 import '../../array/repository/array_repo.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
@@ -24,8 +25,12 @@ class ObjectRepo {
   static final _supabase = Supabase.instance.client;
 
   static Future<void> postgresFetch() async {
-    final response = await http.get(
-      Uri.parse('http://192.168.1.74:3000/api/elements')
+
+    final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
+
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/api/elements'),
+      body: jsonEncode(<String,String>{'query': query.execute})
     );
     if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
