@@ -278,9 +278,9 @@ class TableCubit extends Cubit<TableState> {
 
     //await ObjectRepo.postgresFetch();
     //await ObjectRepo.postgresCreate();
-    final DataResponseModel responseTest = await ObjectRepo.postgresFetchObject();
-    print('data: ${responseTest.dataList}');
-    print('count: ${responseTest.count}');
+    //final DataResponseModel responseTest = await ObjectRepo.postgresFetchObject();
+    //print('data: ${responseTest.dataList}');
+    //print('count: ${responseTest.count}');
 
     dataResponse = await ObjectRepo.fetchObject(
       filters: form.filters,
