@@ -3,6 +3,9 @@ class QueryBuilder {
   String? table;
   String? oper;
   String? whereClause;
+  String? urlGet;
+  List filterParams = [];
+  Map<String,dynamic> whereData = {};
 
   ///FROM, INTO
   QueryBuilder from(String tableName) {
@@ -46,25 +49,34 @@ class QueryBuilder {
 
   ///Equal
   QueryBuilder eq(String column, dynamic value) {
-    String valueText = '';
     if (value is String) {
-      valueText = '\'$value\'';
-    } else if (value is double || value is int) {
-      valueText = value;
-    }
+      value = '\'$value\'';
+    } else 
     if (whereClause == null) {
-      whereClause = 'WHERE $column = $valueText';
+      //whereData[column] = value;
+      filterParams.add(value);
+      whereClause = 'WHERE $column = \$${filterParams.length}';
     } else {
-      whereClause = '$whereClause AND $column = $valueText';
+      //whereData[column] = value;
+      filterParams.add(value);
+      whereClause = '$whereClause AND $column = \$${filterParams.length}';
     }
     return this;
   }
 
-  String get execute {
+  String get getQuery {
     if (oper?.contains('SELECT') ?? false) {
-      query = '$oper FROM $table $whereClause';
+      query = '$oper FROM $table ${whereClause ?? ''}';
     }
 
     return query ?? '';
+  }
+
+  String get getUrl {
+    urlGet ??= '';
+    for (var element in filterParams) {
+      urlGet = '$urlGet/:$element';
+    }
+    return urlGet ?? '';
   }
 }

@@ -276,7 +276,11 @@ class TableCubit extends Cubit<TableState> {
     rangeMin ??= (form.currentPage * form.limitRows) - form.limitRows;
     rangeMax ??= (form.currentPage * form.limitRows) - 1;
 
-    await ObjectRepo.postgresFetch();
+    //await ObjectRepo.postgresFetch();
+    //await ObjectRepo.postgresCreate();
+    final DataResponseModel responseTest = await ObjectRepo.postgresFetchObject();
+    print('data: ${responseTest.dataList}');
+    print('count: ${responseTest.count}');
 
     dataResponse = await ObjectRepo.fetchObject(
       filters: form.filters,

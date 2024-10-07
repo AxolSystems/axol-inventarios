@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/filter_form_model.dart';
@@ -25,17 +26,17 @@ class ObjectRepo {
   static final _supabase = Supabase.instance.client;
 
   static Future<void> postgresFetch() async {
+    //final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
+    //final String urlGet = query.getUrl;
 
-    final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
-
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/api/elements'),
-      body: jsonEncode(<String,String>{'query': query.execute})
+    final response = await http.get(
+      Uri.parse('http://192.168.1.74:3000/api/element/1'),
+      //body: jsonEncode(<String,String>{'query': query.getQuery})
     );
     if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        print(data);
-        /*final List<Product> productList = data
+      final data = json.decode(response.body);
+      print(data);
+      /*final List<Product> productList = data
             .map((item) => Product(
                 id: item['id'],
                 code: item['code'],
@@ -44,9 +45,54 @@ class ObjectRepo {
                 quantity: item['quantity']))
             .toList();
         state = AsyncValue.data(productList);*/
-      } else {
-        throw Exception('Error load element');
-      }
+    } else {
+      throw Exception('Error load element');
+    }
+  }
+
+  static Future<void> postgresCreate() async {
+    final QueryBuilder query = QueryBuilder().select('*').from('table0');
+    final response = await http.post(
+      Uri.parse('http://192.168.1.74:3000/api/elements'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'query': query.getQuery, 'data': query.filterParams}),
+    );
+
+    if (response.statusCode == 200) {
+      print(json.decode(response.body));
+    } else {
+      throw Exception('Error add new element');
+    }
+  }
+
+  static Future<DataResponseModel> postgresFetchObject() async {
+    final QueryBuilder query = QueryBuilder().select('*').from('table0');
+    final DataResponseModel dataResponse;
+    final response = await http.post(
+      Uri.parse('http://192.168.1.74:3000/api/elements'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'query': query.getQuery, 'data': query.filterParams}),
+    );
+    final responseCount = await http.post(
+      Uri.parse('http://192.168.1.74:3000/api/elements'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'query': 'SELECT COUNT(*) FROM table0', 'data': []}),
+    );
+
+    if (response.statusCode == 200) {
+      final dataList = json.decode(response.body);
+      final int count = int.parse(json.decode(responseCount.body)[0]['count']);
+      dataResponse = DataResponseModel(dataList: dataList, count: count);
+      return dataResponse;
+    } else {
+      throw Exception('Error add new element');
+    }
   }
 
   /// Obtiene una lista de objetos de la base de datos.
