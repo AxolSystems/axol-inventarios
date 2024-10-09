@@ -19,6 +19,7 @@
         "oper",
         "Overscroll",
         "postgres",
+        "postgresql",
         "postgrest",
         "Postgrest",
         "scrollbars",

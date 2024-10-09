@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../models/data_response_model.dart';
 import '../../../utilities/postgresql/postgres_client.dart';
+import '../../../utilities/postgresql/query_builder.dart';
 import '../../array/repository/array_repo.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
@@ -24,6 +25,7 @@ class ObjectRepo {
   static const String _object = 'object';
   static const String _createAt = 'create_at';
   static final _supabase = Supabase.instance.client;
+  static const _uri = PostgresClient.url_http;
 
   static Future<void> postgresFetch() async {
     //final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
@@ -53,7 +55,7 @@ class ObjectRepo {
   static Future<void> postgresCreate() async {
     final QueryBuilder query = QueryBuilder().select('*').from('table0');
     final response = await http.post(
-      Uri.parse('http://192.168.1.74:3000/api/elements'),
+      Uri.parse(_uri),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -71,14 +73,14 @@ class ObjectRepo {
     final QueryBuilder query = QueryBuilder().select('*').from('table0');
     final DataResponseModel dataResponse;
     final response = await http.post(
-      Uri.parse('http://192.168.1.74:3000/api/elements'),
+      Uri.parse(_uri),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
       body: jsonEncode({'query': query.getQuery, 'data': query.filterParams}),
     );
     final responseCount = await http.post(
-      Uri.parse('http://192.168.1.74:3000/api/elements'),
+      Uri.parse(_uri),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

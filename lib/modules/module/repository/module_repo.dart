@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../utilities/postgresql/postgres_client.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
 import '../model/module_model.dart';
@@ -14,6 +15,20 @@ class ModuleRepo {
   static const String _permissions = 'permissions';
   static const String _widgetLink = 'widget_link';
   static final _supabase = Supabase.instance.client;
+
+  static const String _uri = PostgresClient.url_http;
+
+  ///FETCH MODULES V. 2
+  static Future <List<ModuleModel>> fetchModulesPostgres() async {
+    List<ModuleModel> moduleList = [];
+    //1. Obtiene todos los módulos de la base de datos.
+    //List<Map<String, dynamic>> modulesDB.
+
+    //2. Mapea id de widgets mediante tabla "links_module_widget", donde key = position,
+    //value = id_widget. 
+
+    return moduleList;
+  }
 
   /// Obtiene de la base de datos todos los módulos creados por el usuario.
   static Future<List<ModuleModel>> fetchModuleList() async {
