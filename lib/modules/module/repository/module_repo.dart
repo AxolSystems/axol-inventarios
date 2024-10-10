@@ -7,7 +7,9 @@ import '../../../utilities/postgresql/postgres_client.dart';
 import '../../../utilities/postgresql/query_builder.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
+import '../model/link_widget_module_model.dart';
 import '../model/module_model.dart';
+import 'links_widget_module_repo.dart';
 import 'module_data_repo.dart';
 
 /// Pasa y recibe datos de módulos a la base da datos.
@@ -26,6 +28,7 @@ class ModuleRepo {
   static Future<List<ModuleModel>> fetchModulesPostgres() async {
     List<ModuleModel> moduleList = [];
     List<String> idModules = [];
+    List<LinkWidgetModuleModel> links = [];
     List<Map<String, dynamic>> modulesDB;
     final QueryBuilder queryModule =
         QueryBuilder().select('*').from(PostgresClient.tableModules);
@@ -41,20 +44,18 @@ class ModuleRepo {
     
     if (response.statusCode == 200) {
       modulesDB = json.decode(response.body);
-      print('moduleDB: $modulesDB');
     } else {
       throw Exception('Error add new element');
     }
 
-    //2. Mapea id de widgets mediante tabla "links_module_widget", donde key = position,
-    //value = id_widget.
-    //SELECT * FROM links_module_widget WHERE id_module = String
+    //2. Obtiene lista de objetos LinkWidgetModuleModel.
     if (modulesDB.isNotEmpty) {
       for (Map<String,dynamic> element in modulesDB) {
         idModules.add(element[_id]);
       }
     }
-    //final QueryBuilder queryLink = QueryBuilder().select('*').from(PostgresClient.tableLinkWidgetModule).
+    
+    links = await LinksWidgetModuleRepo().fetchInModule(idModules);
 
     //3. Convierte los los elementos de modulesDB a objeto modulo.
 

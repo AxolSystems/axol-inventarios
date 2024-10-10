@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+import 'postgres_client.dart';
+
 class QueryBuilder {
   String? query;
   String? table;
@@ -5,7 +11,7 @@ class QueryBuilder {
   String? whereClause;
   String? urlGet;
   List filterParams = [];
-  Map<String,dynamic> whereData = {};
+  Map<String, dynamic> whereData = {};
 
   ///FROM, INTO
   QueryBuilder from(String tableName) {
@@ -52,22 +58,19 @@ class QueryBuilder {
     if (value is String) {
       //value = '\'$value\'';
       value = _valueText(value);
-    } else 
-    if (whereClause == null) {
-      //whereData[column] = value;
-      filterParams.add(value);
+    } else if (whereClause == null) {
+      //filterParams.add(value);
       //whereClause = 'WHERE $column = \$${filterParams.length}';
       whereClause = 'WHERE $column = $value';
     } else {
-      //whereData[column] = value;
-      filterParams.add(value);
+      //filterParams.add(value);
       //whereClause = '$whereClause AND $column = \$${filterParams.length}';
       whereClause = '$whereClause AND $column = $value';
     }
     return this;
   }
 
-  ///in_(String, List)
+  ///in_
   QueryBuilder in_(String column, List values) {
     String inFilters = '';
     for (var element in values) {
@@ -81,11 +84,9 @@ class QueryBuilder {
       }
     }
     if (whereClause == null) {
-      //filterParams.add(value);
-      whereClause = 'WHERE $column IN \$${filterParams.length}';
+      whereClause = 'WHERE $column IN ($inFilters)';
     } else {
-      //filterParams.add(value);
-      whereClause = '$whereClause AND $column IN \$${filterParams.length}';
+      whereClause = '$whereClause AND $column IN ($inFilters)';
     }
     return this;
   }
@@ -107,6 +108,33 @@ class QueryBuilder {
     }
     return urlGet ?? '';
   }
-}
 
-String _valueText(dynamic value) => '\'$value\'';
+  Future<List<Map<String, dynamic>>> get responseData async {
+    const String uri = PostgresClient.urlHttp;
+    List<Map<String, dynamic>> response = [];
+
+    if (oper?.contains('SELECT') ?? false) {
+      query = '$oper FROM $table ${whereClause ?? ''}';
+    }
+
+    final postgresResponse = await http.post(
+      Uri.parse(uri),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'query': query, 'data': filterParams}),
+    );
+
+    if (postgresResponse.statusCode == 200) {
+      response = json.decode(postgresResponse.body);
+    } else {
+      throw Exception('Error add new element');
+    }
+
+    return response;
+  }
+
+  // **************** PRIVATE METHODS **************** //
+
+  String _valueText(dynamic value) => '\'$value\'';
+}
