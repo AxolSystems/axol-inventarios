@@ -27,6 +27,8 @@ class ModuleRepo {
     //2. Mapea id de widgets mediante tabla "links_module_widget", donde key = position,
     //value = id_widget. 
 
+    //3. Convierte los los elementos de modulesDB a objeto modulo.
+
     return moduleList;
   }
 
