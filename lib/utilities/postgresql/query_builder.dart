@@ -50,19 +50,47 @@ class QueryBuilder {
   ///Equal
   QueryBuilder eq(String column, dynamic value) {
     if (value is String) {
-      value = '\'$value\'';
+      //value = '\'$value\'';
+      value = _valueText(value);
     } else 
     if (whereClause == null) {
       //whereData[column] = value;
       filterParams.add(value);
-      whereClause = 'WHERE $column = \$${filterParams.length}';
+      //whereClause = 'WHERE $column = \$${filterParams.length}';
+      whereClause = 'WHERE $column = $value';
     } else {
       //whereData[column] = value;
       filterParams.add(value);
-      whereClause = '$whereClause AND $column = \$${filterParams.length}';
+      //whereClause = '$whereClause AND $column = \$${filterParams.length}';
+      whereClause = '$whereClause AND $column = $value';
     }
     return this;
   }
+
+  ///in_(String, List)
+  QueryBuilder in_(String column, List values) {
+    String inFilters = '';
+    for (var element in values) {
+      if (element is String) {
+        element = _valueText(element);
+      }
+      if (inFilters == '') {
+        inFilters = '$element';
+      } else {
+        inFilters = ',$element';
+      }
+    }
+    if (whereClause == null) {
+      //filterParams.add(value);
+      whereClause = 'WHERE $column IN \$${filterParams.length}';
+    } else {
+      //filterParams.add(value);
+      whereClause = '$whereClause AND $column IN \$${filterParams.length}';
+    }
+    return this;
+  }
+
+  // ****************** GETS ****************** //
 
   String get getQuery {
     if (oper?.contains('SELECT') ?? false) {
@@ -80,3 +108,5 @@ class QueryBuilder {
     return urlGet ?? '';
   }
 }
+
+String _valueText(dynamic value) => '\'$value\'';

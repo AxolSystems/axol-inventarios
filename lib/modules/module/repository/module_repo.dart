@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../utilities/postgresql/postgres_client.dart';
+import '../../../utilities/postgresql/query_builder.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
 import '../model/module_model.dart';
@@ -16,16 +20,41 @@ class ModuleRepo {
   static const String _widgetLink = 'widget_link';
   static final _supabase = Supabase.instance.client;
 
-  static const String _uri = PostgresClient.url_http;
+  static const String _uri = PostgresClient.urlHttp;
 
   ///FETCH MODULES V. 2
-  static Future <List<ModuleModel>> fetchModulesPostgres() async {
+  static Future<List<ModuleModel>> fetchModulesPostgres() async {
     List<ModuleModel> moduleList = [];
+    List<String> idModules = [];
+    List<Map<String, dynamic>> modulesDB;
+    final QueryBuilder queryModule =
+        QueryBuilder().select('*').from(PostgresClient.tableModules);
+
     //1. Obtiene todos los módulos de la base de datos.
-    //List<Map<String, dynamic>> modulesDB.
+    final response = await http.post(
+      Uri.parse(_uri),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'query': queryModule.getQuery, 'data': queryModule.filterParams}),
+    );
+    
+    if (response.statusCode == 200) {
+      modulesDB = json.decode(response.body);
+      print('moduleDB: $modulesDB');
+    } else {
+      throw Exception('Error add new element');
+    }
 
     //2. Mapea id de widgets mediante tabla "links_module_widget", donde key = position,
-    //value = id_widget. 
+    //value = id_widget.
+    //SELECT * FROM links_module_widget WHERE id_module = String
+    if (modulesDB.isNotEmpty) {
+      for (Map<String,dynamic> element in modulesDB) {
+        idModules.add(element[_id]);
+      }
+    }
+    //final QueryBuilder queryLink = QueryBuilder().select('*').from(PostgresClient.tableLinkWidgetModule).
 
     //3. Convierte los los elementos de modulesDB a objeto modulo.
 

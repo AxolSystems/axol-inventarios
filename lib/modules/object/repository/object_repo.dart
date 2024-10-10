@@ -25,7 +25,7 @@ class ObjectRepo {
   static const String _object = 'object';
   static const String _createAt = 'create_at';
   static final _supabase = Supabase.instance.client;
-  static const _uri = PostgresClient.url_http;
+  static const _uri = PostgresClient.urlHttp;
 
   static Future<void> postgresFetch() async {
     //final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
