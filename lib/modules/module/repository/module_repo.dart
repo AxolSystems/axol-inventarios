@@ -30,34 +30,50 @@ class ModuleRepo {
     List<String> idModules = [];
     List<LinkWidgetModuleModel> links = [];
     List<Map<String, dynamic>> modulesDB;
-    final QueryBuilder queryModule =
-        QueryBuilder().select('*').from(PostgresClient.tableModules);
+    /*final QueryBuilder queryModule =
+        QueryBuilder().select('*').from(PostgresClient.tableModules);*/
+    final String query =
+        'SELECT m.id_module, m.text, m.icon, w.id_widget, w.widget, l.index FROM modules m INNER JOIN links_widget_module l ON m.id_module = l.id_module INNER JOIN widgets w ON l.id_widget = w.id_widget';
 
     //1. Obtiene todos los módulos de la base de datos.
+    //Obtener: Todos los módulos, los widgets del modulo seleccionado,
+    //las vistas del widget seleccionado, y la entidad del widget seleccionado. 
     final response = await http.post(
       Uri.parse(_uri),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({'query': queryModule.getQuery, 'data': queryModule.filterParams}),
+      body: jsonEncode({'query': query, 'data': []}),
     );
-    
+
     if (response.statusCode == 200) {
       modulesDB = json.decode(response.body);
     } else {
       throw Exception('Error add new element');
     }
 
-    //2. Obtiene lista de objetos LinkWidgetModuleModel.
-    if (modulesDB.isNotEmpty) {
+    //2. Convierte json en objetos module_model.
+
+    for (Map<String, dynamic> element in modulesDB) {
+      moduleList.add(ModuleModel(
+        name: element[ModulesDB.name] ?? '',
+        id: element[ModulesDB.id] ?? '',
+        icon: element[ModulesDB.icon] ?? -1,
+        widgetLinks: [],
+        permissions: {},
+      ));
+    }
+
+    //XXX2. Obtiene lista de objetos LinkWidgetModuleModel.
+    /*if (modulesDB.isNotEmpty) {
       for (Map<String,dynamic> element in modulesDB) {
         idModules.add(element[_id]);
       }
     }
     
-    links = await LinksWidgetModuleRepo().fetchInModule(idModules);
+    links = await LinksWidgetModuleRepo().fetchInModule(idModules);*/
 
-    //3. Convierte los los elementos de modulesDB a objeto modulo.
+    //XXX3. Convierte los los elementos de modulesDB a objeto modulo.
 
     return moduleList;
   }
