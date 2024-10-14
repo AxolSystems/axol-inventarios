@@ -41,8 +41,10 @@ class MainViewCubit extends Cubit<MainViewState> {
 
       form.user = await LocalUser().getLocalUser();
 
-      moduleList = await ModuleRepo.fetchModuleList();
-      await ModuleRepo.fetchModulesPostgres();
+      //moduleList = await ModuleRepo.fetchModuleList();
+      //await ModuleRepo.fetchModulesPostgres();
+      //V 2.0
+      moduleList = await ModuleRepo.fetchModulesPostgres();
 
       if (moduleList.isNotEmpty) {
         module = moduleList[0];

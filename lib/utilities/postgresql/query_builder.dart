@@ -126,12 +126,32 @@ class QueryBuilder {
     );
 
     if (postgresResponse.statusCode == 200) {
-      response = json.decode(postgresResponse.body);
+      final responseDecode = json.decode(postgresResponse.body);
+      for (var element in responseDecode) {
+        response.add(element);
+      }
     } else {
       throw Exception('Error add new element');
     }
 
     return response;
+  }
+
+  Future<int> countData(String tableName) async {
+    const String uri = PostgresClient.urlHttp;
+    final responseCount = await http.post(
+      Uri.parse(uri),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'query': 'SELECT COUNT(*) FROM $tableName', 'data': []}),
+    );
+    if (responseCount.statusCode == 200) {
+      final int count = int.parse(json.decode(responseCount.body)[0]['count']);
+      return count;
+    } else {
+      throw Exception('Error add new element');
+    }
   }
 
   // **************** PRIVATE METHODS **************** //

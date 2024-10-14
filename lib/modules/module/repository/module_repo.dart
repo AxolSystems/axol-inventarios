@@ -1,15 +1,13 @@
-import 'dart:convert';
-
+import 'package:axol_inventarios/modules/entity/model/entity_model.dart';
+import 'package:axol_inventarios/modules/entity/model/property_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../utilities/postgresql/postgres_client.dart';
 import '../../../utilities/postgresql/query_builder.dart';
+import '../../widget_link/model/widget_view_model.dart';
 import '../../widget_link/model/widgetlink_model.dart';
 import '../../widget_link/repository/widgetlink_repo.dart';
-import '../model/link_widget_module_model.dart';
 import '../model/module_model.dart';
-import 'links_widget_module_repo.dart';
 import 'module_data_repo.dart';
 
 /// Pasa y recibe datos de módulos a la base da datos.
@@ -22,58 +20,110 @@ class ModuleRepo {
   static const String _widgetLink = 'widget_link';
   static final _supabase = Supabase.instance.client;
 
-  static const String _uri = PostgresClient.urlHttp;
-
   ///FETCH MODULES V. 2
   static Future<List<ModuleModel>> fetchModulesPostgres() async {
     List<ModuleModel> moduleList = [];
-    List<String> idModules = [];
-    List<LinkWidgetModuleModel> links = [];
-    List<Map<String, dynamic>> modulesDB;
-    /*final QueryBuilder queryModule =
-        QueryBuilder().select('*').from(PostgresClient.tableModules);*/
-    final String query =
-        'SELECT m.id_module, m.text, m.icon, w.id_widget, w.widget, l.index FROM modules m INNER JOIN links_widget_module l ON m.id_module = l.id_module INNER JOIN widgets w ON l.id_widget = w.id_widget';
+    List<Map<String, dynamic>> modulesDB = [];
+    List<Map<String, dynamic>> entitiesDB = [];
+    List<WidgetViewModel> viewList = [];
+    List<WidgetLinkModel> widgetList = [];
+    List<PropertyModel> propertyList = [];
+    String entityIdsText = '';
+    EntityModel entity;
 
-    //1. Obtiene todos los módulos de la base de datos.
-    //Obtener: Todos los módulos, los widgets del modulo seleccionado,
-    //las vistas del widget seleccionado, y la entidad del widget seleccionado. 
-    final response = await http.post(
-      Uri.parse(_uri),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'query': query, 'data': []}),
-    );
+    const String query =
+        'SELECT m.id_module, m.index_module, m.text, m.icon, w.id_widget, w.index_widget, w.widget,w.id_entity,v.id_view, v.index_view, v.name, v.dynamic_values FROM modules m LEFT JOIN widgets w ON m.id_module = w.id_module AND m.index_module = 0 LEFT JOIN views v ON w.id_widget = v.id_widget';
+    QueryBuilder queryBuilder = QueryBuilder();
 
-    if (response.statusCode == 200) {
-      modulesDB = json.decode(response.body);
-    } else {
-      throw Exception('Error add new element');
+    //1. Obtiene Map con módulos, widgets y vistas.
+    queryBuilder.query = query;
+    modulesDB = await queryBuilder.responseData;
+
+    //2. Mapea el contenido de modulesDB por id.
+    Map<String, Map<String, Map<String, dynamic>>> mapM = {};
+    for (Map<String, dynamic> item in modulesDB) {
+      final idM = item[ModulesDB.id];
+      final idW = item[WidgetsDB.id];
+      final idV = item[ViewsDB.id];
+
+      mapM[idM] ??= {};
+      if (idW != null) {
+        mapM[idM]?[idW] ??= {};
+        if (idV != null) {
+          mapM[idM]![idW]![idV] = null;
+        }
+      }
+    }
+    //print(modulesDB);
+
+    //3. Obtiene lista de entidades relacionados a los widgets
+    for (String keyM in mapM.keys) {
+      for (String keyW in mapM[keyM]!.keys) {
+        if (entityIdsText == '') {
+          entityIdsText =
+              '\'${modulesDB.firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.idEntity] ?? ''}\'';
+        } else {
+          entityIdsText =
+              '$entityIdsText,\'${modulesDB.firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.idEntity] ?? ''}\'';
+        }
+      }
     }
 
-    //2. Convierte json en objetos module_model.
+    queryBuilder.query =
+        'SELECT * FROM entities e INNER JOIN properties p ON e.id_entity = p.id_entity WHERE e.id_entity IN ($entityIdsText)';
+    entitiesDB = await queryBuilder.responseData;
+    //print(entitiesDB);
 
-    for (Map<String, dynamic> element in modulesDB) {
-      moduleList.add(ModuleModel(
-        name: element[ModulesDB.name] ?? '',
-        id: element[ModulesDB.id] ?? '',
-        icon: element[ModulesDB.icon] ?? -1,
-        widgetLinks: [],
-        permissions: {},
+    for (Map<String, dynamic> element in entitiesDB) {
+      propertyList.add(PropertyModel(
+        name: element[PropertiesDB.propName],
+        propertyType:
+            PropertyModel.getPropToInt(element[PropertiesDB.dataType]),
+        key: element[PropertiesDB.columnName],
+        dynamicValues: element[PropertiesDB.dynamicValues] ?? {},
       ));
     }
 
-    //XXX2. Obtiene lista de objetos LinkWidgetModuleModel.
-    /*if (modulesDB.isNotEmpty) {
-      for (Map<String,dynamic> element in modulesDB) {
-        idModules.add(element[_id]);
-      }
-    }
-    
-    links = await LinksWidgetModuleRepo().fetchInModule(idModules);*/
+    entity = EntityModel(
+      entityName: entitiesDB.first[EntitiesDB.entityName],
+      propertyList: propertyList,
+      tableName: entitiesDB.first[EntitiesDB.table],
+      uuid: entitiesDB.first[EntitiesDB.id],
+    );
 
-    //XXX3. Convierte los los elementos de modulesDB a objeto modulo.
+    //Crea objetos module.
+    for (String keyM in mapM.keys) {
+      widgetList = [];
+      for (String keyW in mapM[keyM]!.keys) {
+        viewList = [];
+        for (String keyV in mapM[keyM]![keyW]!.keys) {
+          viewList.add(WidgetViewModel(
+              name: modulesDB
+                  .firstWhere((x) => x[ViewsDB.id] == keyV)[ViewsDB.name],
+              filterList: [],
+              key: keyV,
+              properties: {}));
+        }
+        widgetList.add(WidgetLinkModel(
+          id: modulesDB
+              .firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.id],
+          entity: entity,
+          widget: modulesDB
+              .firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.widget],
+          views: viewList,
+        ));
+      }
+      moduleList.add(ModuleModel(
+        name: modulesDB
+            .firstWhere((x) => x[ModulesDB.id] == keyM)[ModulesDB.name],
+        id: modulesDB.firstWhere((x) => x[ModulesDB.id] == keyM)[ModulesDB.id],
+        icon: IconsRepo.getIcon(modulesDB
+            .firstWhere((x) => x[ModulesDB.id] == keyM)[ModulesDB.icon]),
+        widgetLinks: widgetList,
+        permissions: {},
+      ));
+    }
+    //print(moduleList.first.widgetLinks.first.views[1].name);
 
     return moduleList;
   }

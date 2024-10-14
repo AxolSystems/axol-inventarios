@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:js_interop';
+import 'dart:math';
 
 import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/filter_form_model.dart';
@@ -27,7 +28,7 @@ class ObjectRepo {
   static final _supabase = Supabase.instance.client;
   static const _uri = PostgresClient.urlHttp;
 
-  static Future<void> postgresFetch() async {
+  /*static Future<void> postgresFetch() async {
     //final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
     //final String urlGet = query.getUrl;
 
@@ -67,9 +68,9 @@ class ObjectRepo {
     } else {
       throw Exception('Error add new element');
     }
-  }
+  }*/
 
-  static Future<DataResponseModel> postgresFetchObject() async {
+  /*static Future<DataResponseModel> postgresFetchObject() async {
     final QueryBuilder query = QueryBuilder().select('*').from('table0');
     final DataResponseModel dataResponse;
     final response = await http.post(
@@ -95,6 +96,66 @@ class ObjectRepo {
     } else {
       throw Exception('Error add new element');
     }
+  }*/
+
+  static Future<DataResponseModel> postgresFetchObject(
+      EntityModel entity) async {
+    final DataResponseModel dataResponse;
+    final List<Map<String, dynamic>> objectsDB;
+    final List<ObjectModel> objectList = [];
+    List<ArrayModel> arrayList = [];
+    final List<String> idArrayList = [];
+    Map<String, dynamic> map = {};
+    final int count;
+    final String query = 'SELECT * FROM ${entity.tableName}';
+    QueryBuilder queryBuilder = QueryBuilder();
+
+    //1. Obtiene Map con módulos, widgets y vistas.
+    queryBuilder.query = query;
+    objectsDB = await queryBuilder.responseData;
+    count = await queryBuilder.countData(entity.tableName);
+
+    //2. Obtiene arrays en caso de que haya propiedades de tipo array.
+    if (entity.propertyList.indexWhere((x) => x.propertyType == Prop.array) >
+        -1) {
+      for (PropertyModel element
+          in entity.propertyList.where((x) => x.propertyType == Prop.array)) {
+        idArrayList.add(element.dynamicValues[PropertyModel.dvIdArray]);
+      }
+      arrayList = await ArrayRepo.postgresFetchArray(idArrayList);
+    }
+
+    for (Map<String, dynamic> element in objectsDB) {
+      map = {};
+      for (String key in element.keys) {
+        if (key != 'id' && key != 'create_at') {
+          final PropertyModel prop =
+              entity.propertyList.firstWhere((x) => x.key == key);
+          if (prop.propertyType == Prop.time) {
+            map[key] = DateTime.parse(element[key]).millisecondsSinceEpoch;
+          } else if (prop.propertyType == Prop.array) {
+            final ArrayModel arrayDB = arrayList.firstWhere(
+                (x) => x.id == prop.dynamicValues[PropertyModel.dvIdArray]);
+            map[key] = ArrayModel(
+              id: arrayDB.id,
+              list: arrayDB.list,
+              value: element[key] ?? '',
+            );
+          } else {
+            map[key] = element[key];
+          }
+        }
+      }
+      objectList.add(ObjectModel(
+        id: element['id'],
+        map: map,
+        createAt: DateTime.parse(element['create_at']),
+      ));
+    }
+
+    dataResponse = DataResponseModel(dataList: objectList, count: count);
+
+    return dataResponse;
   }
 
   /// Obtiene una lista de objetos de la base de datos.

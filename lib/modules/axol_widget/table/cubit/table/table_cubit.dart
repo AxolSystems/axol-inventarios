@@ -278,11 +278,14 @@ class TableCubit extends Cubit<TableState> {
 
     //await ObjectRepo.postgresFetch();
     //await ObjectRepo.postgresCreate();
-    //final DataResponseModel responseTest = await ObjectRepo.postgresFetchObject();
     //print('data: ${responseTest.dataList}');
     //print('count: ${responseTest.count}');
 
-    dataResponse = await ObjectRepo.fetchObject(
+    dataResponse = await ObjectRepo.postgresFetchObject(link.entity);
+    //print(dataResponse.dataList);
+
+    //V 1.0: Supabase
+    /*dataResponse = await ObjectRepo.fetchObject(
       filters: form.filters,
       link: link,
       rangeMin: rangeMin,
@@ -290,7 +293,7 @@ class TableCubit extends Cubit<TableState> {
       ascending: form.ascending,
       keyAscending: form.keyAscending,
       search: search,
-    );
+    );*/
     countReg = dataResponse.count;
     form.totalPage = (countReg / form.limitRows).ceil();
     form.totalReg = countReg;
