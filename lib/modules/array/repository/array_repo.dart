@@ -28,7 +28,7 @@ class ArrayRepo {
     QueryBuilder queryBuilder = QueryBuilder();
 
     queryBuilder.query = query;
-    response = await queryBuilder.responseData;
+    response = await queryBuilder.responseQuery;
 
     if (response.isNotEmpty) {
       for (Map<String, dynamic> row in response) {

@@ -1,17 +1,9 @@
-import 'dart:convert';
-import 'dart:js_interop';
-import 'dart:math';
-
 import 'package:axol_inventarios/modules/array/model/array_model.dart';
-import 'package:axol_inventarios/modules/axol_widget/table/model/filter_form_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
-import 'package:postgres/postgres.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../models/data_response_model.dart';
-import '../../../utilities/postgresql/postgres_client.dart';
 import '../../../utilities/postgresql/query_builder.dart';
 import '../../array/repository/array_repo.dart';
 import '../../entity/model/entity_model.dart';
@@ -26,7 +18,6 @@ class ObjectRepo {
   static const String _object = 'object';
   static const String _createAt = 'create_at';
   static final _supabase = Supabase.instance.client;
-  static const _uri = PostgresClient.urlHttp;
 
   /*static Future<void> postgresFetch() async {
     //final QueryBuilder query = QueryBuilder().select('*').eq('id', 1);
@@ -98,8 +89,10 @@ class ObjectRepo {
     }
   }*/
 
-  static Future<DataResponseModel> postgresFetchObject(
-      EntityModel entity) async {
+  static Future<DataResponseModel> postgresFetchObject({
+    required EntityModel entity,
+    String? search,
+  }) async {
     final DataResponseModel dataResponse;
     final List<Map<String, dynamic>> objectsDB;
     final List<ObjectModel> objectList = [];
@@ -107,15 +100,22 @@ class ObjectRepo {
     final List<String> idArrayList = [];
     Map<String, dynamic> map = {};
     final int count;
-    final String query = 'SELECT * FROM ${entity.tableName}';
-    QueryBuilder queryBuilder = QueryBuilder();
+    //final String query = 'SELECT * FROM ${entity.tableName}';
+    QueryBuilder query = QueryBuilder().select().from(entity.tableName);
 
-    //1. Obtiene Map con módulos, widgets y vistas.
-    queryBuilder.query = query;
-    objectsDB = await queryBuilder.responseData;
-    count = await queryBuilder.countData(entity.tableName);
+    //1. Agrega filtros a query.
+    if (search != null) {
+      for (PropertyModel prop in entity.propertyList) {
+        query.ilike(prop.key, search, oper: OperQuery.or);
+      }
+    }
 
-    //2. Obtiene arrays en caso de que haya propiedades de tipo array.
+    //2. Obtiene Map con módulos, widgets y vistas.
+    //queryBuilder.query = query;
+    objectsDB = await query.responseQuery; //queryBuilder.responseQuery;
+    count = await query.countData(entity.tableName);
+
+    //3. Obtiene arrays en caso de que haya propiedades de tipo array.
     if (entity.propertyList.indexWhere((x) => x.propertyType == Prop.array) >
         -1) {
       for (PropertyModel element
@@ -125,6 +125,7 @@ class ObjectRepo {
       arrayList = await ArrayRepo.postgresFetchArray(idArrayList);
     }
 
+    //4. Convierte respuesta de base de datos a lista de modelo de objetos.
     for (Map<String, dynamic> element in objectsDB) {
       map = {};
       for (String key in element.keys) {

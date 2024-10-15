@@ -281,7 +281,10 @@ class TableCubit extends Cubit<TableState> {
     //print('data: ${responseTest.dataList}');
     //print('count: ${responseTest.count}');
 
-    dataResponse = await ObjectRepo.postgresFetchObject(link.entity);
+    dataResponse = await ObjectRepo.postgresFetchObject(
+      entity: link.entity,
+      search: search,
+    );
     //print(dataResponse.dataList);
 
     //V 1.0: Supabase

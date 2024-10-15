@@ -19,7 +19,7 @@ class LinksWidgetModuleRepo {
         .select('*')
         .from(_table)
         .in_(_idWidget, idModules);
-    final List<Map<String, dynamic>> response = await query.responseData;
+    final List<Map<String, dynamic>> response = await query.responseQuery;
 
     for (Map<String, dynamic> element in response) {
       links.add(LinkWidgetModuleModel(

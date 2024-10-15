@@ -37,7 +37,7 @@ class ModuleRepo {
 
     //1. Obtiene Map con módulos, widgets y vistas.
     queryBuilder.query = query;
-    modulesDB = await queryBuilder.responseData;
+    modulesDB = await queryBuilder.responseQuery;
 
     //2. Mapea el contenido de modulesDB por id.
     Map<String, Map<String, Map<String, dynamic>>> mapM = {};
@@ -71,7 +71,7 @@ class ModuleRepo {
 
     queryBuilder.query =
         'SELECT * FROM entities e INNER JOIN properties p ON e.id_entity = p.id_entity WHERE e.id_entity IN ($entityIdsText)';
-    entitiesDB = await queryBuilder.responseData;
+    entitiesDB = await queryBuilder.responseQuery;
     //print(entitiesDB);
 
     for (Map<String, dynamic> element in entitiesDB) {
