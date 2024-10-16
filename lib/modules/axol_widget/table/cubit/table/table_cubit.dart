@@ -284,6 +284,7 @@ class TableCubit extends Cubit<TableState> {
     dataResponse = await ObjectRepo.postgresFetchObject(
       entity: link.entity,
       search: search,
+      filters: form.filters,
     );
     //print(dataResponse.dataList);
 

@@ -1,6 +1,5 @@
 import 'package:axol_inventarios/modules/axol_widget/generic/view/axol_widget.dart';
 import 'package:axol_inventarios/modules/axol_widget/table/model/table_cell_model.dart';
-import 'package:axol_inventarios/modules/formula/repository/formula_function.dart';
 import 'package:axol_inventarios/modules/object/model/object_model.dart';
 import 'package:axol_inventarios/utilities/widgets/buttons/button.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/theme/theme.dart';
 import '../../../../utilities/widgets/checkbox_view.dart';
 import '../../../../utilities/widgets/dialog.dart';
-import '../../../../utilities/widgets/scroll_view_axol.dart';
 import '../../../../utilities/widgets/textfield.dart';
 import '../../../entity/model/property_model.dart';
 import '../../../main_/cubit/main_view/mainview_cubit.dart';

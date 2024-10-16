@@ -53,7 +53,7 @@ class FilterCubit extends Cubit<FilterState> {
             getFilterModel(
               property: flt.property,
               value: value,
-              filterOperator: flt.operator,
+              filterOperator: flt.oper,
             ));
       }
 
@@ -119,7 +119,8 @@ class FilterCubit extends Cubit<FilterState> {
           );
         } else if (prop.propertyType == Prop.array) {
           final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
-          final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+          final List<String> list = await ArrayRepo.postgresFetchArrayById(idArray);
+          //ArrayRepo.fetchArrayById(idArray);
           if (list.isEmpty) {
             list.add('');
           }
@@ -290,7 +291,7 @@ class FilterCubit extends Cubit<FilterState> {
             getFilterModel(
               property: flt.property,
               value: flt.value,
-              filterOperator: flt.operator,
+              filterOperator: flt.oper,
             ));
       }
 

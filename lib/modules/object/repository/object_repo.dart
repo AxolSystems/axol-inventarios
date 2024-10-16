@@ -20,6 +20,7 @@ class ObjectRepo {
   static final _supabase = Supabase.instance.client;
 
   static Future<DataResponseModel> postgresFetchObject({
+    required List<FilterObjModel> filters,
     required EntityModel entity,
     String? search,
   }) async {
@@ -44,9 +45,28 @@ class ObjectRepo {
       query.or(filterList);
     }
 
+    for (FilterObjModel filter in filters) {
+      if (filter.oper == FilterOperator.eq) {
+        query.eq(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.like) {
+        query.like(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.ilike) {
+        query.ilike(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.gt) {
+        query.gt(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.gte) {
+        query.gte(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.lt) {
+        query.lt(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.lte) {
+        query.lte(filter.property.key, filter.value);
+      } else if (filter.oper == FilterOperator.neq) {
+        query.neq(filter.property.key, filter.value);
+      }
+    }
+
     //2. Obtiene Map con módulos, widgets y vistas.
-    //queryBuilder.query = query;
-    print('QUERY: ${query.query}');
+    //print('QUERY: ${query.query}');
     objectsDB = await query.responseQuery;
     count = await query.countData(entity.tableName);
 
@@ -273,7 +293,7 @@ class ObjectRepo {
               FilterObjModel(
                   property: filter.propertyRef!,
                   value: filter.value,
-                  operator: filter.operator),
+                  oper: filter.oper),
               queryRef);
         }
 
@@ -484,30 +504,30 @@ class ObjectRepo {
       value = filter.value;
     }
 
-    if (filter.operator == FilterOperator.eq) {
+    if (filter.oper == FilterOperator.eq) {
       queryFlt = queryFlt.eq('$_object->>"${filter.property.key}"', value);
     }
-    if (filter.operator == FilterOperator.like) {
+    if (filter.oper == FilterOperator.like) {
       queryFlt =
           queryFlt.like('$_object->>"${filter.property.key}"', '%$value%');
     }
-    if (filter.operator == FilterOperator.ilike) {
+    if (filter.oper == FilterOperator.ilike) {
       queryFlt =
           queryFlt.ilike('$_object->>"${filter.property.key}"', '%$value%');
     }
-    if (filter.operator == FilterOperator.gt) {
+    if (filter.oper == FilterOperator.gt) {
       queryFlt = queryFlt.gt('$_object->>"${filter.property.key}"', value);
     }
-    if (filter.operator == FilterOperator.gte) {
+    if (filter.oper == FilterOperator.gte) {
       queryFlt = queryFlt.gte('$_object->>"${filter.property.key}"', value);
     }
-    if (filter.operator == FilterOperator.lt) {
+    if (filter.oper == FilterOperator.lt) {
       queryFlt = queryFlt.lt('$_object->>"${filter.property.key}"', value);
     }
-    if (filter.operator == FilterOperator.lte) {
+    if (filter.oper == FilterOperator.lte) {
       queryFlt = queryFlt.lte('$_object->>"${filter.property.key}"', value);
     }
-    if (filter.operator == FilterOperator.neq) {
+    if (filter.oper == FilterOperator.neq) {
       queryFlt = queryFlt.neq('$_object->>"${filter.property.key}"', value);
     }
     return queryFlt;
@@ -519,42 +539,42 @@ class ObjectRepo {
     var query,
   ) {
     dynamic queryFlt = query;
-    if (filterAtm.operator == FilterOperator.eq) {
+    if (filterAtm.oper == FilterOperator.eq) {
       queryFlt = queryFlt.eq(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           filterAtm.value);
     }
-    if (filterAtm.operator == FilterOperator.like) {
+    if (filterAtm.oper == FilterOperator.like) {
       queryFlt = queryFlt.like(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           '%${filterAtm.value}%');
     }
-    if (filterAtm.operator == FilterOperator.ilike) {
+    if (filterAtm.oper == FilterOperator.ilike) {
       queryFlt = queryFlt.ilike(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           '%${filterAtm.value}%');
     }
-    if (filterAtm.operator == FilterOperator.gt) {
+    if (filterAtm.oper == FilterOperator.gt) {
       queryFlt = queryFlt.gt(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           filterAtm.value);
     }
-    if (filterAtm.operator == FilterOperator.gte) {
+    if (filterAtm.oper == FilterOperator.gte) {
       queryFlt = queryFlt.gte(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           filterAtm.value);
     }
-    if (filterAtm.operator == FilterOperator.lt) {
+    if (filterAtm.oper == FilterOperator.lt) {
       queryFlt = queryFlt.lt(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           filterAtm.value);
     }
-    if (filterAtm.operator == FilterOperator.lte) {
+    if (filterAtm.oper == FilterOperator.lte) {
       queryFlt = queryFlt.lte(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           filterAtm.value);
     }
-    if (filterAtm.operator == FilterOperator.neq) {
+    if (filterAtm.oper == FilterOperator.neq) {
       queryFlt = queryFlt.neq(
           '$_object->"${filter.property.key}"->"${AtomicObjectModel.tObject}"->>"${filterAtm.property.key}"',
           filterAtm.value);

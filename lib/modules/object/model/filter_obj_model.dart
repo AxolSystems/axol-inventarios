@@ -10,12 +10,12 @@ class FilterObjModel {
   final PropertyModel? propertyRef;
   final ReferenceObjectModel? refObject;
   final dynamic value;
-  final FilterOperator operator;
+  final FilterOperator oper;
 
   FilterObjModel({
     required this.property,
     required this.value,
-    required this.operator,
+    required this.oper,
     this.propertyRef,
     this.refObject,
   });
@@ -55,7 +55,7 @@ class FilterObjModel {
       ];
 
   FilterObjModel setProperty(PropertyModel propertyRef_) => FilterObjModel(
-        operator: operator,
+        oper: oper,
         value: value,
         property: property,
         propertyRef: propertyRef_,
@@ -92,7 +92,7 @@ class FilterObjModel {
         filters.add(FilterObjModel(
           property: value[tProperty],
           value: value[tValue],
-          operator: value[tFilter],
+          oper: value[tFilter],
         ));
       }
     }
@@ -135,7 +135,7 @@ class FilterObjModel {
           filter = FilterObjModel(
               property: flt.property,
               value: value,
-              operator: flt.operator,
+              oper: flt.operator,
               refObject: ReferenceObjectModel(
                   idPropertyView: refObjFilter.refObjController.idPropertyView,
                   referenceLink: refObjFilter.refObjController.referenceLink,
@@ -148,7 +148,7 @@ class FilterObjModel {
           filterObjList.add(filter);
         } else {
           filter = FilterObjModel(
-              property: flt.property, value: value, operator: flt.operator);
+              property: flt.property, value: value, oper: flt.operator);
           filterObjList.add(filter);
         }
       }

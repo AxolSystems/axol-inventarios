@@ -42,6 +42,25 @@ class ArrayRepo {
 
     return arrays;
   }
+
+  static Future<List<String>> postgresFetchArrayById(String id) async {
+    final List<String> array = [];
+    final List<Map<String, dynamic>> response;
+    List<dynamic> listDynamic;
+    QueryBuilder queryBuilder = QueryBuilder();
+
+    queryBuilder.query = 'SELECT id_array, array_list FROM $_table WHERE id_array = $id';
+    response = await queryBuilder.responseQuery;
+
+    if (response.isNotEmpty) {
+      listDynamic = response.first[_array];
+      for (var x in listDynamic) {
+        array.add(x.toString());
+      }
+    }
+
+    return array;
+  }
   
   static Future<List<ArrayModel>> fetchArray(List<String> idList) async {
     final List<ArrayModel> arrays = [];

@@ -49,7 +49,7 @@ class QueryBuilder {
 
   // *************** WHERE CLAUSE *************** //
 
-  /// EQUAL
+  /// EQ
   ///
   /// Devuelve las filas donde en [column] sean igual a [value].
   ///
@@ -65,6 +65,34 @@ class QueryBuilder {
   /// WHERE country = 'Mexico';
   /// ```
   QueryBuilder eq(String column, dynamic value) {
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().eq(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND ${filter.clause}';
+      } else {
+        query = '$query WHERE ${filter.clause}';
+      }
+    }
+    return this;
+  }
+
+  /// NEQ
+  ///
+  /// Devuelve las filas donde en [column] los valores no sean igual a [value].
+  ///
+  /// ```dart
+  /// BuilderQuery() query = BuilderQuery()
+  ///   .select()
+  ///   .from('countries')
+  ///   .neq('country','Mexico');
+  /// ```
+  /// sql:
+  /// ```sql
+  /// SELECT * FROM countries
+  /// WHERE country <> 'Mexico';
+  /// ```
+  QueryBuilder neq(String column, dynamic value) {
     final FilterQuery filter;
     if (query != null) {
       filter = FilterQuery().eq(column, value);
@@ -94,11 +122,14 @@ class QueryBuilder {
   /// WHERE country IN ('Mexico', 'Colombia', 'Argentina');
   /// ```
   QueryBuilder in_(String column, List values) {
-    FilterQuery filter = FilterQuery().in_(column, values);
-    if (query!.contains('WHERE')) {
-      query = '$query AND ${filter.clause}';
-    } else {
-      query = '$query WHERE ${filter.clause}';
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().in_(column, values);
+      if (query!.contains('WHERE')) {
+        query = '$query AND ${filter.clause}';
+      } else {
+        query = '$query WHERE ${filter.clause}';
+      }
     }
     return this;
   }
@@ -120,11 +151,14 @@ class QueryBuilder {
   /// WHERE country LIKE '%Mex%' ;
   /// ```
   QueryBuilder like(String column, String value) {
-    FilterQuery filter = FilterQuery().like(column, value);
-    if (query!.contains('WHERE')) {
-      query = '$query AND $filter';
-    } else {
-      query = '$query WHERE $filter';
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().like(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND $filter';
+      } else {
+        query = '$query WHERE $filter';
+      }
     }
     return this;
   }
@@ -146,15 +180,147 @@ class QueryBuilder {
   /// WHERE country ILIKE '%Mex%' ;
   /// ```
   QueryBuilder ilike(String column, String value) {
-    FilterQuery filter = FilterQuery().ilike(column, value);
-    if (query!.contains('WHERE')) {
-      query = '$query AND $filter';
-    } else {
-      query = '$query WHERE $filter';
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().ilike(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND $filter';
+      } else {
+        query = '$query WHERE $filter';
+      }
     }
     return this;
   }
 
+  /// GT
+  ///
+  /// Devuelva las filas donde en [column] los valores sean mayores a [value].
+  ///
+  /// ```dart
+  /// BuilderQuery() query = BuilderQuery()
+  ///   .select()
+  ///   .from('countries')
+  ///   .gt('year', 1900);
+  /// ```
+  /// Sql:
+  /// ```sql
+  /// SELECT * FROM countries
+  /// WHERE year > 1900 ;
+  /// ```
+  QueryBuilder gt(String column, dynamic value) {
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().gt(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND $filter';
+      } else {
+        query = '$query WHERE $filter';
+      }
+    }
+    return this;
+  }
+
+  /// GTE
+  ///
+  /// Devuelva las filas donde en [column] los valores sean mayores o iguales a [value].
+  ///
+  /// ```dart
+  /// BuilderQuery() query = BuilderQuery()
+  ///   .select()
+  ///   .from('countries')
+  ///   .gte('year', 1900);
+  /// ```
+  /// Sql:
+  /// ```sql
+  /// SELECT * FROM countries
+  /// WHERE year >= 1900 ;
+  /// ```
+  QueryBuilder gte(String column, dynamic value) {
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().gte(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND $filter';
+      } else {
+        query = '$query WHERE $filter';
+      }
+    }
+    return this;
+  }
+
+  /// LT
+  ///
+  /// Devuelva las filas donde en [column] los valores sean menores a [value].
+  ///
+  /// ```dart
+  /// BuilderQuery() query = BuilderQuery()
+  ///   .select()
+  ///   .from('countries')
+  ///   .lt('year', 1900);
+  /// ```
+  /// Sql:
+  /// ```sql
+  /// SELECT * FROM countries
+  /// WHERE year < 1900 ;
+  /// ```
+  QueryBuilder lt(String column, dynamic value) {
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().lt(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND $filter';
+      } else {
+        query = '$query WHERE $filter';
+      }
+    }
+    return this;
+  }
+
+  /// LTE
+  ///
+  /// Devuelva las filas donde en [column] los valores sean menores o iguales a [value].
+  ///
+  /// ```dart
+  /// BuilderQuery() query = BuilderQuery()
+  ///   .select()
+  ///   .from('countries')
+  ///   .lte('year', 1900);
+  /// ```
+  /// Sql:
+  /// ```sql
+  /// SELECT * FROM countries
+  /// WHERE year <= 1900 ;
+  /// ```
+  QueryBuilder lte(String column, dynamic value) {
+    final FilterQuery filter;
+    if (query != null) {
+      filter = FilterQuery().lte(column, value);
+      if (query!.contains('WHERE')) {
+        query = '$query AND $filter';
+      } else {
+        query = '$query WHERE $filter';
+      }
+    }
+    return this;
+  }
+
+  /// OR
+  ///
+  /// Una agrupación de clausulas en las que devuelve todas las filas
+  /// que coincida con cualquiera de ellas.
+  ///
+  /// ```dart
+  /// BuilderQuery() query = BuilderQuery()
+  ///   .select()
+  ///   .from('countries')
+  ///   .or([FilterQuery().eq('country','Mexico'), FilterQuery().like('country','Col')]);
+  /// ```
+  ///
+  /// Sql:
+  /// ```sql
+  /// SELECT * FROM countries
+  /// WHERE (country = 'Mexico' OR country LIKE '%Col%') ;
+  /// ```
   QueryBuilder or(List<FilterQuery> filterList) {
     String filter = '';
     for (FilterQuery flt in filterList) {
@@ -258,6 +424,50 @@ class FilterQuery {
 
   FilterQuery ilike(String column, String value) {
     clause = '$column ILIKE \'%$value%\'';
+    return this;
+  }
+
+  FilterQuery gt(String column, dynamic value) {
+    if (value is DateTime) {
+      clause = '$column > ${_valueText(value.toIso8601String())}';
+    } else if (value is int || value is double) {
+      clause = '$column > $value';
+    }
+    return this;
+  }
+
+  FilterQuery gte(String column, dynamic value) {
+    if (value is DateTime) {
+      clause = '$column >= ${_valueText(value.toIso8601String())}';
+    } else if (value is int || value is double) {
+      clause = '$column >= $value';
+    }
+    return this;
+  }
+
+  FilterQuery lt(String column, dynamic value) {
+    if (value is DateTime) {
+      clause = '$column < ${_valueText(value.toIso8601String())}';
+    } else if (value is int || value is double) {
+      clause = '$column < $value';
+    }
+    return this;
+  }
+
+  FilterQuery lte(String column, dynamic value) {
+    if (value is DateTime) {
+      clause = '$column <= ${_valueText(value.toIso8601String())}';
+    } else if (value is int || value is double) {
+      clause = '$column <= $value';
+    }
+    return this;
+  }
+
+  FilterQuery neq(String column, dynamic value) {
+    if (value is String) {
+      value = _valueText(value);
+    }
+    clause = '$column <> $value';
     return this;
   }
 
