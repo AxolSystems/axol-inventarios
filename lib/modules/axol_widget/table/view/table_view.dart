@@ -139,7 +139,7 @@ class TableViewBuild extends AxolWidget {
                               theme: form.theme,
                               prefixIcon: Icon(Icons.search,
                                   color: ColorTheme.item10(form.theme)),
-                              hintText: "Buscar",
+                              hintText: 'Buscar',
                               hintStyle: Typo.hint(form.theme),
                               onSubmitted: (value) {
                                 context.read<TableCubit>().search(form, link);

@@ -65,13 +65,13 @@ class QueryBuilder {
   /// WHERE country = 'Mexico';
   /// ```
   QueryBuilder eq(String column, dynamic value) {
-    final String filter;
+    final FilterQuery filter;
     if (query != null) {
-      filter = FilterQuery.eq(column, value);
+      filter = FilterQuery().eq(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -94,21 +94,11 @@ class QueryBuilder {
   /// WHERE country IN ('Mexico', 'Colombia', 'Argentina');
   /// ```
   QueryBuilder in_(String column, List values) {
-    String inValues = '';
-    for (var element in values) {
-      if (element is String) {
-        element = _valueText(element);
-      }
-      if (inValues == '') {
-        inValues = '$element';
-      } else {
-        inValues = ',$element';
-      }
-    }
+    FilterQuery filter = FilterQuery().in_(column, values);
     if (query!.contains('WHERE')) {
-      query = '$query AND $column IN ($inValues)';
+      query = '$query AND ${filter.clause}';
     } else {
-      query = '$query WHERE $column IN ($inValues)';
+      query = '$query WHERE ${filter.clause}';
     }
     return this;
   }
@@ -129,13 +119,12 @@ class QueryBuilder {
   /// SELECT * FROM countries
   /// WHERE country LIKE '%Mex%' ;
   /// ```
-  QueryBuilder like(String column, String value, {OperQuery? oper}) {
-    final String operText = _getOperText(oper);
-    value = _valueTextLike(value);
+  QueryBuilder like(String column, String value) {
+    FilterQuery filter = FilterQuery().like(column, value);
     if (query!.contains('WHERE')) {
-      query = '$query $operText $column LIKE $value';
+      query = '$query AND $filter';
     } else {
-      query = '$query WHERE $column LIKE $value';
+      query = '$query WHERE $filter';
     }
     return this;
   }
@@ -156,27 +145,29 @@ class QueryBuilder {
   /// SELECT * FROM countries
   /// WHERE country ILIKE '%Mex%' ;
   /// ```
-  QueryBuilder ilike(String column, String value, {OperQuery? oper}) {
-    final String operText = _getOperText(oper);
-    value = _valueTextLike(value);
+  QueryBuilder ilike(String column, String value) {
+    FilterQuery filter = FilterQuery().ilike(column, value);
     if (query!.contains('WHERE')) {
-      query = '$query $operText $column ILIKE $value';
+      query = '$query AND $filter';
     } else {
-      query = '$query WHERE $column ILIKE $value';
+      query = '$query WHERE $filter';
     }
     return this;
   }
 
   QueryBuilder or(List<FilterQuery> filterList) {
+    String filter = '';
     for (FilterQuery flt in filterList) {
-      if (y.elementAt(1) == 'eq') {
-        filter = FilterQuery.eq(column, value);
-        if (query!.contains('WHERE')) {
-          query = '$query AND $filter';
-        } else {
-          query = '$query WHERE $filter';
-        }
+      if (filter == '') {
+        filter = flt.clause ?? '';
+      } else {
+        filter = '$filter OR ${flt.clause}';
       }
+    }
+    if (query!.contains('WHERE')) {
+      query = '$query AND ($filter)';
+    } else {
+      query = '$query WHERE ($filter)';
     }
 
     return this;
@@ -207,7 +198,7 @@ class QueryBuilder {
         response.add(element);
       }
     } else {
-      throw Exception('Error add new element');
+      throw Exception('Error query response');
     }
 
     return response;
@@ -228,40 +219,51 @@ class QueryBuilder {
       final int count = int.parse(json.decode(responseCount.body)[0]['count']);
       return count;
     } else {
-      throw Exception('Error add new element');
+      throw Exception('Error query count');
     }
+  }
+}
+
+class FilterQuery {
+  String? clause;
+
+  FilterQuery eq(String column, dynamic value) {
+    if (value is String) {
+      value = _valueText(value);
+    }
+    clause = '$column = $value';
+    return this;
+  }
+
+  FilterQuery in_(String column, List values) {
+    String inValues = '';
+    for (var element in values) {
+      if (element is String) {
+        element = _valueText(element);
+      }
+      if (inValues == '') {
+        inValues = '$element';
+      } else {
+        inValues = ',$element';
+      }
+    }
+    clause = '$column IN ($inValues)';
+    return this;
+  }
+
+  FilterQuery like(String column, String value) {
+    clause = '$column LIKE \'%$value%\'';
+    return this;
+  }
+
+  FilterQuery ilike(String column, String value) {
+    clause = '$column ILIKE \'%$value%\'';
+    return this;
   }
 
   // **************** PRIVATE METHODS **************** //
 
-  String _valueText(dynamic value) => '\'$value\'';
-  String _valueTextLike(dynamic value) => '\'%$value%\'';
-  String _getOperText(OperQuery? oper) {
-    String operText = 'AND';
-    if (oper != null || oper == OperQuery.and) {
-      operText = 'AND';
-    } else if (oper == OperQuery.or) {
-      operText = 'OR';
-    }
-    return operText;
-  } 
-}
-
-class FilterQuery {
-  static String eq(String column, dynamic value) {
-    if (value is String) {
-      value = _valueText(value);
-    }
-    return '$column = $value';
-  }
-
   static String _valueText(dynamic value) => '\'$value\'';
 }
 
-class FilterData {
-  final String data;
-  final 
-}
-
 enum OperQuery { and, or }
-enum FilterType {eq}
