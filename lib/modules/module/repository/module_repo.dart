@@ -54,7 +54,7 @@ class ModuleRepo {
         }
       }
     }
-    //print(modulesDB);
+    print(modulesDB);
 
     //3. Obtiene lista de entidades relacionados a los widgets
     for (String keyM in mapM.keys) {

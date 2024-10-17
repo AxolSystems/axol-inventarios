@@ -480,6 +480,28 @@ class ObjectRepo {
     return total;
   }
 
+  static Future<double> postgresQuerySum(WidgetLinkModel link,
+      List<String> returnProps, List<String> fetchProps) async {
+    List<Map<String, dynamic>> response;
+    double total = 0;
+    QueryBuilder queryBuilder =
+        QueryBuilder().select().from(link.entity.tableName);
+
+    for (String element in fetchProps) {
+      queryBuilder.eq(element.split('==').first, element.split('==').last);
+    }
+
+    response = await queryBuilder.responseQuery;
+    for (String idProp in returnProps) {
+      for (var element in response) {
+        total =
+            total + (double.tryParse(element[_object][idProp].toString()) ?? 0);
+      }
+    }
+
+    return total;
+  }
+
   /// Actualiza un objeto de la base de datos.
   static Future<void> update(ObjectModel object, WidgetLinkModel link) async {
     await _supabase

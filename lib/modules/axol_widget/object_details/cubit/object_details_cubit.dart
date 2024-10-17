@@ -106,7 +106,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if (prop.propertyType == Prop.array) {
           if (form.object.map[prop.key] == null) {
             final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
-            final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+            final List<String> list = await ArrayRepo.postgresFetchArrayById(idArray);
+            //await ArrayRepo.fetchArrayById(idArray);
             if (list.isEmpty) {
               list.add('');
             }
@@ -357,11 +358,11 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           final double value = await FormulaFunction.devExpressions(
               prop.dynamicValues[PropertyModel.dvFormula], form.object, link);
           final double total = value -
-              initObject.map['13'] -
-              initObject.map['14'] +
-              map['13'] +
-              map['14'];
-          if (total > map['12']) {
+              initObject.map['c13'] -
+              initObject.map['c14'] +
+              map['c13'] +
+              map['c14'];
+          if (total > map['c12']) {
             isError = true;
             emit(const ErrorRowDetailsState(
                 error: 'Cantidad total supera a cantidad de trabajo.'));

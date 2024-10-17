@@ -78,15 +78,17 @@ class FormulaFunction {
         functionsDev.add({tExpression: function, tDev: function});
       } else if (function.startsWith('query_sum:')) {
         /// [query_sum:(return~/column_name)~~(column_name==valor),(column_name==valor)...]
-        String propValue = extractParameters(function)
-              .split('~~')
-              .first;
+        String propValue = extractParameters(function).split('~~').first;
         propValue = propValue.replaceFirst('return~/', '');
-        final double total = await ObjectRepo.querySum(
+        final double total = await ObjectRepo.postgresQuerySum(
+            link!,
+            propValue.split(','),
+            extractParameters(function).split('~').last.split(','));
+        /*ObjectRepo.querySum(
           link!,
           propValue.split(','),
           extractParameters(function).split('~').last.split(','),
-        );
+        );*/
         functionsDev.add({tExpression: function, tDev: total});
       } else if (function.startsWith('prop_name:')) {
         /// [prop_name:(id propiedad)]
