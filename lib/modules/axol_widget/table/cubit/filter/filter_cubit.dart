@@ -47,7 +47,7 @@ class FilterCubit extends Cubit<FilterState> {
         } else {
           value = flt.value;
         }
-        
+
         form.filterList.insert(
             form.filterList.length - 1,
             getFilterModel(
@@ -119,7 +119,8 @@ class FilterCubit extends Cubit<FilterState> {
           );
         } else if (prop.propertyType == Prop.array) {
           final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
-          final List<String> list = await ArrayRepo.postgresFetchArrayById(idArray);
+          final List<String> list =
+              await ArrayRepo.postgresFetchArrayById(idArray);
           //ArrayRepo.fetchArrayById(idArray);
           if (list.isEmpty) {
             list.add('');
@@ -165,7 +166,7 @@ class FilterCubit extends Cubit<FilterState> {
           filterValue = flt.value;
         } else if (form.filterList[index] is DateFilterModel) {
           final DateFilterModel flt = form.filterList[index] as DateFilterModel;
-          filterValue = flt.dateTime.millisecondsSinceEpoch;
+          filterValue = flt.dateTime;
         } else if (form.filterList[index] is RefObjFilterModel) {
           final RefObjFilterModel flt =
               form.filterList[index] as RefObjFilterModel;
@@ -243,7 +244,10 @@ class FilterCubit extends Cubit<FilterState> {
           property: filter.property,
           operatorList: filter.operatorList,
           operator: filter.operator,
-          arrayFilter: ArrayModel(id: filter.arrayFilter.id, list: filter.arrayFilter.list, value: value),
+          arrayFilter: ArrayModel(
+              id: filter.arrayFilter.id,
+              list: filter.arrayFilter.list,
+              value: value),
         );
       }
       emit(LoadedFilterState());
@@ -341,8 +345,8 @@ class FilterCubit extends Cubit<FilterState> {
           operator: filterOperator);
     } else if (property.propertyType == Prop.time) {
       filter = DateFilterModel(
-          dateTime: FormatDate.secondZero(DateTime.fromMillisecondsSinceEpoch(
-              value ?? DateTime.now().millisecondsSinceEpoch)),
+          dateTime: FormatDate.secondZero(
+              value ?? DateTime.now()),
           property: property,
           operatorList: FilterObjModel.operDateTimeList,
           operator: filterOperator);

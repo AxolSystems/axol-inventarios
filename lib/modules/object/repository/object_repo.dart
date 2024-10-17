@@ -32,7 +32,6 @@ class ObjectRepo {
     Map<String, dynamic> map = {};
     final int count;
     List<FilterQuery> filterList = [];
-    //final String query = 'SELECT * FROM ${entity.tableName}';
     QueryBuilder query = QueryBuilder().select().from(entity.tableName);
 
     //1. Agrega filtros a query.
@@ -46,27 +45,36 @@ class ObjectRepo {
     }
 
     for (FilterObjModel filter in filters) {
+      final dynamic filterValue = filter.value;
+      final dynamic value;
+
+      if (filterValue is ArrayModel) {
+        value = filterValue.value;
+      } else {
+        value = filterValue;
+      }
+
       if (filter.oper == FilterOperator.eq) {
-        query.eq(filter.property.key, filter.value);
+        query.eq(filter.property.key, value);
       } else if (filter.oper == FilterOperator.like) {
-        query.like(filter.property.key, filter.value);
+        query.like(filter.property.key, value);
       } else if (filter.oper == FilterOperator.ilike) {
-        query.ilike(filter.property.key, filter.value);
+        query.ilike(filter.property.key, value);
       } else if (filter.oper == FilterOperator.gt) {
-        query.gt(filter.property.key, filter.value);
+        query.gt(filter.property.key, value);
       } else if (filter.oper == FilterOperator.gte) {
-        query.gte(filter.property.key, filter.value);
+        query.gte(filter.property.key, value);
       } else if (filter.oper == FilterOperator.lt) {
-        query.lt(filter.property.key, filter.value);
+        query.lt(filter.property.key, value);
       } else if (filter.oper == FilterOperator.lte) {
-        query.lte(filter.property.key, filter.value);
+        query.lte(filter.property.key, value);
       } else if (filter.oper == FilterOperator.neq) {
-        query.neq(filter.property.key, filter.value);
+        query.neq(filter.property.key, value);
       }
     }
 
     //2. Obtiene Map con módulos, widgets y vistas.
-    //print('QUERY: ${query.query}');
+    print('QUERY: ${query.query}');
     objectsDB = await query.responseQuery;
     count = await query.countData(entity.tableName);
 

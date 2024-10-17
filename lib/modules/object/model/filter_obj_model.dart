@@ -108,11 +108,11 @@ class FilterObjModel {
       if (flt is TextFilterModel) {
         value = flt.ctrlValue.text;
       } else if (flt is NumberFilterModel) {
-        value = flt.ctrlValue.text;
+        value = flt.ctrlValue.text == '' ? 0 : flt.ctrlValue.text;
       } else if (flt is BooleanFilterModel) {
         value = flt.value;
       } else if (flt is DateFilterModel) {
-        value = flt.dateTime.millisecondsSinceEpoch;
+        value = flt.dateTime;
       } else if (flt is RefObjFilterModel) {
         final FilterModel fltRef = flt.referenceFilter;
         if (fltRef is TextFilterModel) {

@@ -95,7 +95,7 @@ class QueryBuilder {
   QueryBuilder neq(String column, dynamic value) {
     final FilterQuery filter;
     if (query != null) {
-      filter = FilterQuery().eq(column, value);
+      filter = FilterQuery().neq(column, value);
       if (query!.contains('WHERE')) {
         query = '$query AND ${filter.clause}';
       } else {
@@ -155,9 +155,9 @@ class QueryBuilder {
     if (query != null) {
       filter = FilterQuery().like(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -184,9 +184,9 @@ class QueryBuilder {
     if (query != null) {
       filter = FilterQuery().ilike(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -212,9 +212,9 @@ class QueryBuilder {
     if (query != null) {
       filter = FilterQuery().gt(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -240,9 +240,9 @@ class QueryBuilder {
     if (query != null) {
       filter = FilterQuery().gte(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -268,9 +268,9 @@ class QueryBuilder {
     if (query != null) {
       filter = FilterQuery().lt(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -296,9 +296,9 @@ class QueryBuilder {
     if (query != null) {
       filter = FilterQuery().lte(column, value);
       if (query!.contains('WHERE')) {
-        query = '$query AND $filter';
+        query = '$query AND ${filter.clause}';
       } else {
-        query = '$query WHERE $filter';
+        query = '$query WHERE ${filter.clause}';
       }
     }
     return this;
@@ -430,7 +430,7 @@ class FilterQuery {
   FilterQuery gt(String column, dynamic value) {
     if (value is DateTime) {
       clause = '$column > ${_valueText(value.toIso8601String())}';
-    } else if (value is int || value is double) {
+    } else {
       clause = '$column > $value';
     }
     return this;
@@ -439,7 +439,7 @@ class FilterQuery {
   FilterQuery gte(String column, dynamic value) {
     if (value is DateTime) {
       clause = '$column >= ${_valueText(value.toIso8601String())}';
-    } else if (value is int || value is double) {
+    } else {
       clause = '$column >= $value';
     }
     return this;
@@ -448,7 +448,7 @@ class FilterQuery {
   FilterQuery lt(String column, dynamic value) {
     if (value is DateTime) {
       clause = '$column < ${_valueText(value.toIso8601String())}';
-    } else if (value is int || value is double) {
+    } else {
       clause = '$column < $value';
     }
     return this;
@@ -457,7 +457,7 @@ class FilterQuery {
   FilterQuery lte(String column, dynamic value) {
     if (value is DateTime) {
       clause = '$column <= ${_valueText(value.toIso8601String())}';
-    } else if (value is int || value is double) {
+    } else {
       clause = '$column <= $value';
     }
     return this;

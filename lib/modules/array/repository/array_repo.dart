@@ -49,7 +49,7 @@ class ArrayRepo {
     List<dynamic> listDynamic;
     QueryBuilder queryBuilder = QueryBuilder();
 
-    queryBuilder.query = 'SELECT id_array, array_list FROM $_table WHERE id_array = $id';
+    queryBuilder.query = 'SELECT $_id, $_array FROM $_table WHERE $_id = \'$id\'';
     response = await queryBuilder.responseQuery;
 
     if (response.isNotEmpty) {
