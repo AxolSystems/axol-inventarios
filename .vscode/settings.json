@@ -22,6 +22,7 @@
         "postgresql",
         "postgrest",
         "Postgrest",
+        "Psql",
         "scrollbars",
         "setblock",
         "setentity",

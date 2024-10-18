@@ -1,54 +1,67 @@
 class PostgresClient {
-  //static const String urlHttp = 'http://192.168.1.74:3000/api/elements';
-  static const String urlHttp = 'http://localhost:3000/api/elements';
-
+  static const String urlHttp = 'http://192.168.1.74:3000/api/elements';
+  //static const String urlHttp = 'http://localhost:3000/api/elements';
 }
 
-class ModulesDB {
-    static const String tableName = 'modules';
-    static const String index = 'index_module';
-    static const String id = 'id_module';
-    static const String name = 'text';
-    static const String icon = 'icon';
-    static const String createAt = 'create_at'; 
-  }
-
-class WidgetsDB {
-  static const String tableName = 'widgets';
-  static const String index = 'index_widget';
-  static const String id = 'id_widget';
-  static const String widget = 'widget';
-  static const String idEntity = 'id_entity';
-  static const String idModule = 'id_module';
-  static const String createAt = 'create_at';
+class Modules {
+  final String tableName = 'modules';
+  final String index = 'index_module';
+  final String id = 'id_module';
+  final String name = 'text';
+  final String icon = 'icon';
+  final String createAt = 'create_at';
 }
 
-class ViewsDB {
-  static const String tableName = 'views';
-  static const String id = 'id_view';
-  static const String index = 'index_view';
-  static const String name = 'name';
-  static const String dynamicValues = 'dynamic_values';
-  static const String idWidget = 'id_widget';
-  static const String createAt = 'create_At';
+class Widgets {
+  final String tableName = 'widgets';
+  final String index = 'index_widget';
+  final String id = 'id_widget';
+  final String widget = 'widget';
+  final String idEntity = 'id_entity';
+  final String idModule = 'id_module';
+  final String createAt = 'create_at';
 }
 
-class EntitiesDB {
-  static const String tableName = 'entities';
-  static const String id = 'id_entity';
-  static const String table = 'table_name';
-  static const String entityName = 'entity_name';
-  static const String createAt = 'create_at';
+class Views {
+  final String tableName = 'views';
+  final String id = 'id_view';
+  final String index = 'index_view';
+  final String name = 'name';
+  final String dynamicValues = 'dynamic_values';
+  final String idWidget = 'id_widget';
+  final String createAt = 'create_At';
 }
 
-class PropertiesDB {
-  static String tableName = 'properties';
-  static String id = 'id_property';
-  static String index = 'index_prop';
-  static String columnName = 'column_name';
-  static String dataType = 'data_type';
-  static String propName = 'prop_name';
-  static String dynamicValues = 'dynamic_values';
-  static String idEntity = 'id_entity';
-  static String createAt = 'create_at';
+class Entities {
+  final String tableName = 'entities';
+  final String id = 'id_entity';
+  final String table = 'table_name';
+  final String entityName = 'entity_name';
+  final String createAt = 'create_at';
+}
+
+class Properties {
+  final String tableName = 'properties';
+  final String id = 'id_property';
+  final String index = 'index_prop';
+  final String columnName = 'column_name';
+  final String dataType = 'data_type';
+  final String propName = 'prop_name';
+  final String dynamicValues = 'dynamic_values';
+  final String idEntity = 'id_entity';
+  final String createAt = 'create_at';
+}
+
+class TableGen {
+  final String id = 'id';
+  final String createAt = 'create_at';
+}
+
+class PsqlTables {
+  static Modules get modules => Modules();
+  static Widgets get widgets => Widgets();
+  static Views get views => Views();
+  static Entities get entities => Entities();
+  static Properties get properties => Properties();
+  static TableGen get tableGen => TableGen();
 }

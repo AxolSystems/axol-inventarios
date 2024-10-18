@@ -19,7 +19,6 @@ class FormulaFunction {
     const String tDev = 'dev';
     List<String> functions = [];
     List<Map<String, dynamic>> functionsDev = [];
-
     functions = matchFunctions(expression);
 
     for (int i = 0; i < functions.length; i++) {

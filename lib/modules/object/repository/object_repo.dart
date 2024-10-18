@@ -1,6 +1,7 @@
 import 'package:axol_inventarios/modules/array/model/array_model.dart';
 import 'package:axol_inventarios/modules/object/model/reference_object_model.dart';
 import 'package:axol_inventarios/modules/widget_link/model/widgetlink_model.dart';
+import 'package:axol_inventarios/utilities/postgresql/postgres_client.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/data_response_model.dart';
@@ -74,7 +75,7 @@ class ObjectRepo {
     }
 
     //2. Obtiene Map con módulos, widgets y vistas.
-    print('QUERY: ${query.query}');
+    //print('QUERY: ${query.query}');
     objectsDB = await query.responseQuery;
     count = await query.countData(entity.tableName);
 
@@ -490,12 +491,10 @@ class ObjectRepo {
     for (String element in fetchProps) {
       queryBuilder.eq(element.split('==').first, element.split('==').last);
     }
-
     response = await queryBuilder.responseQuery;
     for (String idProp in returnProps) {
       for (var element in response) {
-        total =
-            total + (double.tryParse(element[_object][idProp].toString()) ?? 0);
+        total = total + (double.tryParse(element[idProp].toString()) ?? 0);
       }
     }
 
@@ -507,6 +506,15 @@ class ObjectRepo {
     await _supabase
         .from(link.entity.tableName)
         .update({_object: object.map}).eq(id, object.id);
+  }
+
+  /// Actualiza un objeto de la base de datos.
+  static Future<void> postgresUpdate(
+      ObjectModel object, WidgetLinkModel link) async {
+    QueryBuilder queryBuilder = QueryBuilder()
+        .update(link.entity.tableName, object.map)
+        .eq(PsqlTables.tableGen.id, object.id);
+    await queryBuilder.responseQuery;
   }
 
   /// Elimina un objeto de la base de datos.

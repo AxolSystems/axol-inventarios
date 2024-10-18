@@ -106,7 +106,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if (prop.propertyType == Prop.array) {
           if (form.object.map[prop.key] == null) {
             final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
-            final List<String> list = await ArrayRepo.postgresFetchArrayById(idArray);
+            final List<String> list =
+                await ArrayRepo.postgresFetchArrayById(idArray);
             //await ArrayRepo.fetchArrayById(idArray);
             if (list.isEmpty) {
               list.add('');
@@ -310,18 +311,18 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
 
         if (form.controllers[key] is RDTextEditingController &&
             property.propertyType == Prop.text) {
-          map[key] = textController.controller.text;
+          map[key] = '\'${textController.controller.text}\'';
           form.object.map[key] = textController.controller.text;
         } else if (form.controllers[key] is RDTextEditingController &&
             (property.propertyType == Prop.int ||
                 property.propertyType == Prop.double)) {
           map[key] = double.tryParse(textController.controller.text) ?? 0;
-          form.object.map[key] = double.tryParse(textController.controller.text) ?? 0;
+          form.object.map[key] =
+              double.tryParse(textController.controller.text) ?? 0;
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
-          map[key] = dateController.controller?.millisecondsSinceEpoch;
-          form.object.map[key] =
-              dateController.controller?.millisecondsSinceEpoch;
+          map[key] = '\'${dateController.controller?.toIso8601String()}\'';
+          form.object.map[key] = dateController.controller?.microsecondsSinceEpoch;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
@@ -342,10 +343,10 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
             property.propertyType == Prop.array) {
           if (arrayController.array.value == '') {
             final ArrayModel array = form.object.map[property.key];
-            map[key] = array.list.first;
+            map[key] = '\'${array.list.first}\'';
             form.object.map[property.key] = array.setValue(map[key]);
           } else {
-            map[key] = arrayController.array.value;
+            map[key] = '\'${arrayController.array.value}\'';
           }
         }
       }
@@ -376,7 +377,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         object = ObjectModel(
             createAt: form.object.createAt, id: form.object.id, map: map);
 
-        await ObjectRepo.update(object, link);
+        await ObjectRepo.postgresUpdate(object, link);
+        //await ObjectRepo.update(object, link);
         form.isEdited = true;
 
         emit(SavedObjectDetailsState());

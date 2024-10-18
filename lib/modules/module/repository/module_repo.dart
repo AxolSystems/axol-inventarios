@@ -42,9 +42,9 @@ class ModuleRepo {
     //2. Mapea el contenido de modulesDB por id.
     Map<String, Map<String, Map<String, dynamic>>> mapM = {};
     for (Map<String, dynamic> item in modulesDB) {
-      final idM = item[ModulesDB.id];
-      final idW = item[WidgetsDB.id];
-      final idV = item[ViewsDB.id];
+      final idM = item[PsqlTables.modules.id];
+      final idW = item[PsqlTables.widgets.id];
+      final idV = item[PsqlTables.views.id];
 
       mapM[idM] ??= {};
       if (idW != null) {
@@ -54,17 +54,17 @@ class ModuleRepo {
         }
       }
     }
-    print(modulesDB);
+    //print(modulesDB);
 
     //3. Obtiene lista de entidades relacionados a los widgets
     for (String keyM in mapM.keys) {
       for (String keyW in mapM[keyM]!.keys) {
         if (entityIdsText == '') {
           entityIdsText =
-              '\'${modulesDB.firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.idEntity] ?? ''}\'';
+              '\'${modulesDB.firstWhere((x) => x[PsqlTables.widgets.id] == keyW)[PsqlTables.widgets.idEntity] ?? ''}\'';
         } else {
           entityIdsText =
-              '$entityIdsText,\'${modulesDB.firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.idEntity] ?? ''}\'';
+              '$entityIdsText,\'${modulesDB.firstWhere((x) => x[PsqlTables.widgets.id] == keyW)[PsqlTables.widgets.idEntity] ?? ''}\'';
         }
       }
     }
@@ -76,19 +76,19 @@ class ModuleRepo {
 
     for (Map<String, dynamic> element in entitiesDB) {
       propertyList.add(PropertyModel(
-        name: element[PropertiesDB.propName],
+        name: element[PsqlTables.properties.propName],
         propertyType:
-            PropertyModel.getPropToInt(element[PropertiesDB.dataType]),
-        key: element[PropertiesDB.columnName],
-        dynamicValues: element[PropertiesDB.dynamicValues] ?? {},
+            PropertyModel.getPropToInt(element[PsqlTables.properties.dataType]),
+        key: element[PsqlTables.properties.columnName],
+        dynamicValues: element[PsqlTables.properties.dynamicValues] ?? {},
       ));
     }
 
     entity = EntityModel(
-      entityName: entitiesDB.first[EntitiesDB.entityName],
+      entityName: entitiesDB.first[PsqlTables.entities.entityName],
       propertyList: propertyList,
-      tableName: entitiesDB.first[EntitiesDB.table],
-      uuid: entitiesDB.first[EntitiesDB.id],
+      tableName: entitiesDB.first[PsqlTables.entities.table],
+      uuid: entitiesDB.first[PsqlTables.entities.id],
     );
 
     //Crea objetos module.
@@ -98,27 +98,28 @@ class ModuleRepo {
         viewList = [];
         for (String keyV in mapM[keyM]![keyW]!.keys) {
           viewList.add(WidgetViewModel(
-              name: modulesDB
-                  .firstWhere((x) => x[ViewsDB.id] == keyV)[ViewsDB.name],
+              name: modulesDB.firstWhere(
+                  (x) => x[PsqlTables.views.id] == keyV)[PsqlTables.views.name],
               filterList: [],
               key: keyV,
               properties: {}));
         }
         widgetList.add(WidgetLinkModel(
-          id: modulesDB
-              .firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.id],
+          id: modulesDB.firstWhere(
+              (x) => x[PsqlTables.widgets.id] == keyW)[PsqlTables.widgets.id],
           entity: entity,
-          widget: modulesDB
-              .firstWhere((x) => x[WidgetsDB.id] == keyW)[WidgetsDB.widget],
+          widget: modulesDB.firstWhere((x) => x[PsqlTables.widgets.id] == keyW)[
+              PsqlTables.widgets.widget],
           views: viewList,
         ));
       }
       moduleList.add(ModuleModel(
-        name: modulesDB
-            .firstWhere((x) => x[ModulesDB.id] == keyM)[ModulesDB.name],
-        id: modulesDB.firstWhere((x) => x[ModulesDB.id] == keyM)[ModulesDB.id],
-        icon: IconsRepo.getIcon(modulesDB
-            .firstWhere((x) => x[ModulesDB.id] == keyM)[ModulesDB.icon]),
+        name: modulesDB.firstWhere(
+            (x) => x[PsqlTables.modules.id] == keyM)[PsqlTables.modules.name],
+        id: modulesDB.firstWhere(
+            (x) => x[PsqlTables.modules.id] == keyM)[PsqlTables.modules.id],
+        icon: IconsRepo.getIcon(modulesDB.firstWhere(
+            (x) => x[PsqlTables.modules.id] == keyM)[PsqlTables.modules.icon]),
         widgetLinks: widgetList,
         permissions: {},
       ));

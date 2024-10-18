@@ -21,6 +21,21 @@ class QueryBuilder {
     return this;
   }
 
+  ///UPDATE
+  QueryBuilder update(String table, Map<String,dynamic> values, ) {
+    String valuesText = '';
+    
+    for (String key in values.keys) {
+      if (valuesText == '') {
+        valuesText = '$key = ${values[key]}';
+      } else {
+        valuesText = '$valuesText, $key = ${values[key]}';
+      }
+    }
+    query ??= 'UPDATE $table SET $valuesText';
+    return this;
+  }
+
   //INSERT
   /*QueryBuilder insert(Map<String, String> row) {
     String columns = '';
@@ -364,7 +379,7 @@ class QueryBuilder {
         response.add(element);
       }
     } else {
-      throw Exception('Error query response');
+      throw Exception('Error query response:\n$query');
     }
 
     return response;
