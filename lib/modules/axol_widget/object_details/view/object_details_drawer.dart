@@ -236,15 +236,13 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                         theme: theme_,
                       ),
                     );
-                  } else if ((form.object.map[prop.key] is int ||
+                  } else if ((form.object.map[prop.key] is DateTime ||
                           form.object.map[prop.key] == null) &&
                       prop.propertyType == Prop.time) {
                     widgetRead = Text(
                       form.object.map[prop.key] == null
                           ? ''
-                          : FormatDate.dmyHm(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  form.object.map[prop.key])),
+                          : FormatDate.dmyHm(form.object.map[prop.key]),
                       style: Typo.body(theme_),
                     );
                   } else if (prop.propertyType == Prop.referenceObject) {
@@ -334,7 +332,8 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                   } else if (prop.propertyType == Prop.formula) {
                     final RDFormula formulaController;
                     if (form.controllers[prop.key] is RDFormula) {
-                      formulaController = form.controllers[prop.key] as RDFormula;
+                      formulaController =
+                          form.controllers[prop.key] as RDFormula;
                     } else {
                       formulaController = RDFormula.empty();
                     }
@@ -416,7 +415,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                         },
                       ),
                     );
-                  } else if ((form.object.map[prop.key] is int ||
+                  } else if ((form.object.map[prop.key] is DateTime ||
                           form.object.map[prop.key] == null) &&
                       prop.propertyType == Prop.time) {
                     final RDDateController dateController =
@@ -563,7 +562,7 @@ class ObjectDetailsDrawerBuild extends AxolWidget {
                     final RDFormula formulaController;
                     if (form.controllers[prop.key] is RDFormula) {
                       formulaController =
-                        form.controllers[prop.key] as RDFormula;
+                          form.controllers[prop.key] as RDFormula;
                     } else {
                       formulaController = RDFormula.empty();
                     }

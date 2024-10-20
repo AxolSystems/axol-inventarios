@@ -67,10 +67,7 @@ class TableModel extends DataObject {
           row[key] = CellCheck(value: obj.map[key] ?? false);
         } else if (prop == Prop.time) {
           row[key] = CellText(
-              text: obj.map[key] == null
-                  ? ''
-                  : FormatDate.dmyHm(
-                      DateTime.fromMillisecondsSinceEpoch(obj.map[key])));
+              text: obj.map[key] == null ? '' : FormatDate.dmyHm(obj.map[key]));
         } else if (prop == Prop.referenceObject) {
           final ReferenceObjectModel refObj = obj.map[key];
           final PropertyModel propRef = refObj.getPropView();

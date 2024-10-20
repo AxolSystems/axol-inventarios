@@ -97,7 +97,7 @@ class ObjectRepo {
           final PropertyModel prop =
               entity.propertyList.firstWhere((x) => x.key == key);
           if (prop.propertyType == Prop.time) {
-            map[key] = DateTime.parse(element[key]).millisecondsSinceEpoch;
+            map[key] = DateTime.parse(element[key]);
           } else if (prop.propertyType == Prop.array) {
             final ArrayModel arrayDB = arrayList.firstWhere(
                 (x) => x.id == prop.dynamicValues[PropertyModel.dvIdArray]);
@@ -489,7 +489,18 @@ class ObjectRepo {
         QueryBuilder().select().from(link.entity.tableName);
 
     for (String element in fetchProps) {
-      queryBuilder.eq(element.split('==').first, element.split('==').last);
+      final String column = element.split('==').first;
+      final String value;
+      final PropertyModel prop =
+          link.entity.propertyList.firstWhere((x) => x.key == column);
+
+      if (element.split('==').last == 'null' &&
+          prop.propertyType == Prop.double) {
+        value = '0';
+      } else {
+        value = element.split('==').last;
+      }
+      queryBuilder.eq(column, value);
     }
     response = await queryBuilder.responseQuery;
     for (String idProp in returnProps) {

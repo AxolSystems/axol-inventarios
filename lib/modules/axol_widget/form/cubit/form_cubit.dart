@@ -86,7 +86,8 @@ class FormCubit extends Cubit<FormDrawerState> {
           ));
         } else if (prop.propertyType == Prop.array) {
           final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
-          final List<String> list = await ArrayRepo.fetchArrayById(idArray);
+          final List<String> list = await ArrayRepo.postgresFetchArrayById(idArray);
+          //await ArrayRepo.fetchArrayById(idArray);
           if (list.isEmpty) {
             list.add('');
           }

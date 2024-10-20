@@ -82,12 +82,10 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
             prop.propertyType == Prop.bool) {
           cellBool = form.object.map[prop.key] ?? false;
           form.controllers[prop.key] = RDBoolController(controller: cellBool);
-        } else if ((form.object.map[prop.key] is int ||
+        } else if ((form.object.map[prop.key] is DateTime ||
                 form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.time) {
-          cellTime = form.object.map[prop.key] == null
-              ? null
-              : DateTime.fromMillisecondsSinceEpoch(form.object.map[prop.key]);
+          cellTime = form.object.map[prop.key] ?? DateTime(0);
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         } else if (prop.propertyType == Prop.referenceObject) {
           cellRefObj = form.object.map[prop.key] ??
@@ -108,7 +106,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
             final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
             final List<String> list =
                 await ArrayRepo.postgresFetchArrayById(idArray);
-            //await ArrayRepo.fetchArrayById(idArray);
             if (list.isEmpty) {
               list.add('');
             }
@@ -202,9 +199,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
           //form.object.map[key] = double.parse(textController.controller.text);
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
-          map[key] = dateController.controller?.millisecondsSinceEpoch;
+          map[key] = dateController.controller;
           form.object.map[key] =
-              dateController.controller?.millisecondsSinceEpoch;
+              dateController.controller;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
@@ -322,7 +319,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
           map[key] = '\'${dateController.controller?.toIso8601String()}\'';
-          form.object.map[key] = dateController.controller?.microsecondsSinceEpoch;
+          form.object.map[key] = dateController.controller;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
@@ -449,7 +446,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               double.parse(textController.controller.text);
         } else if (form.controllers[prop.key] is RDDateController &&
             prop.propertyType == Prop.time) {
-          map[prop.key] = dateController.controller?.millisecondsSinceEpoch;
+          map[prop.key] = dateController.controller;
           form.object.map[prop.key] =
               dateController.controller?.millisecondsSinceEpoch;
         } else if (form.controllers[prop.key] is RDBoolController &&
