@@ -102,7 +102,8 @@ class ModuleRepo {
                   (x) => x[PsqlTables.views.id] == keyV)[PsqlTables.views.name],
               filterList: [],
               key: keyV,
-              properties: {}));
+              properties: modulesDB.firstWhere(
+                  (x) => x[PsqlTables.views.id] == keyV)[PsqlTables.views.dynamicValues] ?? {}));
         }
         widgetList.add(WidgetLinkModel(
           id: modulesDB.firstWhere(

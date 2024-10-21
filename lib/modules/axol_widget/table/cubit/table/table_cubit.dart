@@ -57,6 +57,17 @@ class TableCubit extends Cubit<TableState> {
       }
 
       form.currentPage = 1;
+      form.columnWidth = widthColumns;
+
+      if (view.properties.containsKey(WidgetViewModel.propAscending) &&
+          view.properties.containsKey(WidgetViewModel.propKeyAscending)) {
+        form.ascending = view.properties[WidgetViewModel.propAscending];
+        form.keyAscending = view.properties[WidgetViewModel.propKeyAscending];
+      } else {
+        form.ascending = false;
+        form.keyAscending = null;
+      }
+      
       await getData(
           form: form, link: link, rangeMin: 0, rangeMax: form.limitRows - 1);
       for (var prop in form.table.header) {
@@ -69,16 +80,6 @@ class TableCubit extends Cubit<TableState> {
             widthColumns[prop.key] = columnWidthDB[prop.key];
           }
         }
-      }
-      form.columnWidth = widthColumns;
-
-      if (view.properties.containsKey(WidgetViewModel.propAscending) &&
-          view.properties.containsKey(WidgetViewModel.propKeyAscending)) {
-        form.ascending = view.properties[WidgetViewModel.propAscending];
-        form.keyAscending = view.properties[WidgetViewModel.propKeyAscending];
-      } else {
-        form.ascending = false;
-        form.keyAscending = null;
       }
 
       emit(LoadedTableState());
@@ -111,7 +112,7 @@ class TableCubit extends Cubit<TableState> {
       emit(SavingTableState());
       int limitRows;
       String saveMessage = 'Cambios de tabla guardados.';
-      WidgetLinkModel upLink;
+      //WidgetLinkModel upLink;
       Map<String, dynamic> properties;
       final WidgetViewModel upView;
       final WidgetViewModel view =
@@ -133,9 +134,10 @@ class TableCubit extends Cubit<TableState> {
 
       properties[WidgetViewModel.propColumnWidth] = form.columnWidth;
       upView = WidgetViewModel.properties(view, properties);
-      upLink = link;
-      upLink.views[link.views.indexWhere((x) => x.key == keyView)] = upView;
-      await WidgetLinkRepo.updateView(upLink);
+      //upLink = link;
+      //upLink.views[link.views.indexWhere((x) => x.key == keyView)] = upView;
+      await WidgetLinkRepo.postgresUpdateView(upView);
+      //await WidgetLinkRepo.updateView(upLink);
       form.edit = false;
 
       if (((form.currentPage * form.limitRows) - form.limitRows) >
@@ -285,6 +287,8 @@ class TableCubit extends Cubit<TableState> {
       entity: link.entity,
       search: search,
       filters: form.filters,
+      propAscending: form.keyAscending,
+      isAscending: form.ascending,
     );
     //print(dataResponse.dataList);
 

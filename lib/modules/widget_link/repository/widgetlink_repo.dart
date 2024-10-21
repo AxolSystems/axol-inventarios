@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../utilities/postgresql/postgres_client.dart';
+import '../../../utilities/postgresql/query_builder.dart';
 import '../../entity/model/entity_model.dart';
 import '../../entity/model/property_model.dart';
 import '../../entity/repository/entity_repo.dart';
@@ -93,5 +97,15 @@ class WidgetLinkRepo {
   static Future<void> updateView(WidgetLinkModel link) async {
     await _supabase.from(_table).update(
         {_views: WidgetViewModel.listToMap(link.views)}).eq(_id, link.id);
+  }
+
+  /// Actualiza las views proporcionado por widgetLink recibido.
+  static Future<void> postgresUpdateView(WidgetViewModel view) async {
+    final String dynamicValues = '\'${jsonEncode(view.properties)}\'';
+    QueryBuilder queryBuilder = QueryBuilder().update(
+        PsqlTables.views.tableName, {
+      PsqlTables.views.dynamicValues: dynamicValues
+    }).eq(PsqlTables.views.id, view.key);
+    await queryBuilder.responseQuery;
   }
 }

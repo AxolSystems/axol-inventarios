@@ -86,7 +86,8 @@ class FormCubit extends Cubit<FormDrawerState> {
           ));
         } else if (prop.propertyType == Prop.array) {
           final String idArray = prop.dynamicValues[PropertyModel.dvIdArray];
-          final List<String> list = await ArrayRepo.postgresFetchArrayById(idArray);
+          final List<String> list =
+              await ArrayRepo.postgresFetchArrayById(idArray);
           //await ArrayRepo.fetchArrayById(idArray);
           if (list.isEmpty) {
             list.add('');
@@ -130,7 +131,7 @@ class FormCubit extends Cubit<FormDrawerState> {
         if (i > -1) {
           if (form.fields[i] is TextFieldModel) {
             final TextFieldModel textField = form.fields[i] as TextFieldModel;
-            map[prop.key] = textField.ctrlText.text;
+            map[prop.key] = '\'${textField.ctrlText.text}\'';
           } else if (form.fields[i] is NumberFieldModel) {
             final NumberFieldModel numberField =
                 form.fields[i] as NumberFieldModel;
@@ -141,7 +142,9 @@ class FormCubit extends Cubit<FormDrawerState> {
             map[prop.key] = booleanField.value;
           } else if (form.fields[i] is DateFieldModel) {
             final DateFieldModel dateField = form.fields[i] as DateFieldModel;
-            map[prop.key] = dateField.dateTime?.millisecondsSinceEpoch;
+            map[prop.key] = dateField.dateTime == null
+                ? null
+                : '\'${dateField.dateTime?.toIso8601String()}\'';
           } else if (form.fields[i] is ReferenceObjectFieldModel) {
             final ReferenceObjectFieldModel refObjField =
                 form.fields[i] as ReferenceObjectFieldModel;
@@ -156,7 +159,7 @@ class FormCubit extends Cubit<FormDrawerState> {
           } else if (form.fields[i] is ArrayFieldModel) {
             final ArrayFieldModel arrayField =
                 form.fields[i] as ArrayFieldModel;
-            map[prop.key] = arrayField.array.value;
+            map[prop.key] = '\'${arrayField.array.value}\'';
           } else {
             map[prop.key] = null;
           }
@@ -174,11 +177,11 @@ class FormCubit extends Cubit<FormDrawerState> {
       /// Hacer genérico.
       bool isError = false;
       for (PropertyModel prop in link.entity.propertyList) {
-        if (prop.propertyType == Prop.formula) {
+        if (prop.propertyType == Prop.formula) { 
           final double value = await FormulaFunction.devExpressions(
               prop.dynamicValues[PropertyModel.dvFormula], object, link);
-          final double total = value + map['13'] + map['14'];
-          if (total > map['12']) {
+          final double total = value + map['c13'] + map['c14'];
+          if (total > map['c12']) {
             isError = true;
             emit(const ErrorFormState(
                 error: 'Cantidad total supera a cantidad de trabajo.'));
@@ -186,9 +189,11 @@ class FormCubit extends Cubit<FormDrawerState> {
           }
         }
       }
+
       if (!isError) {
         if (atmPropertyList == null) {
-          await ObjectRepo.insert(object, link);
+          await ObjectRepo.postgresInsert(object, link);
+          //await ObjectRepo.insert(object, link);
         }
 
         emit(SavedFormState(object: object));

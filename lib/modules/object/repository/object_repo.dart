@@ -24,6 +24,8 @@ class ObjectRepo {
     required List<FilterObjModel> filters,
     required EntityModel entity,
     String? search,
+    String? propAscending,
+    bool? isAscending,
   }) async {
     final DataResponseModel dataResponse;
     final List<Map<String, dynamic>> objectsDB;
@@ -74,12 +76,15 @@ class ObjectRepo {
       }
     }
 
-    //2. Obtiene Map con módulos, widgets y vistas.
+    //2. Agrega orden a consulta.
+    query.order(propAscending ?? 'c0', ascending: isAscending);
+
+    //3. Obtiene Map con módulos, widgets y vistas.
     //print('QUERY: ${query.query}');
     objectsDB = await query.responseQuery;
     count = await query.countData(entity.tableName);
 
-    //3. Obtiene arrays en caso de que haya propiedades de tipo array.
+    //4. Obtiene arrays en caso de que haya propiedades de tipo array.
     if (entity.propertyList.indexWhere((x) => x.propertyType == Prop.array) >
         -1) {
       for (PropertyModel element
@@ -89,7 +94,7 @@ class ObjectRepo {
       arrayList = await ArrayRepo.postgresFetchArray(idArrayList);
     }
 
-    //4. Convierte respuesta de base de datos a lista de modelo de objetos.
+    //5. Convierte respuesta de base de datos a lista de modelo de objetos.
     for (Map<String, dynamic> element in objectsDB) {
       map = {};
       for (String key in element.keys) {
@@ -97,7 +102,8 @@ class ObjectRepo {
           final PropertyModel prop =
               entity.propertyList.firstWhere((x) => x.key == key);
           if (prop.propertyType == Prop.time) {
-            map[key] = DateTime.parse(element[key]);
+            map[key] =
+                element[key] == null ? null : DateTime.parse(element[key]);
           } else if (prop.propertyType == Prop.array) {
             final ArrayModel arrayDB = arrayList.firstWhere(
                 (x) => x.id == prop.dynamicValues[PropertyModel.dvIdArray]);
@@ -490,7 +496,7 @@ class ObjectRepo {
 
     for (String element in fetchProps) {
       final String column = element.split('==').first;
-      final String value;
+      String value;
       final PropertyModel prop =
           link.entity.propertyList.firstWhere((x) => x.key == column);
 
@@ -499,6 +505,9 @@ class ObjectRepo {
         value = '0';
       } else {
         value = element.split('==').last;
+        if (value.startsWith('\'') && value.endsWith('\'')) {
+          value = value.replaceAll('\'', '');
+        }
       }
       queryBuilder.eq(column, value);
     }
@@ -533,6 +542,16 @@ class ObjectRepo {
     await _supabase.from(link.entity.tableName).delete().eq(id, object.id);
   }
 
+  /// Elimina un objeto de la base de datos.
+  static Future<void> postgresDelete(
+      ObjectModel object, WidgetLinkModel link) async {
+    QueryBuilder queryBuilder = QueryBuilder()
+        .delete()
+        .from(link.entity.tableName)
+        .eq(PsqlTables.tableGen.id, object.id);
+    await queryBuilder.responseQuery;
+  }
+
   /// Inserta un objeto en la base de datos.
   static Future<void> insert(ObjectModel object, WidgetLinkModel link) async {
     await _supabase.from(link.entity.tableName).insert({
@@ -540,6 +559,14 @@ class ObjectRepo {
       _object: object.map,
       _createAt: object.createAt.toIso8601String(),
     });
+  }
+
+  /// Inserta un objeto en la base de datos.
+  static Future<void> postgresInsert(
+      ObjectModel object, WidgetLinkModel link) async {
+    QueryBuilder queryBuilder =
+        QueryBuilder().insert(link.entity.tableName, object.map);
+    await queryBuilder.responseQuery;
   }
 
   static dynamic filterQuery(FilterObjModel filter, var query) {

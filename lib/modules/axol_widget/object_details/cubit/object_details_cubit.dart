@@ -85,7 +85,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if ((form.object.map[prop.key] is DateTime ||
                 form.object.map[prop.key] == null) &&
             prop.propertyType == Prop.time) {
-          cellTime = form.object.map[prop.key] ?? DateTime(0);
+          cellTime = form.object.map[prop.key];
           form.controllers[prop.key] = RDDateController(controller: cellTime);
         } else if (prop.propertyType == Prop.referenceObject) {
           cellRefObj = form.object.map[prop.key] ??
@@ -200,8 +200,7 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
           map[key] = dateController.controller;
-          form.object.map[key] =
-              dateController.controller;
+          form.object.map[key] = dateController.controller;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
           map[key] = boolController.controller;
@@ -259,7 +258,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       ObjectModel object;
       Map<String, dynamic> map = {};
       PropertyModel property;
-
       for (String key in form.object.map.keys) {
         final RDTextEditingController textController;
         final RDBoolController boolController;
@@ -318,7 +316,9 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
               double.tryParse(textController.controller.text) ?? 0;
         } else if (form.controllers[key] is RDDateController &&
             property.propertyType == Prop.time) {
-          map[key] = '\'${dateController.controller?.toIso8601String()}\'';
+          map[key] = dateController.controller == null
+              ? null
+              : '\'${dateController.controller?.toIso8601String()}\'';
           form.object.map[key] = dateController.controller;
         } else if (form.controllers[key] is RDBoolController &&
             property.propertyType == Prop.bool) {
@@ -373,7 +373,6 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       if (!isError) {
         object = ObjectModel(
             createAt: form.object.createAt, id: form.object.id, map: map);
-
         await ObjectRepo.postgresUpdate(object, link);
         //await ObjectRepo.update(object, link);
         form.isEdited = true;
@@ -488,7 +487,8 @@ class ObjectDetailsCubit extends Cubit<ObjectDetailsState> {
       emit(InitialObjectDetailsState());
       emit(DeletingObjectDetailsState());
 
-      await ObjectRepo.delete(form.object, link);
+      await ObjectRepo.postgresDelete(form.object, link);
+      //await ObjectRepo.delete(form.object, link);
       form.isEdited;
 
       emit(DeletedObjectDetailsState());

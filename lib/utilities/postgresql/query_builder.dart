@@ -22,9 +22,12 @@ class QueryBuilder {
   }
 
   ///UPDATE
-  QueryBuilder update(String table, Map<String,dynamic> values, ) {
+  QueryBuilder update(
+    String table,
+    Map<String, dynamic> values,
+  ) {
     String valuesText = '';
-    
+
     for (String key in values.keys) {
       if (valuesText == '') {
         valuesText = '$key = ${values[key]}';
@@ -37,30 +40,32 @@ class QueryBuilder {
   }
 
   //INSERT
-  /*QueryBuilder insert(Map<String, String> row) {
+  QueryBuilder insert(String table, Map<String, dynamic> objects) {
     String columns = '';
     String values = '';
 
-    for (String key in row.keys) {
+    for (String key in objects.keys) {
       if (columns == '') {
         columns = key;
       } else {
-        columns = '$columns, $key';
+        columns = '$columns,$key';
       }
       if (values == '') {
-        values = '\'${row[key]!}\'';
+        values = '${objects[key]}';
       } else {
-        values = '$values, \'${row[key]}\'';
+        values = '$values,${objects[key]}';
       }
     }
 
-    oper ??= 'INSERT';
-    if (table != null) {
-      query ??= '$oper INTO $table ($columns) VALUES ($values)';
-    }
-
+    query ??= 'INSERT INTO $table ($columns) VALUES ($values)';
     return this;
-  }*/
+  }
+
+  //DELETE
+  QueryBuilder delete() {
+    query ??= 'DELETE';
+    return this;
+  }
 
   // *************** WHERE CLAUSE *************** //
 
@@ -351,6 +356,18 @@ class QueryBuilder {
       query = '$query WHERE ($filter)';
     }
 
+    return this;
+  }
+
+  // ****************** MODIFIERS ****************** //
+  QueryBuilder order(String propertyKey, {bool? ascending}) {
+    String ascendText;
+    if (ascending == true) {
+      ascendText = 'ASC';
+    } else {
+      ascendText = 'DESC';
+    }
+    query = '$query ORDER BY $propertyKey $ascendText';
     return this;
   }
 
