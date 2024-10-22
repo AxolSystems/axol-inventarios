@@ -26,6 +26,8 @@ class ObjectRepo {
     String? search,
     String? propAscending,
     bool? isAscending,
+    int? limit,
+    int? offset,
   }) async {
     final DataResponseModel dataResponse;
     final List<Map<String, dynamic>> objectsDB;
@@ -77,10 +79,12 @@ class ObjectRepo {
     }
 
     //2. Agrega orden a consulta.
-    query.order(propAscending ?? 'c0', ascending: isAscending);
+    query
+        .order(propAscending ?? 'c0', ascending: isAscending)
+        .range(limit ?? 0, offset ?? 0);
 
     //3. Obtiene Map con módulos, widgets y vistas.
-    //print('QUERY: ${query.query}');
+    print('QUERY: ${query.query}');
     objectsDB = await query.responseQuery;
     count = await query.countData(entity.tableName);
 

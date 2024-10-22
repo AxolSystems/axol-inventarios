@@ -371,6 +371,11 @@ class QueryBuilder {
     return this;
   }
 
+  QueryBuilder range(int limit, int offset) {
+    query = '$query LIMIT $limit OFFSET $offset';
+    return this;
+  }
+
   // ****************** EXECUTE QUERY ****************** //
   /// Ejecuta la consulta en la base de datos y recibe su respuesta.
   ///
