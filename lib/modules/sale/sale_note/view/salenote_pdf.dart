@@ -65,7 +65,7 @@ class SaleNotePDF {
                 pw.Text('J&J PLASTICOS RECYCLING S DE RL DE CV'),
                 pw.Text('JAJ100906LL9', style: bodyText9),
                 pw.Text('21500', style: bodyText9),
-                pw.Text('Tel: 665-521-7218 Cel: 665-799-3117', style: bodyText9),
+                pw.Text('Tel: 665-521-7218 Cel: 664-400-4933', style: bodyText9),
                 pw.Text('email: bolsasvallelaspalmas@gmail.com',
                     style: bodyText9),
               ])),
